@@ -2,7 +2,7 @@
 name: Test
 about: Add test cases
 title: "[TEST]"
-labels: ''
+labels: test
 assignees: ''
 
 ---

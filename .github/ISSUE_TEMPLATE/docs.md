@@ -2,7 +2,7 @@
 name: Docs
 about: organize documentations to write
 title: "[DOCS]"
-labels: ''
+labels: docs
 assignees: ''
 
 ---
