@@ -2,7 +2,7 @@
 
 ## 1. 절차
 
-1. https://github.com/woowacourse-teams/2020-footprint을 `fork` 하기
+1. https://github.com/woowacourse-teams/2020-legeno-around-here을 `fork` 하기
 2. `fork` 한 리포지토리 `clone`
 3. 작업할 내용을 이슈에 등록하기 or 이슈에 이미 등록된 작업 선택하기
 4. 작업중인 이슈에 댓글로 표시하기
@@ -10,7 +10,8 @@
 6. 브랜치 이름 규칙에 따라 작업할 브랜치 생성
 7. 작업 수행(원칙적으로 단위 테스트 작성, 예외적으로 팀원들에게 설명 후 단위 테스트 미작성 허용)
 8. 모든 테스트 통과시 작업한 이슈를 레퍼런스하여 `develop` 브랜치에 Pull Request
-10. `master` 는 모든 테스트 케이스를 통과하며 빌드 에러가 없고 milestone 지점에 `Squash and merge`
+9. 모든 팀원 approve 후 `develop` 브랜치에 `Sqash and merge`
+10. `master` 는 모든 테스트 케이스를 통과하며 빌드 에러가 없고 milestone 지점에 `merge`
 
 ## 2. 브랜치 관리 규칙
 
