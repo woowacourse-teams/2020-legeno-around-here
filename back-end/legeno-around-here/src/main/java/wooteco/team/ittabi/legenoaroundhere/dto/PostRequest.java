@@ -2,11 +2,15 @@ package wooteco.team.ittabi.legenoaroundhere.dto;
 
 import java.util.Objects;
 
-public class PostCreateRequest {
+public class PostRequest {
 
     private String writing;
 
-    public PostCreateRequest() {
+    public PostRequest() {
+    }
+
+    public PostRequest(String writing) {
+        this.writing = writing;
     }
 
     public String getWriting() {
@@ -21,7 +25,7 @@ public class PostCreateRequest {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        PostCreateRequest that = (PostCreateRequest) o;
+        PostRequest that = (PostRequest) o;
         return Objects.equals(writing, that.writing);
     }
 

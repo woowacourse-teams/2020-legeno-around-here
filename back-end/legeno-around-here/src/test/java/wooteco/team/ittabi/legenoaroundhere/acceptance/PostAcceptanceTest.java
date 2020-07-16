@@ -56,8 +56,11 @@ public class PostAcceptanceTest {
         List<PostResponse> postResponses = findAllPost();
         assertThat(postResponses).hasSize(1);
 
-//         When 글을 수정한다.
-//         Then 글이 수정되었다.
+        String writing = "Hello world!!";
+        updatePost(id, writing);
+        PostResponse updatedPostResponse = findPost(id);
+//        assertThat(updatedPostResponse.getId()).isEqualTo(id);
+//        assertThat(updatedPostResponse.getWriting()).isEqualTo(expectedWriting);
 //
 //         When 글을 조회한다.
 //         Then 글을 응답 받는다.
@@ -66,6 +69,19 @@ public class PostAcceptanceTest {
 //         Then 글이 삭제 상태로 변경된다.
 //         And 다시 글을 조회할 수 없다.
 //         And 글 목록은 n-1개이다.
+    }
+
+    private void updatePost(Long id, String writing) {
+        Map<String, String> params = new HashMap<>();
+        params.put("writing", writing);
+
+        given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .put("/posts/" + id)
+            .then()
+            .statusCode(HttpStatus.OK.value());
     }
 
     private List<PostResponse> findAllPost() {
