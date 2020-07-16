@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.restassured.RestAssured;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -52,10 +53,9 @@ public class PostAcceptanceTest {
         assertThat(postResponse.getId()).isEqualTo(id);
         assertThat(postResponse.getWriting()).isEqualTo(expectedWriting);
 
-//         When 글 목록을 조회한다.
-//         Then 글 목록을 응답받는다.
-//         And 글 목록은 n개이다.
-//
+        List<PostResponse> postResponses = findAllPost();
+        assertThat(postResponses).hasSize(1);
+
 //         When 글을 수정한다.
 //         Then 글이 수정되었다.
 //
@@ -66,6 +66,18 @@ public class PostAcceptanceTest {
 //         Then 글이 삭제 상태로 변경된다.
 //         And 다시 글을 조회할 수 없다.
 //         And 글 목록은 n-1개이다.
+    }
+
+    private List<PostResponse> findAllPost() {
+        return given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/posts")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .jsonPath()
+            .getList(".", PostResponse.class);
     }
 
     private Long getIdFromUrl(String location) {

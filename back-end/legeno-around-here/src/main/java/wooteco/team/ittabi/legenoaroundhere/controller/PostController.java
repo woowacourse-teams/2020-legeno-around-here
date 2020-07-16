@@ -1,6 +1,8 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
 import java.net.URI;
+import java.util.Collections;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,5 +24,11 @@ public class PostController {
     public ResponseEntity<PostResponse> findPost(@PathVariable Long id) {
         PostResponse postResponse = new PostResponse(id, "글을 등록합니다.");
         return ResponseEntity.ok().body(postResponse);
+    }
+
+    @GetMapping("/posts")
+    public ResponseEntity<List<PostResponse>> findAllPost() {
+        PostResponse postResponse = new PostResponse(1L, "글을 등록합니다.");
+        return ResponseEntity.ok().body(Collections.singletonList(postResponse));
     }
 }
