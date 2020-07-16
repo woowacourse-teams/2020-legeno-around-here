@@ -61,10 +61,11 @@ public class PostAcceptanceTest {
         PostResponse updatedPostResponse = findPost(id);
 //        assertThat(updatedPostResponse.getId()).isEqualTo(id);
 //        assertThat(updatedPostResponse.getWriting()).isEqualTo(expectedWriting);
-//
-//         When 글을 조회한다.
-//         Then 글을 응답 받는다.
-//
+
+        PostResponse postFindResponse = findPost(id);
+//        assertThat(postResponse.getId()).isEqualTo(id);
+//        assertThat(postResponse.getWriting()).isEqualTo(writing);
+
 //         When 글을 삭제한다.
 //         Then 글이 삭제 상태로 변경된다.
 //         And 다시 글을 조회할 수 없다.
