@@ -66,10 +66,27 @@ public class PostAcceptanceTest {
 //        assertThat(postResponse.getId()).isEqualTo(id);
 //        assertThat(postResponse.getWriting()).isEqualTo(writing);
 
-//         When 글을 삭제한다.
-//         Then 글이 삭제 상태로 변경된다.
-//         And 다시 글을 조회할 수 없다.
-//         And 글 목록은 n-1개이다.
+        deletePost(id);
+//        findNotExistsPost(id);
+        List<PostResponse> postResponses2 = findAllPost();
+//        assertThat(postResponses).hasSize(0);
+    }
+
+    private void findNotExistsPost(Long id) {
+        given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/posts/" + id)
+            .then()
+            .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    private void deletePost(Long id) {
+        given()
+            .when()
+            .delete("/posts/" + id)
+            .then()
+            .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     private void updatePost(Long id, String writing) {
