@@ -1,6 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
 import java.util.Objects;
+import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 
 public class PostRequest {
 
@@ -39,5 +40,9 @@ public class PostRequest {
         return "PostCreateRequest{" +
             "writing='" + writing + '\'' +
             '}';
+    }
+
+    public Post toPost() {
+        return new Post(writing);
     }
 }

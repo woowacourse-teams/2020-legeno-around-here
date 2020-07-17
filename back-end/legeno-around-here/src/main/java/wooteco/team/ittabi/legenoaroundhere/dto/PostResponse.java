@@ -1,6 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
 import java.util.Objects;
+import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 
 public class PostResponse {
 
@@ -13,6 +14,10 @@ public class PostResponse {
     public PostResponse(Long id, String writing) {
         this.id = id;
         this.writing = writing;
+    }
+
+    public static PostResponse of(Post post) {
+        return new PostResponse(post.getId(), post.getWriting());
     }
 
     public Long getId() {

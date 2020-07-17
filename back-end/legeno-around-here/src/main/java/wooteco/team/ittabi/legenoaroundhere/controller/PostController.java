@@ -14,13 +14,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
+import wooteco.team.ittabi.legenoaroundhere.service.PostService;
 
 @RestController
 @RequestMapping("/posts")
 public class PostController {
 
+    private PostService postService;
+
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
+
     @PostMapping
     public ResponseEntity<Void> createPost(@RequestBody PostRequest postRequest) {
+
         return ResponseEntity.created(URI.create("/posts/1")).build();
     }
 
