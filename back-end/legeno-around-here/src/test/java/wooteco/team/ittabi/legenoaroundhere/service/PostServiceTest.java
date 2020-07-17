@@ -83,4 +83,14 @@ public class PostServiceTest {
             .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @DisplayName("ID로 포스트 삭제처리 - 실패, ID가 DB에 없음")
+    @Test
+    void deletePost_HasId_SuccessToDelete() {
+        when(postRepository.findById(any()))
+            .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> postService.deletePost(postId))
+            .isInstanceOf(IllegalArgumentException.class);
+    }
+
 }

@@ -36,4 +36,10 @@ public class PostService {
             .orElseThrow(() -> new IllegalArgumentException("ID에 해당하는 POST가 없습니다."));
         post.setWriting(postRequest.getWriting());
     }
+
+    public void deletePost(Long id) {
+        Post post = postRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("ID에 해당하는 POST가 없습니다."));
+        // TODO: 17/07/2020 Post의 상태를 Enum으로 삭제 상태로 변경
+    }
 }

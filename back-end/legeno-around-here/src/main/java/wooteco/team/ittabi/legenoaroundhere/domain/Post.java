@@ -1,11 +1,19 @@
 package wooteco.team.ittabi.legenoaroundhere.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Post {
 
     private static final int LIMIT_LENGTH = 20;
 
+    @Id
     private Long id;
     private String writing;
+
+    protected Post() {
+    }
 
     public Post(String writing) {
         validateLength(writing);
