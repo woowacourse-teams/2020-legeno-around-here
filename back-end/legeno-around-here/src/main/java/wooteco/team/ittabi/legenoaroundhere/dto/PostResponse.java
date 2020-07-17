@@ -1,6 +1,8 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 
 public class PostResponse {
@@ -18,6 +20,12 @@ public class PostResponse {
 
     public static PostResponse of(Post post) {
         return new PostResponse(post.getId(), post.getWriting());
+    }
+
+    public static List<PostResponse> listOf(List<Post> posts) {
+        return posts.stream()
+            .map(PostResponse::of)
+            .collect(Collectors.toList());
     }
 
     public Long getId() {

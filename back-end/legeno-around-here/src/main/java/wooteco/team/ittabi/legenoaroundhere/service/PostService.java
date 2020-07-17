@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
@@ -24,5 +25,9 @@ public class PostService {
         Post post = postRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("ID에 해당하는 POST가 없습니다."));
         return PostResponse.of(post);
+    }
+
+    public List<PostResponse> findAllPost() {
+        return PostResponse.listOf(postRepository.findAll());
     }
 }

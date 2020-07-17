@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -62,5 +63,12 @@ public class PostServiceTest {
 
         assertThatThrownBy(() -> postService.findPost(postId))
             .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("포스트 전체 목록 조회 - 성공")
+    @Test
+    void findAllPost_SuccessToFind() {
+        when(postRepository.findAll()).thenReturn(Arrays.asList(new Post("hi"), new Post("hihi")));
+        assertThat(postService.findAllPost()).hasSize(2);
     }
 }
