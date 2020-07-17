@@ -71,4 +71,16 @@ public class PostServiceTest {
         when(postRepository.findAll()).thenReturn(Arrays.asList(new Post("hi"), new Post("hihi")));
         assertThat(postService.findAllPost()).hasSize(2);
     }
+
+    @DisplayName("ID로 포스트 수정 - 실패, ID가 DB에 없음")
+    @Test
+    void updatePost_HasNotId_ThrownException() {
+        PostRequest postRequest = new PostRequest(expectedWriting);
+        when(postRepository.findById(any()))
+            .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> postService.updatePost(postId, postRequest))
+            .isInstanceOf(IllegalArgumentException.class);
+    }
+
 }

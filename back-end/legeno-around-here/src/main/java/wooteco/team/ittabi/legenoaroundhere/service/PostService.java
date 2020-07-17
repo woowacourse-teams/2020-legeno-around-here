@@ -30,4 +30,10 @@ public class PostService {
     public List<PostResponse> findAllPost() {
         return PostResponse.listOf(postRepository.findAll());
     }
+
+    public void updatePost(Long id, PostRequest postRequest) {
+        Post post = postRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("ID에 해당하는 POST가 없습니다."));
+        post.setWriting(postRequest.getWriting());
+    }
 }

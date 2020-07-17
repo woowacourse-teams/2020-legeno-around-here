@@ -23,13 +23,16 @@ public class Post {
         }
     }
 
-
     public Long getId() {
         return id;
     }
 
     public String getWriting() {
         return writing;
+    }
+
+    public void setWriting(String writing) {
+        this.writing = writing;
     }
 
     @Override
