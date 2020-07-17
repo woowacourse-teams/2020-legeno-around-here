@@ -45,7 +45,6 @@ public class PostAcceptanceTest {
     @DisplayName("글 관리")
     @Test
     void managePost() {
-
         String expectedWriting = "글을 등록합니다.";
         String location = createPost(expectedWriting);
         Long id = getIdFromUrl(location);

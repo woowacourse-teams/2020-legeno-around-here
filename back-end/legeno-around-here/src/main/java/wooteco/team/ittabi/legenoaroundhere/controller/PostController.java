@@ -28,7 +28,6 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<Void> createPost(@RequestBody PostRequest postRequest) {
-
         return ResponseEntity.created(URI.create("/posts/1")).build();
     }
 

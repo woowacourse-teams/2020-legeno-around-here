@@ -19,4 +19,10 @@ public class PostService {
         Post post = postRepository.save(postRequest.toPost());
         return PostResponse.of(post);
     }
+
+    public PostResponse findPost(Long id) {
+        Post post = postRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("ID에 해당하는 POST가 없습니다."));
+        return PostResponse.of(post);
+    }
 }
