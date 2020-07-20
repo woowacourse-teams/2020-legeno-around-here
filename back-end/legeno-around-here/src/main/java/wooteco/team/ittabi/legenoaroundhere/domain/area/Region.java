@@ -1,11 +1,17 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.area;
 
-public class Region {
+class Region implements Comparable<Region> {
+
     private final String name;
     private final RegionLevel level;
 
-    public Region(String name, RegionLevel level) {
+    Region(String name, RegionLevel level) {
         this.name = name;
         this.level = level;
+    }
+
+    @Override
+    public int compareTo(Region other) {
+        return this.level.compareTo(other.level);
     }
 }
