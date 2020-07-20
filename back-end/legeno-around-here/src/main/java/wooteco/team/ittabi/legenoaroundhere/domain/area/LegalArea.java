@@ -14,7 +14,7 @@ class LegalArea extends Area {
 
 
     @Override
-    Region findSmallestRegion() {
+    Region getSmallestRegion() {
         return regions.getSmallestRegion();
     }
 }

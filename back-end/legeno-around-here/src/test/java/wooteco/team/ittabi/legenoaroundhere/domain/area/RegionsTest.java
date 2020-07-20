@@ -3,11 +3,12 @@ package wooteco.team.ittabi.legenoaroundhere.domain.area;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class RegionsTest {
 
-
+    @DisplayName("가장 작은 단위의 Region 조회")
     @Test
     void getSmallestRegion() {
         Region expectedSmallestRegion = new Region("홍제동", RegionLevel.LEVEL_3);

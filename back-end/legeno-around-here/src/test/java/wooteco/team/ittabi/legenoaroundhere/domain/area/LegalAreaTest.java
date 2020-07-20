@@ -4,10 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class LegalAreaTest {
 
+    @DisplayName("LegalArea 생성")
     @Test
     void construct() {
         List<Region> regions = Arrays.asList(
@@ -18,8 +20,9 @@ class LegalAreaTest {
         assertThat(legalArea).isNotNull();
     }
 
+    @DisplayName("가장 작은 단위의 Region 조회")
     @Test
-    void findSmallestRegion() {
+    void getSmallestRegion() {
         Region expectedSmallestRegion = new Region("홍제동", RegionLevel.LEVEL_3);
         List<Region> regions = Arrays.asList(
             new Region("서울시", RegionLevel.LEVEL_1),
@@ -28,7 +31,7 @@ class LegalAreaTest {
         );
 
         LegalArea legalArea = new LegalArea(regions);
-        Region actualSmallestRegion = legalArea.findSmallestRegion();
+        Region actualSmallestRegion = legalArea.getSmallestRegion();
         assertThat(actualSmallestRegion).isEqualTo(expectedSmallestRegion);
     }
 }

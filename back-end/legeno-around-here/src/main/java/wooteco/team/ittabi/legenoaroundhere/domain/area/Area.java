@@ -8,6 +8,6 @@ abstract class Area {
         this.regions = regions;
     }
 
-    abstract Region findSmallestRegion();
+    abstract Region getSmallestRegion();
 
 }

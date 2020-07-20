@@ -18,6 +18,7 @@ class RegionTest {
         assertThat(regionLevelThree).isNotNull();
     }
 
+    @DisplayName("비교 학습")
     @Test
     void compareTo() {
         Region regionLevelOne = new Region("서울시", RegionLevel.LEVEL_1);
