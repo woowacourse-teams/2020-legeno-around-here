@@ -2,30 +2,27 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import wooteco.team.ittabi.legenoaroundhere.domain.Post;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@Transactional
 public class PostServiceTest {
 
-    @Mock
+    @Autowired
     private PostRepository postRepository;
-
+    @Autowired
     private PostService postService;
-    private final Long postId = 1L;
+
     private final String expectedWriting = "Hello!!";
 
     @BeforeEach
@@ -37,64 +34,88 @@ public class PostServiceTest {
     @Test
     void createPost_SuccessToCreate() {
         PostRequest postRequest = new PostRequest(expectedWriting);
-        Post post = new Post(expectedWriting);
-        post.setId(postId);
-        when(postRepository.save(any())).thenReturn(post);
 
         PostResponse postResponse = postService.createPost(postRequest);
-        assertThat(postResponse.getId()).isEqualTo(postId);
+
+        assertThat(postResponse.getId()).isNotNull();
         assertThat(postResponse.getWriting()).isEqualTo(expectedWriting);
     }
 
-    @DisplayName("ID로 포스트 조회 - 성공, ID가 DB에 존재")
+    @DisplayName("ID로 포스트 조회 - 성공")
     @Test
     void findPost_HasId_SuccessToFind() {
-        Post post = new Post(expectedWriting);
-        post.setId(postId);
-        when(postRepository.findById(any()))
-            .thenReturn(Optional.of(post));
+        PostRequest postRequest = new PostRequest(expectedWriting);
+        PostResponse createdPostResponse = postService.createPost(postRequest);
 
-        PostResponse postResponse = postService.findPost(postId);
-        assertThat(postResponse.getId()).isEqualTo(postId);
-        assertThat(postResponse.getWriting()).isEqualTo(expectedWriting);
+        PostResponse postResponse = postService.findPost(createdPostResponse.getId());
+
+        assertThat(postResponse.getId()).isEqualTo(createdPostResponse.getId());
+        assertThat(postResponse.getWriting()).isEqualTo(createdPostResponse.getWriting());
     }
 
-    @DisplayName("ID로 포스트 조회 - 실패, ID가 DB에 없음")
+    @DisplayName("ID로 포스트 조회 - 실패")
     @Test
     void findPost_HasNotId_ThrownException() {
-        when(postRepository.findById(any()))
-            .thenReturn(Optional.empty());
+        Long invalidId = -1L;
 
-        assertThatThrownBy(() -> postService.findPost(postId))
+        assertThatThrownBy(() -> postService.findPost(invalidId))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
     @DisplayName("포스트 전체 목록 조회 - 성공")
     @Test
     void findAllPost_SuccessToFind() {
-        when(postRepository.findAll()).thenReturn(Arrays.asList(new Post("hi"), new Post("hihi")));
-        assertThat(postService.findAllPost()).hasSize(2);
+        PostRequest postRequest = new PostRequest(expectedWriting);
+        postService.createPost(postRequest);
+        postService.createPost(postRequest);
+
+        List<PostResponse> posts = postService.findAllPost();
+
+        assertThat(posts).hasSize(2);
     }
 
-    @DisplayName("ID로 포스트 수정 - 실패, ID가 DB에 없음")
+    @DisplayName("ID로 포스트 수정 - 성공")
+    @Test
+    void updatePost_HasId_SuccessToUpdate() {
+        String updatedPostWriting = "Jamie and BingBong";
+        PostRequest createdPostRequest = new PostRequest(expectedWriting);
+        PostResponse createdPostResponse = postService.createPost(createdPostRequest);
+        PostRequest updatedPostRequest = new PostRequest(updatedPostWriting);
+
+        postService.updatePost(createdPostResponse.getId(), updatedPostRequest);
+        PostResponse updatedPostResponse = postService.findPost(createdPostResponse.getId());
+
+        assertThat(updatedPostResponse.getWriting()).isEqualTo(updatedPostWriting);
+    }
+
+    @DisplayName("ID로 포스트 수정 - 실패")
     @Test
     void updatePost_HasNotId_ThrownException() {
         PostRequest postRequest = new PostRequest(expectedWriting);
-        when(postRepository.findById(any()))
-            .thenReturn(Optional.empty());
+        Long invalidId = -1L;
 
-        assertThatThrownBy(() -> postService.updatePost(postId, postRequest))
+        assertThatThrownBy(() -> postService.updatePost(invalidId, postRequest))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @DisplayName("ID로 포스트 삭제처리 - 실패, ID가 DB에 없음")
+    @DisplayName("ID로 포스트 삭제 - 성공")
     @Test
     void deletePost_HasId_SuccessToDelete() {
-        when(postRepository.findById(any()))
-            .thenReturn(Optional.empty());
+        PostRequest createdPostRequest = new PostRequest(expectedWriting);
+        PostResponse createdPostResponse = postService.createPost(createdPostRequest);
 
-        assertThatThrownBy(() -> postService.deletePost(postId))
+        postService.deletePost(createdPostResponse.getId());
+
+        assertThatThrownBy(() -> postService.findPost(createdPostResponse.getId()))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @DisplayName("ID로 포스트 삭제 - 실패")
+    @Test
+    void deletePost_HasNotId_ThrownException() {
+        Long invalidId = -1L;
+
+        assertThatThrownBy(() -> postService.deletePost(invalidId))
+            .isInstanceOf(IllegalArgumentException.class);
+    }
 }

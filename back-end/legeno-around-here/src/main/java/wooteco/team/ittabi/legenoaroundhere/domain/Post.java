@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.domain;
 
+import java.util.Objects;
 import javax.persistence.Entity;
 
 @Entity
@@ -8,6 +9,7 @@ public class Post extends BaseEntity {
     private static final int LIMIT_LENGTH = 20;
 
     private String writing;
+    private State state;
 
     protected Post() {
     }
@@ -15,12 +17,21 @@ public class Post extends BaseEntity {
     public Post(String writing) {
         validateLength(writing);
         this.writing = writing;
+        this.state = State.PUBLISHED;
     }
 
     private void validateLength(String writing) {
         if (writing.length() > LIMIT_LENGTH) {
             throw new IllegalArgumentException(LIMIT_LENGTH + "글자를 초과했습니다!");
         }
+    }
+
+    public boolean isSameState(State state) {
+        return Objects.equals(this.state, state);
+    }
+
+    public boolean isNotSameState(State state) {
+        return !Objects.equals(this.state, state);
     }
 
     public String getWriting() {
@@ -31,10 +42,19 @@ public class Post extends BaseEntity {
         this.writing = writing;
     }
 
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
             "writing='" + writing + '\'' +
+            ", state=" + state +
             '}';
     }
 }

@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.domain;
 
-public class State {
-
+public enum State {
+    DELETED,
+    PUBLISHED
 }
