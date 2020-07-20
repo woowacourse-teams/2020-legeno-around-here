@@ -37,7 +37,9 @@ public class PostServiceTest {
     @Test
     void createPost_SuccessToCreate() {
         PostRequest postRequest = new PostRequest(expectedWriting);
-        when(postRepository.save(any())).thenReturn(new Post(postId, expectedWriting));
+        Post post = new Post(expectedWriting);
+        post.setId(postId);
+        when(postRepository.save(any())).thenReturn(post);
 
         PostResponse postResponse = postService.createPost(postRequest);
         assertThat(postResponse.getId()).isEqualTo(postId);
@@ -47,8 +49,10 @@ public class PostServiceTest {
     @DisplayName("ID로 포스트 조회 - 성공, ID가 DB에 존재")
     @Test
     void findPost_HasId_SuccessToFind() {
+        Post post = new Post(expectedWriting);
+        post.setId(postId);
         when(postRepository.findById(any()))
-            .thenReturn(Optional.of(new Post(postId, expectedWriting)));
+            .thenReturn(Optional.of(post));
 
         PostResponse postResponse = postService.findPost(postId);
         assertThat(postResponse.getId()).isEqualTo(postId);

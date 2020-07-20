@@ -1,15 +1,12 @@
 package wooteco.team.ittabi.legenoaroundhere.domain;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
 
 @Entity
-public class Post {
+public class Post extends BaseEntity {
 
     private static final int LIMIT_LENGTH = 20;
 
-    @Id
-    private Long id;
     private String writing;
 
     protected Post() {
@@ -20,19 +17,10 @@ public class Post {
         this.writing = writing;
     }
 
-    public Post(Long id, String writing) {
-        this.id = id;
-        this.writing = writing;
-    }
-
     private void validateLength(String writing) {
         if (writing.length() > LIMIT_LENGTH) {
             throw new IllegalArgumentException(LIMIT_LENGTH + "글자를 초과했습니다!");
         }
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getWriting() {
@@ -46,8 +34,7 @@ public class Post {
     @Override
     public String toString() {
         return "Post{" +
-            "id=" + id +
-            ", writing='" + writing + '\'' +
+            "writing='" + writing + '\'' +
             '}';
     }
 }
