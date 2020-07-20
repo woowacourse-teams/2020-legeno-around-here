@@ -26,12 +26,17 @@ public class PostService {
     }
 
     public PostResponse findPost(Long id) {
+        Post post = findNotDeletedPost(id);
+        return PostResponse.of(post);
+    }
+
+    private Post findNotDeletedPost(Long id) {
         Post post = postRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("ID에 해당하는 POST가 없습니다."));
         if (post.isSameState(State.DELETED)) {
             throw new IllegalArgumentException("삭제된 POST 입니다!");
         }
-        return PostResponse.of(post);
+        return post;
     }
 
     public List<PostResponse> findAllPost() {
@@ -48,8 +53,7 @@ public class PostService {
     }
 
     public void deletePost(Long id) {
-        Post post = postRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("ID에 해당하는 POST가 없습니다."));
+        Post post = findNotDeletedPost(id);
         post.setState(State.DELETED);
     }
 }

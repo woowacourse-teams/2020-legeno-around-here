@@ -118,4 +118,16 @@ public class PostServiceTest {
         assertThatThrownBy(() -> postService.deletePost(invalidId))
             .isInstanceOf(IllegalArgumentException.class);
     }
+
+    @DisplayName("삭제한 ID로 포스트 삭제 - 실패")
+    @Test
+    void deletePost_AlreadyDeletedId_ThrownException() {
+        PostRequest createdPostRequest = new PostRequest(expectedWriting);
+        PostResponse createdPostResponse = postService.createPost(createdPostRequest);
+
+        postService.deletePost(createdPostResponse.getId());
+
+        assertThatThrownBy(() -> postService.deletePost(createdPostResponse.getId()))
+            .isInstanceOf(IllegalArgumentException.class);
+    }
 }
