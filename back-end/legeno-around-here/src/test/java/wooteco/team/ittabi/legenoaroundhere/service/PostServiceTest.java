@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,23 +11,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
-import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 
 @SpringBootTest
 @Transactional
 public class PostServiceTest {
 
     @Autowired
-    private PostRepository postRepository;
-    @Autowired
     private PostService postService;
 
     private final String expectedWriting = "Hello!!";
-
-    @BeforeEach
-    void setUp() {
-        postService = new PostService(postRepository);
-    }
 
     @DisplayName("포스트 생성 - 성공")
     @Test

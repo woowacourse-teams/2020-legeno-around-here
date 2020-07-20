@@ -45,6 +45,7 @@ public class PostAcceptanceTest {
     @DisplayName("글 관리")
     @Test
     void managePost() {
+        // 등록
         String expectedWriting = "글을 등록합니다.";
         String location = createPost(expectedWriting);
         Long id = getIdFromUrl(location);
@@ -52,23 +53,27 @@ public class PostAcceptanceTest {
         assertThat(postResponse.getId()).isEqualTo(id);
         assertThat(postResponse.getWriting()).isEqualTo(expectedWriting);
 
+        // 목록 조회
         List<PostResponse> postResponses = findAllPost();
         assertThat(postResponses).hasSize(1);
 
+        // 수정
         String writing = "Hello world!!";
         updatePost(id, writing);
         PostResponse updatedPostResponse = findPost(id);
-//        assertThat(updatedPostResponse.getId()).isEqualTo(id);
-//        assertThat(updatedPostResponse.getWriting()).isEqualTo(expectedWriting);
+        assertThat(updatedPostResponse.getId()).isEqualTo(id);
+        assertThat(updatedPostResponse.getWriting()).isEqualTo(writing);
 
+        // 조회
         PostResponse postFindResponse = findPost(id);
-//        assertThat(postResponse.getId()).isEqualTo(id);
-//        assertThat(postResponse.getWriting()).isEqualTo(writing);
+        assertThat(postFindResponse.getId()).isEqualTo(id);
+        assertThat(postFindResponse.getWriting()).isEqualTo(writing);
 
+        // 삭제
         deletePost(id);
-//        findNotExistsPost(id);
+        findNotExistsPost(id);
         List<PostResponse> postResponses2 = findAllPost();
-//        assertThat(postResponses).hasSize(0);
+        assertThat(postResponses2).hasSize(0);
     }
 
     private void findNotExistsPost(Long id) {
