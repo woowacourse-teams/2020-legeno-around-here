@@ -14,6 +14,10 @@ public class PostRequest {
         this.writing = writing;
     }
 
+    public Post toPost() {
+        return new Post(writing);
+    }
+
     public String getWriting() {
         return writing;
     }
@@ -40,9 +44,5 @@ public class PostRequest {
         return "PostCreateRequest{" +
             "writing='" + writing + '\'' +
             '}';
-    }
-
-    public Post toPost() {
-        return new Post(writing);
     }
 }
