@@ -8,24 +8,24 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class RegionLevelTest {
+class RegionDepthTest {
 
     @DisplayName("정렬 학습")
     @Test
     void sort() {
         //given
-        List<RegionLevel> regionLevels = Arrays.asList(RegionLevel.LEVEL_1,
-            RegionLevel.LEVEL_3,
-            RegionLevel.LEVEL_2);
+        List<RegionDepth> regionDepths = Arrays.asList(RegionDepth.LEVEL_1,
+            RegionDepth.LEVEL_3,
+            RegionDepth.LEVEL_2);
 
         //when
-        Collections.sort(regionLevels);
+        Collections.sort(regionDepths);
 
         //then
-        assertThat(regionLevels).isEqualTo(Arrays.asList(
-            RegionLevel.LEVEL_1,
-            RegionLevel.LEVEL_2,
-            RegionLevel.LEVEL_3
+        assertThat(regionDepths).isEqualTo(Arrays.asList(
+            RegionDepth.LEVEL_1,
+            RegionDepth.LEVEL_2,
+            RegionDepth.LEVEL_3
         ));
     }
 

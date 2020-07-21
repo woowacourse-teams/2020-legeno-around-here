@@ -3,9 +3,9 @@ package wooteco.team.ittabi.legenoaroundhere.domain.area;
 class Region implements Comparable<Region> {
 
     private final String name;
-    private final RegionLevel level;
+    private final RegionDepth level;
 
-    Region(String name, RegionLevel level) {
+    Region(String name, RegionDepth level) {
         this.name = name;
         this.level = level;
     }
