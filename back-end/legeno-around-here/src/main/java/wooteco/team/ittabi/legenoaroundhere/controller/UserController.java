@@ -12,7 +12,7 @@ import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 @RestController
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -21,6 +21,8 @@ public class UserController {
     @PostMapping("/join")
     public ResponseEntity<Void> join(@RequestBody UserCreateRequest userCreateRequest) {
         User user = userService.createUser(userCreateRequest.toUser());
-        return ResponseEntity.created(URI.create("/users/" + user.getId())).build();
+        return ResponseEntity
+            .created(URI.create("/users/" + user.getId()))
+            .build();
     }
 }

@@ -1,6 +1,9 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptanceTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_PASSWORD;
 
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
@@ -17,9 +20,6 @@ import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserAcceptanceTest {
 
-    private static final String TEST_EMAIL = "test@test.com";
-    private static final String TEST_NAME = "testName";
-    private static final String TEST_PASSWORD = "testPassword";
     private static final String USER_LOCATION_FORMAT = "^/users/[1-9][0-9]*$";
 
     @LocalServerPort
@@ -34,14 +34,16 @@ public class UserAcceptanceTest {
         RestAssured.port = port;
     }
 
-    //        Feature: 회원관리
-    //
-    //        Scenario: 회원을 관리한다.
-    //        When 회원 가입 요청을 한다.
-    //        Then 회원으로 가입이되었다.
-    //
-    //        When 로그인을 한다.
-    //        Then 로그인이 되었다.
+    /**
+     * Feature: 회원관리
+     * Scenario: 회원을 관리한다.
+     *
+     * When 회원 가입 요청을 한다.
+     * Then 회원으로 가입이되었다.
+     *
+     * When 로그인을 한다.
+     * Then 로그인이 되었다.
+     */
     @Test
     public void manageUser() {
         String location = createUser(TEST_EMAIL, TEST_NAME, TEST_PASSWORD);

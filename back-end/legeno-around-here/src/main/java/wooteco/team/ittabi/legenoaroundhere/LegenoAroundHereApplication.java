@@ -9,5 +9,4 @@ public class LegenoAroundHereApplication {
     public static void main(String[] args) {
         SpringApplication.run(LegenoAroundHereApplication.class, args);
     }
-
 }

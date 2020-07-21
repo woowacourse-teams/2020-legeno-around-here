@@ -32,10 +32,10 @@ public class Email {
     }
 
     private void validateFormat(String email) {
-        Pattern p = Pattern.compile(EMAIL_FORMAT);
-        Matcher m = p.matcher(email);
+        Pattern pattern = Pattern.compile(EMAIL_FORMAT);
+        Matcher matcher = pattern.matcher(email);
 
-        if (!m.matches()) {
+        if (!matcher.matches()) {
             throw new IllegalArgumentException("이메일 형식이 잘못됐습니다.");
         }
     }

@@ -2,12 +2,12 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import org.springframework.stereotype.Service;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.UserRepository;
+import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 
 @Service
 public class UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;

@@ -2,6 +2,9 @@ package wooteco.team.ittabi.legenoaroundhere.domain.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_PASSWORD;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -11,10 +14,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 class UserTest {
-
-    private static final String TEST_EMAIL = "test@test.com";
-    private static final String TEST_NAME = "testName";
-    private static final String TEST_PASSWORD = "testPassword";
 
     @Test
     @DisplayName("생성자 테스트")

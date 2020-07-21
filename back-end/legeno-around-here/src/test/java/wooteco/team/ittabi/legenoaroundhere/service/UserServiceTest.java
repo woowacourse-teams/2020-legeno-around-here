@@ -2,6 +2,9 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_PASSWORD;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,14 +16,10 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.NickName;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Password;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.UserRepository;
+import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
-
-    private static final String TEST_EMAIL = "test@test.com";
-    private static final String TEST_NAME = "testName";
-    private static final String TEST_PASSWORD = "testPassword";
 
     private UserService userService;
 

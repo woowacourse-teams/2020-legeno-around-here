@@ -16,7 +16,7 @@ public class Password {
 
     public Password(String password) {
         validate(password);
-        this.password = password; // Todo: 암호화 해야 됨? => security reference B-Crypto
+        this.password = password; // Todo: Security 적용 할 때 암호화 도입 예정 (bcrypt)
     }
 
     private void validate(String password) {

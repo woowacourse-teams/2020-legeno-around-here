@@ -7,6 +7,10 @@ import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_ID;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_PASSWORD;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,18 +22,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.filter.ShallowEtagHeaderFilter;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 class UserControllerTest {
-
-    private static final String TEST_EMAIL = "test@test.com";
-    private static final String TEST_NAME = "testName";
-    private static final String TEST_PASSWORD = "testPassword";
-    private static final Long TEST_ID = 1L;
 
     @MockBean
     protected UserService userService;
@@ -38,8 +36,8 @@ class UserControllerTest {
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext) {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-            .addFilter(new ShallowEtagHeaderFilter())
+        this.mockMvc = MockMvcBuilders
+            .webAppContextSetup(webApplicationContext)
             .build();
     }
 

@@ -31,12 +31,24 @@ public class User {
     }
 
     private void validate(Email email, NickName nickName, Password password) {
+        validateEmailIsNull(email);
+        validateNickNameIsNull(nickName);
+        validatePasswordIsNull(password);
+    }
+
+    private void validateEmailIsNull(Email email) {
         if (Objects.isNull(email)) {
             throw new IllegalArgumentException("이메일이 null 입니다.");
         }
+    }
+
+    private void validateNickNameIsNull(NickName nickName) {
         if (Objects.isNull(nickName)) {
             throw new IllegalArgumentException("닉네임이 null 입니다.");
         }
+    }
+
+    private void validatePasswordIsNull(Password password) {
         if (Objects.isNull(password)) {
             throw new IllegalArgumentException("비밀번호가 null 입니다.");
         }
