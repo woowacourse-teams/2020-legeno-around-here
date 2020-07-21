@@ -14,18 +14,18 @@ class RegionDepthTest {
     @Test
     void sort() {
         //given
-        List<RegionDepth> regionDepths = Arrays.asList(RegionDepth.LEVEL_1,
-            RegionDepth.LEVEL_3,
-            RegionDepth.LEVEL_2);
+        List<RegionDepth> regionDepths = Arrays.asList(RegionDepth.ONE,
+            RegionDepth.THREE,
+            RegionDepth.TWO);
 
         //when
         Collections.sort(regionDepths);
 
         //then
         assertThat(regionDepths).isEqualTo(Arrays.asList(
-            RegionDepth.LEVEL_1,
-            RegionDepth.LEVEL_2,
-            RegionDepth.LEVEL_3
+            RegionDepth.ONE,
+            RegionDepth.TWO,
+            RegionDepth.THREE
         ));
     }
 

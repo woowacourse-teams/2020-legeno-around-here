@@ -14,14 +14,15 @@ class Regions {
 
     Regions(List<Region> regions) {
         validate(regions);
-        this.regions = regions;
+        Collections.sort(regions);
+        this.regions = Collections.unmodifiableList(regions);
     }
 
     Region getSmallestRegion() {
-        Collections.sort(regions);
         return regions.get(getLastIndex());
     }
 
+    //todo: validate region 레벨 1, 레벨 2
     private void validate(List<Region> regions) {
         if (isNotValidSize(regions)) {
             throw new IllegalArgumentException(
