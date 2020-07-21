@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.user;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,6 +19,17 @@ public class Email {
     }
 
     private void validate(String email) {
+        validateNull(email);
+        validateFormat(email);
+    }
+
+    private void validateNull(String email) {
+        if (Objects.isNull(email)) {
+            throw new IllegalArgumentException("이메일이 null입니다.");
+        }
+    }
+
+    private void validateFormat(String email) {
         Pattern p = Pattern.compile(EMAIL_FORMAT);
         Matcher m = p.matcher(email);
 
