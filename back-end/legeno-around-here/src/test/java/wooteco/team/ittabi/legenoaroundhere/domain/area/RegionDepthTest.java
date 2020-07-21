@@ -14,7 +14,8 @@ class RegionDepthTest {
     @Test
     void sort() {
         //given
-        List<RegionDepth> regionDepths = Arrays.asList(RegionDepth.ONE,
+        List<RegionDepth> regionDepths = Arrays.asList(
+            RegionDepth.ONE,
             RegionDepth.THREE,
             RegionDepth.TWO);
 
