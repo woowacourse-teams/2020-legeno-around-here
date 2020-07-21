@@ -2,6 +2,8 @@ package wooteco.team.ittabi.legenoaroundhere.domain;
 
 import java.util.Objects;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 @Entity
 public class Post extends BaseEntity {
@@ -9,6 +11,7 @@ public class Post extends BaseEntity {
     private static final int LIMIT_LENGTH = 20;
 
     private String writing;
+    @Enumerated(EnumType.STRING)
     private State state;
 
     protected Post() {
