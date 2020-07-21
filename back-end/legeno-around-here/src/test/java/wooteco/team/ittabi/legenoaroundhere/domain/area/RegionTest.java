@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 
 class RegionTest {
 
-    @DisplayName("region 생성")
+    @DisplayName("region 생성 성공")
     @Test
-    void counstruct() {
+    void construct() {
         Region regionLevelOne = new Region("서울시", RegionDepth.ONE);
         assertThat(regionLevelOne).isNotNull();
         Region regionLevelTwo = new Region("서대문구", RegionDepth.TWO);

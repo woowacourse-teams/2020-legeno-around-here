@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 class RegionDepthTest {
 
-    @DisplayName("정렬 학습")
+    @DisplayName("정렬 확인")
     @Test
     void sort() {
         //given
