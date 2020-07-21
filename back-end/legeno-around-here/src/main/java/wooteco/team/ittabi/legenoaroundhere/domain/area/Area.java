@@ -1,13 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.area;
 
-abstract class Area {
+interface Area {
 
-    protected Regions regions;
-
-    Area(Regions regions) {
-        this.regions = regions;
-    }
-
-    abstract Region getSmallestRegion();
-
+    Region getSmallestRegion();
 }

@@ -1,17 +1,19 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.area;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class LegalAreaTest {
 
-    @DisplayName("LegalArea 생성")
+    @DisplayName("1개 이상의 region을 활용한 LegalArea 생성 - 성공")
     @Test
-    void construct() {
+    void construct_Succeed() {
         //given
         List<Region> regions = Arrays.asList(
             new Region("서울시", RegionDepth.ONE),
@@ -23,6 +25,14 @@ class LegalAreaTest {
 
         //then
         assertThat(legalArea).isNotNull();
+    }
+
+    @DisplayName("1개 미만의 region을 활용한 LegalArea 생성 - 실패")
+    @Test
+    void construct_InvalidSize_ThrowIllegalArgumentException() {
+        assertThatThrownBy(() -> new LegalArea(Collections.emptyList()))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage(LegalArea.INVALID_SIZE_ERROR);
     }
 
     @DisplayName("가장 작은 단위의 Region 조회")
