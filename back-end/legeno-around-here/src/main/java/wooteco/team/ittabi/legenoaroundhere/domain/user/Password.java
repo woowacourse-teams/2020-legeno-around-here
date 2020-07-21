@@ -1,7 +1,9 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.user;
 
 import java.util.Objects;
+import javax.persistence.Embeddable;
 
+@Embeddable
 public class Password {
 
     private static final int MIN_LENGTH = 8;

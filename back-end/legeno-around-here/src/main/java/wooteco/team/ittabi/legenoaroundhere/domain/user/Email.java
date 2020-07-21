@@ -3,7 +3,9 @@ package wooteco.team.ittabi.legenoaroundhere.domain.user;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.persistence.Embeddable;
 
+@Embeddable
 public class Email {
 
     private static final String EMAIL_FORMAT = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";

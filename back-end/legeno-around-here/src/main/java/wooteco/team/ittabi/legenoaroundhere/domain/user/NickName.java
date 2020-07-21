@@ -1,7 +1,9 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.user;
 
 import java.util.Objects;
+import javax.persistence.Embeddable;
 
+@Embeddable
 public class NickName {
 
     private static final int MAX_LENGTH = 10;

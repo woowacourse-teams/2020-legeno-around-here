@@ -19,8 +19,8 @@ public class UserAcceptanceTest {
 
     private static final String TEST_EMAIL = "test@test.com";
     private static final String TEST_NAME = "testName";
-    private static final String TEST_PASSWORD = "test";
-    private static final String USER_LOCATION_PATTERN = "^/users/[1-9][0-9]*$";
+    private static final String TEST_PASSWORD = "testPassword";
+    private static final String USER_LOCATION_FORMAT = "^/users/[1-9][0-9]*$";
 
     @LocalServerPort
     public int port;
@@ -44,19 +44,18 @@ public class UserAcceptanceTest {
     //        Then 로그인이 되었다.
     @Test
     public void manageUser() {
-//        String location = createUser(TEST_EMAIL, TEST_NAME, TEST_PASSWORD);
-        String location = "/users/1";     // Todo: 지울것
-        assertThat(location).matches(USER_LOCATION_PATTERN);
+        String location = createUser(TEST_EMAIL, TEST_NAME, TEST_PASSWORD);
+        assertThat(location).matches(USER_LOCATION_FORMAT);
 
 //        TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
         TokenResponse tokenResponse = new TokenResponse("abc");   // Todo: 지울것
         assertThat(tokenResponse.getAccessToken()).isNotNull();
     }
 
-    private String createUser(String email, String name, String password) {
+    private String createUser(String email, String nickName, String password) {
         Map<String, String> params = new HashMap<>();
         params.put("email", email);
-        params.put("name", name);
+        params.put("nickName", nickName);
         params.put("password", password);
 
         return

@@ -1,11 +1,23 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.user;
 
 import java.util.Objects;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @Embedded
     private Email email;
+    @Embedded
     private NickName nickName;
+    @Embedded
     private Password password;
 
     public User() {
@@ -28,5 +40,21 @@ public class User {
         if (Objects.isNull(password)) {
             throw new IllegalArgumentException("비밀번호가 null 입니다.");
         }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Email getEmail() {
+        return email;
+    }
+
+    public NickName getNickName() {
+        return nickName;
+    }
+
+    public Password getPassword() {
+        return password;
     }
 }
