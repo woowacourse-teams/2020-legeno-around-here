@@ -12,7 +12,7 @@ class RegionsTest {
 
     @DisplayName("1개 이상의 region을 활용한 Regions 생성 - 성공")
     @Test
-    void constructSucceed() {
+    void construct_Succeed() {
         Regions regions = new Regions(
             Collections.singletonList(new Region("홍제동", RegionDepth.THREE)));
 
@@ -21,7 +21,7 @@ class RegionsTest {
 
     @DisplayName("1개 미만의 region을 활용한 Regions 생성 - 실패")
     @Test
-    void constructWithInvalidSizeThrowIllegalArgumentException() {
+    void construct_InvalidSize_ThrowIllegalArgumentException() {
         assertThatThrownBy(() -> new Regions(Collections.emptyList()))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage(Regions.INVALID_SIZE_ERROR);
@@ -29,12 +29,12 @@ class RegionsTest {
 
     @DisplayName("가장 작은 단위의 Region 조회")
     @Test
-    void getSmallestRegion() {
+    void getSmallestRegion_haveThreeRegions_ReigionWhichIsSmallest() {
         Region expectedSmallestRegion = new Region("홍제동", RegionDepth.THREE);
         Regions regions = new Regions(Arrays.asList(
             new Region("서울시", RegionDepth.ONE),
             expectedSmallestRegion,
-            new Region("서대문구", RegionDepth.ONE)
+            new Region("서대문구", RegionDepth.TWO)
         ));
 
         Region actualSmallestRegion = regions.getSmallestRegion();
