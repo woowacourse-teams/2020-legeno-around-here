@@ -27,7 +27,7 @@ class LegalAreaTest {
 
     @DisplayName("가장 작은 단위의 Region 조회")
     @Test
-    void getSmallestRegion() {
+    void getSmallestRegion_WithThreeRegions_RegionWhichIsSmallest() {
         //given
         Region expectedSmallestRegion = new Region("홍제동", RegionDepth.THREE);
         List<Region> regions = Arrays.asList(
