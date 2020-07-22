@@ -43,21 +43,41 @@ public class UserAcceptanceTest {
      *
      * When 로그인을 한다.
      * Then 로그인이 되었다.
+     *
+     * When 내 정보를 조회한다.
+     * Then 내 정보가 조회된다.
+     *
+     * When 내 정보를 수정한다.
+     * Then 내 정보가 수정된다.
+     *
+     * When 로그아웃을 한다.
+     * Then 로그아웃이 된다.
+     *
+     * Given 로그인이 되어있는 상태이다.
+     * When 회원 탈퇴 요청을 한다.
+     * Then 회원 탈퇴가 되었다.
      */
     @Test
     public void manageUser() {
         String location = createUser(TEST_EMAIL, TEST_NAME, TEST_PASSWORD);
+        // Todo: 내 정보 조회 api 구현 후, 조회가 잘 되는지 확인하는 코드로 바꿀 것.
         assertThat(location).matches(USER_LOCATION_FORMAT);
 
-//        TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
-        TokenResponse tokenResponse = new TokenResponse("abc");   // Todo: 지울것
-        assertThat(tokenResponse.getAccessToken()).isNotNull();
+        // Todo: 로그인
+        
+        // Todo: 내 정보 조회
+        
+        // Todo: 내 정보 수정
+        
+        // Todo: 로그아웃
+        
+        // Todo: 회원 탈퇴
     }
 
-    private String createUser(String email, String nickName, String password) {
+    private String createUser(String email, String nickname, String password) {
         Map<String, String> params = new HashMap<>();
         params.put("email", email);
-        params.put("nickName", nickName);
+        params.put("nickname", nickname);
         params.put("password", password);
 
         return

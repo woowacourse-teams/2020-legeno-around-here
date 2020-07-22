@@ -11,28 +11,28 @@ import javax.persistence.Id;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Embedded
     private Email email;
     @Embedded
-    private NickName nickName;
+    private Nickname nickname;
     @Embedded
     private Password password;
 
-    public User() {
+    protected User() {
     }
 
-    public User(Email email, NickName nickName, Password password) {
-        validate(email, nickName, password);
+    public User(Email email, Nickname nickname, Password password) {
+        validate(email, nickname, password);
         this.email = email;
-        this.nickName = nickName;
+        this.nickname = nickname;
         this.password = password;
     }
 
-    private void validate(Email email, NickName nickName, Password password) {
+    private void validate(Email email, Nickname nickname, Password password) {
         validateEmailIsNull(email);
-        validateNickNameIsNull(nickName);
+        validateNicknameIsNull(nickname);
         validatePasswordIsNull(password);
     }
 
@@ -42,8 +42,8 @@ public class User {
         }
     }
 
-    private void validateNickNameIsNull(NickName nickName) {
-        if (Objects.isNull(nickName)) {
+    private void validateNicknameIsNull(Nickname nickname) {
+        if (Objects.isNull(nickname)) {
             throw new IllegalArgumentException("닉네임이 null 입니다.");
         }
     }
@@ -62,8 +62,8 @@ public class User {
         return email;
     }
 
-    public NickName getNickName() {
-        return nickName;
+    public Nickname getNickname() {
+        return nickname;
     }
 
     public Password getPassword() {

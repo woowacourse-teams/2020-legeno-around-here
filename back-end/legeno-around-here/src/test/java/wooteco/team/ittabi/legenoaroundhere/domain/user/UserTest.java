@@ -19,27 +19,27 @@ class UserTest {
     @DisplayName("생성자 테스트")
     void constructor() {
         Email email = new Email(TEST_EMAIL);
-        NickName nickName = new NickName(TEST_NAME);
+        Nickname nickname = new Nickname(TEST_NAME);
         Password password = new Password(TEST_PASSWORD);
 
-        assertThat(new User(email, nickName, password)).isInstanceOf(User.class);
+        assertThat(new User(email, nickname, password)).isInstanceOf(User.class);
     }
 
     @ParameterizedTest
     @DisplayName("생성자 테스트 - null이 존재할 때")
     @MethodSource("getNullInput")
-    void constructor_IfExistNull_ThrowException(Email email, NickName nickName, Password password) {
-        assertThatThrownBy(() -> new User(email, nickName, password))
+    void constructor_IfExistNull_ThrowException(Email email, Nickname nickname, Password password) {
+        assertThatThrownBy(() -> new User(email, nickname, password))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
     private static Stream<Arguments> getNullInput() {
         return Stream.of(
-            Arguments.of(null, new NickName(TEST_NAME), new Password(TEST_PASSWORD)),
+            Arguments.of(null, new Nickname(TEST_NAME), new Password(TEST_PASSWORD)),
             Arguments.of(new Email(TEST_EMAIL), null, new Password(TEST_PASSWORD)),
-            Arguments.of(new Email(TEST_EMAIL), new NickName(TEST_NAME), null),
+            Arguments.of(new Email(TEST_EMAIL), new Nickname(TEST_NAME), null),
             Arguments.of(new Email(TEST_EMAIL), null, null),
-            Arguments.of(null, new NickName(TEST_NAME), null),
+            Arguments.of(null, new Nickname(TEST_NAME), null),
             Arguments.of(null, null, new Password(TEST_PASSWORD)),
             Arguments.of(null, null, null)
         );

@@ -11,7 +11,7 @@ public class Password {
 
     private String password;
 
-    public Password() {
+    protected Password() {
     }
 
     public Password(String password) {
@@ -32,7 +32,8 @@ public class Password {
 
     private void validateLength(String password) {
         if (password.length() < MIN_LENGTH || password.length() > MAX_LENGTH) {
-            throw new IllegalArgumentException("비밀번호는 8 ~ 16 자여야 합니다.");
+            throw new IllegalArgumentException(
+                "비밀번호는 " + MIN_LENGTH + " ~ " + MAX_LENGTH + " 자여야 합니다.");
         }
     }
 }

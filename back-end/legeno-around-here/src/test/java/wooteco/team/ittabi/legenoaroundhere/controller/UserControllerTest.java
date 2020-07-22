@@ -50,7 +50,7 @@ class UserControllerTest {
         given(userService.createUser(any())).willReturn(mockUser);
 
         String inputJson = "{\"email\":\"" + TEST_EMAIL + "\"," +
-            "\"nickName\":\"" + TEST_NAME + "\"," +
+            "\"nickname\":\"" + TEST_NAME + "\"," +
             "\"password\":\"" + TEST_PASSWORD + "\"}";
 
         this.mockMvc.perform(post("/join")
