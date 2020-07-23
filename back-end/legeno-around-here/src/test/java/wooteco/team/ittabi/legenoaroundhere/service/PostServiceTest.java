@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 
 @DataJpaTest
 @Import(PostService.class)
@@ -50,7 +51,7 @@ public class PostServiceTest {
         Long invalidId = -1L;
 
         assertThatThrownBy(() -> postService.findPost(invalidId))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(NotExistsException.class);
     }
 
     @DisplayName("포스트 전체 목록 조회 - 성공")
@@ -86,7 +87,7 @@ public class PostServiceTest {
         Long invalidId = -1L;
 
         assertThatThrownBy(() -> postService.updatePost(invalidId, postRequest))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(NotExistsException.class);
     }
 
     @DisplayName("ID로 포스트 삭제 - 성공")
@@ -98,7 +99,7 @@ public class PostServiceTest {
         postService.deletePost(createdPostResponse.getId());
 
         assertThatThrownBy(() -> postService.findPost(createdPostResponse.getId()))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(NotExistsException.class);
     }
 
     @DisplayName("ID로 포스트 삭제 - 실패")
@@ -107,7 +108,7 @@ public class PostServiceTest {
         Long invalidId = -1L;
 
         assertThatThrownBy(() -> postService.deletePost(invalidId))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(NotExistsException.class);
     }
 
     @DisplayName("삭제한 ID로 포스트 삭제 - 실패")
@@ -119,6 +120,6 @@ public class PostServiceTest {
         postService.deletePost(createdPostResponse.getId());
 
         assertThatThrownBy(() -> postService.deletePost(createdPostResponse.getId()))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(NotExistsException.class);
     }
 }

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 
 public class PostTest {
 
@@ -13,7 +14,7 @@ public class PostTest {
     void validateLength_OverLength_ThrownException() {
         String overLengthInput = "aaaaaaaaaaaaaaaaaaaaa";
         assertThatThrownBy(() -> new Post(overLengthInput))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(UserInputException.class);
     }
 
     @DisplayName("같은 상태인지 확인")

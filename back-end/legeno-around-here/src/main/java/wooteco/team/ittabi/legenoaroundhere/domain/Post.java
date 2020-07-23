@@ -4,6 +4,7 @@ import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 
 @Entity
 public class Post extends BaseEntity {
@@ -25,7 +26,7 @@ public class Post extends BaseEntity {
 
     private void validateLength(String writing) {
         if (writing.length() > LIMIT_LENGTH) {
-            throw new IllegalArgumentException(LIMIT_LENGTH + "글자를 초과했습니다!");
+            throw new UserInputException(LIMIT_LENGTH + "글자를 초과했습니다!");
         }
     }
 

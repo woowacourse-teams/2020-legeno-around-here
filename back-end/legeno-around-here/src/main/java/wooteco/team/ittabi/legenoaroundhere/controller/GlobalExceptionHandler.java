@@ -6,13 +6,21 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import wooteco.team.ittabi.legenoaroundhere.dto.ErrorResponse;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
+import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 
 @RestControllerAdvice(annotations = RestController.class)
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleNotFound(IllegalArgumentException e) {
+    @ExceptionHandler(NotExistsException.class)
+    public ResponseEntity<ErrorResponse> handleNotFound(NotExistsException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(UserInputException.class)
+    public ResponseEntity<ErrorResponse> HandleBadRequest(UserInputException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(new ErrorResponse(e.getMessage()));
     }
 

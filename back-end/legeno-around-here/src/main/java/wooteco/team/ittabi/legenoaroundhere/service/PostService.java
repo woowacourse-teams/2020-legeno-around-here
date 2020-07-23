@@ -8,6 +8,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.State;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 
 @Transactional
@@ -32,9 +33,9 @@ public class PostService {
 
     private Post findNotDeletedPost(Long id) {
         Post post = postRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("ID에 해당하는 POST가 없습니다."));
+            .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
         if (post.isSameState(State.DELETED)) {
-            throw new IllegalArgumentException("삭제된 POST 입니다!");
+            throw new NotExistsException("삭제된 POST 입니다!");
         }
         return post;
     }
@@ -48,7 +49,7 @@ public class PostService {
 
     public void updatePost(Long id, PostRequest postRequest) {
         Post post = postRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("ID에 해당하는 POST가 없습니다."));
+            .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
         post.setWriting(postRequest.getWriting());
     }
 
