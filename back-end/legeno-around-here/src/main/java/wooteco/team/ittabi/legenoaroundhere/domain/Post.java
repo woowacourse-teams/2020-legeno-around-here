@@ -9,7 +9,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 @Entity
 public class Post extends BaseEntity {
 
-    private static final int LIMIT_LENGTH = 20;
+    private static final int MAX_LENGTH = 20;
 
     private String writing;
     @Enumerated(EnumType.STRING)
@@ -25,8 +25,8 @@ public class Post extends BaseEntity {
     }
 
     private void validateLength(String writing) {
-        if (writing.length() > LIMIT_LENGTH) {
-            throw new UserInputException(LIMIT_LENGTH + "글자를 초과했습니다!");
+        if (writing.length() > MAX_LENGTH) {
+            throw new UserInputException(MAX_LENGTH + "글자를 초과했습니다!");
         }
     }
 
