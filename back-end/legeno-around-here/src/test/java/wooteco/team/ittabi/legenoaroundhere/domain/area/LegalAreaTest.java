@@ -40,6 +40,7 @@ class LegalAreaTest {
             .hasMessage(LegalArea.INVALID_SIZE_ERROR);
     }
 
+    @DisplayName("다양한 Region의 조합에서 가장 작은 단위의 Region 조회")
     @ParameterizedTest
     @MethodSource("getCasesForGetSmallestRegion")
     void getSmallestRegion_SmallestRegion(Map<RegionDepth, Region> regions,

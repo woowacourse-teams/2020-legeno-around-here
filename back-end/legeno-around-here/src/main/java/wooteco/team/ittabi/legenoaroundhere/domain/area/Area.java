@@ -5,21 +5,21 @@ import java.util.Map;
 abstract class Area {
 
     private static final int MIN_SIZE = 1;
+    private static final int STANDARD_FOR_COMPARE = 0;
     static final String INVALID_SIZE_ERROR = String
         .format("region의 갯수가 최소 갯수인 %d보다 작습니다.", MIN_SIZE);
 
     private final Map<RegionDepth, Region> regions;
 
-    protected Area(
-        Map<RegionDepth, Region> regions) {
+    protected Area(Map<RegionDepth, Region> regions) {
         validate(regions);
         this.regions = regions;
     }
 
     Region getSmallestRegion() {
         RegionDepth smallestRegionDepth = regions.keySet().stream()
-            .reduce((depth1, depth2) -> depth1.compareTo(depth2) > 0 ? depth1 : depth2)
-            .orElseThrow(() -> new IllegalStateException());
+            .reduce((depth1, depth2) -> depth1.compareTo(depth2) > STANDARD_FOR_COMPARE ? depth1 : depth2)
+            .orElseThrow(() -> new IllegalStateException("Region이 존재하지 않습니다."));
         return regions.get(smallestRegionDepth);
     }
 
@@ -31,5 +31,12 @@ abstract class Area {
 
     private boolean isNotValidSize(Map<RegionDepth, Region> regions) {
         return regions.size() < MIN_SIZE;
+    }
+
+    @Override
+    public String toString() {
+        return "Area{" +
+            "regions=" + regions +
+            '}';
     }
 }

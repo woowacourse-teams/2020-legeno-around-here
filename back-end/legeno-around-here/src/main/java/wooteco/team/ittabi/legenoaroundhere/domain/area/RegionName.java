@@ -18,8 +18,7 @@ public class RegionName {
 
     private void validateLength(String name) {
         if (name.length() < MIN_LENGTH || MAX_LENGTH < name.length()) {
-            throw new IllegalArgumentException(
-                INVALID_LENGTH_ERROR);
+            throw new IllegalArgumentException(INVALID_LENGTH_ERROR);
         }
     }
 
@@ -38,5 +37,12 @@ public class RegionName {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    @Override
+    public String toString() {
+        return "RegionName{" +
+            "name='" + name + '\'' +
+            '}';
     }
 }
