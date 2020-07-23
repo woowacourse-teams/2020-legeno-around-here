@@ -9,6 +9,7 @@ import javax.persistence.Embeddable;
 public class Email {
 
     private static final String EMAIL_FORMAT = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_FORMAT);
 
     private String email;
 
@@ -32,11 +33,34 @@ public class Email {
     }
 
     private void validateFormat(String email) {
-        Pattern pattern = Pattern.compile(EMAIL_FORMAT);
-        Matcher matcher = pattern.matcher(email);
+        Matcher matcher = EMAIL_PATTERN.matcher(email);
 
         if (!matcher.matches()) {
             throw new IllegalArgumentException("이메일 형식이 잘못됐습니다.");
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Email email1 = (Email) o;
+        return Objects.equals(email, email1.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email);
+    }
+
+    @Override
+    public String toString() {
+        return "Email{" +
+            "email='" + email + '\'' +
+            '}';
     }
 }

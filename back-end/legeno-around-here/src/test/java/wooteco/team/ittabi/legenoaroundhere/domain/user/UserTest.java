@@ -24,24 +24,4 @@ class UserTest {
 
         assertThat(new User(email, nickname, password)).isInstanceOf(User.class);
     }
-
-    @ParameterizedTest
-    @DisplayName("생성자 테스트 - null이 존재할 때")
-    @MethodSource("getNullInput")
-    void constructor_IfExistNull_ThrowException(Email email, Nickname nickname, Password password) {
-        assertThatThrownBy(() -> new User(email, nickname, password))
-            .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    private static Stream<Arguments> getNullInput() {
-        return Stream.of(
-            Arguments.of(null, new Nickname(TEST_NAME), new Password(TEST_PASSWORD)),
-            Arguments.of(new Email(TEST_EMAIL), null, new Password(TEST_PASSWORD)),
-            Arguments.of(new Email(TEST_EMAIL), new Nickname(TEST_NAME), null),
-            Arguments.of(new Email(TEST_EMAIL), null, null),
-            Arguments.of(null, new Nickname(TEST_NAME), null),
-            Arguments.of(null, null, new Password(TEST_PASSWORD)),
-            Arguments.of(null, null, null)
-        );
-    }
 }

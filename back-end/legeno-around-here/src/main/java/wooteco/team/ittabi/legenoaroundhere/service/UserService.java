@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
+import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
@@ -13,7 +14,9 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User createUser(User user) {
-        return userRepository.save(user);
+    @Transactional
+    public Long createUser(User user) {
+        User persistUser = userRepository.save(user);
+        return persistUser.getId();
     }
 }

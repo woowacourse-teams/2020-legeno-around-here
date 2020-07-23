@@ -44,10 +44,7 @@ class UserControllerTest {
     @Test
     @DisplayName("회원 가입 요청/응답 테스트")
     public void join() throws Exception {
-        User mockUser = mock(User.class);
-        given(mockUser.getId()).willReturn(TEST_ID);
-
-        given(userService.createUser(any())).willReturn(mockUser);
+        given(userService.createUser(any())).willReturn(TEST_ID);
 
         String inputJson = "{\"email\":\"" + TEST_EMAIL + "\"," +
             "\"nickname\":\"" + TEST_NAME + "\"," +

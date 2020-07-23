@@ -36,4 +36,28 @@ public class Password {
                 "비밀번호는 " + MIN_LENGTH + " ~ " + MAX_LENGTH + " 자여야 합니다.");
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Password password1 = (Password) o;
+        return Objects.equals(password, password1.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(password);
+    }
+
+    @Override
+    public String toString() {
+        return "Password{" +
+            "password='" + password + '\'' +
+            '}';
+    }
 }

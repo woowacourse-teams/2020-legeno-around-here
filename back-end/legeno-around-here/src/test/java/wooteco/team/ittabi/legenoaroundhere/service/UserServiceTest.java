@@ -2,6 +2,7 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_ID;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_PASSWORD;
 
@@ -30,8 +31,8 @@ class UserServiceTest {
         Password password = new Password(TEST_PASSWORD);
 
         User user = new User(email, nickname, password);
-        User persistUser = userService.createUser(user);
+        Long userId = userService.createUser(user);
 
-        assertThat(persistUser).isNotNull();
+        assertThat(userId).isEqualTo(TEST_ID);
     }
 }
