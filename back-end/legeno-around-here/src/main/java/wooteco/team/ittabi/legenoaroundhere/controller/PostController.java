@@ -28,31 +28,41 @@ public class PostController {
     @PostMapping
     public ResponseEntity<Void> createPost(@RequestBody PostRequest postRequest) {
         Long postId = postService.createPost(postRequest).getId();
-        return ResponseEntity.created(URI.create("/posts/" + postId)).build();
+        return ResponseEntity
+            .created(URI.create("/posts/" + postId))
+            .build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PostResponse> findPost(@PathVariable Long id) {
         PostResponse post = postService.findPost(id);
-        return ResponseEntity.ok().body(post);
+        return ResponseEntity
+            .ok()
+            .body(post);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updatePost(@PathVariable Long id,
         @RequestBody PostRequest postRequest) {
         postService.updatePost(id, postRequest);
-        return ResponseEntity.ok().build();
+        return ResponseEntity
+            .ok()
+            .build();
     }
 
     @GetMapping
     public ResponseEntity<List<PostResponse>> findAllPost() {
         List<PostResponse> posts = postService.findAllPost();
-        return ResponseEntity.ok().body(posts);
+        return ResponseEntity
+            .ok()
+            .body(posts);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable Long id) {
         postService.deletePost(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity
+            .noContent()
+            .build();
     }
 }
