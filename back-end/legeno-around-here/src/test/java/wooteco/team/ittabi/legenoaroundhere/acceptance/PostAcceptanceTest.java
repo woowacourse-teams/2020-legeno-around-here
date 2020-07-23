@@ -72,8 +72,8 @@ public class PostAcceptanceTest {
         // 삭제
         deletePost(id);
         findNotExistsPost(id);
-        List<PostResponse> postResponses2 = findAllPost();
-        assertThat(postResponses2).hasSize(0);
+        List<PostResponse> foundPostResponses = findAllPost();
+        assertThat(foundPostResponses).hasSize(0);
     }
 
     private void findNotExistsPost(Long id) {
