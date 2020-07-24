@@ -1,0 +1,19 @@
+version: '3.3'
+
+services:
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_DATABASE: legeno-around-here
+      MYSQL_USER: ittabi
+      MYSQL_ROOT_PASSWORD: ittabi
+      MYSQL_PASSWORD: ittabi
+    volumes:
+      - data:/var/lib/mysql
+    container_name: mysql
+    ports:
+      - 3306:3306
+volumes:
+  data:

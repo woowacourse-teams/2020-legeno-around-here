@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/ittabi
+    url: jdbc:mysql://localhost:3306/legeno-around-here
     username: ittabi
     password: ittabi
   jpa:
