@@ -5,7 +5,6 @@ import java.util.Map;
 abstract class Area {
 
     private static final int MIN_SIZE = 1;
-    private static final int STANDARD_FOR_COMPARE = 0;
     static final String INVALID_SIZE_ERROR = String
         .format("region의 갯수가 최소 갯수인 %d보다 작습니다.", MIN_SIZE);
 
@@ -18,7 +17,7 @@ abstract class Area {
 
     Region getSmallestRegion() {
         RegionDepth smallestRegionDepth = regions.keySet().stream()
-            .reduce((depth1, depth2) -> depth1.compareTo(depth2) > STANDARD_FOR_COMPARE ? depth1 : depth2)
+            .max(RegionDepth::compareTo)
             .orElseThrow(() -> new IllegalStateException("Region이 존재하지 않습니다."));
         return regions.get(smallestRegionDepth);
     }
