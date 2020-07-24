@@ -1,14 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptanceTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_NAME;
-import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_PASSWORD;
-
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +9,12 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserAcceptanceTest {
@@ -64,13 +63,13 @@ public class UserAcceptanceTest {
         assertThat(location).matches(USER_LOCATION_FORMAT);
 
         // Todo: 로그인
-        
+
         // Todo: 내 정보 조회
-        
+
         // Todo: 내 정보 수정
-        
+
         // Todo: 로그아웃
-        
+
         // Todo: 회원 탈퇴
     }
 
@@ -80,16 +79,16 @@ public class UserAcceptanceTest {
         params.put("nickname", nickname);
         params.put("password", password);
 
-        return
-            given().
-                body(params).
-                contentType(MediaType.APPLICATION_JSON_VALUE).
-                accept(MediaType.APPLICATION_JSON_VALUE).
-            when().
-                post("/join").
-            then().
-                statusCode(HttpStatus.CREATED.value()).
-                extract().header("Location");
+        return given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/join")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract()
+            .header("Location");
     }
 
     private TokenResponse login(String email, String password) {
@@ -97,16 +96,14 @@ public class UserAcceptanceTest {
         params.put("email", email);
         params.put("password", password);
 
-        return
-            given().
-                body(params).
-                contentType(MediaType.APPLICATION_JSON_VALUE).
-                accept(MediaType.APPLICATION_JSON_VALUE).
-            when().
-                post("/login").
-            then().
-                log().all().
-                statusCode(HttpStatus.OK.value()).
-                extract().as(TokenResponse.class);
+        return given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/login")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract().as(TokenResponse.class);
     }
 }

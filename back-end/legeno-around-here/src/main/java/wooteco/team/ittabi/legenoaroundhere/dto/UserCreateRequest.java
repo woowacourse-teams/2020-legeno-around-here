@@ -11,7 +11,7 @@ public class UserCreateRequest {
     private String nickname;
     private String password;
 
-    public UserCreateRequest() {
+    private UserCreateRequest() {
     }
 
     public UserCreateRequest(String email, String nickname, String password) {
