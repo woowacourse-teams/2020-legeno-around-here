@@ -4,8 +4,7 @@ import java.util.Map;
 
 public class LegalArea extends Area {
 
-    public LegalArea(
-        Map<RegionDepth, Region> regions) {
+    public LegalArea(Map<RegionDepth, Region> regions) {
         super(regions);
     }
 }
