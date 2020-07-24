@@ -12,6 +12,7 @@ public class Post extends BaseEntity {
     private static final int MAX_LENGTH = 20;
 
     private String writing;
+
     @Enumerated(EnumType.STRING)
     private State state;
 
