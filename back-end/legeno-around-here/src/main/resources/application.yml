@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/ittabi
+    username: ittabi
+    password: ittabi
+  jpa:
+    hibernate:
+      ddl-auto: create
+security:
+  jwt:
+    token:
+      secret-key: hihirachsecretkey
+      expire_length: 3600000
