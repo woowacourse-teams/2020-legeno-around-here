@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_ID;
-import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_PASSWORD;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -32,10 +32,10 @@ class UserControllerTest {
     @MockBean
     protected UserService userService;
 
-    protected MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @BeforeEach
-    public void setUp(WebApplicationContext webApplicationContext) {
+    void setUp(WebApplicationContext webApplicationContext) {
         this.mockMvc = MockMvcBuilders
             .webAppContextSetup(webApplicationContext)
             .build();
@@ -43,11 +43,11 @@ class UserControllerTest {
 
     @Test
     @DisplayName("회원 가입 요청/응답 테스트")
-    public void join() throws Exception {
+    void join() throws Exception {
         given(userService.createUser(any())).willReturn(TEST_ID);
 
         String inputJson = "{\"email\":\"" + TEST_EMAIL + "\"," +
-            "\"nickname\":\"" + TEST_NAME + "\"," +
+            "\"nickname\":\"" + TEST_NICKNAME + "\"," +
             "\"password\":\"" + TEST_PASSWORD + "\"}";
 
         this.mockMvc.perform(post("/join")

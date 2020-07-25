@@ -2,7 +2,11 @@ package wooteco.team.ittabi.legenoaroundhere.domain.user;
 
 import java.util.Objects;
 import javax.persistence.Embeddable;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Embeddable
 public class Nickname {
 

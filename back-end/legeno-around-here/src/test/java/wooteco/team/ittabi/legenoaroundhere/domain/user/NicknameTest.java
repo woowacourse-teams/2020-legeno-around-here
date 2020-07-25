@@ -2,7 +2,7 @@ package wooteco.team.ittabi.legenoaroundhere.domain.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_NICKNAME;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ class NicknameTest {
     @Test
     @DisplayName("생성자 테스트")
     void constructor() {
-        assertThat(new Nickname(TEST_NAME)).isInstanceOf(Nickname.class);
+        assertThat(new Nickname(TEST_NICKNAME)).isInstanceOf(Nickname.class);
     }
 
     @Test

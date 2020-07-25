@@ -20,7 +20,7 @@ public class UserController {
 
     @PostMapping("/join")
     public ResponseEntity<Void> join(@RequestBody UserCreateRequest userCreateRequest) {
-        Long userId = userService.createUser(userCreateRequest.toUser());
+        Long userId = userService.createUser(userCreateRequest);
         return ResponseEntity
             .created(URI.create("/users/" + userId))
             .build();

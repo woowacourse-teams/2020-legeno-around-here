@@ -1,4 +1,4 @@
-package wooteco.team.ittabi.legenoaroundhere.acceptanceTest;
+package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
@@ -24,12 +24,12 @@ public class UserAcceptanceTest {
     @LocalServerPort
     public int port;
 
-    public static RequestSpecification given() {
+    static RequestSpecification given() {
         return RestAssured.given().log().all();
     }
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         RestAssured.port = port;
     }
 
@@ -57,8 +57,8 @@ public class UserAcceptanceTest {
      * Then 회원 탈퇴가 되었다.
      */
     @Test
-    public void manageUser() {
-        String location = createUser(TEST_EMAIL, TEST_NAME, TEST_PASSWORD);
+    void manageUser() {
+        String location = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         // Todo: 내 정보 조회 api 구현 후, 조회가 잘 되는지 확인하는 코드로 바꿀 것.
         assertThat(location).matches(USER_LOCATION_FORMAT);
 
