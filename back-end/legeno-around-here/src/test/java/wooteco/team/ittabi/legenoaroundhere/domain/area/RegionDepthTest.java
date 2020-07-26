@@ -29,5 +29,4 @@ class RegionDepthTest {
             RegionDepth.THREE
         ));
     }
-
 }
