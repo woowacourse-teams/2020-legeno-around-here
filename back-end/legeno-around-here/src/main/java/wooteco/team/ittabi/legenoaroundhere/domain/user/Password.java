@@ -4,6 +4,7 @@ import java.util.Objects;
 import javax.persistence.Embeddable;
 import lombok.Getter;
 import lombok.Setter;
+import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 
 @Getter
 @Setter
@@ -20,7 +21,7 @@ public class Password {
 
     public Password(String password) {
         validate(password);
-        this.password = password; // Todo: Security 적용 할 때 암호화 도입 예정 (bcrypt)
+        this.password = password;
     }
 
     private void validate(String password) {
@@ -29,7 +30,7 @@ public class Password {
 
     private void validateNull(String password) {
         if (Objects.isNull(password)) {
-            throw new IllegalArgumentException("password가 null 입니다.");
+            throw new UserInputException("password가 null 입니다.");
         }
     }
 

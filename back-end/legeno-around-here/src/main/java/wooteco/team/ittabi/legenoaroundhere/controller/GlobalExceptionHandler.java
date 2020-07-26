@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserInputException.class)
-    public ResponseEntity<ErrorResponse> HandleBadRequest(UserInputException e) {
+    public ResponseEntity<ErrorResponse> handleBadRequest(UserInputException e) {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(new ErrorResponse(e.getMessage()));
