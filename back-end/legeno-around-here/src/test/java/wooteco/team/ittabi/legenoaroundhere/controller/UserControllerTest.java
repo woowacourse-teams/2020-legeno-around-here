@@ -3,7 +3,6 @@ package wooteco.team.ittabi.legenoaroundhere.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,7 +21,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 
 @SpringBootTest
@@ -57,4 +55,24 @@ class UserControllerTest {
             .andExpect(status().isCreated())
             .andDo(print());
     }
+
+    @Test
+    @DisplayName("로그인 요청")
+    void login() throws Exception {
+        String inputJson = "{\"email\":\"" + TEST_EMAIL + "\"," +
+            "\"password\":\"" + TEST_PASSWORD + "\"}";
+
+        String responseBody = this.mockMvc.perform(post("/login")
+            .content(inputJson)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+
+        System.out.println(responseBody);
+    }
+
+    // Todo: 로그인 실패 테스트 (ControllerAdvice)
 }

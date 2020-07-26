@@ -6,9 +6,17 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenDecoder;
 
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final JwtTokenDecoder jwtTokenDecoder;
+
+    public WebSecurityConfig(JwtTokenDecoder jwtTokenDecoder) {
+        this.jwtTokenDecoder = jwtTokenDecoder;
+    }
 
     @Bean
     @Override
@@ -26,6 +34,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .authorizeRequests()
             .antMatchers("/users/**").hasRole("USER")
-            .anyRequest().permitAll();
+            .anyRequest().permitAll()
+            .and()
+            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenDecoder),
+                UsernamePasswordAuthenticationFilter.class);;
     }
 }
