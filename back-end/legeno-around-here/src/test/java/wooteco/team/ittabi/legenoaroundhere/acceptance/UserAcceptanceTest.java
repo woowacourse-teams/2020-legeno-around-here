@@ -10,6 +10,7 @@ import io.restassured.specification.RequestSpecification;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -59,6 +60,7 @@ public class UserAcceptanceTest {
      * Then 회원 탈퇴가 되었다.
      */
     @Test
+    @DisplayName("회원 관리")
     void manageUser() {
         String location = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         // Todo: 내 정보 조회 api 구현 후, 조회가 잘 되는지 확인하는 코드로 바꿀 것.
