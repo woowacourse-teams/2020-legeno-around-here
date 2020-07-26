@@ -1,0 +1,64 @@
+branches:
+  only:
+    - master
+    - develop
+    
+matrix:
+  include:
+    - language: java
+      jdk:
+        - openjdk8
+      script:
+        - "cd ./back-end/legeno-around-here"
+        - "chmod +x gradlew"
+        - "./gradlew clean build"
+    - language: node_js
+      node_js:
+        - "node"
+      script:
+        - "cd ./front-end/legeno-around-here"
+        - "yarn upgrade"
+        - "yarn run build"
+             
+before_deploy:
+  - export NOW_PATH=`pwd`
+  - if [[ $NOW_PATH =~ "back-end" ]];then zip -r back-end *;mkdir -p deploy;mv back-end.zip deploy/back-end.zip;export NOW_KEY="back-end.zip";export DEPLOY_GROUP="ittabi-back-group";fi
+  - if [[ $NOW_PATH =~ "front-end" ]];then zip -r front-end *;mkdir -p deploy;mv front-end.zip deploy/front-end.zip;export NOW_KEY="front-end.zip";export DEPLOY_GROUP="ittabi-front-group";fi
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: ittabi-deploy
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: public_read
+    local_dir: deploy
+    wait-until-deployed: true
+    on:
+      repo: woowacourse-teams/2020-legeno-around-here
+      branch: 
+      - master
+      - develop
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: ittabi-deploy
+    key: $NOW_KEY
+    bundle_type: zip
+    application: ittabi
+    deployment_group: $DEPLOY_GROUP
+    region: ap-northeast-2
+    wait-until-deployed: true
+    on:
+      repo: woowacourse-teams/2020-legeno-around-here
+      branch: 
+      - master
+      - develop
+
+notifications:
+  email:
+    on_success: never
+    on_failure: always
+    recipients:
+      - jsahn32@gmail.com
