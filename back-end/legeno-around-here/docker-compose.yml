@@ -3,7 +3,7 @@ version: '3.3'
 services:
   db:
     image: mysql
-    command: --default-authentication-plugin=mysql_native_password --secure-file-priv="" # todo: --secure-file-priv의 폴더명 명시
+    command: --default-authentication-plugin=mysql_native_password --secure-file-priv="/legeno_around_here/provision"
     restart: always
     environment:
       MYSQL_DATABASE: legeno_around_here
@@ -11,7 +11,7 @@ services:
       MYSQL_ROOT_PASSWORD: ittabi
       MYSQL_PASSWORD: ittabi
     volumes:
-      - ./data:/legeno_around_here/data
+      - ../provision:/legeno_around_here/provision
       - data:/var/lib/mysql
     container_name: mysql
     ports:
