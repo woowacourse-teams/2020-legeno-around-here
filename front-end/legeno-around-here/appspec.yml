@@ -3,3 +3,7 @@ os: linux
 files:
   - source:  /
     destination: /home/ubuntu/app/travis/build/front-end
+hooks:
+  AfterInstall:
+    - location: execute-deploy.sh
+      timeout: 180
