@@ -1,14 +1,17 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import wooteco.team.ittabi.legenoaroundhere.domain.Image;
 import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 
 public class PostResponse {
 
     private Long id;
     private String writing;
+    private List<Image> images;
 
     public PostResponse() {
     }
@@ -16,6 +19,13 @@ public class PostResponse {
     public PostResponse(Long id, String writing) {
         this.id = id;
         this.writing = writing;
+        this.images = Collections.emptyList();
+    }
+
+    public PostResponse(Long id, String writing, List<Image> images) {
+        this.id = id;
+        this.writing = writing;
+        this.images = images;
     }
 
     public static PostResponse of(Post post) {
@@ -34,6 +44,10 @@ public class PostResponse {
 
     public String getWriting() {
         return writing;
+    }
+
+    public List<Image> getImages() {
+        return images;
     }
 
     @Override

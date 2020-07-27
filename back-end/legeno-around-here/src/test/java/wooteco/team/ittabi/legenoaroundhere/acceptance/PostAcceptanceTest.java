@@ -4,6 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.restassured.RestAssured;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,8 @@ public class PostAcceptanceTest {
      * <p>
      * When 글을 등록한다. Then 글이 등록되었다.
      * <p>
+     * When 이미지가 포함된 글을 등록한다. Then 이미지가 포함된 글이 등록되었다.
+     * <p>
      * When 글 목록을 조회한다. Then 글 목록을 응답받는다. And 글 목록은 n개이다.
      * <p>
      * When 글을 조회한다. Then 글을 응답 받는다.
@@ -47,11 +50,16 @@ public class PostAcceptanceTest {
     void managePost() {
         // 등록
         String expectedWriting = "글을 등록합니다.";
-        String location = createPost(expectedWriting);
-        Long id = getIdFromUrl(location);
-        PostResponse postResponse = findPost(id);
-        assertThat(postResponse.getId()).isEqualTo(id);
+        String postWithoutImageLocation = createPostWithoutImage(expectedWriting);
+        Long postWithoutImageId = getIdFromUrl(postWithoutImageLocation);
+        PostResponse postResponse = findPost(postWithoutImageId);
+        assertThat(postResponse.getId()).isEqualTo(postWithoutImageId);
         assertThat(postResponse.getWriting()).isEqualTo(expectedWriting);
+
+        // 이미지가 포함된 글 등록
+        PostResponse postWithImageResponse = createPostWithImage(expectedWriting);
+        assertThat(postWithImageResponse.getWriting()).isEqualTo(expectedWriting);
+        assertThat(postWithImageResponse.getImages()).hasSize(2);
 
         // 목록 조회
         List<PostResponse> postResponses = findAllPost();
@@ -59,19 +67,19 @@ public class PostAcceptanceTest {
 
         // 수정
         String writing = "Hello world!!";
-        updatePost(id, writing);
-        PostResponse updatedPostResponse = findPost(id);
-        assertThat(updatedPostResponse.getId()).isEqualTo(id);
+        updatePost(postWithoutImageId, writing);
+        PostResponse updatedPostResponse = findPost(postWithoutImageId);
+        assertThat(updatedPostResponse.getId()).isEqualTo(postWithoutImageId);
         assertThat(updatedPostResponse.getWriting()).isEqualTo(writing);
 
         // 조회
-        PostResponse postFindResponse = findPost(id);
-        assertThat(postFindResponse.getId()).isEqualTo(id);
+        PostResponse postFindResponse = findPost(postWithoutImageId);
+        assertThat(postFindResponse.getId()).isEqualTo(postWithoutImageId);
         assertThat(postFindResponse.getWriting()).isEqualTo(writing);
 
         // 삭제
-        deletePost(id);
-        findNotExistsPost(id);
+        deletePost(postWithoutImageId);
+        findNotExistsPost(postWithoutImageId);
         List<PostResponse> foundPostResponses = findAllPost();
         assertThat(foundPostResponses).hasSize(0);
     }
@@ -135,7 +143,7 @@ public class PostAcceptanceTest {
             .as(PostResponse.class);
     }
 
-    private String createPost(String writing) {
+    private String createPostWithoutImage(String writing) {
         Map<String, String> params = new HashMap<>();
         params.put("writing", writing);
 
@@ -149,5 +157,21 @@ public class PostAcceptanceTest {
             .statusCode(HttpStatus.CREATED.value())
             .extract()
             .header("Location");
+    }
+
+    private PostResponse createPostWithImage(String writing) {
+
+        return given()
+            .formParam("writing", writing)
+            .multiPart("images", new File("src/test/resources/static/images/test1.jpg"))
+            .multiPart("images", new File("src/test/resources/static/images/test2.jpg"))
+            .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/posts/image")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .as(PostResponse.class);
     }
 }
