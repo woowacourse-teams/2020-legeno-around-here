@@ -1,10 +1,12 @@
 package wooteco.team.ittabi.legenoaroundhere.domain;
 
 import java.util.Objects;
+import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-public class Image {
+@Entity
+public class Image extends BaseEntity {
 
     private String name;
 
@@ -14,7 +16,7 @@ public class Image {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    public Image() {
+    protected Image() {
     }
 
     public Image(String name, String url, Post post) {

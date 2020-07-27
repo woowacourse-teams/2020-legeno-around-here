@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wooteco.team.ittabi.legenoaroundhere.domain.Image;
+import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.service.PostService;
@@ -38,7 +39,11 @@ public class PostController {
     @PostMapping("/image")
     public ResponseEntity<PostResponse> createPostWithImage(PostRequest postRequest) {
         PostResponse postResponse = new PostResponse(1L, "글을 등록합니다.",
-            Arrays.asList(new Image(), new Image()));
+            Arrays.asList(
+                new Image("", "", new Post("")),
+                new Image("", "", new Post(""))
+            )
+        );
 
         return ResponseEntity
             .ok()
