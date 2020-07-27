@@ -12,6 +12,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Nickname;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Password;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
+import wooteco.team.ittabi.legenoaroundhere.domain.user.UserRole;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
@@ -38,7 +39,7 @@ public class UserService implements UserDetailsService {
             .email(new Email(userCreateRequest.getEmail()))
             .nickname(new Nickname(userCreateRequest.getNickname()))
             .password(new Password(passwordEncoder.encode(userCreateRequest.getPassword())))
-            .roles(Collections.singletonList("ROLE_USER"))
+            .roles(Collections.singletonList(UserRole.USER.getRoleName()))
             .build());
         return persistUser.getId();
     }

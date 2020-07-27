@@ -55,14 +55,6 @@ public class User implements UserDetails {
         this.nickname = nickname;
         this.password = password;
     }
-//    Todo: roles 컨트롤 할 것
-//    public User(Email email, Nickname nickname, Password password, List<String> roles) {
-//        validate(email, nickname, password);
-//        this.email = email;
-//        this.nickname = nickname;
-//        this.password = password;
-//        this.roles = roles;
-//    }
 
     public String getPasswordByString() {
         return this.password.getPassword();
