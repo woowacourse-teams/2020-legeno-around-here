@@ -1,17 +1,35 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.area;
 
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import lombok.Getter;
+import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 
-class Region {
+@Getter
+@Entity
+public class Region extends BaseEntity {
 
-    private final RegionName name;
+    @Embedded
+    @Column(nullable = false)
+    private RegionName name;
 
-    Region(String name) {
+    @ManyToOne
+    @JoinColumn(name = "area_id")
+    private Area area;
+
+    public Region(String name) {
         this(new RegionName(name));
     }
 
-    Region(RegionName name) {
+    public Region(RegionName name) {
         this.name = name;
+    }
+
+    protected Region() {
     }
 
     @Override
