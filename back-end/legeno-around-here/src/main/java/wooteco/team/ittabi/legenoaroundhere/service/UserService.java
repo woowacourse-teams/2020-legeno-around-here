@@ -45,7 +45,6 @@ public class UserService implements UserDetailsService {
     }
 
     public TokenResponse login(LoginRequest loginRequest) {
-        // Todo: PasswordEncoder 를 config 에서 빈 등록 하도록 수정 해야함
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         User user = userRepository.findByEmail(new Email(loginRequest.getEmail()))
@@ -59,7 +58,6 @@ public class UserService implements UserDetailsService {
             jwtTokenGenerator.createToken(user.getEmailByString(), user.getRoles()));
     }
 
-    // Todo: email 로 find 하는데 메서드 이름이 loadUserByUserName 이어서 이상함..
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(new Email(email))
