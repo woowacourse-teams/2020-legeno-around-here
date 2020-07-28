@@ -1,6 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.domain;
 
 import java.util.Arrays;
+import java.util.Objects;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageExtensionException;
 
@@ -32,7 +33,7 @@ public enum ImageExtension {
     }
 
     private static boolean isSame(MultipartFile file, String extension) {
-        return file.getName()
+        return Objects.requireNonNull(file.getOriginalFilename())
             .toLowerCase()
             .endsWith(extension);
     }

@@ -13,11 +13,13 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
+import wooteco.team.ittabi.legenoaroundhere.aws.AwsS3Config;
+import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
 import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageMimeTypeException;
 
 @DataJpaTest
-@Import(ImageService.class)
+@Import({S3Uploader.class, AwsS3Config.class, ImageService.class})
 public class ImageServiceTest {
 
     @Autowired

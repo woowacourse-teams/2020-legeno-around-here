@@ -3,14 +3,15 @@ package wooteco.team.ittabi.legenoaroundhere.dto;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import wooteco.team.ittabi.legenoaroundhere.domain.Image;
 import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 
 public class PostResponse {
 
     private Long id;
+
     private String writing;
+
     private List<Image> images;
 
     public PostResponse() {
@@ -28,14 +29,8 @@ public class PostResponse {
         this.images = images;
     }
 
-    public static PostResponse of(Post post) {
-        return new PostResponse(post.getId(), post.getWriting());
-    }
-
-    public static List<PostResponse> listOf(List<Post> posts) {
-        return posts.stream()
-            .map(PostResponse::of)
-            .collect(Collectors.toList());
+    public static PostResponse of(Post post, List<Image> images) {
+        return new PostResponse(post.getId(), post.getWriting(), images);
     }
 
     public Long getId() {

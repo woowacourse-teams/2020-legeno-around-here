@@ -9,6 +9,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 public class PostRequest {
 
     private String writing;
+
     private List<MultipartFile> images;
 
     public PostRequest() {
@@ -24,6 +25,10 @@ public class PostRequest {
         this.images = images;
     }
 
+    public boolean isImagesNull() {
+        return Objects.isNull(images);
+    }
+
     public Post toPost() {
         return new Post(writing);
     }
@@ -34,6 +39,14 @@ public class PostRequest {
 
     public List<MultipartFile> getImages() {
         return images;
+    }
+
+    public void setWriting(String writing) {
+        this.writing = writing;
+    }
+
+    public void setImages(List<MultipartFile> images) {
+        this.images = images;
     }
 
     @Override

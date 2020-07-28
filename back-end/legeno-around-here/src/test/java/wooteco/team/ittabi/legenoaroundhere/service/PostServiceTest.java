@@ -3,18 +3,23 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import io.restassured.internal.util.IOUtils;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 
-@DataJpaTest
-@Import(PostService.class)
+@SpringBootTest
 public class PostServiceTest {
 
     @Autowired
@@ -31,6 +36,23 @@ public class PostServiceTest {
 
         assertThat(postResponse.getId()).isNotNull();
         assertThat(postResponse.getWriting()).isEqualTo(expectedWriting);
+    }
+
+    @DisplayName("이미지를 포함한 포스트 생성 - 성공")
+    @Test
+    void createPostWithImage_SuccessToCreate() throws IOException {
+        File file = new File("src/test/resources/static/images/test1.jpg");
+        FileInputStream input = new FileInputStream(file);
+        MultipartFile multipartFile = new MockMultipartFile("test1.jpg",
+            file.getName(), "image/jpg", IOUtils.toByteArray(input));
+
+        PostRequest postRequest = new PostRequest("Hello World",
+            Collections.singletonList(multipartFile));
+
+        PostResponse postResponse = postService.createPost(postRequest);
+
+        assertThat(postResponse.getWriting()).isEqualTo("Hello World");
+        assertThat(postResponse.getImages()).hasSize(1);
     }
 
     @DisplayName("ID로 포스트 조회 - 성공")

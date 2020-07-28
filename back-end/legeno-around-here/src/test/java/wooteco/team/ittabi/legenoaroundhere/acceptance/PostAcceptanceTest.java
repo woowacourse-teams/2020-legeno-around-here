@@ -4,6 +4,8 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.restassured.RestAssured;
+import io.restassured.config.EncoderConfig;
+import io.restassured.config.RestAssuredConfig;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -49,21 +51,24 @@ public class PostAcceptanceTest {
     @Test
     void managePost() {
         // 등록
-        String expectedWriting = "글을 등록합니다.";
+        String expectedWriting = "Hello World";
         String postWithoutImageLocation = createPostWithoutImage(expectedWriting);
         Long postWithoutImageId = getIdFromUrl(postWithoutImageLocation);
-        PostResponse postResponse = findPost(postWithoutImageId);
-        assertThat(postResponse.getId()).isEqualTo(postWithoutImageId);
-        assertThat(postResponse.getWriting()).isEqualTo(expectedWriting);
+        PostResponse postWithoutImageResponse = findPost(postWithoutImageId);
+        assertThat(postWithoutImageResponse.getId()).isEqualTo(postWithoutImageId);
+        assertThat(postWithoutImageResponse.getWriting()).isEqualTo(expectedWriting);
 
         // 이미지가 포함된 글 등록
-        PostResponse postWithImageResponse = createPostWithImage(expectedWriting);
+        String postWithImageLocation = createPostWithImage(expectedWriting);
+        Long postWithImageId = getIdFromUrl(postWithImageLocation);
+        PostResponse postWithImageResponse = findPost(postWithImageId);
+        assertThat(postWithImageResponse.getId()).isEqualTo(postWithImageId);
         assertThat(postWithImageResponse.getWriting()).isEqualTo(expectedWriting);
         assertThat(postWithImageResponse.getImages()).hasSize(2);
 
         // 목록 조회
         List<PostResponse> postResponses = findAllPost();
-        assertThat(postResponses).hasSize(1);
+        assertThat(postResponses).hasSize(2);
 
         // 수정
         String writing = "Hello world!!";
@@ -81,7 +86,7 @@ public class PostAcceptanceTest {
         deletePost(postWithoutImageId);
         findNotExistsPost(postWithoutImageId);
         List<PostResponse> foundPostResponses = findAllPost();
-        assertThat(foundPostResponses).hasSize(0);
+        assertThat(foundPostResponses).hasSize(1);
     }
 
     private void findNotExistsPost(Long id) {
@@ -144,13 +149,11 @@ public class PostAcceptanceTest {
     }
 
     private String createPostWithoutImage(String writing) {
-        Map<String, String> params = new HashMap<>();
-        params.put("writing", writing);
 
         return given()
-            .body(params)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .formParam("writing", writing)
+            .config(RestAssuredConfig.config()
+                .encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
             .when()
             .post("/posts")
             .then()
@@ -159,19 +162,20 @@ public class PostAcceptanceTest {
             .header("Location");
     }
 
-    private PostResponse createPostWithImage(String writing) {
+    private String createPostWithImage(String writing) {
 
+        // TODO: 2020/07/28 한글이 안 나오는 문제
         return given()
+            .config(RestAssuredConfig.config()
+                .encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
             .formParam("writing", writing)
             .multiPart("images", new File("src/test/resources/static/images/test1.jpg"))
             .multiPart("images", new File("src/test/resources/static/images/test2.jpg"))
-            .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
             .when()
-            .post("/posts/image")
+            .post("/posts")
             .then()
-            .statusCode(HttpStatus.OK.value())
+            .statusCode(HttpStatus.CREATED.value())
             .extract()
-            .as(PostResponse.class);
+            .header("Location");
     }
 }

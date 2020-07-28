@@ -1,7 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
 import java.net.URI;
-import java.util.Arrays;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,8 +11,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import wooteco.team.ittabi.legenoaroundhere.domain.Image;
-import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.service.PostService;
@@ -29,25 +26,11 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createPost(@RequestBody PostRequest postRequest) {
+    public ResponseEntity<Void> createPost(PostRequest postRequest) {
         Long postId = postService.createPost(postRequest).getId();
         return ResponseEntity
             .created(URI.create("/posts/" + postId))
             .build();
-    }
-
-    @PostMapping("/image")
-    public ResponseEntity<PostResponse> createPostWithImage(PostRequest postRequest) {
-        PostResponse postResponse = new PostResponse(1L, "글을 등록합니다.",
-            Arrays.asList(
-                new Image("", "", new Post("")),
-                new Image("", "", new Post(""))
-            )
-        );
-
-        return ResponseEntity
-            .ok()
-            .body(postResponse);
     }
 
     @GetMapping("/{id}")
