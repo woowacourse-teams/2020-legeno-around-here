@@ -16,10 +16,10 @@ class RegionRepositoryTest {
     @Autowired
     private RegionRepository regionRepository;
 
-    @DisplayName("regionName을 활용한 Region 생성")
+    @DisplayName("regionName을 활용한 Region 저장")
     @ParameterizedTest
     @ValueSource(strings = {"서울시", "서대문구", "홍제동"})
-    void save_validRegionName_Region(String regionName) {
+    void save(String regionName) {
         Region region = new Region(regionName);
         assertThat(region.getId()).isNull();
         assertThat(region.getArea()).isNull();
