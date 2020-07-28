@@ -9,7 +9,7 @@ public class LegalArea extends Area {
     protected LegalArea() {
     }
 
-    public LegalArea(Map<RegionDepth, Region> regions) {
+    public LegalArea(Map<RegionDepth, RegionalRelationship> regions) {
         super(regions);
     }
 }

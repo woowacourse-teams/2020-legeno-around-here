@@ -19,42 +19,43 @@ public class Area extends BaseEntity {
 
     @OneToMany(mappedBy = "area")
     @MapKeyEnumerated(EnumType.STRING)
-    public final Map<RegionDepth, Region> regions;
+    public final Map<RegionDepth, RegionalRelationship> regions;
 
     protected Area() {
         this.regions = new HashMap<>();
     }
 
-    protected Area(Map<RegionDepth, Region> regions) {
+    protected Area(Map<RegionDepth, RegionalRelationship> regions) {
         validate(regions);
         this.regions = regions;
     }
 
-    Region getSmallestRegion() {
+    //todo: check
+    RegionalRelationship getSmallestRegion() {
         RegionDepth smallestRegionDepth = regions.keySet().stream()
             .max(RegionDepth::compareTo)
             .orElseThrow(() -> new IllegalStateException("Region이 존재하지 않습니다."));
         return regions.get(smallestRegionDepth);
     }
 
-    private void validate(Map<RegionDepth, Region> regions) {
+    private void validate(Map<RegionDepth, RegionalRelationship> regions) {
         validateNull(regions);
         validateSize(regions);
     }
 
-    private void validateNull(Map<RegionDepth, Region> regions) {
+    private void validateNull(Map<RegionDepth, RegionalRelationship> regions) {
         if (Objects.isNull(regions)) {
             throw new IllegalArgumentException(NOT_ALLOWED_NULL);
         }
     }
 
-    private void validateSize(Map<RegionDepth, Region> regions) {
+    private void validateSize(Map<RegionDepth, RegionalRelationship> regions) {
         if (isNotValidSize(regions)) {
             throw new IllegalArgumentException(INVALID_SIZE_ERROR);
         }
     }
 
-    private boolean isNotValidSize(Map<RegionDepth, Region> regions) {
+    private boolean isNotValidSize(Map<RegionDepth, RegionalRelationship> regions) {
         return regions.size() < MIN_SIZE;
     }
 
