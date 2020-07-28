@@ -23,7 +23,8 @@ public enum ImageExtension {
 
     public static void validateImageExtension(MultipartFile file) {
         if (noneMatchImageExtension(file)) {
-            throw new NotImageExtensionException(file.getName() + "은/는 이미지 파일에 맞는 확장자가 아닙니다!");
+            throw new NotImageExtensionException(
+                file.getOriginalFilename() + "은/는 이미지 파일에 맞는 확장자가 아닙니다!");
         }
     }
 

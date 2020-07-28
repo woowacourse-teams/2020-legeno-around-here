@@ -18,6 +18,7 @@ import wooteco.team.ittabi.legenoaroundhere.repository.ImageRepository;
 public class ImageService {
 
     public static final String IMAGE_TYPE = "image";
+    public static final String IMAGE_DIR = "images";
 
     private final ImageRepository imageRepository;
     private final S3Uploader s3Uploader;
@@ -29,7 +30,7 @@ public class ImageService {
 
     public Image save(MultipartFile multipartFile, Post post) {
         validateImage(multipartFile);
-        String imageUrl = s3Uploader.upload(multipartFile, "images");
+        String imageUrl = s3Uploader.upload(multipartFile, IMAGE_DIR);
         Image image = new Image(multipartFile.getName(), imageUrl, post);
         return imageRepository.save(image);
     }
