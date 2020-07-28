@@ -11,7 +11,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 @Getter
 @Entity
 @Table(name = "regional_relationship")
-class RegionalRelationship extends BaseEntity {
+public class RegionalRelationship extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "area_id", nullable = false)
@@ -24,7 +24,7 @@ class RegionalRelationship extends BaseEntity {
     protected RegionalRelationship() {
     }
 
-    RegionalRelationship(Area area, Region region) {
+    public RegionalRelationship(Area area, Region region) {
         validate(area, region);
         this.area = area;
         this.region = region;
