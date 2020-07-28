@@ -15,7 +15,6 @@ class JwtTokenGeneratorTest {
 
     private static final int MIN_SIZE = 1;
 
-    //Todo: lombok 으로 하자 ㅎㅎ
     @Autowired
     JwtTokenGenerator jwtTokenGenerator;
 

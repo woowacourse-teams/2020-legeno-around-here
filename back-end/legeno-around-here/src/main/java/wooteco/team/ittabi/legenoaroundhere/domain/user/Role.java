@@ -1,13 +1,13 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.user;
 
-public enum UserRole {
-    USER("USER"),
-    REPORTED_USER("REPORTED_USER"),
-    ADMIN("ADMIN");
+public enum Role {
+    USER("ROLE_USER"),
+    REPORTED_USER("ROLE_REPORTED_USER"),
+    ADMIN("ROLE_ADMIN");
 
     private String roleName;
 
-    UserRole(String roleName) {
+    Role(String roleName) {
         this.roleName = roleName;
     }
 
