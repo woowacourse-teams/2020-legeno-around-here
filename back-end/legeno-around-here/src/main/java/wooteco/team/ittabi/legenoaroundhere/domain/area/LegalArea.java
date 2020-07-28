@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 @Entity
 public class LegalArea extends Area {
 
-    protected LegalArea() {
+    public LegalArea() {
     }
 
     public LegalArea(Map<RegionDepth, RegionalRelationship> regions) {

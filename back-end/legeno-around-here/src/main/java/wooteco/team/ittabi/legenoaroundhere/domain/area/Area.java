@@ -19,23 +19,24 @@ public class Area extends BaseEntity {
 
     @OneToMany(mappedBy = "area")
     @MapKeyEnumerated(EnumType.STRING)
-    public final Map<RegionDepth, RegionalRelationship> regions;
+    public final Map<RegionDepth, RegionalRelationship> regionalRelationships;
 
     protected Area() {
-        this.regions = new HashMap<>();
+        this.regionalRelationships = new HashMap<>();
     }
 
-    protected Area(Map<RegionDepth, RegionalRelationship> regions) {
-        validate(regions);
-        this.regions = regions;
+    protected Area(Map<RegionDepth, RegionalRelationship> regionalRelationships) {
+        validate(regionalRelationships);
+        this.regionalRelationships = regionalRelationships;
     }
 
     //todo: check
-    RegionalRelationship getSmallestRegion() {
-        RegionDepth smallestRegionDepth = regions.keySet().stream()
+    Region getSmallestRegion() {
+        RegionDepth smallestRegionDepth = regionalRelationships.keySet().stream()
             .max(RegionDepth::compareTo)
             .orElseThrow(() -> new IllegalStateException("Region이 존재하지 않습니다."));
-        return regions.get(smallestRegionDepth);
+        RegionalRelationship regionalRelationship = regionalRelationships.get(smallestRegionDepth);
+        return regionalRelationship.getRegion();
     }
 
     private void validate(Map<RegionDepth, RegionalRelationship> regions) {
@@ -62,7 +63,7 @@ public class Area extends BaseEntity {
     @Override
     public String toString() {
         return "Area{" +
-            "regions=" + regions +
+            "regions=" + regionalRelationships +
             '}';
     }
 }

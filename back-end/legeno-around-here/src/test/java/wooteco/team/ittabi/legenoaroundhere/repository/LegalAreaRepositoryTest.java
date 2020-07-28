@@ -21,12 +21,7 @@ class LegalAreaRepositoryTest {
     @DisplayName("LegalArea 저장")
     @Test
     void save() {
-        Map<RegionDepth, Region> regions = new HashMap<RegionDepth, Region>() {{
-            put(RegionDepth.ONE, new Region("서울시"));
-            put(RegionDepth.TWO, new Region("서대문구"));
-            put(RegionDepth.THREE, new Region("홍제동"));
-        }};
-        LegalArea legalArea = new LegalArea(regions);
+        LegalArea legalArea = new LegalArea();
         assertThat(legalArea.getId()).isNull();
 
         legalArea = legalAreaRepository.save(legalArea);
