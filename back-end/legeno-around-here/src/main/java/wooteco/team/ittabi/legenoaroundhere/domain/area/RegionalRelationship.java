@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.area;
 
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -13,12 +14,10 @@ import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 class RegionalRelationship extends BaseEntity {
 
     @ManyToOne
-    //todo: check
     @JoinColumn(name = "area_id", nullable = false)
     private Area area;
 
     @ManyToOne
-    //todo: check
     @JoinColumn(name = "region_id", nullable = false)
     private Region region;
 
@@ -26,8 +25,14 @@ class RegionalRelationship extends BaseEntity {
     }
 
     RegionalRelationship(Area area, Region region) {
-        //todo: validateNull
+        validate(area, region);
         this.area = area;
         this.region = region;
+    }
+
+    private void validate(Area area, Region region) {
+        if (Objects.isNull(area) || Objects.isNull(region)) {
+            throw new IllegalArgumentException(String.format("%s 혹은 %s가 null 입니다.", area, region));
+        }
     }
 }
