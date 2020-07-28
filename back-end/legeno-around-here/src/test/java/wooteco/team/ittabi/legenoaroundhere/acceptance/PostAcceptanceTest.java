@@ -1,10 +1,12 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
 import static io.restassured.RestAssured.given;
+import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.TEST_IMAGE_DIR;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostTestConstants.TEST_WRITING;
 
 import io.restassured.RestAssured;
-import io.restassured.config.EncoderConfig;
 import io.restassured.config.RestAssuredConfig;
 import java.io.File;
 import java.util.HashMap;
@@ -50,20 +52,20 @@ public class PostAcceptanceTest {
     @DisplayName("글 관리")
     @Test
     void managePost() {
-        // 등록
-        String expectedWriting = "Hello World";
-        String postWithoutImageLocation = createPostWithoutImage(expectedWriting);
+
+        // 이미지가 포함되지 않은 글 등록
+        String postWithoutImageLocation = createPostWithoutImage();
         Long postWithoutImageId = getIdFromUrl(postWithoutImageLocation);
         PostResponse postWithoutImageResponse = findPost(postWithoutImageId);
         assertThat(postWithoutImageResponse.getId()).isEqualTo(postWithoutImageId);
-        assertThat(postWithoutImageResponse.getWriting()).isEqualTo(expectedWriting);
+        assertThat(postWithoutImageResponse.getWriting()).isEqualTo(TEST_WRITING);
 
         // 이미지가 포함된 글 등록
-        String postWithImageLocation = createPostWithImage(expectedWriting);
+        String postWithImageLocation = createPostWithImage();
         Long postWithImageId = getIdFromUrl(postWithImageLocation);
         PostResponse postWithImageResponse = findPost(postWithImageId);
         assertThat(postWithImageResponse.getId()).isEqualTo(postWithImageId);
-        assertThat(postWithImageResponse.getWriting()).isEqualTo(expectedWriting);
+        assertThat(postWithImageResponse.getWriting()).isEqualTo(TEST_WRITING);
         assertThat(postWithImageResponse.getImages()).hasSize(2);
 
         // 목록 조회
@@ -71,16 +73,16 @@ public class PostAcceptanceTest {
         assertThat(postResponses).hasSize(2);
 
         // 수정
-        String writing = "Hello world!!";
-        updatePost(postWithoutImageId, writing);
+        String updatedWriting = "BingBong and Jamie";
+        updatePost(postWithoutImageId, updatedWriting);
         PostResponse updatedPostResponse = findPost(postWithoutImageId);
         assertThat(updatedPostResponse.getId()).isEqualTo(postWithoutImageId);
-        assertThat(updatedPostResponse.getWriting()).isEqualTo(writing);
+        assertThat(updatedPostResponse.getWriting()).isEqualTo(updatedWriting);
 
         // 조회
         PostResponse postFindResponse = findPost(postWithoutImageId);
         assertThat(postFindResponse.getId()).isEqualTo(postWithoutImageId);
-        assertThat(postFindResponse.getWriting()).isEqualTo(writing);
+        assertThat(postFindResponse.getWriting()).isEqualTo(updatedWriting);
 
         // 삭제
         deletePost(postWithoutImageId);
@@ -148,12 +150,13 @@ public class PostAcceptanceTest {
             .as(PostResponse.class);
     }
 
-    private String createPostWithoutImage(String writing) {
+    private String createPostWithoutImage() {
 
         return given()
-            .formParam("writing", writing)
+            .log().all()
+            .formParam("writing", TEST_WRITING)
             .config(RestAssuredConfig.config()
-                .encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
+                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
             .when()
             .post("/posts")
             .then()
@@ -162,15 +165,16 @@ public class PostAcceptanceTest {
             .header("Location");
     }
 
-    private String createPostWithImage(String writing) {
+    private String createPostWithImage() {
 
-        // TODO: 2020/07/28 한글이 안 나오는 문제
+        // TODO: 2020/07/28 이미지를 포함했을 때 한글이 안 나오는 문제
         return given()
+            .log().all()
+            .formParam("writing", TEST_WRITING)
             .config(RestAssuredConfig.config()
-                .encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8")))
-            .formParam("writing", writing)
-            .multiPart("images", new File("src/test/resources/static/images/test1.jpg"))
-            .multiPart("images", new File("src/test/resources/static/images/test2.jpg"))
+                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+            .multiPart("images", new File(TEST_IMAGE_DIR + "right_image1.jpg"))
+            .multiPart("images", new File(TEST_IMAGE_DIR + "right_image2.jpg"))
             .when()
             .post("/posts")
             .then()

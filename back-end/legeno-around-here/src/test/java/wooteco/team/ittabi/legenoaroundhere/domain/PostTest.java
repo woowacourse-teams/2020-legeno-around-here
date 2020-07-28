@@ -2,6 +2,7 @@ package wooteco.team.ittabi.legenoaroundhere.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostTestConstants.TEST_WRITING;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ public class PostTest {
     @DisplayName("같은 상태인지 확인")
     @Test
     void isSameState_SameState_True() {
-        Post post = new Post("Hello!");
+        Post post = new Post(TEST_WRITING);
         post.setState(State.DELETED);
 
         assertThat(post.isSameState(State.DELETED)).isTrue();
@@ -29,7 +30,7 @@ public class PostTest {
     @DisplayName("다른 상태인지 확인")
     @Test
     void isNotSameState_DifferentState_True() {
-        Post post = new Post("Hello!");
+        Post post = new Post(TEST_WRITING);
         post.setState(State.DELETED);
 
         assertThat(post.isNotSameState(State.PUBLISHED)).isTrue();

@@ -2,63 +2,83 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.TEST_IMAGE_CONTENT_TYPE;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostTestConstants.TEST_WRITING;
 
-import io.restassured.internal.util.IOUtils;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.web.multipart.MultipartFile;
+import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
+import wooteco.team.ittabi.legenoaroundhere.repository.ImageRepository;
+import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
+import wooteco.team.ittabi.legenoaroundhere.utils.FileConverter;
 
-@SpringBootTest
+@DataJpaTest
+@ExtendWith(MockitoExtension.class)
 public class PostServiceTest {
 
+    @Mock
+    private S3Uploader s3Uploader;
+
     @Autowired
+    private ImageRepository imageRepository;
+
+    @Autowired
+    private PostRepository postRepository;
+
     private PostService postService;
 
-    private final String expectedWriting = "Hello!!";
+    @BeforeEach
+    void setUp() {
+        postService = new PostService(postRepository,
+            new ImageService(imageRepository, s3Uploader));
+    }
 
     @DisplayName("포스트 생성 - 성공")
     @Test
     void createPost_SuccessToCreate() {
-        PostRequest postRequest = new PostRequest(expectedWriting);
+        PostRequest postRequest = new PostRequest(TEST_WRITING);
 
         PostResponse postResponse = postService.createPost(postRequest);
 
         assertThat(postResponse.getId()).isNotNull();
-        assertThat(postResponse.getWriting()).isEqualTo(expectedWriting);
+        assertThat(postResponse.getWriting()).isEqualTo(TEST_WRITING);
     }
 
     @DisplayName("이미지를 포함한 포스트 생성 - 성공")
     @Test
     void createPostWithImage_SuccessToCreate() throws IOException {
-        File file = new File("src/test/resources/static/images/test1.jpg");
-        FileInputStream input = new FileInputStream(file);
-        MultipartFile multipartFile = new MockMultipartFile("test1.jpg",
-            file.getName(), "image/jpg", IOUtils.toByteArray(input));
-
-        PostRequest postRequest = new PostRequest("Hello World",
+        MultipartFile multipartFile = FileConverter
+            .convert("right_image1.jpg", TEST_IMAGE_CONTENT_TYPE);
+        PostRequest postRequest = new PostRequest(TEST_WRITING,
             Collections.singletonList(multipartFile));
+        when(s3Uploader.upload(any(MultipartFile.class), eq("images"))).thenReturn("imageUrl");
 
         PostResponse postResponse = postService.createPost(postRequest);
 
-        assertThat(postResponse.getWriting()).isEqualTo("Hello World");
+        assertThat(postResponse.getWriting()).isEqualTo(TEST_WRITING);
         assertThat(postResponse.getImages()).hasSize(1);
     }
 
     @DisplayName("ID로 포스트 조회 - 성공")
     @Test
     void findPost_HasId_SuccessToFind() {
-        PostRequest postRequest = new PostRequest(expectedWriting);
+        PostRequest postRequest = new PostRequest(TEST_WRITING);
         PostResponse createdPostResponse = postService.createPost(postRequest);
 
         PostResponse postResponse = postService.findPost(createdPostResponse.getId());
@@ -79,7 +99,7 @@ public class PostServiceTest {
     @DisplayName("포스트 전체 목록 조회 - 성공")
     @Test
     void findAllPost_SuccessToFind() {
-        PostRequest postRequest = new PostRequest(expectedWriting);
+        PostRequest postRequest = new PostRequest(TEST_WRITING);
         postService.createPost(postRequest);
         postService.createPost(postRequest);
 
@@ -92,7 +112,7 @@ public class PostServiceTest {
     @Test
     void updatePost_HasId_SuccessToUpdate() {
         String updatedPostWriting = "Jamie and BingBong";
-        PostRequest createdPostRequest = new PostRequest(expectedWriting);
+        PostRequest createdPostRequest = new PostRequest(TEST_WRITING);
         PostResponse createdPostResponse = postService.createPost(createdPostRequest);
         PostRequest updatedPostRequest = new PostRequest(updatedPostWriting);
 
@@ -105,7 +125,7 @@ public class PostServiceTest {
     @DisplayName("ID로 포스트 수정 - 실패")
     @Test
     void updatePost_HasNotId_ThrownException() {
-        PostRequest postRequest = new PostRequest(expectedWriting);
+        PostRequest postRequest = new PostRequest(TEST_WRITING);
         Long invalidId = -1L;
 
         assertThatThrownBy(() -> postService.updatePost(invalidId, postRequest))
@@ -115,7 +135,7 @@ public class PostServiceTest {
     @DisplayName("ID로 포스트 삭제 - 성공")
     @Test
     void deletePost_HasId_SuccessToDelete() {
-        PostRequest createdPostRequest = new PostRequest(expectedWriting);
+        PostRequest createdPostRequest = new PostRequest(TEST_WRITING);
         PostResponse createdPostResponse = postService.createPost(createdPostRequest);
 
         postService.deletePost(createdPostResponse.getId());
@@ -136,7 +156,7 @@ public class PostServiceTest {
     @DisplayName("삭제한 ID로 포스트 삭제 - 실패")
     @Test
     void deletePost_AlreadyDeletedId_ThrownException() {
-        PostRequest createdPostRequest = new PostRequest(expectedWriting);
+        PostRequest createdPostRequest = new PostRequest(TEST_WRITING);
         PostResponse createdPostResponse = postService.createPost(createdPostRequest);
 
         postService.deletePost(createdPostResponse.getId());

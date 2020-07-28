@@ -1,4 +1,4 @@
-package wooteco.team.ittabi.legenoaroundhere.constants;
+package wooteco.team.ittabi.legenoaroundhere.utils.constants;
 
 public class UserTestConstants {
 
