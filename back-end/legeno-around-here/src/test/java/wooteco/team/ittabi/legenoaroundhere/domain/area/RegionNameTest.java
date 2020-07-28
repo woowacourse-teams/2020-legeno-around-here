@@ -25,4 +25,12 @@ class RegionNameTest {
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage(RegionName.INVALID_LENGTH_ERROR);
     }
+
+    @DisplayName("null을 활용한 RegionName 생성 - 실패")
+    @Test
+    void construct_NameNull_ThrowIllegalArgumentException() {
+        assertThatThrownBy(() -> new RegionName(null))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage(RegionName.NOT_ALLOWED_NULL);
+    }
 }
