@@ -6,6 +6,8 @@ build/
 !**/src/test/**/build/
 aws.properties
 
+logs
+
 ### Java template
 *.class
 

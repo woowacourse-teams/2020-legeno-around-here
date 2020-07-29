@@ -1,9 +1,7 @@
-package wooteco.team.ittabi.legenoaroundhere.acceptanceTest;
+package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.*;
 
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
