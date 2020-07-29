@@ -3,7 +3,7 @@ version: '3.3'
 services:
   db:
     image: mysql
-    command: --default-authentication-plugin=mysql_native_password --secure-file-priv="/legeno_around_here/provision"
+    command: --default-authentication-plugin=mysql_native_password --secure-file-priv="/legeno_around_here/initial_data"
     restart: always
     environment:
       MYSQL_DATABASE: legeno_around_here
@@ -11,7 +11,7 @@ services:
       MYSQL_ROOT_PASSWORD: ittabi
       MYSQL_PASSWORD: ittabi
     volumes:
-      - ../provision:/legeno_around_here/provision
+      - ../initial_data:/legeno_around_here/initial_data
       - data:/var/lib/mysql
     container_name: mysql
     ports:
