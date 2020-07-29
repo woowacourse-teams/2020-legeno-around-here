@@ -1,8 +1,10 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/legeno-around-here
-    username: ittabi
+    url: jdbc:mysql://localhost:3306/legeno_around_here
+    username: root
     password: ittabi
+    data: classpath:initial_data.sql
+    initialization-mode: always
   jpa:
     hibernate:
       ddl-auto: create
