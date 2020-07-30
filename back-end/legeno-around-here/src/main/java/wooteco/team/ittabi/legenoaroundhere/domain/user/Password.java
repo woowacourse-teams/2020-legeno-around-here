@@ -25,12 +25,12 @@ public class Password {
     }
 
     private void validate(String password) {
-        validateNull(password);
+        validateEmpty(password);
     }
 
-    private void validateNull(String password) {
-        if (Objects.isNull(password)) {
-            throw new UserInputException("password가 null 입니다.");
+    private void validateEmpty(String password) {
+        if (Objects.isNull(password) || password.isEmpty()) {
+            throw new UserInputException("비밀번호가 비어있습니다.");
         }
     }
 

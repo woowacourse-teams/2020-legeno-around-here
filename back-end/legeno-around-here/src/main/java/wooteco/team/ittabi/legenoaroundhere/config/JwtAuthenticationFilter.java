@@ -14,6 +14,8 @@ import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenDecoder;
 
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
+    private static final String REQUEST_TOKEN_HEADER_NAME = "X-AUTH-TOKEN";
+
     private final JwtTokenDecoder jwtTokenDecoder;
 
     public JwtAuthenticationFilter(JwtTokenDecoder jwtTokenDecoder) {
@@ -23,7 +25,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
         throws IOException, ServletException {
-        String token = ((HttpServletRequest) request).getHeader("X-AUTH-TOKEN");
+        String token = ((HttpServletRequest) request).getHeader(REQUEST_TOKEN_HEADER_NAME);
 
         if (isValidToken(token)) {
             Authentication authentication = jwtTokenDecoder.getAuthentication(token);

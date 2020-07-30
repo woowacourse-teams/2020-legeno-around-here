@@ -12,6 +12,7 @@ import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.T
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_PASSWORD;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,9 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 
@@ -35,6 +38,7 @@ class UserControllerTest {
     protected UserService userService;
 
     private MockMvc mockMvc;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext) {
@@ -48,9 +52,8 @@ class UserControllerTest {
     void join() throws Exception {
         given(userService.createUser(any())).willReturn(TEST_ID);
 
-        String inputJson = "{\"email\":\"" + TEST_EMAIL + "\"," +
-            "\"nickname\":\"" + TEST_NICKNAME + "\"," +
-            "\"password\":\"" + TEST_PASSWORD + "\"}";
+        String inputJson = objectMapper.writeValueAsString(
+            new UserCreateRequest(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD));
 
         this.mockMvc.perform(post("/join")
             .content(inputJson)
@@ -66,8 +69,8 @@ class UserControllerTest {
         TokenResponse expected = new TokenResponse("fake Token");
         given(userService.login(any())).willReturn(expected);
 
-        String inputJson = "{\"email\":\"" + TEST_EMAIL + "\","
-            + "\"password\":\"" + TEST_PASSWORD + "\"}";
+        String inputJson = objectMapper.writeValueAsString(
+            new LoginRequest(TEST_EMAIL, TEST_PASSWORD));
 
         MockHttpServletResponse response = this.mockMvc.perform(post("/login")
             .content(inputJson)
@@ -86,8 +89,8 @@ class UserControllerTest {
         UserInputException expected = new UserInputException("회원가입 실패");
         given(userService.login(any())).willThrow(expected);
 
-        String inputJson = "{\"email\":\"" + TEST_EMAIL + "\","
-            + "\"password\":\"" + TEST_PASSWORD + "\"}";
+        String inputJson = objectMapper.writeValueAsString(
+            new LoginRequest(TEST_EMAIL, TEST_PASSWORD));
 
         this.mockMvc.perform(post("/login")
             .content(inputJson)
@@ -100,6 +103,6 @@ class UserControllerTest {
     @Test
     @DisplayName("로그인 실패 - 요청 형식 자체가 잘못된 경우")
     void login_IfRequestFormatIsWrong_ThrowException() {
-        // Todo: 구현
+        // Todo: ExceptionHandler로 처리하도록 구현한 뒤, 이 테스트도 구현해야함
     }
 }

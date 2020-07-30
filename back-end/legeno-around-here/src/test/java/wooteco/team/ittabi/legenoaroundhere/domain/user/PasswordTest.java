@@ -6,8 +6,6 @@ import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.T
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 class PasswordTest {
 
@@ -21,7 +19,13 @@ class PasswordTest {
     @DisplayName("생성자 테스트 - 패스워드가 null일 때")
     void constructor_IfPasswordIsNull_ThrowException() {
         assertThatThrownBy(() -> new Password(null))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("password가 null 입니다.");
+            .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("생성자 테스트 - 패스워드가 빈 문자열일 때")
+    void constructor_IfPasswordIsEmptyString_ThrowException() {
+        assertThatThrownBy(() -> new Password(""))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 }

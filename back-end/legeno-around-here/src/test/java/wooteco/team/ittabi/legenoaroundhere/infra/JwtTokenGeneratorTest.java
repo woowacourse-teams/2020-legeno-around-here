@@ -5,18 +5,20 @@ import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.T
 
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 class JwtTokenGeneratorTest {
 
     private static final int MIN_SIZE = 1;
 
-    @Autowired
-    JwtTokenGenerator jwtTokenGenerator;
+    private JwtTokenGenerator jwtTokenGenerator;
+
+    @BeforeEach
+    void setUp() {
+        jwtTokenGenerator = new JwtTokenGenerator("testSecretKey", 1L);
+    }
 
     @Test
     @DisplayName("토큰 생성")

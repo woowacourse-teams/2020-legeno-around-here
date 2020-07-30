@@ -74,6 +74,6 @@ class UserServiceTest {
 
         User user = (User) userService.loadUserByUsername(TEST_EMAIL);
 
-        assertThat(user.getEmail().getEmail()).isEqualTo(TEST_EMAIL);
+        assertThat(user.getEmailByString()).isEqualTo(TEST_EMAIL);
     }
 }
