@@ -110,4 +110,8 @@ public class User implements UserDetails {
             ", password=" + password +
             '}';
     }
+
+    public String getNicknameByString() {
+        return getNickname().getNickname();
+    }
 }
