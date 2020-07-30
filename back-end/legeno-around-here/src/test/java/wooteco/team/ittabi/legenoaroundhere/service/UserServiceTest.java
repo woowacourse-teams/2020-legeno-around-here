@@ -2,6 +2,8 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_PASSWORD;
@@ -11,6 +13,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.core.Authentication;
+import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
+import wooteco.team.ittabi.legenoaroundhere.domain.user.Nickname;
+import wooteco.team.ittabi.legenoaroundhere.domain.user.Password;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
@@ -75,5 +81,20 @@ class UserServiceTest {
         User user = (User) userService.loadUserByUsername(TEST_EMAIL);
 
         assertThat(user.getEmailByString()).isEqualTo(TEST_EMAIL);
+    }
+
+    @Test
+    @DisplayName("내정보 찾기")
+    void findUser() {
+        User user = new User(
+            new Email(TEST_EMAIL),
+            new Nickname(TEST_NICKNAME),
+            new Password(TEST_PASSWORD)
+        );
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(user);
+
+        assertThat(userService.findUser(authentication).getEmail()).isEqualTo(TEST_EMAIL);
+        assertThat(userService.findUser(authentication).getNickname()).isEqualTo(TEST_NICKNAME);
     }
 }

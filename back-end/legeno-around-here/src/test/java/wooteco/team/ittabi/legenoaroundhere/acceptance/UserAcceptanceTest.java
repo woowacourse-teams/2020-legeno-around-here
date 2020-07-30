@@ -17,6 +17,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserAcceptanceTest {
@@ -73,6 +74,11 @@ public class UserAcceptanceTest {
             .hasSizeGreaterThanOrEqualTo(TOKEN_MIN_SIZE);
 
         // Todo: 내 정보 조회
+        UserResponse userResponse = findUser(tokenResponse.getAccessToken());
+        assertThat(userResponse).isNotNull();
+        assertThat(userResponse.getId()).isNotNull();
+        assertThat(userResponse.getEmail()).isEqualTo(TEST_EMAIL);
+        assertThat(userResponse.getNickname()).isEqualTo(TEST_NICKNAME);
 
         // Todo: 내 정보 수정
 
@@ -113,5 +119,16 @@ public class UserAcceptanceTest {
             .then()
             .statusCode(HttpStatus.OK.value())
             .extract().as(TokenResponse.class);
+    }
+
+    private UserResponse findUser(String accessToken) {
+        return given()
+            .header("X-AUTH-TOKEN", accessToken)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/users/myinfo")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract().as(UserResponse.class);
     }
 }

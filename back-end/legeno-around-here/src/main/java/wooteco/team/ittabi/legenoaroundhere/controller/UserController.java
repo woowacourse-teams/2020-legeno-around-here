@@ -2,12 +2,15 @@ package wooteco.team.ittabi.legenoaroundhere.controller;
 
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 
 @RestController
@@ -30,5 +33,10 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(userService.login(loginRequest));
+    }
+
+    @GetMapping("/users/myinfo")
+    public ResponseEntity<UserResponse> findUser(Authentication authentication) {
+        return ResponseEntity.ok(userService.findUser(authentication));
     }
 }
