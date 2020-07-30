@@ -2,7 +2,12 @@ package wooteco.team.ittabi.legenoaroundhere.domain.user;
 
 import java.util.Objects;
 import javax.persistence.Embeddable;
+import lombok.Getter;
+import lombok.Setter;
+import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 
+@Getter
+@Setter
 @Embeddable
 public class Password {
 
@@ -16,24 +21,16 @@ public class Password {
 
     public Password(String password) {
         validate(password);
-        this.password = password; // Todo: Security 적용 할 때 암호화 도입 예정 (bcrypt)
+        this.password = password;
     }
 
     private void validate(String password) {
-        validateNull(password);
-        validateLength(password);
+        validateEmpty(password);
     }
 
-    private void validateNull(String password) {
-        if (Objects.isNull(password)) {
-            throw new IllegalArgumentException("password가 null 입니다.");
-        }
-    }
-
-    private void validateLength(String password) {
-        if (password.length() < MIN_LENGTH || password.length() > MAX_LENGTH) {
-            throw new IllegalArgumentException(
-                "비밀번호는 " + MIN_LENGTH + " ~ " + MAX_LENGTH + " 자여야 합니다.");
+    private void validateEmpty(String password) {
+        if (Objects.isNull(password) || password.isEmpty()) {
+            throw new UserInputException("비밀번호가 비어있습니다.");
         }
     }
 

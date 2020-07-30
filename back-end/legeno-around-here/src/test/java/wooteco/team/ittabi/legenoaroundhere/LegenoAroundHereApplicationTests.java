@@ -9,5 +9,4 @@ class LegenoAroundHereApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }

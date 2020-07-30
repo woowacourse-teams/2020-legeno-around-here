@@ -2,7 +2,12 @@ package wooteco.team.ittabi.legenoaroundhere.domain.user;
 
 import java.util.Objects;
 import javax.persistence.Embeddable;
+import lombok.Getter;
+import lombok.Setter;
+import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 
+@Getter
+@Setter
 @Embeddable
 public class Nickname {
 
@@ -27,25 +32,25 @@ public class Nickname {
 
     private void validateNull(String nickname) {
         if (Objects.isNull(nickname)) {
-            throw new IllegalArgumentException("닉네임이 null 입니다.");
+            throw new UserInputException("닉네임이 null 입니다.");
         }
     }
 
     private void validateEmpty(String nickname) {
         if (nickname.isEmpty()) {
-            throw new IllegalArgumentException("닉네임이 비어있습니다.");
+            throw new UserInputException("닉네임이 비어있습니다.");
         }
     }
 
     private void validateSpace(String nickname) {
         if (nickname.contains(" ")) {
-            throw new IllegalArgumentException("닉네임은 공백을 포함할 수 없습니다.");
+            throw new UserInputException("닉네임은 공백을 포함할 수 없습니다.");
         }
     }
 
     private void validateLength(String nickname) {
         if (nickname.length() > MAX_LENGTH) {
-            throw new IllegalArgumentException("닉네임은 " + MAX_LENGTH + "글자 이하여야 합니다.");
+            throw new UserInputException("닉네임은 " + MAX_LENGTH + "글자 이하여야 합니다.");
         }
     }
 

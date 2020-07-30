@@ -1,8 +1,8 @@
-package wooteco.team.ittabi.legenoaroundhere.acceptanceTest;
+package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_PASSWORD;
 
 import io.restassured.RestAssured;
@@ -10,6 +10,7 @@ import io.restassured.specification.RequestSpecification;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -21,16 +22,17 @@ import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 public class UserAcceptanceTest {
 
     private static final String USER_LOCATION_FORMAT = "^/users/[1-9][0-9]*$";
+    private static final int TOKEN_MIN_SIZE = 1;
 
     @LocalServerPort
     public int port;
 
-    public static RequestSpecification given() {
+    static RequestSpecification given() {
         return RestAssured.given().log().all();
     }
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         RestAssured.port = port;
     }
 
@@ -58,12 +60,17 @@ public class UserAcceptanceTest {
      * Then 회원 탈퇴가 되었다.
      */
     @Test
-    public void manageUser() {
-        String location = createUser(TEST_EMAIL, TEST_NAME, TEST_PASSWORD);
+    @DisplayName("회원 관리")
+    void manageUser() {
+        String location = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         // Todo: 내 정보 조회 api 구현 후, 조회가 잘 되는지 확인하는 코드로 바꿀 것.
         assertThat(location).matches(USER_LOCATION_FORMAT);
 
-        // Todo: 로그인
+        // 로그인
+        TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
+        assertThat(tokenResponse).isNotNull();
+        assertThat(tokenResponse.getAccessToken())
+            .hasSizeGreaterThanOrEqualTo(TOKEN_MIN_SIZE);
 
         // Todo: 내 정보 조회
 
