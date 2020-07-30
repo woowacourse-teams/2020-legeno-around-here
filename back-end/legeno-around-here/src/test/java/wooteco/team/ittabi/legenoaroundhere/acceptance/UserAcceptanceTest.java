@@ -73,7 +73,7 @@ public class UserAcceptanceTest {
         assertThat(tokenResponse.getAccessToken())
             .hasSizeGreaterThanOrEqualTo(TOKEN_MIN_SIZE);
 
-        // Todo: 내 정보 조회
+        // 내 정보 조회
         UserResponse userResponse = findUser(tokenResponse.getAccessToken());
         assertThat(userResponse).isNotNull();
         assertThat(userResponse.getId()).isNotNull();
