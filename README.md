@@ -1,4 +1,4 @@
-# 우리 동네 캡짱
+# 우리 동네 캡짱 [![Build Status](https://travis-ci.org/woowacourse-teams/2020-legeno-around-here.svg?branch=develop)](https://travis-ci.org/woowacourse-teams/2020-legeno-around-here)
 
 ## 개요
 
