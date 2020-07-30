@@ -95,7 +95,7 @@ function JoinForm() {
 
   const join = useCallback(() => {
     axios
-      .post("http://localhost:8080/join", {
+      .post("http://13.209.62.31:8080/join", {
         email,
         nickname,
         password,
