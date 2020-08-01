@@ -8,7 +8,6 @@ import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.T
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_PASSWORD;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,6 +23,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
 
@@ -58,8 +58,7 @@ public class PostServiceTest {
             userId,
             new Email(TEST_EMAIL),
             new Nickname(TEST_NICKNAME),
-            new Password(TEST_PASSWORD),
-            new ArrayList<>()
+            new Password(TEST_PASSWORD)
         );
     }
 
@@ -72,6 +71,7 @@ public class PostServiceTest {
 
         assertThat(postResponse.getId()).isNotNull();
         assertThat(postResponse.getWriting()).isEqualTo(expectedWriting);
+        assertThat(postResponse.getUser()).isEqualTo(UserResponse.from(user));
     }
 
     @DisplayName("ID로 포스트 조회 - 성공")
@@ -81,10 +81,11 @@ public class PostServiceTest {
         PostResponse createdPostResponse = postService.createPost(authentication, postRequest);
 
         PostResponse postResponse = postService
-            .findPost(authentication, createdPostResponse.getId());
+            .findPost(createdPostResponse.getId());
 
         assertThat(postResponse.getId()).isEqualTo(createdPostResponse.getId());
         assertThat(postResponse.getWriting()).isEqualTo(createdPostResponse.getWriting());
+        assertThat(postResponse.getUser()).isEqualTo(UserResponse.from(user));
     }
 
     @DisplayName("ID로 포스트 조회 - 실패")
@@ -92,7 +93,7 @@ public class PostServiceTest {
     void findPost_HasNotId_ThrownException() {
         Long invalidId = -1L;
 
-        assertThatThrownBy(() -> postService.findPost(authentication, invalidId))
+        assertThatThrownBy(() -> postService.findPost(invalidId))
             .isInstanceOf(NotExistsException.class);
     }
 
@@ -103,7 +104,7 @@ public class PostServiceTest {
         postService.createPost(authentication, postRequest);
         postService.createPost(authentication, postRequest);
 
-        List<PostResponse> posts = postService.findAllPost(authentication);
+        List<PostResponse> posts = postService.findAllPost();
 
         assertThat(posts).hasSize(2);
     }
@@ -119,9 +120,10 @@ public class PostServiceTest {
 
         postService.updatePost(authentication, createdPostResponse.getId(), updatedPostRequest);
         PostResponse updatedPostResponse = postService
-            .findPost(authentication, createdPostResponse.getId());
+            .findPost(createdPostResponse.getId());
 
         assertThat(updatedPostResponse.getWriting()).isEqualTo(updatedPostWriting);
+        assertThat(updatedPostResponse.getUser()).isEqualTo(UserResponse.from(user));
     }
 
     @DisplayName("ID로 포스트 수정 - 실패")
@@ -143,7 +145,7 @@ public class PostServiceTest {
 
         postService.deletePost(authentication, createdPostResponse.getId());
 
-        assertThatThrownBy(() -> postService.findPost(authentication, createdPostResponse.getId()))
+        assertThatThrownBy(() -> postService.findPost(createdPostResponse.getId()))
             .isInstanceOf(NotExistsException.class);
     }
 

@@ -36,9 +36,8 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponse> findPost(Authentication authentication,
-        @PathVariable Long id) {
-        PostResponse post = postService.findPost(authentication, id);
+    public ResponseEntity<PostResponse> findPost(@PathVariable Long id) {
+        PostResponse post = postService.findPost(id);
         return ResponseEntity
             .ok()
             .body(post);
@@ -54,8 +53,8 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PostResponse>> findAllPost(Authentication authentication) {
-        List<PostResponse> posts = postService.findAllPost(authentication);
+    public ResponseEntity<List<PostResponse>> findAllPost() {
+        List<PostResponse> posts = postService.findAllPost();
         return ResponseEntity
             .ok()
             .body(posts);

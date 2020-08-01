@@ -2,32 +2,35 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.State;
+import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
+import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 
-@Transactional
 @Service
+@AllArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
-    public PostService(PostRepository postRepository) {
-        this.postRepository = postRepository;
-    }
-
+    @Transactional
     public PostResponse createPost(Authentication authentication, PostRequest postRequest) {
-        Post post = postRepository.save(postRequest.toPost());
+        User user = (User) authentication.getPrincipal();
+        Post post = postRepository.save(postRequest.toPost(user));
         return PostResponse.of(post);
     }
 
-    public PostResponse findPost(Authentication authentication, Long id) {
+    public PostResponse findPost(Long id) {
         Post post = findNotDeletedPost(id);
         return PostResponse.of(post);
     }
@@ -41,21 +44,33 @@ public class PostService {
         return post;
     }
 
-    public List<PostResponse> findAllPost(Authentication authentication) {
+    public List<PostResponse> findAllPost() {
         List<Post> posts = postRepository.findAll().stream()
             .filter(post -> post.isNotSameState(State.DELETED))
             .collect(Collectors.toList());
         return PostResponse.listOf(posts);
     }
 
+    @Transactional
     public void updatePost(Authentication authentication, Long id, PostRequest postRequest) {
         Post post = postRepository.findById(id)
             .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
+        validateIsOwner(authentication, post);
         post.setWriting(postRequest.getWriting());
     }
 
+    @Transactional
     public void deletePost(Authentication authentication, Long id) {
         Post post = findNotDeletedPost(id);
+        validateIsOwner(authentication, post);
         post.setState(State.DELETED);
+    }
+
+    private void validateIsOwner(Authentication authentication, Post post) {
+        User user = (User) authentication.getPrincipal();
+
+        if (!post.getUser().equals(user)) {
+            throw new NotAuthorizedException("권한이 없습니다.");
+        }
     }
 }

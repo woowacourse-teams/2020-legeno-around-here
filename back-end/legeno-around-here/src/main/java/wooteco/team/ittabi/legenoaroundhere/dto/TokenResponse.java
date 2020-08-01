@@ -1,17 +1,18 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@Getter
+@EqualsAndHashCode
+@ToString
 public class TokenResponse {
 
     private String accessToken;
-
-    private TokenResponse() {
-    }
-
-    public TokenResponse(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
-    }
 }

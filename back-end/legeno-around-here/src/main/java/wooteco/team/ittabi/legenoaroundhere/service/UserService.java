@@ -2,6 +2,7 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import java.util.Collections;
 import javax.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,15 +24,11 @@ import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
 import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 
 @Service
+@AllArgsConstructor
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final JwtTokenGenerator jwtTokenGenerator;
-
-    public UserService(UserRepository userRepository, JwtTokenGenerator jwtTokenGenerator) {
-        this.userRepository = userRepository;
-        this.jwtTokenGenerator = jwtTokenGenerator;
-    }
 
     @Transactional
     public Long createUser(UserCreateRequest userCreateRequest) {

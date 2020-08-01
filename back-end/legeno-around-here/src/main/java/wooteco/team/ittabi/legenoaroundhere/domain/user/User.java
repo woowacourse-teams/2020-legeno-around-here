@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.user;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -9,27 +10,28 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
+import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@AllArgsConstructor()
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
-@Entity
-public class User implements UserDetails {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@ToString
+public class User extends BaseEntity implements UserDetails {
 
     @Embedded
     @Column(nullable = false, unique = true)
@@ -47,10 +49,19 @@ public class User implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-    protected User() {
+    @OneToMany(mappedBy = "user")
+    @Builder.Default
+    private List<Post> post = new ArrayList<>();
+
+    @Builder
+    public User(Email email, Nickname nickname, Password password) {
+        this.email = email;
+        this.nickname = nickname;
+        this.password = password;
     }
 
-    public User(Email email, Nickname nickname, Password password) {
+    public User(Long id, Email email, Nickname nickname, Password password) {
+        super(id, LocalDateTime.now(), LocalDateTime.now());
         this.email = email;
         this.nickname = nickname;
         this.password = password;
@@ -99,16 +110,6 @@ public class User implements UserDetails {
 
     public String getEmailByString() {
         return this.email.getEmail();
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-            "id=" + id +
-            ", email=" + email +
-            ", nickname=" + nickname +
-            ", password=" + password +
-            '}';
     }
 
     public String getNicknameByString() {
