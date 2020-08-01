@@ -3,6 +3,7 @@ package wooteco.team.ittabi.legenoaroundhere.controller;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,41 +27,43 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createPost(@RequestBody PostRequest postRequest) {
-        Long postId = postService.createPost(postRequest).getId();
+    public ResponseEntity<Void> createPost(Authentication authentication,
+        @RequestBody PostRequest postRequest) {
+        Long postId = postService.createPost(authentication, postRequest).getId();
         return ResponseEntity
             .created(URI.create("/posts/" + postId))
             .build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponse> findPost(@PathVariable Long id) {
-        PostResponse post = postService.findPost(id);
+    public ResponseEntity<PostResponse> findPost(Authentication authentication,
+        @PathVariable Long id) {
+        PostResponse post = postService.findPost(authentication, id);
         return ResponseEntity
             .ok()
             .body(post);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updatePost(@PathVariable Long id,
+    public ResponseEntity<Void> updatePost(Authentication authentication, @PathVariable Long id,
         @RequestBody PostRequest postRequest) {
-        postService.updatePost(id, postRequest);
+        postService.updatePost(authentication, id, postRequest);
         return ResponseEntity
             .ok()
             .build();
     }
 
     @GetMapping
-    public ResponseEntity<List<PostResponse>> findAllPost() {
-        List<PostResponse> posts = postService.findAllPost();
+    public ResponseEntity<List<PostResponse>> findAllPost(Authentication authentication) {
+        List<PostResponse> posts = postService.findAllPost(authentication);
         return ResponseEntity
             .ok()
             .body(posts);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
-        postService.deletePost(id);
+    public ResponseEntity<Void> deletePost(Authentication authentication, @PathVariable Long id) {
+        postService.deletePost(authentication, id);
         return ResponseEntity
             .noContent()
             .build();
