@@ -27,7 +27,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-@AllArgsConstructor()
+@AllArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -53,7 +53,6 @@ public class User extends BaseEntity implements UserDetails {
     @Builder.Default
     private List<Post> post = new ArrayList<>();
 
-    @Builder
     public User(Email email, Nickname nickname, Password password) {
         this.email = email;
         this.nickname = nickname;
