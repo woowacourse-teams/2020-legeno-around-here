@@ -20,18 +20,17 @@ public class GlobalExceptionHandler {
             .status(HttpStatus.NOT_FOUND)
             .body(new ErrorResponse(e.getMessage()));
     }
-
+    
     @ExceptionHandler({UserInputException.class, NotImageMimeTypeException.class,
         NotImageExtensionException.class})
-    public ResponseEntity<ErrorResponse> HandleBadRequest(IllegalArgumentException e) {
+    public ResponseEntity<ErrorResponse> handleBadRequest(UserInputException e) {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleInternalServerError(Exception e) {
-        e.printStackTrace();
+    public ResponseEntity<ErrorResponse> handleInternalServerError() {
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(new ErrorResponse("예기치 않은 오류가 발생하였습니다."));

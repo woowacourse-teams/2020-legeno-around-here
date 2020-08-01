@@ -4,7 +4,12 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.persistence.Embeddable;
+import lombok.Getter;
+import lombok.Setter;
+import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 
+@Getter
+@Setter
 @Embeddable
 public class Email {
 
@@ -28,7 +33,7 @@ public class Email {
 
     private void validateNull(String email) {
         if (Objects.isNull(email)) {
-            throw new IllegalArgumentException("이메일이 null입니다.");
+            throw new UserInputException("이메일이 null입니다.");
         }
     }
 
@@ -36,7 +41,7 @@ public class Email {
         Matcher matcher = EMAIL_PATTERN.matcher(email);
 
         if (!matcher.matches()) {
-            throw new IllegalArgumentException("이메일 형식이 잘못됐습니다.");
+            throw new UserInputException("이메일 형식이 잘못됐습니다.");
         }
     }
 
