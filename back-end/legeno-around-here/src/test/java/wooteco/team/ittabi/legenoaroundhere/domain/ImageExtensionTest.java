@@ -1,6 +1,8 @@
 package wooteco.team.ittabi.legenoaroundhere.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.TEST_IMAGE_CONTENT_TYPE;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.TEST_TEXT_CONTENT_TYPE;
 
 import java.io.IOException;
@@ -12,7 +14,7 @@ import wooteco.team.ittabi.legenoaroundhere.utils.FileConverter;
 
 public class ImageExtensionTest {
 
-    @DisplayName("이미지 확장자 유효성 검사")
+    @DisplayName("이미지 확장자 유효성 검사 - 실패, 예외 처리")
     @Test
     void validateImageExtension_NoneMatchImageExtension_ThrownException() throws IOException {
         MultipartFile multipartFile = FileConverter
