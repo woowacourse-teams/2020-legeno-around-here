@@ -23,11 +23,11 @@ public class UserRepositoryTest {
     @DisplayName("Base Entity 필드에 값이 잘 들어오는지 확인")
     @Test
     void save() {
-        User notSavedUser = new User(
-            new Email(TEST_EMAIL),
-            new Nickname(TEST_NICKNAME),
-            new Password(TEST_PASSWORD)
-        );
+        User notSavedUser = User.builder()
+            .email(new Email(TEST_EMAIL))
+            .nickname(new Nickname(TEST_NICKNAME))
+            .password(new Password(TEST_PASSWORD))
+            .build();
         assertThat(notSavedUser.getId()).isNull();
         assertThat(notSavedUser.getCreatedAt()).isNull();
         assertThat(notSavedUser.getModifiedAt()).isNull();

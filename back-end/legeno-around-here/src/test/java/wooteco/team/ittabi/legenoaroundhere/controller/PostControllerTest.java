@@ -32,7 +32,7 @@ public class PostControllerTest {
     private PostService postService;
 
     private MockMvc mockMvc;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext) {

@@ -23,10 +23,10 @@ public class UserCreateRequest {
     private String password;
 
     public User toUser() {
-        return new User(
-            new Email(this.email),
-            new Nickname(this.nickname),
-            new Password(this.password)
-        );
+        return User.builder()
+            .email(new Email(this.email))
+            .nickname(new Nickname(this.nickname))
+            .password(new Password(this.password))
+            .build();
     }
 }

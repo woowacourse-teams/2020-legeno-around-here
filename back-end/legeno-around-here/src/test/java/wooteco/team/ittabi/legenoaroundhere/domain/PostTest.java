@@ -16,11 +16,11 @@ import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 
 public class PostTest {
 
-    private User user = new User(
-        new Email(TEST_EMAIL),
-        new Nickname(TEST_NICKNAME),
-        new Password(TEST_PASSWORD)
-    );
+    private final User user = User.builder()
+        .email(new Email(TEST_EMAIL))
+        .nickname(new Nickname(TEST_NICKNAME))
+        .password(new Password(TEST_PASSWORD))
+        .build();
 
     @DisplayName("길이 검증 - 예외 발생")
     @Test

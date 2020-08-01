@@ -53,12 +53,6 @@ public class User extends BaseEntity implements UserDetails {
     @Builder.Default
     private List<Post> post = new ArrayList<>();
 
-    public User(Email email, Nickname nickname, Password password) {
-        this.email = email;
-        this.nickname = nickname;
-        this.password = password;
-    }
-
     public User(Long id, Email email, Nickname nickname, Password password) {
         super(id, LocalDateTime.now(), LocalDateTime.now());
         this.email = email;
