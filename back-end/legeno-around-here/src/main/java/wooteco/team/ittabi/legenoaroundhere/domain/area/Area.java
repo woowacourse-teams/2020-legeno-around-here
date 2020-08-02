@@ -3,6 +3,7 @@ package wooteco.team.ittabi.legenoaroundhere.domain.area;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.MapKeyEnumerated;
@@ -16,6 +17,9 @@ public class Area extends BaseEntity {
     static final String NOT_ALLOWED_NULL = "이름에 null은 허용되지 않습니다.";
     static final String INVALID_SIZE_ERROR = String
         .format("region의 갯수가 최소 갯수인 %d보다 작습니다.", MIN_SIZE);
+
+    @Column
+    private String code;
 
     @OneToMany(mappedBy = "area")
     @MapKeyEnumerated(EnumType.STRING)
