@@ -4,9 +4,18 @@ import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 
 @Entity
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 
     private static final int MAX_LENGTH = 20;
@@ -15,9 +24,6 @@ public class Post extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private State state;
-
-    protected Post() {
-    }
 
     public Post(String writing) {
         validateLength(writing);
@@ -39,27 +45,4 @@ public class Post extends BaseEntity {
         return !Objects.equals(this.state, state);
     }
 
-    public String getWriting() {
-        return writing;
-    }
-
-    public void setWriting(String writing) {
-        this.writing = writing;
-    }
-
-    public State getState() {
-        return state;
-    }
-
-    public void setState(State state) {
-        this.state = state;
-    }
-
-    @Override
-    public String toString() {
-        return "Post{" +
-            "writing='" + writing + '\'' +
-            ", state=" + state +
-            '}';
-    }
 }
