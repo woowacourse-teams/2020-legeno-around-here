@@ -2,9 +2,11 @@ package wooteco.team.ittabi.legenoaroundhere.domain;
 
 import java.util.Arrays;
 import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageExtensionException;
 
+@Slf4j
 public enum ImageExtension {
     JPG(".jpg"),
     JPEG(".jpeg"),
@@ -23,6 +25,7 @@ public enum ImageExtension {
 
     public static void validateImageExtension(MultipartFile file) {
         if (noneMatchImageExtension(file)) {
+            log.debug("이미지 파일에 맞지 않는 확장자, originalFileName = {}", file.getOriginalFilename());
             throw new NotImageExtensionException(
                 file.getOriginalFilename() + "은/는 이미지 파일에 맞는 확장자가 아닙니다!");
         }

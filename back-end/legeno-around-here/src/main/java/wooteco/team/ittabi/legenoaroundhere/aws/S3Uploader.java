@@ -8,16 +8,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import wooteco.team.ittabi.legenoaroundhere.exception.FileIOException;
 
+@Slf4j
 @Component
 public class S3Uploader {
 
     public static final String DIR_DELIMITER = "/";
-    private static final Logger logger = LoggerFactory.getLogger(S3Uploader.class);
 
     private final AmazonS3 amazonS3;
     private final String bucket;
@@ -48,9 +48,9 @@ public class S3Uploader {
 
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
-            logger.info("파일이 삭제되었습니다.");
+            log.info("파일이 삭제되었습니다.");
         } else {
-            logger.info("파일이 삭제되지 못했습니다.");
+            log.info("파일이 삭제되지 못했습니다.");
         }
     }
 
@@ -64,7 +64,8 @@ public class S3Uploader {
                 return Optional.of(convertFile);
             }
         } catch (IOException e) {
-            logger.info("바이트 파일을 가져오는데 실패했습니다!");
+            log.error("File 읽기 실패, originalFileName = {}", originalFileName);
+            throw new FileIOException("File을 읽고 쓰는데 실패했습니다!");
         }
         return Optional.empty();
     }
