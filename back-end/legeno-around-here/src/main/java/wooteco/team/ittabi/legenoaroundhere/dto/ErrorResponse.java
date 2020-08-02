@@ -1,21 +1,14 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+
+@AllArgsConstructor
+@Getter
+@ToString
 public class ErrorResponse {
 
     private String errorMessage;
 
-    public ErrorResponse(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    @Override
-    public String toString() {
-        return "ErrorResponse{" +
-            "errorMessage='" + errorMessage + '\'' +
-            '}';
-    }
 }

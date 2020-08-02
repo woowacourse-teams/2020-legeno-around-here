@@ -24,7 +24,6 @@ import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
-import wooteco.team.ittabi.legenoaroundhere.repository.ImageRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.FileConverter;
 
@@ -36,17 +35,13 @@ public class PostServiceTest {
     private S3Uploader s3Uploader;
 
     @Autowired
-    private ImageRepository imageRepository;
-
-    @Autowired
     private PostRepository postRepository;
 
     private PostService postService;
 
     @BeforeEach
     void setUp() {
-        postService = new PostService(postRepository,
-            new ImageService(imageRepository, s3Uploader));
+        postService = new PostService(postRepository, new ImageService(s3Uploader));
     }
 
     @DisplayName("포스트 생성 - 성공")

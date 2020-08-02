@@ -26,24 +26,28 @@ public class PostService {
     }
 
     public PostResponse createPost(PostRequest postRequest) {
-        Post post = postRepository.save(postRequest.toPost());
-        List<Image> images = saveImages(postRequest, post);
-        return PostResponse.of(post, images);
+        Post post = postRequest.toPost();
+        List<Image> images = uploadImages(postRequest);
+
+        images.forEach(post::addImage);
+        Post savedPost = postRepository.save(post);
+
+        return PostResponse.of(savedPost);
     }
 
-    private List<Image> saveImages(PostRequest postRequest, Post post) {
+    private List<Image> uploadImages(PostRequest postRequest) {
         if (postRequest.isImagesNull()) {
             return Collections.emptyList();
         }
+
         return postRequest.getImages().stream()
-            .map(multipartFile -> imageService.save(multipartFile, post))
+            .map(imageService::upload)
             .collect(Collectors.toList());
     }
 
     public PostResponse findPost(Long id) {
         Post post = findNotDeletedPost(id);
-        List<Image> images = imageService.findAllByPostId(id);
-        return PostResponse.of(post, images);
+        return PostResponse.of(post);
     }
 
     private Post findNotDeletedPost(Long id) {
@@ -58,7 +62,7 @@ public class PostService {
     public List<PostResponse> findAllPost() {
         return postRepository.findAll().stream()
             .filter(post -> post.isNotSameState(State.DELETED))
-            .map(post -> PostResponse.of(post, imageService.findAllByPostId(post.getId())))
+            .map(PostResponse::of)
             .collect(Collectors.toList());
     }
 

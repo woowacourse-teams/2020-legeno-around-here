@@ -3,17 +3,20 @@ package wooteco.team.ittabi.legenoaroundhere.domain;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity
+@Table(name = "image")
 @Getter
-@ToString
+@Setter
+@ToString(exclude = "post")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Image extends BaseEntity {
 
     private String name;
@@ -22,4 +25,11 @@ public class Image extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @Builder
+    public Image(String name, String url) {
+        this.name = name;
+        this.url = url;
+    }
+
 }
