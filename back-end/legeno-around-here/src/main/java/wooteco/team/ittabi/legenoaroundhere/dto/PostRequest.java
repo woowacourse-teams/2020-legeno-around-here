@@ -9,7 +9,6 @@ import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 public class PostRequest {
 
     private String writing;
-
     private List<MultipartFile> images;
 
     public PostRequest() {

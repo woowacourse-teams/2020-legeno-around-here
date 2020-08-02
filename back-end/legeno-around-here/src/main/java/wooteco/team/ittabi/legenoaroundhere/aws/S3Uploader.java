@@ -54,13 +54,13 @@ public class S3Uploader {
         }
     }
 
-    private Optional<File> convert(MultipartFile file) {
-        String originalFileName = Objects.requireNonNull(file.getOriginalFilename());
+    private Optional<File> convert(MultipartFile multipartFile) {
+        String originalFileName = Objects.requireNonNull(multipartFile.getOriginalFilename());
         File convertFile = new File(originalFileName);
         try {
             if (convertFile.createNewFile()) {
-                FileOutputStream fos = new FileOutputStream(convertFile);
-                fos.write(file.getBytes());
+                FileOutputStream fileOutputStream = new FileOutputStream(convertFile);
+                fileOutputStream.write(multipartFile.getBytes());
                 return Optional.of(convertFile);
             }
         } catch (IOException e) {

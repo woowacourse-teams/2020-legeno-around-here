@@ -87,7 +87,18 @@ public class PostServiceTest {
         assertThat(postResponse.getWriting()).isEqualTo(createdPostResponse.getWriting());
     }
 
-    @DisplayName("ID로 포스트 조회 - 실패")
+    @DisplayName("ID로 포스트 조회 - 실패, 이미 지워진 포스트")
+    @Test
+    void findPost_AlreadyDeletedPost_ThrownException() {
+        PostRequest postRequest = new PostRequest(TEST_WRITING);
+        PostResponse createdPostResponse = postService.createPost(postRequest);
+        postService.deletePost(createdPostResponse.getId());
+
+        assertThatThrownBy(() -> postService.findPost(createdPostResponse.getId()))
+            .isInstanceOf(NotExistsException.class);
+    }
+
+    @DisplayName("ID로 포스트 조회 - 실패, 유효하지 않은 포스트 ID")
     @Test
     void findPost_HasNotId_ThrownException() {
         Long invalidId = -1L;

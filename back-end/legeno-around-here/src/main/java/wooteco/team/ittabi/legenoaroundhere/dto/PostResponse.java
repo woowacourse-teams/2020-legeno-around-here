@@ -9,7 +9,6 @@ import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 public class PostResponse {
 
     private Long id;
-
     private String writing;
 
     private List<Image> images;

@@ -65,14 +65,18 @@ public class PostAcceptanceTest {
         // 이미지가 포함되지 않은 글 등록
         String postWithoutImageLocation = createPostWithoutImage();
         Long postWithoutImageId = getIdFromUrl(postWithoutImageLocation);
+
         PostResponse postWithoutImageResponse = findPost(postWithoutImageId);
+
         assertThat(postWithoutImageResponse.getId()).isEqualTo(postWithoutImageId);
         assertThat(postWithoutImageResponse.getWriting()).isEqualTo(TEST_WRITING);
 
         // 이미지가 포함된 글 등록
         String postWithImageLocation = createPostWithImage();
         Long postWithImageId = getIdFromUrl(postWithImageLocation);
+
         PostResponse postWithImageResponse = findPost(postWithImageId);
+
         assertThat(postWithImageResponse.getId()).isEqualTo(postWithImageId);
         assertThat(postWithImageResponse.getWriting()).isEqualTo(TEST_WRITING);
         assertThat(postWithImageResponse.getImages()).hasSize(2);
@@ -84,19 +88,24 @@ public class PostAcceptanceTest {
         // 수정
         String updatedWriting = "BingBong and Jamie";
         updatePost(postWithoutImageId, updatedWriting);
+
         PostResponse updatedPostResponse = findPost(postWithoutImageId);
+
         assertThat(updatedPostResponse.getId()).isEqualTo(postWithoutImageId);
         assertThat(updatedPostResponse.getWriting()).isEqualTo(updatedWriting);
 
         // 조회
         PostResponse postFindResponse = findPost(postWithoutImageId);
+
         assertThat(postFindResponse.getId()).isEqualTo(postWithoutImageId);
         assertThat(postFindResponse.getWriting()).isEqualTo(updatedWriting);
 
         // 삭제
         deletePost(postWithoutImageId);
         findNotExistsPost(postWithoutImageId);
+
         List<PostResponse> foundPostResponses = findAllPost();
+
         assertThat(foundPostResponses).hasSize(1);
     }
 
