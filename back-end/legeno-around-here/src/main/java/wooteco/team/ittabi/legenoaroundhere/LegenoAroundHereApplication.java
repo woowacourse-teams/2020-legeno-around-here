@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @SpringBootApplication
 public class LegenoAroundHereApplication {
 
-    public static final String APPLICATION_LOCATIONS = "spring.config.location="
+    private static final String APPLICATION_LOCATIONS = "spring.config.location="
         + "classpath:application.properties,"
         + "/app/config/back/profile.yml";
 

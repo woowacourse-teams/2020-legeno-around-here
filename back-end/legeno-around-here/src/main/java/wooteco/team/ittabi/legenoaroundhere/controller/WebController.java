@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class WebController {
 
-    private Environment env;
+    private final Environment env;
 
     public WebController(Environment env) {
         this.env = env;
