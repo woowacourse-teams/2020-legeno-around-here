@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.domain;
 
-import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -35,25 +34,6 @@ public class Image extends BaseEntity {
 
     public Post getPost() {
         return post;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Image image = (Image) o;
-        return Objects.equals(name, image.name) &&
-            Objects.equals(url, image.url) &&
-            Objects.equals(post, image.post);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, url, post);
     }
 
     @Override
