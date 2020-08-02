@@ -41,7 +41,7 @@ select distinct village from raw_legal_area;
 
 -- area, region, raw_legal_area 테이블을 활용하여 area 테이블과 region의 관계를 맺어줍니다. 즉 regional_relationship 테이블을 셋팅합니다.
 insert ignore into regional_relationship (area_id, region_id)
-    select c.area_id, c.region_id from
+    select prcessed_area_region.area_id, prcessed_area_region.region_id from
         (select distinct area_id, region_id from
             raw_legal_area  join
             (select id as area_id, code from area) as area
@@ -75,7 +75,7 @@ insert ignore into regional_relationship (area_id, region_id)
             on raw_legal_area.legal_code = area.code
             join (select id as region_id, name from region) as region
             on raw_legal_area.village = region.name
-        ) as c;
+        ) as prcessed_area_region;
 
 -- [3] 불필요한 임시 테이블 삭제
 drop table if exists raw_legal_area;
