@@ -33,6 +33,15 @@ public class UserController {
     }
 
     @CrossOrigin
+    @PostMapping("/joinAdmin")
+    public ResponseEntity<Void> joinAdmin(@RequestBody UserCreateRequest userCreateRequest) {
+        Long userId = userService.createAdmin(userCreateRequest);
+        return ResponseEntity
+            .created(URI.create("/users/" + userId))
+            .build();
+    }
+
+    @CrossOrigin
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(userService.login(loginRequest));

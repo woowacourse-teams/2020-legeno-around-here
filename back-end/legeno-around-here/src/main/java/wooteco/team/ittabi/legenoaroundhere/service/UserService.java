@@ -33,14 +33,24 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public Long createUser(UserCreateRequest userCreateRequest) {
+        User persistUser = createUserBy(userCreateRequest, Role.USER);
+        return persistUser.getId();
+    }
+
+    private User createUserBy(UserCreateRequest userCreateRequest, Role user) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-        User persistUser = userRepository.save(User.builder()
+        return userRepository.save(User.builder()
             .email(new Email(userCreateRequest.getEmail()))
             .nickname(new Nickname(userCreateRequest.getNickname()))
             .password(new Password(passwordEncoder.encode(userCreateRequest.getPassword())))
-            .roles(Collections.singletonList(Role.USER.getRoleName()))
+            .roles(Collections.singletonList(user.getRoleName()))
             .build());
+    }
+
+    @Transactional
+    public Long createAdmin(UserCreateRequest userCreateRequest) {
+        User persistUser = createUserBy(userCreateRequest, Role.ADMIN);
         return persistUser.getId();
     }
 
