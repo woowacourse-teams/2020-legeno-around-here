@@ -1,9 +1,9 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_MY_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
 
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
@@ -65,12 +65,12 @@ public class UserAcceptanceTest {
     @Test
     @DisplayName("회원 관리")
     void manageUser() {
-        String location = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        String location = createUser(TEST_MY_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         // Todo: 내 정보 조회 api 구현 후, 조회가 잘 되는지 확인하는 코드로 바꿀 것.
         assertThat(location).matches(USER_LOCATION_FORMAT);
 
         // 로그인
-        TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
+        TokenResponse tokenResponse = login(TEST_MY_EMAIL, TEST_PASSWORD);
         assertThat(tokenResponse).isNotNull();
         assertThat(tokenResponse.getAccessToken())
             .hasSizeGreaterThanOrEqualTo(TOKEN_MIN_SIZE);
@@ -79,7 +79,7 @@ public class UserAcceptanceTest {
         UserResponse userResponse = findUser(tokenResponse.getAccessToken());
         assertThat(userResponse).isNotNull();
         assertThat(userResponse.getId()).isNotNull();
-        assertThat(userResponse.getEmail()).isEqualTo(TEST_EMAIL);
+        assertThat(userResponse.getEmail()).isEqualTo(TEST_MY_EMAIL);
         assertThat(userResponse.getNickname()).isEqualTo(TEST_NICKNAME);
 
         // Todo: 내 정보 수정

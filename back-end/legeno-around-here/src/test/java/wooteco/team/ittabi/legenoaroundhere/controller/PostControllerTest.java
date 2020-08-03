@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.EMPTY_MULTIPART_FILES;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +46,7 @@ public class PostControllerTest {
     void updatePost_IfNotAuthor_Forbidden() throws Exception {
         doThrow(NotAuthorizedException.class).when(postService).updatePost(any(), any());
 
-        String inputJson = objectMapper.writeValueAsString(new PostRequest(EXPECTED_WRITING));
+        String inputJson = objectMapper.writeValueAsString(new PostRequest(EXPECTED_WRITING, EMPTY_MULTIPART_FILES));
 
         this.mockMvc.perform(put("/posts/" + ANY_ID)
             .content(inputJson)
@@ -59,7 +60,7 @@ public class PostControllerTest {
     void deletePost_IfNotAuthor_Forbidden() throws Exception {
         doThrow(NotAuthorizedException.class).when(postService).deletePost(any());
 
-        String inputJson = objectMapper.writeValueAsString(new PostRequest(EXPECTED_WRITING));
+        String inputJson = objectMapper.writeValueAsString(new PostRequest(EXPECTED_WRITING, EMPTY_MULTIPART_FILES));
 
         this.mockMvc.perform(delete("/posts/" + ANY_ID)
             .content(inputJson)

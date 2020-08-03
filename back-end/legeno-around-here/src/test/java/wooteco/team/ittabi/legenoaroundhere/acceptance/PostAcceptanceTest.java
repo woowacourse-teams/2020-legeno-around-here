@@ -1,12 +1,20 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
 import static io.restassured.RestAssured.given;
+import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
-import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_PASSWORD;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.TEST_IMAGE_DIR;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostTestConstants.TEST_WRITING;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_MY_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
 
 import io.restassured.RestAssured;
+import io.restassured.config.RestAssuredConfig;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,16 +22,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.web.multipart.MultipartFile;
+import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql("/init-table.sql")
 public class PostAcceptanceTest {
+
+    @MockBean
+    private S3Uploader s3Uploader;
 
     @LocalServerPort
     public int port;
@@ -38,8 +50,6 @@ public class PostAcceptanceTest {
      * <p>
      * Scenario: 글을 관리한다.
      * <p>
-     * Given 사용자가 로그인 되어있다.
-     * <p>
      * When 글을 등록한다. Then 글이 등록되었다.
      * <p>
      * When 글 목록을 조회한다. Then 글 목록을 응답받는다. And 글 목록은 n개이다.
@@ -50,43 +60,60 @@ public class PostAcceptanceTest {
      * <p>
      * When 글을 삭제한다. Then 글이 삭제 상태로 변경된다. And 다시 글을 조회할 수 없다. And 글 목록은 n-1개이다.
      */
-    @DisplayName("로그인 한 사용자가 본인 글 관리")
+    @DisplayName("글 관리")
     @Test
     void manageMyPost() {
+
         // 로그인
-        createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
-        TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
+        createUser(TEST_MY_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        TokenResponse tokenResponse = login(TEST_MY_EMAIL, TEST_PASSWORD);
         String accessToken = tokenResponse.getAccessToken();
 
-        // 등록
-        String expectedWriting = "글을 등록합니다.";
-        String location = createPost(expectedWriting, accessToken);
-        Long id = getIdFromUrl(location);
-        PostResponse postResponse = findPost(id, accessToken);
-        assertThat(postResponse.getId()).isEqualTo(id);
-        assertThat(postResponse.getWriting()).isEqualTo(expectedWriting);
+        // 이미지가 포함되지 않은 글 등록
+        String postWithoutImageLocation = createPostWithoutImage(accessToken);
+        Long postWithoutImageId = getIdFromUrl(postWithoutImageLocation);
+
+        PostResponse postWithoutImageResponse = findPost(postWithoutImageId, accessToken);
+
+        assertThat(postWithoutImageResponse.getId()).isEqualTo(postWithoutImageId);
+        assertThat(postWithoutImageResponse.getWriting()).isEqualTo(TEST_WRITING);
+
+        // 이미지가 포함된 글 등록
+        String postWithImageLocation = createPostWithImage(accessToken);
+        Long postWithImageId = getIdFromUrl(postWithImageLocation);
+
+        PostResponse postWithImageResponse = findPost(postWithImageId, accessToken);
+
+        assertThat(postWithImageResponse.getId()).isEqualTo(postWithImageId);
+        assertThat(postWithImageResponse.getWriting()).isEqualTo(TEST_WRITING);
+        assertThat(postWithImageResponse.getImages()).hasSize(2);
 
         // 목록 조회
         List<PostResponse> postResponses = findAllPost(accessToken);
-        assertThat(postResponses).hasSize(1);
+        assertThat(postResponses).hasSize(2);
 
         // 수정
-        String writing = "Hello world!!";
-        updatePost(id, writing, accessToken);
-        PostResponse updatedPostResponse = findPost(id, accessToken);
-        assertThat(updatedPostResponse.getId()).isEqualTo(id);
-        assertThat(updatedPostResponse.getWriting()).isEqualTo(writing);
+        String updatedWriting = "BingBong and Jamie";
+        updatePost(postWithoutImageId, updatedWriting, accessToken);
+
+        PostResponse updatedPostResponse = findPost(postWithoutImageId, accessToken);
+
+        assertThat(updatedPostResponse.getId()).isEqualTo(postWithoutImageId);
+        assertThat(updatedPostResponse.getWriting()).isEqualTo(updatedWriting);
 
         // 조회
-        PostResponse postFindResponse = findPost(id, accessToken);
-        assertThat(postFindResponse.getId()).isEqualTo(id);
-        assertThat(postFindResponse.getWriting()).isEqualTo(writing);
+        PostResponse postFindResponse = findPost(postWithoutImageId, accessToken);
+
+        assertThat(postFindResponse.getId()).isEqualTo(postWithoutImageId);
+        assertThat(postFindResponse.getWriting()).isEqualTo(updatedWriting);
 
         // 삭제
-        deletePost(id, accessToken);
-        findNotExistsPost(id, accessToken);
+        deletePost(postWithoutImageId, accessToken);
+        findNotExistsPost(postWithoutImageId, accessToken);
+
         List<PostResponse> foundPostResponses = findAllPost(accessToken);
-        assertThat(foundPostResponses).hasSize(0);
+
+        assertThat(foundPostResponses).hasSize(1);
     }
 
     private String createUser(String email, String nickname, String password) {
@@ -186,15 +213,34 @@ public class PostAcceptanceTest {
             .as(PostResponse.class);
     }
 
-    private String createPost(String writing, String accessToken) {
-        Map<String, String> params = new HashMap<>();
-        params.put("writing", writing);
+    private String createPostWithoutImage(String accessToken) {
 
         return given()
-            .body(params)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .log().all()
+            .formParam("writing", TEST_WRITING)
             .header("X-AUTH-TOKEN", accessToken)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .config(RestAssuredConfig.config()
+                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+            .when()
+            .post("/posts")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract()
+            .header("Location");
+    }
+
+    private String createPostWithImage(String accessToken) {
+        when(s3Uploader.upload(any(MultipartFile.class), anyString())).thenReturn("imageUrl");
+
+        // TODO: 2020/07/28 이미지를 포함했을 때 한글이 안 나오는 문제
+        return given()
+            .log().all()
+            .formParam("writing", TEST_WRITING)
+            .header("X-AUTH-TOKEN", accessToken)
+            .config(RestAssuredConfig.config()
+                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+            .multiPart("images", new File(TEST_IMAGE_DIR + "right_image1.jpg"))
+            .multiPart("images", new File(TEST_IMAGE_DIR + "right_image2.jpg"))
             .when()
             .post("/posts")
             .then()
