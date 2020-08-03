@@ -9,27 +9,28 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
+import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 
-@Getter
-@Setter
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
-@Entity
-public class User implements UserDetails {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Getter
+@Setter
+@ToString
+public class User extends BaseEntity implements UserDetails {
 
     @Embedded
     @Column(nullable = false, unique = true)
@@ -47,13 +48,12 @@ public class User implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-    protected User() {
-    }
+    @OneToMany(mappedBy = "user")
+    @Builder.Default
+    private List<Post> post = new ArrayList<>();
 
-    public User(Email email, Nickname nickname, Password password) {
-        this.email = email;
-        this.nickname = nickname;
-        this.password = password;
+    public boolean isNotSame(User user) {
+        return !this.equals(user);
     }
 
     public String getPasswordByString() {
@@ -99,16 +99,6 @@ public class User implements UserDetails {
 
     public String getEmailByString() {
         return this.email.getEmail();
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-            "id=" + id +
-            ", email=" + email +
-            ", nickname=" + nickname +
-            ", password=" + password +
-            '}';
     }
 
     public String getNicknameByString() {

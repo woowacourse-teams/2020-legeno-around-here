@@ -8,6 +8,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.TEST_IMAGE_DIR;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostTestConstants.TEST_WRITING;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_MY_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
 
 import io.restassured.RestAssured;
 import io.restassured.config.RestAssuredConfig;
@@ -26,6 +29,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PostAcceptanceTest {
@@ -37,7 +41,7 @@ public class PostAcceptanceTest {
     public int port;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         RestAssured.port = port;
     }
 
@@ -47,8 +51,6 @@ public class PostAcceptanceTest {
      * Scenario: 글을 관리한다.
      * <p>
      * When 글을 등록한다. Then 글이 등록되었다.
-     * <p>
-     * When 이미지가 포함된 글을 등록한다. Then 이미지가 포함된 글이 등록되었다.
      * <p>
      * When 글 목록을 조회한다. Then 글 목록을 응답받는다. And 글 목록은 n개이다.
      * <p>
@@ -60,57 +62,97 @@ public class PostAcceptanceTest {
      */
     @DisplayName("글 관리")
     @Test
-    void managePost() {
+    void manageMyPost() {
+
+        // 로그인
+        createUser(TEST_MY_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        TokenResponse tokenResponse = login(TEST_MY_EMAIL, TEST_PASSWORD);
+        String accessToken = tokenResponse.getAccessToken();
 
         // 이미지가 포함되지 않은 글 등록
-        String postWithoutImageLocation = createPostWithoutImage();
+        String postWithoutImageLocation = createPostWithoutImage(accessToken);
         Long postWithoutImageId = getIdFromUrl(postWithoutImageLocation);
 
-        PostResponse postWithoutImageResponse = findPost(postWithoutImageId);
+        PostResponse postWithoutImageResponse = findPost(postWithoutImageId, accessToken);
 
         assertThat(postWithoutImageResponse.getId()).isEqualTo(postWithoutImageId);
         assertThat(postWithoutImageResponse.getWriting()).isEqualTo(TEST_WRITING);
 
         // 이미지가 포함된 글 등록
-        String postWithImageLocation = createPostWithImage();
+        String postWithImageLocation = createPostWithImage(accessToken);
         Long postWithImageId = getIdFromUrl(postWithImageLocation);
 
-        PostResponse postWithImageResponse = findPost(postWithImageId);
+        PostResponse postWithImageResponse = findPost(postWithImageId, accessToken);
 
         assertThat(postWithImageResponse.getId()).isEqualTo(postWithImageId);
         assertThat(postWithImageResponse.getWriting()).isEqualTo(TEST_WRITING);
         assertThat(postWithImageResponse.getImages()).hasSize(2);
 
         // 목록 조회
-        List<PostResponse> postResponses = findAllPost();
+        List<PostResponse> postResponses = findAllPost(accessToken);
         assertThat(postResponses).hasSize(2);
 
         // 수정
         String updatedWriting = "BingBong and Jamie";
-        updatePost(postWithoutImageId, updatedWriting);
+        updatePost(postWithoutImageId, updatedWriting, accessToken);
 
-        PostResponse updatedPostResponse = findPost(postWithoutImageId);
+        PostResponse updatedPostResponse = findPost(postWithoutImageId, accessToken);
 
         assertThat(updatedPostResponse.getId()).isEqualTo(postWithoutImageId);
         assertThat(updatedPostResponse.getWriting()).isEqualTo(updatedWriting);
 
         // 조회
-        PostResponse postFindResponse = findPost(postWithoutImageId);
+        PostResponse postFindResponse = findPost(postWithoutImageId, accessToken);
 
         assertThat(postFindResponse.getId()).isEqualTo(postWithoutImageId);
         assertThat(postFindResponse.getWriting()).isEqualTo(updatedWriting);
 
         // 삭제
-        deletePost(postWithoutImageId);
-        findNotExistsPost(postWithoutImageId);
+        deletePost(postWithoutImageId, accessToken);
+        findNotExistsPost(postWithoutImageId, accessToken);
 
-        List<PostResponse> foundPostResponses = findAllPost();
+        List<PostResponse> foundPostResponses = findAllPost(accessToken);
 
         assertThat(foundPostResponses).hasSize(1);
     }
 
-    private void findNotExistsPost(Long id) {
+    private String createUser(String email, String nickname, String password) {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("nickname", nickname);
+        params.put("password", password);
+
+        return given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/join")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract()
+            .header("Location");
+    }
+
+    private TokenResponse login(String email, String password) {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("password", password);
+
+        return given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/login")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract().as(TokenResponse.class);
+    }
+
+    private void findNotExistsPost(Long id, String accessToken) {
         given()
+            .header("X-AUTH-TOKEN", accessToken)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .get("/posts/" + id)
@@ -118,30 +160,33 @@ public class PostAcceptanceTest {
             .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
-    private void deletePost(Long id) {
+    private void deletePost(Long id, String accessToken) {
         given()
+            .header("X-AUTH-TOKEN", accessToken)
             .when()
             .delete("/posts/" + id)
             .then()
             .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    private void updatePost(Long id, String writing) {
+    private void updatePost(Long id, String writing, String accessToken) {
         Map<String, String> params = new HashMap<>();
         params.put("writing", writing);
 
         given()
             .body(params)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
             .when()
             .put("/posts/" + id)
             .then()
             .statusCode(HttpStatus.OK.value());
     }
 
-    private List<PostResponse> findAllPost() {
+    private List<PostResponse> findAllPost(String accessToken) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
             .when()
             .get("/posts")
             .then()
@@ -154,12 +199,12 @@ public class PostAcceptanceTest {
     private Long getIdFromUrl(String location) {
         int lastIndex = location.lastIndexOf("/");
         return Long.valueOf(location.substring(lastIndex + 1));
-
     }
 
-    private PostResponse findPost(Long id) {
+    private PostResponse findPost(Long id, String accessToken) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
             .when()
             .get("/posts/" + id)
             .then()
@@ -168,11 +213,12 @@ public class PostAcceptanceTest {
             .as(PostResponse.class);
     }
 
-    private String createPostWithoutImage() {
+    private String createPostWithoutImage(String accessToken) {
 
         return given()
             .log().all()
             .formParam("writing", TEST_WRITING)
+            .header("X-AUTH-TOKEN", accessToken)
             .config(RestAssuredConfig.config()
                 .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
             .when()
@@ -183,13 +229,14 @@ public class PostAcceptanceTest {
             .header("Location");
     }
 
-    private String createPostWithImage() {
+    private String createPostWithImage(String accessToken) {
         when(s3Uploader.upload(any(MultipartFile.class), eq("images"))).thenReturn("imageUrl");
 
         // TODO: 2020/07/28 이미지를 포함했을 때 한글이 안 나오는 문제
         return given()
             .log().all()
             .formParam("writing", TEST_WRITING)
+            .header("X-AUTH-TOKEN", accessToken)
             .config(RestAssuredConfig.config()
                 .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
             .multiPart("images", new File(TEST_IMAGE_DIR + "right_image1.jpg"))
@@ -202,4 +249,3 @@ public class PostAcceptanceTest {
             .header("Location");
     }
 }
-

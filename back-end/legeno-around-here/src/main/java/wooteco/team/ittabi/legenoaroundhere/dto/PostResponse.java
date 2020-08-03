@@ -1,6 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -19,10 +20,16 @@ public class PostResponse {
     private Long id;
     private String writing;
     private List<ImageResponse> images;
+    private UserResponse user;
 
     public static PostResponse of(Post post) {
         List<ImageResponse> imageResponses = ImageResponse.listOf(post.getImages());
-        return new PostResponse(post.getId(), post.getWriting(), imageResponses);
+        return new PostResponse(post.getId(), post.getWriting(), imageResponses, UserResponse.from(post.getUser()));
     }
 
+    public static List<PostResponse> listOf(List<Post> posts) {
+        return posts.stream()
+            .map(PostResponse::of)
+            .collect(Collectors.toList());
+    }
 }

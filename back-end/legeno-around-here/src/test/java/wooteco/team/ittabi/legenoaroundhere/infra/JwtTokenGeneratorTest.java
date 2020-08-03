@@ -1,7 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.infra;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_MY_EMAIL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ class JwtTokenGeneratorTest {
     @DisplayName("토큰 생성")
     void createToken() {
         List<String> roles = new ArrayList<>();
-        assertThat(jwtTokenGenerator.createToken(TEST_EMAIL, roles))
+        assertThat(jwtTokenGenerator.createToken(TEST_MY_EMAIL, roles))
             .hasSizeGreaterThanOrEqualTo(MIN_SIZE);
     }
 }

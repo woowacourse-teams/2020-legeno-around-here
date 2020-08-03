@@ -31,7 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedOrigin("http://13.209.62.31:3000");
+        configuration.addAllowedOrigin("http://13.209.62.31:80");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
@@ -50,12 +50,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
-            .antMatchers("/users/**").hasRole("USER")
+            .antMatchers("/join").permitAll()
+            .antMatchers("/login").permitAll()
+            .antMatchers("/**").hasRole("USER")
             .anyRequest().permitAll()
             .and()
             .cors()
             .and()
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenDecoder),
-                UsernamePasswordAuthenticationFilter.class);;
+                UsernamePasswordAuthenticationFilter.class);
     }
 }

@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_MY_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
@@ -38,7 +38,7 @@ import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 class UserControllerTest {
 
     @MockBean
-    protected UserService userService;
+    private UserService userService;
 
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -56,7 +56,7 @@ class UserControllerTest {
         given(userService.createUser(any())).willReturn(TEST_ID);
 
         String inputJson = objectMapper.writeValueAsString(
-            new UserCreateRequest(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD));
+            new UserCreateRequest(TEST_MY_EMAIL, TEST_NICKNAME, TEST_PASSWORD));
 
         this.mockMvc.perform(post("/join")
             .content(inputJson)
@@ -73,7 +73,7 @@ class UserControllerTest {
         given(userService.login(any())).willReturn(expected);
 
         String inputJson = objectMapper.writeValueAsString(
-            new LoginRequest(TEST_EMAIL, TEST_PASSWORD));
+            new LoginRequest(TEST_MY_EMAIL, TEST_PASSWORD));
 
         MockHttpServletResponse response = this.mockMvc.perform(post("/login")
             .content(inputJson)
@@ -93,7 +93,7 @@ class UserControllerTest {
         given(userService.login(any())).willThrow(expected);
 
         String inputJson = objectMapper.writeValueAsString(
-            new LoginRequest(TEST_EMAIL, TEST_PASSWORD));
+            new LoginRequest(TEST_MY_EMAIL, TEST_PASSWORD));
 
         this.mockMvc.perform(post("/login")
             .content(inputJson)
@@ -112,7 +112,7 @@ class UserControllerTest {
     @Test
     @DisplayName("내 정보 얻기")
     void findUser() throws Exception {
-        UserResponse expected = new UserResponse(TEST_ID, TEST_EMAIL, TEST_NICKNAME);
+        UserResponse expected = new UserResponse(TEST_ID, TEST_MY_EMAIL, TEST_NICKNAME);
         given(userService.findUser(any())).willReturn(expected);
 
         String expectedJson = objectMapper.writeValueAsString(expected);
