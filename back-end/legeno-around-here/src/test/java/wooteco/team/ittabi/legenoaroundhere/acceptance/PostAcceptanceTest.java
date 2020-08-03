@@ -4,7 +4,7 @@ import static io.restassured.RestAssured.given;
 import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.TEST_IMAGE_DIR;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostTestConstants.TEST_WRITING;
@@ -230,7 +230,7 @@ public class PostAcceptanceTest {
     }
 
     private String createPostWithImage(String accessToken) {
-        when(s3Uploader.upload(any(MultipartFile.class), eq("images"))).thenReturn("imageUrl");
+        when(s3Uploader.upload(any(MultipartFile.class), anyString())).thenReturn("imageUrl");
 
         // TODO: 2020/07/28 이미지를 포함했을 때 한글이 안 나오는 문제
         return given()

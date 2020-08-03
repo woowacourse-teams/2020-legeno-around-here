@@ -3,7 +3,7 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.EMPTY_MULTIPART_FILES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.TEST_IMAGE_CONTENT_TYPE;
@@ -107,7 +107,7 @@ public class PostServiceTest {
             .convert("right_image1.jpg", TEST_IMAGE_CONTENT_TYPE);
         PostRequest postRequest = new PostRequest(TEST_WRITING,
             Collections.singletonList(multipartFile));
-        when(s3Uploader.upload(any(MultipartFile.class), eq("images"))).thenReturn("imageUrl");
+        when(s3Uploader.upload(any(MultipartFile.class), anyString())).thenReturn("imageUrl");
 
         PostResponse postResponse = postService.createPost(postRequest);
 

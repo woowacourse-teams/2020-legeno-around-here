@@ -11,6 +11,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.FileIOException;
 import wooteco.team.ittabi.legenoaroundhere.exception.MultipartFileConvertException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotFoundAlgorithmException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageExtensionException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageMimeTypeException;
 import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
@@ -48,7 +49,7 @@ public class GlobalExceptionHandler {
             .body(new ErrorResponse(e.getMessage()));
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler({Exception.class, NotFoundAlgorithmException.class})
     public ResponseEntity<ErrorResponse> handleInternalServerError(Exception e) {
         log.info(e.getMessage());
         return ResponseEntity

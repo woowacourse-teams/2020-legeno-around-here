@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +19,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.MultipartFileConvertExcept
 public class S3Uploader {
 
     public static final String DIR_DELIMITER = "/";
+    public static final String FILE_NAME_DELIMITER = "_";
 
     private final AmazonS3 amazonS3;
     private final String bucket;
@@ -33,7 +35,11 @@ public class S3Uploader {
     }
 
     private String upload(File uploadFile, String dirName) {
-        String fileName = dirName + DIR_DELIMITER + uploadFile.getName();
+        String fileName = dirName
+            + DIR_DELIMITER
+            + UUID.randomUUID().toString()
+            + FILE_NAME_DELIMITER
+            + uploadFile.getName();
         String uploadImageUrl = putS3(uploadFile, fileName);
         removeNewFile(uploadFile);
         return uploadImageUrl;
