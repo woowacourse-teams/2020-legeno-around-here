@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,10 +20,14 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
+import wooteco.team.ittabi.legenoaroundhere.service.SectorService;
 
 @RestController
 @RequestMapping("/sectors")
+@AllArgsConstructor
 public class SectorController {
+
+    private SectorService sectorService;
 
     private Map<Long, SectorResponse> sectors = new HashMap<>();
 
