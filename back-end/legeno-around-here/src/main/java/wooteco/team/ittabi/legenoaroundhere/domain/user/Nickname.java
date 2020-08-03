@@ -2,21 +2,25 @@ package wooteco.team.ittabi.legenoaroundhere.domain.user;
 
 import java.util.Objects;
 import javax.persistence.Embeddable;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 
+@Embeddable
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-@Embeddable
+@EqualsAndHashCode
+@ToString
 public class Nickname {
 
     private static final int MAX_LENGTH = 10;
 
     private String nickname;
-
-    protected Nickname() {
-    }
 
     public Nickname(String nickname) {
         validate(nickname);
@@ -52,29 +56,5 @@ public class Nickname {
         if (nickname.length() > MAX_LENGTH) {
             throw new UserInputException("닉네임은 " + MAX_LENGTH + "글자 이하여야 합니다.");
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Nickname nickname1 = (Nickname) o;
-        return Objects.equals(nickname, nickname1.nickname);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(nickname);
-    }
-
-    @Override
-    public String toString() {
-        return "Nickname{" +
-            "nickname='" + nickname + '\'' +
-            '}';
     }
 }

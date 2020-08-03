@@ -1,23 +1,19 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@Getter
+@EqualsAndHashCode
+@ToString
 public class LoginRequest {
 
     private String email;
     private String password;
-
-    public LoginRequest() {
-    }
-
-    public LoginRequest(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
 }

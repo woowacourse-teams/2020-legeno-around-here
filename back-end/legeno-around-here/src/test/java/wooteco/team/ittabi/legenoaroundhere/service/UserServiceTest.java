@@ -86,11 +86,11 @@ class UserServiceTest {
     @Test
     @DisplayName("내정보 찾기")
     void findUser() {
-        User user = new User(
-            new Email(TEST_EMAIL),
-            new Nickname(TEST_NICKNAME),
-            new Password(TEST_PASSWORD)
-        );
+        User user = User.builder()
+            .email(new Email(TEST_EMAIL))
+            .nickname(new Nickname(TEST_NICKNAME))
+            .password(new Password(TEST_PASSWORD))
+            .build();
         Authentication authentication = mock(Authentication.class);
         when(authentication.getPrincipal()).thenReturn(user);
 

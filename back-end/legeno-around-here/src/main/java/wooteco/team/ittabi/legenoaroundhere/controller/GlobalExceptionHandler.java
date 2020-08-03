@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import wooteco.team.ittabi.legenoaroundhere.dto.ErrorResponse;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 
@@ -23,6 +24,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleBadRequest(UserInputException e) {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
+            .body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(NotAuthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleForbidden(NotAuthorizedException e) {
+        return ResponseEntity
+            .status(HttpStatus.FORBIDDEN)
             .body(new ErrorResponse(e.getMessage()));
     }
 

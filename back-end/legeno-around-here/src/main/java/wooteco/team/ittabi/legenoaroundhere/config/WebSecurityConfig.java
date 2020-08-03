@@ -50,13 +50,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
-            .antMatchers("/users/**").hasRole("USER")
+            .antMatchers("/join").permitAll()
+            .antMatchers("/login").permitAll()
+            .antMatchers("/**").hasRole("USER")
             .anyRequest().permitAll()
             .and()
             .cors()
             .and()
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenDecoder),
                 UsernamePasswordAuthenticationFilter.class);
-        ;
     }
 }
