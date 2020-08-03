@@ -22,7 +22,8 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
     testImplementation 'io.rest-assured:rest-assured'
-    compile 'com.amazonaws:aws-java-sdk:1.11.824'
+    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.832')
+    implementation 'com.amazonaws:aws-java-sdk-s3'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
