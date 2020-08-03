@@ -76,7 +76,7 @@ class SectorServiceTest {
         assertThat(sectorResponse.getUser()).isEqualTo(UserResponse.from(admin));
     }
 
-    @DisplayName("Sector 생성 - 예외 발생")
+    @DisplayName("Sector 생성 - 예외 발생, 동일 이름의 부문이 존재")
     @Test
     void createSector_DuplicateName_ThrownException() {
         SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
@@ -84,5 +84,23 @@ class SectorServiceTest {
 
         assertThatThrownBy(() -> sectorService.createSector(sectorRequest))
             .isInstanceOf(NotUniqueException.class);
+    }
+
+    @DisplayName("Sector 조회 - 성공, ID가 있는 경우")
+    @Test
+    void findSector_HasId_Success() {
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        SectorResponse createdSector = sectorService.createSector(sectorRequest);
+        Long createdSectorId = createdSector.getId();
+
+        SectorResponse foundSector = sectorService.findSector(createdSectorId);
+        assertThat(foundSector).isEqualTo(createdSector);
+    }
+
+    @DisplayName("Sector 조회 - 예외 발생, ID가 없는 경우")
+    @Test
+    void findSector_HasNotId_ThrowException() {
+        assertThatThrownBy(() -> sectorService.findSector(INVALID_ID))
+            .isInstanceOf(NotExistsException.class);
     }
 }
