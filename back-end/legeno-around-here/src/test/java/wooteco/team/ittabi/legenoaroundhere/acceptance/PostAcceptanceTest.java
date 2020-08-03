@@ -22,7 +22,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql("/truncate.sql")
+@Sql("/init-table.sql")
 public class PostAcceptanceTest {
 
     @LocalServerPort

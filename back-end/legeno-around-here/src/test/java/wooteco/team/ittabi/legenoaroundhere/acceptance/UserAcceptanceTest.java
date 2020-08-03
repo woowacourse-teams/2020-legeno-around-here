@@ -21,7 +21,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql("/truncate.sql")
+@Sql("/init-table.sql")
 public class UserAcceptanceTest {
 
     private static final String USER_LOCATION_FORMAT = "^/users/[1-9][0-9]*$";
