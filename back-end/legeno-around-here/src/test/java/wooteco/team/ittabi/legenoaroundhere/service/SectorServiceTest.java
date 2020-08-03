@@ -4,9 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_ADMIN_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_ADMIN_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_SECTOR_ANOTHER_DESCRIPTION;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_SECTOR_ANOTHER_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_SECTOR_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_SECTOR_NAME;
 
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -102,5 +105,16 @@ class SectorServiceTest {
     void findSector_HasNotId_ThrowException() {
         assertThatThrownBy(() -> sectorService.findSector(INVALID_ID))
             .isInstanceOf(NotExistsException.class);
+    }
+
+    @DisplayName("Sector 전체 조회 - 성공")
+    @Test
+    void findAllSector_Success() {
+        sectorService.createSector(new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION));
+        sectorService.createSector(
+            new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION));
+
+        List<SectorResponse> sectors = sectorService.findAllSector();
+        assertThat(sectors).hasSize(2);
     }
 }

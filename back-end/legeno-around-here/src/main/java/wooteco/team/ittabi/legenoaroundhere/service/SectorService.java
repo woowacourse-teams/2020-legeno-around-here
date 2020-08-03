@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -37,5 +38,10 @@ public class SectorService {
         Sector sector = sectorRepository.findById(id)
             .orElseThrow(() -> new NotExistsException(id + "에 해당하는 Sector가 존재하지 않습니다."));
         return SectorResponse.of(sector);
+    }
+
+    public List<SectorResponse> findAllSector() {
+        List<Sector> sectors = sectorRepository.findAll();
+        return SectorResponse.listOf(sectors);
     }
 }
