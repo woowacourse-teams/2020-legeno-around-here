@@ -143,7 +143,7 @@ public class PostServiceTest {
 
     @DisplayName("ID로 포스트 수정 - 예외 발생, 작성자가 아님")
     @Test
-    void updatePost_IfNotAuthor_ThrowException() {
+    void updatePost_IfNotOwner_ThrowException() {
         String updatedPostWriting = "Jamie and BingBong";
         PostRequest createdPostRequest = new PostRequest(expectedWriting);
         PostResponse createdPostResponse = postService.createPost(createdPostRequest);
@@ -190,9 +190,9 @@ public class PostServiceTest {
             .isInstanceOf(NotExistsException.class);
     }
 
-    @DisplayName("ID로 포스트 삭제 - 실패, 다른 사용자")
+    @DisplayName("ID로 포스트 삭제 - 예외 발생, 작성자가 아님")
     @Test
-    void deletePost_IfNotAuthor_ThrowException() {
+    void deletePost_IfNotOwner_ThrowException() {
         PostRequest createdPostRequest = new PostRequest(expectedWriting);
         PostResponse createdPostResponse = postService.createPost(createdPostRequest);
 
