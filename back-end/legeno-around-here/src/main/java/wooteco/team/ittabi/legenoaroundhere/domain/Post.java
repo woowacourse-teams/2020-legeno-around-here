@@ -29,7 +29,7 @@ public class Post extends BaseEntity {
     private State state;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "user_id")
     private User user;
 
     public Post(User user, String writing) {
