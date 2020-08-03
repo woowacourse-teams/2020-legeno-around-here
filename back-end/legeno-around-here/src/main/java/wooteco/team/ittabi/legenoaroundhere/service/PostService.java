@@ -69,7 +69,7 @@ public class PostService {
     private void validateIsOwner(Authentication authentication, Post post) {
         User user = (User) authentication.getPrincipal();
 
-        if (!post.getUser().equals(user)) {
+        if (user.isNotSame(post.getUser())) {
             throw new NotAuthorizedException("권한이 없습니다.");
         }
     }

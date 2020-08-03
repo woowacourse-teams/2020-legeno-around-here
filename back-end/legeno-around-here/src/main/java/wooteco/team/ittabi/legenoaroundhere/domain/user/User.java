@@ -60,6 +60,10 @@ public class User extends BaseEntity implements UserDetails {
         this.password = password;
     }
 
+    public boolean isNotSame(User user) {
+        return !this.equals(user);
+    }
+
     public String getPasswordByString() {
         return this.password.getPassword();
     }
