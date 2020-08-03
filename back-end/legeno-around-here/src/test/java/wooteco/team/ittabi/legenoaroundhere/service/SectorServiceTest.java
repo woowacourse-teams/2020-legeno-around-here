@@ -145,4 +145,24 @@ class SectorServiceTest {
         assertThatThrownBy(() -> sectorService.updateSector(INVALID_ID, sectorRequest))
             .isInstanceOf(NotExistsException.class);
     }
+
+    @DisplayName("Sector 삭제 - 성공, ID가 있는 경우")
+    @Test
+    void deleteSector_HasId_Success() {
+        Long id = sectorService
+            .createSector(new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION))
+            .getId();
+
+        sectorService.deleteSector(id);
+
+        assertThatThrownBy(() -> sectorService.findSector(id))
+            .isInstanceOf(NotExistsException.class);
+    }
+
+    @DisplayName("Sector 삭제 - 예외 발생, ID가 없는 경우")
+    @Test
+    void deleteSector_HasNotId_ThrownException() {
+        assertThatThrownBy(() -> sectorService.deleteSector(INVALID_ID))
+            .isInstanceOf(NotExistsException.class);
+    }
 }

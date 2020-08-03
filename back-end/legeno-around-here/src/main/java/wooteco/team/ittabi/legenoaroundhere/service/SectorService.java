@@ -1,13 +1,15 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import wooteco.team.ittabi.legenoaroundhere.domain.Sector;
+import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
+import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
@@ -25,7 +27,8 @@ public class SectorService {
     public SectorResponse createSector(SectorRequest sectorRequest) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
-            Sector sector = sectorRepository.save(sectorRequest.toSector(user));
+            Sector sector = sectorRepository
+                .save(sectorRequest.toSector(user, SectorState.PUBLISHED));
             return SectorResponse.of(sector);
         } catch (DataIntegrityViolationException e) {
             if (e.getCause() instanceof ConstraintViolationException) {
@@ -42,12 +45,20 @@ public class SectorService {
     }
 
     private Sector findSectorBy(Long id) {
-        return sectorRepository.findById(id)
+        Sector sector = sectorRepository.findById(id)
             .orElseThrow(() -> new NotExistsException(id + "에 해당하는 Sector가 존재하지 않습니다."));
+        if (sector.isNotUsed()) {
+            throw new NotExistsException(id + "에 해당하는 Sector가 존재하지 않습니다.");
+        }
+        return sector;
     }
 
     public List<SectorResponse> findAllSector() {
-        List<Sector> sectors = sectorRepository.findAll();
+        List<Sector> sectors = sectorRepository.findAll()
+            .stream()
+            .filter(Sector::isUsed)
+            .collect(Collectors.toList());
+
         return SectorResponse.listOf(sectors);
     }
 
@@ -56,6 +67,12 @@ public class SectorService {
         Sector sector = findSectorBy(id);
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        sector.update(sectorRequest.toSector(user));
+        sector.update(sectorRequest.toSector(user, SectorState.PUBLISHED));
+    }
+
+    @Transactional
+    public void deleteSector(Long id) {
+        Sector sector = findSectorBy(id);
+        sector.setState(SectorState.DELETED);
     }
 }
