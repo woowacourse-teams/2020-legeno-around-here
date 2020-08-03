@@ -3,7 +3,7 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.domain.Post;
@@ -14,18 +14,16 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
-import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 
 @Service
 @AllArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
 
     @Transactional
-    public PostResponse createPost(Authentication authentication, PostRequest postRequest) {
-        User user = (User) authentication.getPrincipal();
+    public PostResponse createPost(PostRequest postRequest) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Post post = postRepository.save(postRequest.toPost(user));
         return PostResponse.of(post);
     }
@@ -52,22 +50,22 @@ public class PostService {
     }
 
     @Transactional
-    public void updatePost(Authentication authentication, Long id, PostRequest postRequest) {
+    public void updatePost(Long id, PostRequest postRequest) {
         Post post = postRepository.findById(id)
             .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
-        validateIsOwner(authentication, post);
+        validateIsOwner(post);
         post.setWriting(postRequest.getWriting());
     }
 
     @Transactional
-    public void deletePost(Authentication authentication, Long id) {
+    public void deletePost(Long id) {
         Post post = findNotDeletedPost(id);
-        validateIsOwner(authentication, post);
+        validateIsOwner(post);
         post.setState(State.DELETED);
     }
 
-    private void validateIsOwner(Authentication authentication, Post post) {
-        User user = (User) authentication.getPrincipal();
+    private void validateIsOwner(Post post) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (user.isNotSame(post.getUser())) {
             throw new NotAuthorizedException("권한이 없습니다.");

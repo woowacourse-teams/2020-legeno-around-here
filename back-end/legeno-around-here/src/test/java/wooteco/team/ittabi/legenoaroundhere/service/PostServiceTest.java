@@ -2,8 +2,6 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_PASSWORD;
@@ -15,7 +13,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
@@ -41,28 +42,28 @@ public class PostServiceTest {
 
     private final String expectedWriting = "Hello!!";
     private User user;
-    private Authentication authentication;
     private User another;
-    private Authentication authenticationOfAnother;
 
     @BeforeEach
     void setUp() {
-        user = createUser(TEST_EMAIL);
-        authentication = mock(Authentication.class);
-        when(authentication.getPrincipal()).thenReturn(user);
-
-        another = createUser("another@test.com");
-        authenticationOfAnother = mock(Authentication.class);
-        when(authenticationOfAnother.getPrincipal()).thenReturn(another);
+        user = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        another = createUser("another@test.com", TEST_NICKNAME, TEST_PASSWORD);
+        setAuthentication(user);
     }
 
-    private User createUser(String email) {
-        UserCreateRequest userCreateRequest =
-            new UserCreateRequest(email, TEST_NICKNAME, TEST_PASSWORD);
+    private User createUser(String email, String nickname, String password) {
+        UserCreateRequest userCreateRequest = new UserCreateRequest(email, nickname, password);
         Long userId = userService.createUser(userCreateRequest);
 
         return userRepository.findById(userId)
             .orElseThrow(() -> new NotExistsException("해당하는 사용자가 존재하지 않습니다."));
+    }
+
+    private void setAuthentication(User user) {
+        UserDetails userDetails = userService.loadUserByUsername(user.getEmailByString());
+        Authentication authToken = new UsernamePasswordAuthenticationToken(
+            user, "TestCredentials", userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authToken);
     }
 
     @DisplayName("포스트 생성 - 성공")
@@ -70,7 +71,7 @@ public class PostServiceTest {
     void createPost_SuccessToCreate() {
         PostRequest postRequest = new PostRequest(expectedWriting);
 
-        PostResponse postResponse = postService.createPost(authentication, postRequest);
+        PostResponse postResponse = postService.createPost(postRequest);
 
         assertThat(postResponse.getId()).isNotNull();
         assertThat(postResponse.getWriting()).isEqualTo(expectedWriting);
@@ -81,7 +82,7 @@ public class PostServiceTest {
     @Test
     void findPost_HasId_SuccessToFind() {
         PostRequest postRequest = new PostRequest(expectedWriting);
-        PostResponse createdPostResponse = postService.createPost(authentication, postRequest);
+        PostResponse createdPostResponse = postService.createPost(postRequest);
 
         PostResponse postResponse = postService
             .findPost(createdPostResponse.getId());
@@ -104,8 +105,9 @@ public class PostServiceTest {
     @Test
     void findAllPost_SuccessToFind() {
         PostRequest postRequest = new PostRequest(expectedWriting);
-        postService.createPost(authentication, postRequest);
-        postService.createPost(authentication, postRequest);
+
+        postService.createPost(postRequest);
+        postService.createPost(postRequest);
 
         List<PostResponse> posts = postService.findAllPost();
 
@@ -118,10 +120,10 @@ public class PostServiceTest {
         String updatedPostWriting = "Jamie and BingBong";
         PostRequest createdPostRequest = new PostRequest(expectedWriting);
         PostResponse createdPostResponse = postService
-            .createPost(authentication, createdPostRequest);
+            .createPost(createdPostRequest);
         PostRequest updatedPostRequest = new PostRequest(updatedPostWriting);
 
-        postService.updatePost(authentication, createdPostResponse.getId(), updatedPostRequest);
+        postService.updatePost(createdPostResponse.getId(), updatedPostRequest);
         PostResponse updatedPostResponse = postService
             .findPost(createdPostResponse.getId());
 
@@ -135,7 +137,7 @@ public class PostServiceTest {
         PostRequest postRequest = new PostRequest(expectedWriting);
         Long invalidId = -1L;
 
-        assertThatThrownBy(() -> postService.updatePost(authentication, invalidId, postRequest))
+        assertThatThrownBy(() -> postService.updatePost(invalidId, postRequest))
             .isInstanceOf(NotExistsException.class);
     }
 
@@ -144,12 +146,12 @@ public class PostServiceTest {
     void updatePost_IfNotAuthor_ThrowException() {
         String updatedPostWriting = "Jamie and BingBong";
         PostRequest createdPostRequest = new PostRequest(expectedWriting);
-        PostResponse createdPostResponse = postService
-            .createPost(authentication, createdPostRequest);
+        PostResponse createdPostResponse = postService.createPost(createdPostRequest);
         PostRequest updatedPostRequest = new PostRequest(updatedPostWriting);
 
+        setAuthentication(another);
         assertThatThrownBy(() -> postService
-            .updatePost(authenticationOfAnother, createdPostResponse.getId(), updatedPostRequest))
+            .updatePost(createdPostResponse.getId(), updatedPostRequest))
             .isInstanceOf(NotAuthorizedException.class);
     }
 
@@ -157,10 +159,9 @@ public class PostServiceTest {
     @Test
     void deletePost_HasId_SuccessToDelete() {
         PostRequest createdPostRequest = new PostRequest(expectedWriting);
-        PostResponse createdPostResponse = postService
-            .createPost(authentication, createdPostRequest);
+        PostResponse createdPostResponse = postService.createPost(createdPostRequest);
 
-        postService.deletePost(authentication, createdPostResponse.getId());
+        postService.deletePost(createdPostResponse.getId());
 
         assertThatThrownBy(() -> postService.findPost(createdPostResponse.getId()))
             .isInstanceOf(NotExistsException.class);
@@ -171,7 +172,7 @@ public class PostServiceTest {
     void deletePost_HasNotId_ThrownException() {
         Long invalidId = -1L;
 
-        assertThatThrownBy(() -> postService.deletePost(authentication, invalidId))
+        assertThatThrownBy(() -> postService.deletePost(invalidId))
             .isInstanceOf(NotExistsException.class);
     }
 
@@ -179,25 +180,25 @@ public class PostServiceTest {
     @Test
     void deletePost_AlreadyDeletedId_ThrownException() {
         PostRequest createdPostRequest = new PostRequest(expectedWriting);
-        PostResponse createdPostResponse = postService
-            .createPost(authentication, createdPostRequest);
 
-        postService.deletePost(authentication, createdPostResponse.getId());
+        PostResponse createdPostResponse = postService.createPost(createdPostRequest);
+
+        postService.deletePost(createdPostResponse.getId());
 
         assertThatThrownBy(
-            () -> postService.deletePost(authentication, createdPostResponse.getId()))
+            () -> postService.deletePost(createdPostResponse.getId()))
             .isInstanceOf(NotExistsException.class);
     }
 
-    @DisplayName("ID로 포스트 삭제 - 성공")
+    @DisplayName("ID로 포스트 삭제 - 실패, 다른 사용자")
     @Test
     void deletePost_IfNotAuthor_ThrowException() {
         PostRequest createdPostRequest = new PostRequest(expectedWriting);
-        PostResponse createdPostResponse = postService
-            .createPost(authentication, createdPostRequest);
+        PostResponse createdPostResponse = postService.createPost(createdPostRequest);
 
+        setAuthentication(another);
         assertThatThrownBy(
-            () -> postService.deletePost(authenticationOfAnother, createdPostResponse.getId()))
+            () -> postService.deletePost(createdPostResponse.getId()))
             .isInstanceOf(NotAuthorizedException.class);
     }
 }

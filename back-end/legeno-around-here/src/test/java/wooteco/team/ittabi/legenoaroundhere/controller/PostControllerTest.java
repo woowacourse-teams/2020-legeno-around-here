@@ -43,7 +43,7 @@ public class PostControllerTest {
 
     @Test
     void updatePost_IfNotAuthor_Forbidden() throws Exception {
-        doThrow(NotAuthorizedException.class).when(postService).updatePost(any(), any(), any());
+        doThrow(NotAuthorizedException.class).when(postService).updatePost(any(), any());
 
         String inputJson = objectMapper.writeValueAsString(new PostRequest(EXPECTED_WRITING));
 
@@ -57,7 +57,7 @@ public class PostControllerTest {
 
     @Test
     void deletePost_IfNotAuthor_Forbidden() throws Exception {
-        doThrow(NotAuthorizedException.class).when(postService).deletePost(any(), any());
+        doThrow(NotAuthorizedException.class).when(postService).deletePost(any());
 
         String inputJson = objectMapper.writeValueAsString(new PostRequest(EXPECTED_WRITING));
 

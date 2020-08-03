@@ -3,7 +3,6 @@ package wooteco.team.ittabi.legenoaroundhere.controller;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,9 +26,8 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createPost(Authentication authentication,
-        @RequestBody PostRequest postRequest) {
-        Long postId = postService.createPost(authentication, postRequest).getId();
+    public ResponseEntity<Void> createPost(@RequestBody PostRequest postRequest) {
+        Long postId = postService.createPost(postRequest).getId();
         return ResponseEntity
             .created(URI.create("/posts/" + postId))
             .build();
@@ -44,9 +42,9 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updatePost(Authentication authentication, @PathVariable Long id,
+    public ResponseEntity<Void> updatePost(@PathVariable Long id,
         @RequestBody PostRequest postRequest) {
-        postService.updatePost(authentication, id, postRequest);
+        postService.updatePost(id, postRequest);
         return ResponseEntity
             .ok()
             .build();
@@ -61,8 +59,8 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(Authentication authentication, @PathVariable Long id) {
-        postService.deletePost(authentication, id);
+    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
+        postService.deletePost(id);
         return ResponseEntity
             .noContent()
             .build();
