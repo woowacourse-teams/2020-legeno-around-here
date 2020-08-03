@@ -7,11 +7,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.exception.FileIOException;
+import wooteco.team.ittabi.legenoaroundhere.exception.MultipartFileConvertException;
 
 @Slf4j
 @Component
@@ -28,8 +28,7 @@ public class S3Uploader {
     }
 
     public String upload(MultipartFile multipartFile, String dirName) {
-        File uploadFile = convert(multipartFile)
-            .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
+        File uploadFile = convert(multipartFile);
         return upload(uploadFile, dirName);
     }
 
@@ -49,24 +48,25 @@ public class S3Uploader {
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
             log.info("파일이 삭제되었습니다.");
-        } else {
-            log.info("파일이 삭제되지 못했습니다.");
+            return;
         }
+        log.info("파일이 삭제되지 못했습니다.");
     }
 
-    private Optional<File> convert(MultipartFile multipartFile) {
+    private File convert(MultipartFile multipartFile) {
         String originalFileName = Objects.requireNonNull(multipartFile.getOriginalFilename());
         File convertFile = new File(originalFileName);
         try {
             if (convertFile.createNewFile()) {
                 FileOutputStream fileOutputStream = new FileOutputStream(convertFile);
                 fileOutputStream.write(multipartFile.getBytes());
-                return Optional.of(convertFile);
+                return convertFile;
             }
         } catch (IOException e) {
             log.error("File 읽기 실패, originalFileName = {}", originalFileName);
             throw new FileIOException("File을 읽고 쓰는데 실패했습니다!");
         }
-        return Optional.empty();
+        log.debug("File 전환 실패, originalFileName = {}", originalFileName);
+        throw new MultipartFileConvertException("MultipartFile -> File로 전환이 실패했습니다.");
     }
 }
