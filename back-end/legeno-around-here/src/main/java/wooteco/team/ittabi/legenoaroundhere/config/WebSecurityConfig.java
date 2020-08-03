@@ -53,7 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/join").permitAll()
             .antMatchers("/joinAdmin").permitAll()
             .antMatchers("/login").permitAll()
-            .antMatchers("/**").hasRole("USER")
+            .antMatchers("/**").hasAnyRole("USER", "ADMIN")
             .anyRequest().permitAll()
             .and()
             .cors()

@@ -1,21 +1,18 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode
 @ToString
-public class SectorResponse {
+public class SectorRequest {
 
-    private Long id;
     private String name;
     private String description;
-    private UserResponse user;
 }

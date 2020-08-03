@@ -1,9 +1,14 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_ADMIN_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_ADMIN_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_ADMIN_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_SECTOR_ANOTHER_DESCRIPTION;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_SECTOR_ANOTHER_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_SECTOR_DESCRIPTION;
+import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_SECTOR_NAME;
 
 import io.restassured.RestAssured;
 import java.util.HashMap;
@@ -58,38 +63,38 @@ public class SectorAcceptanceTest {
         TokenResponse tokenResponse = login(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD);
         String accessToken = tokenResponse.getAccessToken();
 
-//        // 부문 등록
-//        Long id = createSector(accessToken, TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
-//
-//        // 부문 조회
-//        SectorResponse sectorResponse = findSector(accessToken, id);
-//        assertThat(sectorResponse.getId()).isEqualTo(id);
-//        assertThat(sectorResponse.getName()).isEqualTo(TEST_SECTOR_NAME);
-//        assertThat(sectorResponse.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
-//        assertThat(sectorResponse.getUser()).isNotNull();
-//
-//        // 부문 수정
-//        updateSector(accessToken, id, TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION);
-//        SectorResponse updatedSectorResponse = findSector(accessToken, id);
-//        assertThat(updatedSectorResponse.getId()).isEqualTo(id);
-//        assertThat(updatedSectorResponse.getName()).isEqualTo(TEST_SECTOR_ANOTHER_NAME);
-//        assertThat(updatedSectorResponse.getDescription())
-//            .isEqualTo(TEST_SECTOR_ANOTHER_DESCRIPTION);
-//        assertThat(updatedSectorResponse.getUser()).isNotNull();
-//
-//        // 부문 전체 조회
-//        Long anotherId = createSector(accessToken, TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
-//        List<SectorResponse> sectorResponses = findAllSector(accessToken);
-//        assertThat(sectorResponses).hasSize(2);
-//
-//        // 부문 삭제
-//        deleteSector(accessToken, id);
-//        List<SectorResponse> afterDeletedSectorResponses = findAllSector(accessToken);
-//        assertThat(afterDeletedSectorResponses).hasSize(1);
-//
-//        deleteSector(accessToken, anotherId);
-//        List<SectorResponse> deletedSectorResponses = findAllSector(accessToken);
-//        assertThat(deletedSectorResponses).hasSize(0);
+        // 부문 등록
+        Long id = createSector(accessToken, TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+
+        // 부문 조회
+        SectorResponse sectorResponse = findSector(accessToken, id);
+        assertThat(sectorResponse.getId()).isEqualTo(id);
+        assertThat(sectorResponse.getName()).isEqualTo(TEST_SECTOR_NAME);
+        assertThat(sectorResponse.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
+        assertThat(sectorResponse.getUser()).isNotNull();
+
+        // 부문 수정
+        updateSector(accessToken, id, TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION);
+        SectorResponse updatedSectorResponse = findSector(accessToken, id);
+        assertThat(updatedSectorResponse.getId()).isEqualTo(id);
+        assertThat(updatedSectorResponse.getName()).isEqualTo(TEST_SECTOR_ANOTHER_NAME);
+        assertThat(updatedSectorResponse.getDescription())
+            .isEqualTo(TEST_SECTOR_ANOTHER_DESCRIPTION);
+        assertThat(updatedSectorResponse.getUser()).isNotNull();
+
+        // 부문 전체 조회
+        Long anotherId = createSector(accessToken, TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        List<SectorResponse> sectorResponses = findAllSector(accessToken);
+        assertThat(sectorResponses).hasSize(2);
+
+        // 부문 삭제
+        deleteSector(accessToken, id);
+        List<SectorResponse> afterDeletedSectorResponses = findAllSector(accessToken);
+        assertThat(afterDeletedSectorResponses).hasSize(1);
+
+        deleteSector(accessToken, anotherId);
+        List<SectorResponse> deletedSectorResponses = findAllSector(accessToken);
+        assertThat(deletedSectorResponses).hasSize(0);
     }
 
     private String createAdmin(String email, String nickname, String password) {
@@ -137,7 +142,7 @@ public class SectorAcceptanceTest {
             .header("X-AUTH-TOKEN", accessToken)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when()
-            .post("/posts")
+            .post("/sectors")
             .then()
             .statusCode(HttpStatus.CREATED.value())
             .extract()
