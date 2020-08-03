@@ -4,6 +4,8 @@ import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.Getter;
@@ -17,16 +19,16 @@ public class Region extends BaseEntity {
     @Column(nullable = false)
     private RegionName name;
 
-    @ManyToOne
-    @JoinColumn(name = "area_id")
-    private Area area;
+    @Enumerated(EnumType.STRING)
+    private RegionDepth depth;
 
-    public Region(String name) {
-        this(new RegionName(name));
+    public Region(String name, RegionDepth depth) {
+        this(new RegionName(name), depth);
     }
 
-    public Region(RegionName name) {
+    public Region(RegionName name, RegionDepth depth) {
         this.name = name;
+        this.depth = depth;
     }
 
     protected Region() {

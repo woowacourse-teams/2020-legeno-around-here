@@ -2,6 +2,7 @@ package wooteco.team.ittabi.legenoaroundhere.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,13 @@ class RegionalRelationshipRepositoryTest {
 
     @Autowired
     private RegionalRelationshipRepository regionalRelationshipRepository;
+
+    @Test
+    void haha() {
+        List<RegionalRelationship> all = regionalRelationshipRepository.findAll();
+        System.out.println("all");
+        System.out.println(all.get(0));
+    }
 
     @DisplayName("영속화된 LegalArea, Region을 활용한 RegionalRelationship 저장")
     @Test

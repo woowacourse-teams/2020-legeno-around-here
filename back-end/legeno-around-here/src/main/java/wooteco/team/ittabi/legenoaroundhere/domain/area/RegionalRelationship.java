@@ -35,4 +35,12 @@ public class RegionalRelationship extends BaseEntity {
             throw new IllegalArgumentException(String.format("%s 혹은 %s가 null 입니다.", area, region));
         }
     }
+
+    @Override
+    public String toString() {
+        return "RegionalRelationship{" +
+            "area=" + area +
+            ", region=" + region +
+            '}';
+    }
 }
