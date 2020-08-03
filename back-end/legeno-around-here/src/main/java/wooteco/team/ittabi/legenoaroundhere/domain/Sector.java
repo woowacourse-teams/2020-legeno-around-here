@@ -24,6 +24,16 @@ public class Sector extends BaseEntity {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "create_user_id")
+    private User creator;
+
+    @ManyToOne
+    @JoinColumn(name = "modify_user_id")
+    private User lastModifier;
+
+    public void update(Sector sector) {
+        this.name = sector.name;
+        this.description = sector.description;
+        this.lastModifier = sector.lastModifier;
+    }
 }

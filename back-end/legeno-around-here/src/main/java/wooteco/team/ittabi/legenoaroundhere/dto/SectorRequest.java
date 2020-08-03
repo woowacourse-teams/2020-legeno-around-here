@@ -19,6 +19,6 @@ public class SectorRequest {
     private String description;
 
     public Sector toSector(User user) {
-        return new Sector(name, description, user);
+        return new Sector(name, description, user, user);
     }
 }

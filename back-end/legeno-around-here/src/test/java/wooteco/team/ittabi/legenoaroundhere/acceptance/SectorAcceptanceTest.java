@@ -71,7 +71,7 @@ public class SectorAcceptanceTest {
         assertThat(sectorResponse.getId()).isEqualTo(id);
         assertThat(sectorResponse.getName()).isEqualTo(TEST_SECTOR_NAME);
         assertThat(sectorResponse.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
-        assertThat(sectorResponse.getUser()).isNotNull();
+        assertThat(sectorResponse.getCreator()).isNotNull();
 
         // 부문 수정
         updateSector(accessToken, id, TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION);
@@ -80,7 +80,7 @@ public class SectorAcceptanceTest {
         assertThat(updatedSectorResponse.getName()).isEqualTo(TEST_SECTOR_ANOTHER_NAME);
         assertThat(updatedSectorResponse.getDescription())
             .isEqualTo(TEST_SECTOR_ANOTHER_DESCRIPTION);
-        assertThat(updatedSectorResponse.getUser()).isNotNull();
+        assertThat(updatedSectorResponse.getCreator()).isNotNull();
 
         // 부문 전체 조회
         Long anotherId = createSector(accessToken, TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);

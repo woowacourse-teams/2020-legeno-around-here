@@ -6,6 +6,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.domain.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
@@ -20,6 +21,7 @@ public class SectorService {
 
     private final SectorRepository sectorRepository;
 
+    @Transactional
     public SectorResponse createSector(SectorRequest sectorRequest) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
@@ -35,13 +37,25 @@ public class SectorService {
     }
 
     public SectorResponse findSector(Long id) {
-        Sector sector = sectorRepository.findById(id)
-            .orElseThrow(() -> new NotExistsException(id + "에 해당하는 Sector가 존재하지 않습니다."));
+        Sector sector = findSectorBy(id);
         return SectorResponse.of(sector);
+    }
+
+    private Sector findSectorBy(Long id) {
+        return sectorRepository.findById(id)
+            .orElseThrow(() -> new NotExistsException(id + "에 해당하는 Sector가 존재하지 않습니다."));
     }
 
     public List<SectorResponse> findAllSector() {
         List<Sector> sectors = sectorRepository.findAll();
         return SectorResponse.listOf(sectors);
+    }
+
+    @Transactional
+    public void updateSector(Long id, SectorRequest sectorRequest) {
+        Sector sector = findSectorBy(id);
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        sector.update(sectorRequest.toSector(user));
     }
 }

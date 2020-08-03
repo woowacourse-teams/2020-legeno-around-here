@@ -48,12 +48,13 @@ class SectorServiceTest {
 
     @BeforeEach
     void setUp() {
-        admin = createAdmin(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_EMAIL);
+        admin = createAdmin();
         setAuthentication(admin);
     }
 
-    private User createAdmin(String email, String nickname, String password) {
-        UserCreateRequest userCreateRequest = new UserCreateRequest(email, nickname, password);
+    private User createAdmin() {
+        UserCreateRequest userCreateRequest
+            = new UserCreateRequest(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_EMAIL);
         Long userId = userService.createAdmin(userCreateRequest);
 
         return userRepository.findById(userId)
@@ -76,7 +77,7 @@ class SectorServiceTest {
         assertThat(sectorResponse.getId()).isNotNull();
         assertThat(sectorResponse.getName()).isEqualTo(TEST_SECTOR_NAME);
         assertThat(sectorResponse.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
-        assertThat(sectorResponse.getUser()).isEqualTo(UserResponse.from(admin));
+        assertThat(sectorResponse.getCreator()).isEqualTo(UserResponse.from(admin));
     }
 
     @DisplayName("Sector 생성 - 예외 발생, 동일 이름의 부문이 존재")
@@ -116,5 +117,32 @@ class SectorServiceTest {
 
         List<SectorResponse> sectors = sectorService.findAllSector();
         assertThat(sectors).hasSize(2);
+    }
+
+    @DisplayName("Sector 수정 - 성공, ID가 있는 경우")
+    @Test
+    void updateSector_HasId_Success() {
+        Long id = sectorService
+            .createSector(new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION))
+            .getId();
+
+        SectorRequest sectorRequest =
+            new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION);
+        sectorService.updateSector(id, sectorRequest);
+
+        SectorResponse updatedSector = sectorService.findSector(id);
+        assertThat(updatedSector.getId()).isEqualTo(id);
+        assertThat(updatedSector.getName()).isEqualTo(TEST_SECTOR_ANOTHER_NAME);
+        assertThat(updatedSector.getDescription()).isEqualTo(TEST_SECTOR_ANOTHER_DESCRIPTION);
+        assertThat(updatedSector.getCreator()).isNotNull();
+    }
+
+    @DisplayName("Sector 수정 - 예외 발생, ID가 없는 경우")
+    @Test
+    void updateSector_HasNotId_ThrownException() {
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+
+        assertThatThrownBy(() -> sectorService.updateSector(INVALID_ID, sectorRequest))
+            .isInstanceOf(NotExistsException.class);
     }
 }
