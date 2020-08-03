@@ -8,10 +8,16 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotImageExtensionException
 
 @Slf4j
 public enum ImageExtension {
-    JPG(".jpg"),
-    JPEG(".jpeg"),
+    APNG(".apng"),
     GIF(".gif"),
     ICO(".ico"),
+    CUR(".cur"),
+    JPG(".jpg"),
+    JPEG(".jpeg"),
+    JFIF(".jfif"),
+    PJPEG(".pjpeg"),
+    PJP(".pjp"),
+    PNG(".png"),
     SVG(".svg"),
     TIF(".tif"),
     TIFF(".tiff"),
