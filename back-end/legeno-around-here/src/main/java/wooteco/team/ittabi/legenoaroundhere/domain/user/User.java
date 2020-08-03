@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.user;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -52,13 +51,6 @@ public class User extends BaseEntity implements UserDetails {
     @OneToMany(mappedBy = "user")
     @Builder.Default
     private List<Post> post = new ArrayList<>();
-
-    public User(Long id, Email email, Nickname nickname, Password password) {
-        super(id, LocalDateTime.now(), LocalDateTime.now());
-        this.email = email;
-        this.nickname = nickname;
-        this.password = password;
-    }
 
     public boolean isNotSame(User user) {
         return !this.equals(user);

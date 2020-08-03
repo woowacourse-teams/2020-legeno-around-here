@@ -16,9 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.core.Authentication;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.Nickname;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.Password;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
@@ -27,6 +24,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
+import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 
 @DataJpaTest
 @Import({PostService.class, UserService.class, JwtTokenGenerator.class})
@@ -37,6 +35,9 @@ public class PostServiceTest {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private final String expectedWriting = "Hello!!";
     private User user;
@@ -60,12 +61,8 @@ public class PostServiceTest {
             new UserCreateRequest(email, TEST_NICKNAME, TEST_PASSWORD);
         Long userId = userService.createUser(userCreateRequest);
 
-        return new User(
-            userId,
-            new Email(email),
-            new Nickname(TEST_NICKNAME),
-            new Password(TEST_PASSWORD)
-        );
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new NotExistsException("해당하는 사용자가 존재하지 않습니다."));
     }
 
     @DisplayName("포스트 생성 - 성공")
