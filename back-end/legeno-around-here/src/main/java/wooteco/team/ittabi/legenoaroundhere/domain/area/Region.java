@@ -6,8 +6,6 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import lombok.Getter;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 

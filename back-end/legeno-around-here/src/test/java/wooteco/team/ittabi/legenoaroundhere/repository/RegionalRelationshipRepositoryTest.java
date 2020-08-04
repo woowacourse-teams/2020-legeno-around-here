@@ -2,15 +2,11 @@ package wooteco.team.ittabi.legenoaroundhere.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.LegalArea;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Region;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.RegionDepth;
@@ -27,6 +23,23 @@ class RegionalRelationshipRepositoryTest {
 
     @Autowired
     private RegionalRelationshipRepository regionalRelationshipRepository;
+
+    @Test
+    void findByAreaCode() {
+        LegalArea legalArea = legalAreaRepository.findById(1L).orElseThrow(
+            IllegalArgumentException::new);
+
+        List<RegionalRelationship> regionalRelationships = regionalRelationshipRepository
+            .findByAreaCode(legalArea.getCode());
+
+        //then
+        assertThat(regionalRelationships).hasSize(3);
+        for (RegionalRelationship regionalRelationship : regionalRelationships) {
+            assertThat(regionalRelationship.getId()).isNotNull();
+            assertThat(regionalRelationship.getArea()).isEqualTo(legalArea);
+            assertThat(regionalRelationship.getRegion()).isNotNull();
+        }
+    }
 
     @Test
     void findByArea() {

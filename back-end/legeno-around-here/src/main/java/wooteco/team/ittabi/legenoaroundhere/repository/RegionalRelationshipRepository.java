@@ -7,4 +7,5 @@ import wooteco.team.ittabi.legenoaroundhere.domain.area.RegionalRelationship;
 
 public interface RegionalRelationshipRepository extends JpaRepository<RegionalRelationship, Long> {
     List<RegionalRelationship> findByArea(Area area);
+    List<RegionalRelationship> findByAreaCode(String code);
 }
