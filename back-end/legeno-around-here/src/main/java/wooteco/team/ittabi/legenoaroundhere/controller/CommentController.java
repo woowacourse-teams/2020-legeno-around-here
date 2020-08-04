@@ -1,7 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -40,8 +39,8 @@ public class CommentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CommentResponse>> findAllComment() {
-        List<CommentResponse> commentResponses = Collections.emptyList();
+    public ResponseEntity<List<CommentResponse>> findAllComment(@PathVariable Long postId) {
+        List<CommentResponse> commentResponses = commentService.findAllComment(postId);
         return ResponseEntity
             .ok()
             .body(commentResponses);

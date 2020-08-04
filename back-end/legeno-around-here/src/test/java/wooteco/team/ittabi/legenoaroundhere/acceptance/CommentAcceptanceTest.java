@@ -77,7 +77,7 @@ public class CommentAcceptanceTest {
 
         // 목록 조회
         List<CommentResponse> commentResponses = findAllComment(postResponse.getId(), accessToken);
-        assertThat(commentResponses).hasSize(0);
+        assertThat(commentResponses).hasSize(1);
 
         // 조회
 //        CommentResponse commentFoundResponse = findComment(commentId, accessToken);

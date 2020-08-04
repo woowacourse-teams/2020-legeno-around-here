@@ -9,6 +9,7 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConst
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
 
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -105,6 +106,18 @@ public class CommentServiceTest extends AuthServiceTest {
 
         assertThatThrownBy(() -> commentService.findComment(invalidId))
             .isInstanceOf(NotExistsException.class);
+    }
+
+    @DisplayName("댓글 조회 - 성공")
+    @Test
+    void findAllComment_SuccessToFind() {
+        CommentRequest commentRequest = new CommentRequest(TEST_WRITING);
+        commentService.createComment(postResponse.getId(), commentRequest);
+
+        List<CommentResponse> commentResponses = commentService
+            .findAllComment(postResponse.getId());
+
+        assertThat(commentResponses).hasSize(1);
     }
 
 }

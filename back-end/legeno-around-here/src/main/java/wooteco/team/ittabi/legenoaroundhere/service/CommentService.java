@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -37,5 +38,10 @@ public class CommentService {
             .orElseThrow(() -> new NotExistsException(
                 "Comment ID : " + commentId + " 에 해당하는 Comment가 없습니다!"));
         return CommentResponse.of(comment);
+    }
+
+    public List<CommentResponse> findAllComment(Long postId) {
+        List<Comment> comments = commentRepository.findAllByPostId(postId);
+        return CommentResponse.listOf(comments);
     }
 }
