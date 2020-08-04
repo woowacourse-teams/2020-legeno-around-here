@@ -34,11 +34,10 @@ import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PostAcceptanceTest {
 
-    @MockBean
-    private S3Uploader s3Uploader;
-
     @LocalServerPort
     public int port;
+    @MockBean
+    private S3Uploader s3Uploader;
 
     @BeforeEach
     void setUp() {

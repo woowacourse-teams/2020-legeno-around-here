@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
@@ -20,10 +21,12 @@ public class CommentResponse {
     private Long id;
     private String writing;
     private UserResponse user;
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
 
     public static CommentResponse of(Comment comment) {
         return new CommentResponse(comment.getId(), comment.getWriting(),
-            UserResponse.from(comment.getUser()));
+            UserResponse.from(comment.getUser()), comment.getCreatedAt(), comment.getModifiedAt());
     }
 
     public static List<CommentResponse> listOf(List<Comment> comments) {

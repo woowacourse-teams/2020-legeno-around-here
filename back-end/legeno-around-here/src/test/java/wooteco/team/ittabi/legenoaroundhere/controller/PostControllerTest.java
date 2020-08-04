@@ -28,12 +28,10 @@ public class PostControllerTest {
 
     private static final String EXPECTED_WRITING = "Hello!!";
     private static final String ANY_ID = "1";
-
+    private final ObjectMapper objectMapper = new ObjectMapper();
     @MockBean
     private PostService postService;
-
     private MockMvc mockMvc;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext) {
@@ -46,7 +44,8 @@ public class PostControllerTest {
     void updatePost_IfNotAuthor_Forbidden() throws Exception {
         doThrow(NotAuthorizedException.class).when(postService).updatePost(any(), any());
 
-        String inputJson = objectMapper.writeValueAsString(new PostRequest(EXPECTED_WRITING, EMPTY_MULTIPART_FILES));
+        String inputJson = objectMapper
+            .writeValueAsString(new PostRequest(EXPECTED_WRITING, EMPTY_MULTIPART_FILES));
 
         this.mockMvc.perform(put("/posts/" + ANY_ID)
             .content(inputJson)
@@ -60,7 +59,8 @@ public class PostControllerTest {
     void deletePost_IfNotAuthor_Forbidden() throws Exception {
         doThrow(NotAuthorizedException.class).when(postService).deletePost(any());
 
-        String inputJson = objectMapper.writeValueAsString(new PostRequest(EXPECTED_WRITING, EMPTY_MULTIPART_FILES));
+        String inputJson = objectMapper
+            .writeValueAsString(new PostRequest(EXPECTED_WRITING, EMPTY_MULTIPART_FILES));
 
         this.mockMvc.perform(delete("/posts/" + ANY_ID)
             .content(inputJson)
