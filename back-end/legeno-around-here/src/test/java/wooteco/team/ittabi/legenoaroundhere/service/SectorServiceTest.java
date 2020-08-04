@@ -75,8 +75,9 @@ class SectorServiceTest {
         SectorResponse sectorResponse = sectorService.createSector(sectorRequest);
 
         assertThat(sectorResponse.getId()).isNotNull();
-        assertThat(sectorResponse.getName()).isEqualTo(TEST_SECTOR_NAME);
-        assertThat(sectorResponse.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
+        assertThat(sectorResponse.getName()).isEqualToIgnoringCase(TEST_SECTOR_NAME);
+        assertThat(sectorResponse.getDescription())
+            .isEqualToIgnoringCase(TEST_SECTOR_DESCRIPTION);
         assertThat(sectorResponse.getCreator()).isEqualTo(UserResponse.from(admin));
     }
 
@@ -132,8 +133,9 @@ class SectorServiceTest {
 
         SectorResponse updatedSector = sectorService.findSector(id);
         assertThat(updatedSector.getId()).isEqualTo(id);
-        assertThat(updatedSector.getName()).isEqualTo(TEST_SECTOR_ANOTHER_NAME);
-        assertThat(updatedSector.getDescription()).isEqualTo(TEST_SECTOR_ANOTHER_DESCRIPTION);
+        assertThat(updatedSector.getName()).isEqualToIgnoringCase(TEST_SECTOR_ANOTHER_NAME);
+        assertThat(updatedSector.getDescription())
+            .isEqualToIgnoringCase(TEST_SECTOR_ANOTHER_DESCRIPTION);
         assertThat(updatedSector.getCreator()).isNotNull();
     }
 

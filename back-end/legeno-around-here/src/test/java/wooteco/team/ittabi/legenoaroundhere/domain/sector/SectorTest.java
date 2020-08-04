@@ -1,6 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.sector;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_ADMIN_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_ADMIN_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_ADMIN_PASSWORD;
@@ -50,6 +51,20 @@ class SectorTest {
             .lastModifier(user)
             .state(state)
             .build();
+    }
+
+    @DisplayName("생성자 - 예외 발생, 파라미터에 널이 들어갈 경우")
+    @Test
+    void constructor_ParameterNull_thrownException() {
+        assertThatThrownBy(
+            () -> makeSector(null, TEST_SECTOR_DESCRIPTION, user, SectorState.PUBLISHED));
+        assertThatThrownBy(
+            () -> makeSector(TEST_SECTOR_NAME, null, user, SectorState.PUBLISHED));
+        assertThatThrownBy(
+            () -> makeSector(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION, null,
+                SectorState.PUBLISHED));
+        assertThatThrownBy(
+            () -> makeSector(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION, user, null));
     }
 
     @DisplayName("Sector의 내용(name, description, lastModifier)을 Update한다.")
