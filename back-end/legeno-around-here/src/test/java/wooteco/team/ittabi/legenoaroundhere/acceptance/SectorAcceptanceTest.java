@@ -2,6 +2,7 @@ package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_ADMIN_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_ADMIN_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_ADMIN_PASSWORD;
@@ -22,6 +23,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
+import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponseForAdmin;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
@@ -51,17 +53,14 @@ public class SectorAcceptanceTest {
      * <p>
      * When 부문을 수정한다. Then 부문이 수정된다.
      * <p>
-     * Given 부문을 추가로 등록한다.
-     * When 사용중인 부문을 전체 조회한다. Then 사용중인 부문이 전체 조회된다.
+     * Given 부문을 추가로 등록한다. When 사용중인 부문을 전체 조회한다. Then 사용중인 부문이 전체 조회된다.
      * <p>
-     * When 부문을 삭제한다.
-     * Then 부문이 삭제되었다. 전체 조회시 조회된다. 사용중인 건만 조회시 조회되지 않는다.
+     * When 부문을 삭제한다. Then 부문이 삭제되었다. 전체 조회시 조회된다. 사용중인 건만 조회시 조회되지 않는다.
      */
     @DisplayName("관리자의 부문 관리")
     @Test
     void manageSector_admin() {
         // 관리자 로그인
-        // 로그인
         createAdmin(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_PASSWORD);
         TokenResponse tokenResponse = login(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD);
         String accessToken = tokenResponse.getAccessToken();
@@ -69,21 +68,42 @@ public class SectorAcceptanceTest {
         // 부문 등록
         Long id = createSector(accessToken, TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
 
-        // 부문 조회
+        // 사용 중인 부문 조회
         SectorResponse sectorResponse = findUsedSector(accessToken, id);
         assertThat(sectorResponse.getId()).isEqualTo(id);
         assertThat(sectorResponse.getName()).isEqualToIgnoringCase(TEST_SECTOR_NAME);
         assertThat(sectorResponse.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
         assertThat(sectorResponse.getCreator()).isNotNull();
 
+        // Admin을 위한 부문 조회(상세)
+        SectorResponseForAdmin sectorResponseForAdmin = findSector(accessToken, id);
+        assertThat(sectorResponseForAdmin.getId()).isEqualTo(id);
+        assertThat(sectorResponseForAdmin.getName()).isEqualToIgnoringCase(TEST_SECTOR_NAME);
+        assertThat(sectorResponseForAdmin.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
+        assertThat(sectorResponseForAdmin.getCreator()).isNotNull();
+        assertThat(sectorResponseForAdmin.getLastModifier()).isNotNull();
+        assertThat(sectorResponseForAdmin.getState()).isEqualTo(SectorState.PUBLISHED.name());
+
         // 부문 수정
         updateSector(accessToken, id, TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION);
-        SectorResponse updatedSectorResponse = findUsedSector(accessToken, id);
-        assertThat(updatedSectorResponse.getId()).isEqualTo(id);
-        assertThat(updatedSectorResponse.getName()).isEqualToIgnoringCase(TEST_SECTOR_ANOTHER_NAME);
-        assertThat(updatedSectorResponse.getDescription())
+
+        // 사용 중인 부문 조회
+        sectorResponse = findUsedSector(accessToken, id);
+        assertThat(sectorResponse.getId()).isEqualTo(id);
+        assertThat(sectorResponse.getName()).isEqualToIgnoringCase(TEST_SECTOR_ANOTHER_NAME);
+        assertThat(sectorResponse.getDescription()).isEqualTo(TEST_SECTOR_ANOTHER_DESCRIPTION);
+        assertThat(sectorResponse.getCreator()).isNotNull();
+
+        // Admin을 위한 부문 조회(상세)
+        sectorResponseForAdmin = findSector(accessToken, id);
+        assertThat(sectorResponseForAdmin.getId()).isEqualTo(id);
+        assertThat(sectorResponseForAdmin.getName())
+            .isEqualToIgnoringCase(TEST_SECTOR_ANOTHER_NAME);
+        assertThat(sectorResponseForAdmin.getDescription())
             .isEqualTo(TEST_SECTOR_ANOTHER_DESCRIPTION);
-        assertThat(updatedSectorResponse.getCreator()).isNotNull();
+        assertThat(sectorResponseForAdmin.getCreator()).isNotNull();
+        assertThat(sectorResponseForAdmin.getLastModifier()).isNotNull();
+        assertThat(sectorResponseForAdmin.getState()).isEqualTo(SectorState.PUBLISHED.name());
 
         // 부문 전체 조회 + 사용하는 부문 전체 조회
         Long anotherId = createSector(accessToken, TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
@@ -94,6 +114,10 @@ public class SectorAcceptanceTest {
 
         // 부문 삭제
         deleteSector(accessToken, id);
+        assertThatThrownBy(() -> findUsedSector(accessToken, id));
+        sectorResponseForAdmin = findSector(accessToken, id);
+        assertThat(sectorResponseForAdmin.getState()).isEqualTo(SectorState.DELETED.name());
+
         sectorResponseForAdmins = findAllSector(accessToken);
         sectorResponses = findAllUsedSector(accessToken);
         assertThat(sectorResponseForAdmins).hasSize(2);

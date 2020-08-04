@@ -57,6 +57,14 @@ public class Sector extends BaseEntity {
         Objects.requireNonNull(state, "SectorState는 Null일 수 없습니다.");
     }
 
+    public boolean isUsed() {
+        return state.isUsed();
+    }
+
+    public boolean isNotUsed() {
+        return !state.isUsed();
+    }
+
     public void update(Sector sector) {
         this.name = sector.name;
         this.description = sector.description;
@@ -65,14 +73,6 @@ public class Sector extends BaseEntity {
 
     public void setState(SectorState state) {
         this.state = state;
-    }
-
-    public boolean isNotUsed() {
-        return !state.isUsed();
-    }
-
-    public boolean isUsed() {
-        return state.isUsed();
     }
 
     public String getStringName() {
