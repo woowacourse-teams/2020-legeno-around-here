@@ -11,6 +11,7 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConst
 import io.restassured.RestAssured;
 import io.restassured.config.RestAssuredConfig;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -72,11 +73,11 @@ public class CommentAcceptanceTest {
         CommentResponse commentResponse = findComment(postResponse.getId(), commentId, accessToken);
 
         assertThat(commentResponse.getId()).isEqualTo(commentId);
-        assertThat(commentResponse.getContent()).isEqualTo(TEST_WRITING);
+        assertThat(commentResponse.getWriting()).isEqualTo(TEST_WRITING);
 
         // 목록 조회
-//        List<CommentResponse> commentResponses = findAllComment(accessToken);
-//        assertThat(commentResponses).hasSize(2);
+//        List<CommentResponse> commentResponses = findAllComment(postResponse.getId(), accessToken);
+//        assertThat(commentResponses).hasSize(1);
 
         // 조회
 //        CommentResponse commentFoundResponse = findComment(commentId, accessToken);
@@ -91,6 +92,20 @@ public class CommentAcceptanceTest {
 //        List<PostResponse> foundPostResponses = findAllComment(accessToken);
 //
 //        assertThat(foundPostResponses).hasSize(1);
+    }
+
+
+    private List<CommentResponse> findAllComment(Long postId, String accessToken) {
+        return given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .get("/posts/" + postId + "/comments")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .jsonPath()
+            .getList(".", CommentResponse.class);
     }
 
     private String createUser(String email, String nickname, String password) {
@@ -195,7 +210,7 @@ public class CommentAcceptanceTest {
     private String createComment(Long postId, String accessToken) {
 
         Map<String, String> params = new HashMap<>();
-        params.put("content", TEST_WRITING);
+        params.put("writing", TEST_WRITING);
 
         return given()
             .log().all()

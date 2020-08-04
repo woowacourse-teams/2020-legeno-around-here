@@ -54,7 +54,7 @@ public class PostService {
         return PostResponse.of(post);
     }
 
-    private Post findNotDeletedPost(Long id) {
+    public Post findNotDeletedPost(Long id) {
         Post post = postRepository.findById(id)
             .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
         if (post.isSameState(State.DELETED)) {

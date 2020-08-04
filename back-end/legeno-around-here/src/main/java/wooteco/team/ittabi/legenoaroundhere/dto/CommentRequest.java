@@ -6,6 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import wooteco.team.ittabi.legenoaroundhere.domain.Comment;
+import wooteco.team.ittabi.legenoaroundhere.domain.Post;
+import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
@@ -14,5 +17,9 @@ import lombok.ToString;
 @ToString
 public class CommentRequest {
 
-    private String content;
+    private String writing;
+
+    public Comment toComment(User user, Post post) {
+        return new Comment(user, post, writing);
+    }
 }

@@ -20,11 +20,14 @@ public class PostResponse {
     private Long id;
     private String writing;
     private List<ImageResponse> images;
+    private List<CommentResponse> comments;
     private UserResponse user;
 
     public static PostResponse of(Post post) {
         List<ImageResponse> imageResponses = ImageResponse.listOf(post.getImages());
-        return new PostResponse(post.getId(), post.getWriting(), imageResponses, UserResponse.from(post.getUser()));
+        List<CommentResponse> commentResponses = CommentResponse.listOf(post.getComments());
+        return new PostResponse(post.getId(), post.getWriting(), imageResponses, commentResponses,
+            UserResponse.from(post.getUser()));
     }
 
     public static List<PostResponse> listOf(List<Post> posts) {
