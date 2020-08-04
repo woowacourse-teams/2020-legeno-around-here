@@ -66,7 +66,7 @@ public class CommentAcceptanceTest {
         assertThat(postResponse.getId()).isEqualTo(postId);
         assertThat(postResponse.getWriting()).isEqualTo(TEST_WRITING);
 
-        // 댓글 등록
+        // 댓글 등록 및 조회
         String commentLocation = createComment(postResponse.getId(), accessToken);
         Long commentId = getIdFromUrl(commentLocation);
 
@@ -75,36 +75,18 @@ public class CommentAcceptanceTest {
         assertThat(commentResponse.getId()).isEqualTo(commentId);
         assertThat(commentResponse.getWriting()).isEqualTo(TEST_WRITING);
 
-        // 목록 조회
+        // 댓글 목록 조회
         List<CommentResponse> commentResponses = findAllComment(postResponse.getId(), accessToken);
         assertThat(commentResponses).hasSize(1);
 
-        // 조회
-//        CommentResponse commentFoundResponse = findComment(commentId, accessToken);
-//
-//        assertThat(commentFoundResponse.getId()).isEqualTo(commentId);
-//        assertThat(commentFoundResponse.getWriting()).isEqualTo(TEST_WRITING);
-
         // 삭제
-//        deleteComment(commentId, accessToken);
+        deleteComment(postResponse.getId(), commentId, accessToken);
 //        findNotExistsComment(commentId, accessToken);
-//
-//        List<PostResponse> foundPostResponses = findAllComment(accessToken);
-//
-//        assertThat(foundPostResponses).hasSize(1);
-    }
 
-    private List<CommentResponse> findAllComment(Long postId, String accessToken) {
-        return given()
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header("X-AUTH-TOKEN", accessToken)
-            .when()
-            .get("/posts/" + postId + "/comments")
-            .then()
-            .statusCode(HttpStatus.OK.value())
-            .extract()
-            .jsonPath()
-            .getList(".", CommentResponse.class);
+        List<CommentResponse> reFoundPostResponses = findAllComment(postResponse.getId(),
+            accessToken);
+
+        assertThat(reFoundPostResponses).hasSize(1);
     }
 
     private String createUser(String email, String nickname, String password) {
@@ -141,7 +123,21 @@ public class CommentAcceptanceTest {
             .extract().as(TokenResponse.class);
     }
 
-//    private void findNotExistsComment(Long id, String accessToken) {
+
+    private List<CommentResponse> findAllComment(Long postId, String accessToken) {
+        return given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .get("/posts/" + postId + "/comments")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .jsonPath()
+            .getList(".", CommentResponse.class);
+    }
+
+    //    private void findNotExistsComment(Long id, String accessToken) {
 //        given()
 //            .header("X-AUTH-TOKEN", accessToken)
 //            .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -151,15 +147,15 @@ public class CommentAcceptanceTest {
 //            .statusCode(HttpStatus.NOT_FOUND.value());
 //    }
 //
-//    private void deleteComment(Long id, String accessToken) {
-//        given()
-//            .header("X-AUTH-TOKEN", accessToken)
-//            .when()
-//            .delete("/posts/" + id)
-//            .then()
-//            .statusCode(HttpStatus.NO_CONTENT.value());
-//    }
-//
+    private void deleteComment(Long postId, Long commentId, String accessToken) {
+        given()
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .delete("/posts/" + postId + "/comments/" + commentId)
+            .then()
+            .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
 
     private Long getIdFromUrl(String location) {
         int lastIndex = location.lastIndexOf("/");
