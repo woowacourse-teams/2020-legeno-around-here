@@ -20,7 +20,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 @Table(name = "comment")
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"post", "user"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseEntity {
 

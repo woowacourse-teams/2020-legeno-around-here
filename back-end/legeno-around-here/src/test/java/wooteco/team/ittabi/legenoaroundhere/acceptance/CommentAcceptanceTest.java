@@ -60,11 +60,7 @@ public class CommentAcceptanceTest {
         // 이미지가 포함되지 않은 글 등록
         String postLocation = createPostWithoutImage(accessToken);
         Long postId = getIdFromUrl(postLocation);
-
         PostResponse postResponse = findPost(postId, accessToken);
-
-        assertThat(postResponse.getId()).isEqualTo(postId);
-        assertThat(postResponse.getWriting()).isEqualTo(TEST_WRITING);
 
         // 댓글 등록 및 조회
         String commentLocation = createComment(postResponse.getId(), accessToken);
@@ -81,12 +77,12 @@ public class CommentAcceptanceTest {
 
         // 삭제
         deleteComment(postResponse.getId(), commentId, accessToken);
-//        findNotExistsComment(commentId, accessToken);
+        findNotExistsComment(postResponse.getId(), commentId, accessToken);
 
         List<CommentResponse> reFoundPostResponses = findAllComment(postResponse.getId(),
             accessToken);
 
-        assertThat(reFoundPostResponses).hasSize(1);
+        assertThat(reFoundPostResponses).hasSize(0);
     }
 
     private String createUser(String email, String nickname, String password) {
@@ -137,16 +133,16 @@ public class CommentAcceptanceTest {
             .getList(".", CommentResponse.class);
     }
 
-    //    private void findNotExistsComment(Long id, String accessToken) {
-//        given()
-//            .header("X-AUTH-TOKEN", accessToken)
-//            .accept(MediaType.APPLICATION_JSON_VALUE)
-//            .when()
-//            .get("/posts/" + id)
-//            .then()
-//            .statusCode(HttpStatus.NOT_FOUND.value());
-//    }
-//
+    private void findNotExistsComment(Long postId, Long commentId, String accessToken) {
+        given()
+            .header("X-AUTH-TOKEN", accessToken)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/posts/" + postId + "/comments/" + commentId)
+            .then()
+            .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
     private void deleteComment(Long postId, Long commentId, String accessToken) {
         given()
             .header("X-AUTH-TOKEN", accessToken)

@@ -24,7 +24,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 @Table(name = "post")
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 

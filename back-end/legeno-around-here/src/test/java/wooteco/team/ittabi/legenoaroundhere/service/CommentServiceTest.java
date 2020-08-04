@@ -24,6 +24,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.CommentRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
@@ -88,16 +89,17 @@ public class CommentServiceTest extends AuthServiceTest {
         assertThat(foundCommentResponse.getUser()).isEqualTo(createdCommentResponse.getUser());
     }
 
-//    @DisplayName("댓글 조회 - 실패, 찾는 Comment가 이미 삭제 됐을 경우")
-//    @Test
-//    void findComment_AlreadyDeletedComment_ThrownException() {
-//        CommentRequest commentRequest = new CommentRequest(TEST_WRITING);
-//        CommentResponse commentResponse = commentService.createComment(postResponse.getId(), commentRequest);
-//        commentService.deleteComment(commentResponse.getId());
-//
-//        assertThatThrownBy(() -> commentService.findComment(commentResponse.getId()))
-//            .isInstanceOf(NotExistsException.class);
-//    }
+    @DisplayName("댓글 조회 - 실패, 찾는 Comment가 이미 삭제 됐을 경우")
+    @Test
+    void findComment_AlreadyDeletedComment_ThrownException() {
+        CommentRequest commentRequest = new CommentRequest(TEST_WRITING);
+        CommentResponse commentResponse = commentService
+            .createComment(postResponse.getId(), commentRequest);
+        commentService.deleteComment(commentResponse.getId());
+
+        assertThatThrownBy(() -> commentService.findComment(commentResponse.getId()))
+            .isInstanceOf(NotExistsException.class);
+    }
 
     @DisplayName("댓글 조회 - 실패, 찾는 Comment ID가 없을 경우")
     @Test
@@ -120,4 +122,30 @@ public class CommentServiceTest extends AuthServiceTest {
         assertThat(commentResponses).hasSize(1);
     }
 
+    @DisplayName("댓글 삭제 - 성공")
+    @Test
+    void deleteComment_SuccessToDelete() {
+        CommentRequest commentRequest = new CommentRequest(TEST_WRITING);
+        CommentResponse commentResponse = commentService
+            .createComment(postResponse.getId(), commentRequest);
+
+        commentService.deleteComment(commentResponse.getId());
+
+        List<CommentResponse> commentResponses = commentService
+            .findAllComment(postResponse.getId());
+        assertThat(commentResponses).hasSize(0);
+    }
+
+    @DisplayName("댓글 삭제 - 실패, 댓글 작성자가 아님")
+    @Test
+    void deleteComment_IfNotOwner_ThrowException() {
+        CommentRequest commentRequest = new CommentRequest(TEST_WRITING);
+        CommentResponse commentResponse = commentService
+            .createComment(postResponse.getId(), commentRequest);
+
+        setAuthentication(another);
+        assertThatThrownBy(
+            () -> commentService.deleteComment(commentResponse.getId()))
+            .isInstanceOf(NotAuthorizedException.class);
+    }
 }
