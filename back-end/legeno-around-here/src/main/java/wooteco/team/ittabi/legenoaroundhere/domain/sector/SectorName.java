@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import wooteco.team.ittabi.legenoaroundhere.exception.InvalidParameterException;
+import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 
 @Embeddable
 @NoArgsConstructor
@@ -28,7 +28,7 @@ public class SectorName {
 
     private void validation(String name) {
         if (Objects.isNull(name) || isInvalid(name.trim().replaceAll("  +", " "))) {
-            throw new InvalidParameterException("SectorName이 유효하지 않습니다.");
+            throw new UserInputException("SectorName이 유효하지 않습니다.");
         }
     }
 

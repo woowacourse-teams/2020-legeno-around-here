@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import wooteco.team.ittabi.legenoaroundhere.exception.InvalidParameterException;
+import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 
 @Embeddable
 @NoArgsConstructor
@@ -27,7 +27,7 @@ public class SectorDescription {
 
     private void validation(String description) {
         if (Objects.isNull(description) || isInvalid(description.trim().replaceAll(" +", " "))) {
-            throw new InvalidParameterException("SectorDescription이 유효하지 않습니다.");
+            throw new UserInputException("SectorDescription이 유효하지 않습니다.");
         }
     }
 

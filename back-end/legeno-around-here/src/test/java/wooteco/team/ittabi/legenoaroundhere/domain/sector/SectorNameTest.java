@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-import wooteco.team.ittabi.legenoaroundhere.exception.InvalidParameterException;
+import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 
 class SectorNameTest {
 
@@ -27,7 +27,7 @@ class SectorNameTest {
     @NullAndEmptySource
     void constructor_NameNullOrEmpty_ThrownException(String input) {
         assertThatThrownBy(() -> new SectorDescription(input))
-            .isInstanceOf(InvalidParameterException.class);
+            .isInstanceOf(UserInputException.class);
     }
 
     @DisplayName("생성자 테스트, 예외 발생 - name이 공백 제거하면 empty")
@@ -35,7 +35,7 @@ class SectorNameTest {
     @ValueSource(strings = {" ", "  ", "   "})
     void constructor_NameEmptyAfterTrim_ThrownException(String input) {
         assertThatThrownBy(() -> new SectorName(input))
-            .isInstanceOf(InvalidParameterException.class);
+            .isInstanceOf(UserInputException.class);
     }
 
     @DisplayName("생성자 테스트, 예외 발생 - 20자 초과")
@@ -48,6 +48,6 @@ class SectorNameTest {
         }
 
         assertThatThrownBy(() -> new SectorName(stringBuilder.toString()))
-            .isInstanceOf(InvalidParameterException.class);
+            .isInstanceOf(UserInputException.class);
     }
 }
