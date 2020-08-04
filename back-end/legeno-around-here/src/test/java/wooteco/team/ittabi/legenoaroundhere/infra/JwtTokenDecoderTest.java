@@ -2,9 +2,9 @@ package wooteco.team.ittabi.legenoaroundhere.infra;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.constants.UserTestConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_MY_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
 
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,14 +34,15 @@ class JwtTokenDecoderTest {
 
     @BeforeEach
     void setUp() {
-        token = jwtTokenGenerator.createToken(TEST_EMAIL, Collections.singletonList("ROLE_USER"));
+        token = jwtTokenGenerator
+            .createToken(TEST_MY_EMAIL, Collections.singletonList("ROLE_USER"));
     }
 
     @Test
     @DisplayName("토큰으로부터 Authentication 얻기")
     void getAuthentication() {
-        userService.createUser(new UserCreateRequest(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD));
-        userService.login(new LoginRequest(TEST_EMAIL, TEST_PASSWORD));
+        userService.createUser(new UserCreateRequest(TEST_MY_EMAIL, TEST_NICKNAME, TEST_PASSWORD));
+        userService.login(new LoginRequest(TEST_MY_EMAIL, TEST_PASSWORD));
 
         assertThat(jwtTokenDecoder.getAuthentication(token))
             .isInstanceOf(Authentication.class);

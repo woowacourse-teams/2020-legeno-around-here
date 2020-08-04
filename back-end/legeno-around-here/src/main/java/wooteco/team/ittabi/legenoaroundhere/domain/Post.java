@@ -1,11 +1,17 @@
 package wooteco.team.ittabi.legenoaroundhere.domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,18 +21,24 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "post")
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 
     private static final int MAX_LENGTH = 20;
 
+    @Column(nullable = false)
     private String writing;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private State state;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -45,6 +57,11 @@ public class Post extends BaseEntity {
         }
     }
 
+    public void addImage(Image image) {
+        images.add(image);
+        image.setPost(this);
+    }
+
     public boolean isSameState(State state) {
         return Objects.equals(this.state, state);
     }
@@ -52,4 +69,5 @@ public class Post extends BaseEntity {
     public boolean isNotSameState(State state) {
         return !Objects.equals(this.state, state);
     }
+
 }

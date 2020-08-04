@@ -1,15 +1,22 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import wooteco.team.ittabi.legenoaroundhere.dto.ErrorResponse;
+import wooteco.team.ittabi.legenoaroundhere.exception.FileIOException;
+import wooteco.team.ittabi.legenoaroundhere.exception.MultipartFileConvertException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotFoundAlgorithmException;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotImageExtensionException;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotImageMimeTypeException;
 import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 
+@Slf4j
 @RestControllerAdvice(annotations = RestController.class)
 public class GlobalExceptionHandler {
 
@@ -20,8 +27,10 @@ public class GlobalExceptionHandler {
             .body(new ErrorResponse(e.getMessage()));
     }
 
-    @ExceptionHandler(UserInputException.class)
-    public ResponseEntity<ErrorResponse> handleBadRequest(UserInputException e) {
+    @ExceptionHandler({UserInputException.class, NotImageMimeTypeException.class,
+        NotImageExtensionException.class, MultipartFileConvertException.class,
+        FileIOException.class})
+    public ResponseEntity<ErrorResponse> handleBadRequest(Exception e) {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(new ErrorResponse(e.getMessage()));
@@ -34,8 +43,9 @@ public class GlobalExceptionHandler {
             .body(new ErrorResponse(e.getMessage()));
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleInternalServerError() {
+    @ExceptionHandler({Exception.class, NotFoundAlgorithmException.class})
+    public ResponseEntity<ErrorResponse> handleInternalServerError(Exception e) {
+        log.info(e.getMessage());
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(new ErrorResponse("예기치 않은 오류가 발생하였습니다."));
