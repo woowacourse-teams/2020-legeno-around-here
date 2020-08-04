@@ -15,23 +15,23 @@ SELECT 'Legal', null, current_time(), raw.legal_code
 FROM raw_legal_area as raw;
 
 
-INSERT INTO region (name)
-SELECT DISTINCT county
+INSERT INTO region (name, depth)
+SELECT DISTINCT county, 'ONE'
 FROM raw_legal_area
 WHERE county is not null
 
 UNION
-SELECT DISTINCT city
+SELECT DISTINCT city, 'TWO'
 FROM raw_legal_area
 WHERE city is not null
 
 UNION
-SELECT DISTINCT town
+SELECT DISTINCT town, 'THREE'
 FROM raw_legal_area
 WHERE town is not null
 
 UNION
-SELECT DISTINCT village
+SELECT DISTINCT village, 'FOUR'
 FROM raw_legal_area
 WHERE village is not null;
 
