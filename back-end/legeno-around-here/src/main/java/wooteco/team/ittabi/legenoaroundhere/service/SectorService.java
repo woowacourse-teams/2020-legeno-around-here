@@ -13,6 +13,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponseForAdmin;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotUniqueException;
 import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
@@ -39,21 +40,25 @@ public class SectorService {
         }
     }
 
-    public SectorResponse findSector(Long id) {
-        Sector sector = findSectorBy(id);
+    public SectorResponse findUsedSector(Long id) {
+        Sector sector = findUsedSectorBy(id);
         return SectorResponse.of(sector);
     }
 
-    private Sector findSectorBy(Long id) {
-        Sector sector = sectorRepository.findById(id)
-            .orElseThrow(() -> new NotExistsException(id + "에 해당하는 Sector가 존재하지 않습니다."));
+    private Sector findUsedSectorBy(Long id) {
+        Sector sector = findSectorBy(id);
         if (sector.isNotUsed()) {
             throw new NotExistsException(id + "에 해당하는 Sector가 존재하지 않습니다.");
         }
         return sector;
     }
 
-    public List<SectorResponse> findAllSector() {
+    private Sector findSectorBy(Long id) {
+        return sectorRepository.findById(id)
+            .orElseThrow(() -> new NotExistsException(id + "에 해당하는 Sector가 존재하지 않습니다."));
+    }
+
+    public List<SectorResponse> findAllUsedSector() {
         List<Sector> sectors = sectorRepository.findAll()
             .stream()
             .filter(Sector::isUsed)
@@ -64,7 +69,7 @@ public class SectorService {
 
     @Transactional
     public void updateSector(Long id, SectorRequest sectorRequest) {
-        Sector sector = findSectorBy(id);
+        Sector sector = findUsedSectorBy(id);
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         sector.update(sectorRequest.toSector(user, SectorState.PUBLISHED));
@@ -72,7 +77,17 @@ public class SectorService {
 
     @Transactional
     public void deleteSector(Long id) {
-        Sector sector = findSectorBy(id);
+        Sector sector = findUsedSectorBy(id);
         sector.setState(SectorState.DELETED);
+    }
+
+    public SectorResponseForAdmin findSector(Long id) {
+        Sector sector = findSectorBy(id);
+        return SectorResponseForAdmin.of(sector);
+    }
+
+    public List<SectorResponseForAdmin> findAllSector() {
+        List<Sector> sectors = sectorRepository.findAll();
+        return SectorResponseForAdmin.listOf(sectors);
     }
 }

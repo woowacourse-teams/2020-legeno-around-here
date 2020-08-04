@@ -20,9 +20,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponseForAdmin;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
@@ -76,8 +78,7 @@ class SectorServiceTest {
 
         assertThat(sectorResponse.getId()).isNotNull();
         assertThat(sectorResponse.getName()).isEqualToIgnoringCase(TEST_SECTOR_NAME);
-        assertThat(sectorResponse.getDescription())
-            .isEqualToIgnoringCase(TEST_SECTOR_DESCRIPTION);
+        assertThat(sectorResponse.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
         assertThat(sectorResponse.getCreator()).isEqualTo(UserResponse.from(admin));
     }
 
@@ -93,31 +94,47 @@ class SectorServiceTest {
 
     @DisplayName("Sector 조회 - 성공, ID가 있는 경우")
     @Test
-    void findSector_HasId_Success() {
+    void findSector_HasUsedId_Success() {
         SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
         SectorResponse createdSector = sectorService.createSector(sectorRequest);
         Long createdSectorId = createdSector.getId();
 
-        SectorResponse foundSector = sectorService.findSector(createdSectorId);
+        SectorResponse foundSector = sectorService.findUsedSector(createdSectorId);
         assertThat(foundSector).isEqualTo(createdSector);
     }
 
-    @DisplayName("Sector 조회 - 예외 발생, ID가 없는 경우")
+    @DisplayName("사용중인 Sector 조회 - 예외 발생, ID가 없는 경우")
     @Test
-    void findSector_HasNotId_ThrowException() {
-        assertThatThrownBy(() -> sectorService.findSector(INVALID_ID))
+    void findUsedSector_HasNotId_ThrowException() {
+        assertThatThrownBy(() -> sectorService.findUsedSector(INVALID_ID))
             .isInstanceOf(NotExistsException.class);
     }
 
-    @DisplayName("Sector 전체 조회 - 성공")
+    @DisplayName("사용중인 Sector 조회 - 예외 발생, 사용중인 ID가 없는 경우")
     @Test
-    void findAllSector_Success() {
-        sectorService.createSector(new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION));
-        sectorService.createSector(
-            new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION));
+    void findUsedSector_HasNotUsedId_ThrowException() {
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        SectorResponse createdSector = sectorService.createSector(sectorRequest);
+        Long sectorId = createdSector.getId();
+        sectorService.deleteSector(sectorId);
 
-        List<SectorResponse> sectors = sectorService.findAllSector();
-        assertThat(sectors).hasSize(2);
+        assertThatThrownBy(() -> sectorService.findUsedSector(sectorId))
+            .isInstanceOf(NotExistsException.class);
+    }
+
+    @DisplayName("사용중인 Sector 전체 조회 - 성공")
+    @Test
+    void findAllUsedSector_Success() {
+        SectorResponse sector
+            = sectorService
+            .createSector(new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION));
+        SectorResponse anotherSector = sectorService.createSector(
+            new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION));
+        sectorService.deleteSector(sector.getId());
+
+        List<SectorResponse> sectors = sectorService.findAllUsedSector();
+        assertThat(sectors).doesNotContain(sector);
+        assertThat(sectors).contains(anotherSector);
     }
 
     @DisplayName("Sector 수정 - 성공, ID가 있는 경우")
@@ -131,11 +148,10 @@ class SectorServiceTest {
             new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION);
         sectorService.updateSector(id, sectorRequest);
 
-        SectorResponse updatedSector = sectorService.findSector(id);
+        SectorResponse updatedSector = sectorService.findUsedSector(id);
         assertThat(updatedSector.getId()).isEqualTo(id);
         assertThat(updatedSector.getName()).isEqualToIgnoringCase(TEST_SECTOR_ANOTHER_NAME);
-        assertThat(updatedSector.getDescription())
-            .isEqualToIgnoringCase(TEST_SECTOR_ANOTHER_DESCRIPTION);
+        assertThat(updatedSector.getDescription()).isEqualTo(TEST_SECTOR_ANOTHER_DESCRIPTION);
         assertThat(updatedSector.getCreator()).isNotNull();
     }
 
@@ -157,8 +173,37 @@ class SectorServiceTest {
 
         sectorService.deleteSector(id);
 
-        assertThatThrownBy(() -> sectorService.findSector(id))
+        assertThatThrownBy(() -> sectorService.findUsedSector(id))
             .isInstanceOf(NotExistsException.class);
+    }
+
+    @DisplayName("Sector 조회 - 성공, ID가 있는 경우")
+    @Test
+    void findSector() {
+        SectorResponse createdSector = sectorService
+            .createSector(new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION));
+        Long sectorId = createdSector.getId();
+
+        SectorResponseForAdmin sector = sectorService.findSector(sectorId);
+        assertThat(sector.getId()).isEqualTo(sectorId);
+        assertThat(sector.getName()).isEqualToIgnoringCase(TEST_SECTOR_NAME);
+        assertThat(sector.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
+        assertThat(sector.getState()).isEqualTo(SectorState.PUBLISHED.name());
+    }
+
+    @DisplayName("사용중인 Sector 조회 - 성공, 사용중이 아닌 ID가 있는 경우")
+    @Test
+    void findSector_HasNotUsedId_Success() {
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        SectorResponse createdSector = sectorService.createSector(sectorRequest);
+        Long sectorId = createdSector.getId();
+        sectorService.deleteSector(sectorId);
+
+        SectorResponseForAdmin sector = sectorService.findSector(sectorId);
+        assertThat(sector.getId()).isEqualTo(sectorId);
+        assertThat(sector.getName()).isEqualToIgnoringCase(TEST_SECTOR_NAME);
+        assertThat(sector.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
+        assertThat(sector.getState()).isEqualTo(SectorState.DELETED.name());
     }
 
     @DisplayName("Sector 삭제 - 예외 발생, ID가 없는 경우")
@@ -166,5 +211,31 @@ class SectorServiceTest {
     void deleteSector_HasNotId_ThrownException() {
         assertThatThrownBy(() -> sectorService.deleteSector(INVALID_ID))
             .isInstanceOf(NotExistsException.class);
+    }
+
+    @DisplayName("Sector 조회 - 예외 발생, ID가 없는 경우")
+    @Test
+    void findSector_HasNotId_ThrowException() {
+        assertThatThrownBy(() -> sectorService.findSector(INVALID_ID))
+            .isInstanceOf(NotExistsException.class);
+    }
+
+    @DisplayName("Sector 전체 조회 - 성공")
+    @Test
+    void findAllSector() {
+        SectorResponse sector
+            = sectorService
+            .createSector(new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION));
+        SectorResponse anotherSector = sectorService.createSector(
+            new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION));
+        sectorService.deleteSector(sector.getId());
+
+        SectorResponseForAdmin expectedSector = sectorService.findSector(sector.getId());
+        SectorResponseForAdmin expectedAnotherSector
+            = sectorService.findSector(anotherSector.getId());
+
+        List<SectorResponseForAdmin> sectors = sectorService.findAllSector();
+        assertThat(sectors).contains(expectedSector);
+        assertThat(sectors).contains(expectedAnotherSector);
     }
 }

@@ -23,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponseForAdmin;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -50,9 +51,11 @@ public class SectorAcceptanceTest {
      * <p>
      * When 부문을 수정한다. Then 부문이 수정된다.
      * <p>
-     * Given 부문을 추가로 등록한다. When 부문을 전체 조회한다. Then 부문이 전체 조회된다.
+     * Given 부문을 추가로 등록한다.
+     * When 사용중인 부문을 전체 조회한다. Then 사용중인 부문이 전체 조회된다.
      * <p>
-     * Given 부문을 삭제한다. Then 부문이 삭제되었다.
+     * When 부문을 삭제한다.
+     * Then 부문이 삭제되었다. 전체 조회시 조회된다. 사용중인 건만 조회시 조회되지 않는다.
      */
     @DisplayName("관리자의 부문 관리")
     @Test
@@ -67,34 +70,40 @@ public class SectorAcceptanceTest {
         Long id = createSector(accessToken, TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
 
         // 부문 조회
-        SectorResponse sectorResponse = findSector(accessToken, id);
+        SectorResponse sectorResponse = findUsedSector(accessToken, id);
         assertThat(sectorResponse.getId()).isEqualTo(id);
-        assertThat(sectorResponse.getName()).isEqualTo(TEST_SECTOR_NAME);
+        assertThat(sectorResponse.getName()).isEqualToIgnoringCase(TEST_SECTOR_NAME);
         assertThat(sectorResponse.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
         assertThat(sectorResponse.getCreator()).isNotNull();
 
         // 부문 수정
         updateSector(accessToken, id, TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION);
-        SectorResponse updatedSectorResponse = findSector(accessToken, id);
+        SectorResponse updatedSectorResponse = findUsedSector(accessToken, id);
         assertThat(updatedSectorResponse.getId()).isEqualTo(id);
-        assertThat(updatedSectorResponse.getName()).isEqualTo(TEST_SECTOR_ANOTHER_NAME);
+        assertThat(updatedSectorResponse.getName()).isEqualToIgnoringCase(TEST_SECTOR_ANOTHER_NAME);
         assertThat(updatedSectorResponse.getDescription())
             .isEqualTo(TEST_SECTOR_ANOTHER_DESCRIPTION);
         assertThat(updatedSectorResponse.getCreator()).isNotNull();
 
-        // 부문 전체 조회
+        // 부문 전체 조회 + 사용하는 부문 전체 조회
         Long anotherId = createSector(accessToken, TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
-        List<SectorResponse> sectorResponses = findAllSector(accessToken);
+        List<SectorResponseForAdmin> sectorResponseForAdmins = findAllSector(accessToken);
+        List<SectorResponse> sectorResponses = findAllUsedSector(accessToken);
+        assertThat(sectorResponseForAdmins).hasSize(2);
         assertThat(sectorResponses).hasSize(2);
 
         // 부문 삭제
         deleteSector(accessToken, id);
-        List<SectorResponse> afterDeletedSectorResponses = findAllSector(accessToken);
-        assertThat(afterDeletedSectorResponses).hasSize(1);
+        sectorResponseForAdmins = findAllSector(accessToken);
+        sectorResponses = findAllUsedSector(accessToken);
+        assertThat(sectorResponseForAdmins).hasSize(2);
+        assertThat(sectorResponses).hasSize(1);
 
         deleteSector(accessToken, anotherId);
-        List<SectorResponse> deletedSectorResponses = findAllSector(accessToken);
-        assertThat(deletedSectorResponses).hasSize(0);
+        sectorResponseForAdmins = findAllSector(accessToken);
+        sectorResponses = findAllUsedSector(accessToken);
+        assertThat(sectorResponseForAdmins).hasSize(2);
+        assertThat(sectorResponses).hasSize(0);
     }
 
     private String createAdmin(String email, String nickname, String password) {
@@ -142,7 +151,7 @@ public class SectorAcceptanceTest {
             .header("X-AUTH-TOKEN", accessToken)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when()
-            .post("/sectors")
+            .post("/admin/sectors")
             .then()
             .statusCode(HttpStatus.CREATED.value())
             .extract()
@@ -156,7 +165,19 @@ public class SectorAcceptanceTest {
         return Long.valueOf(location.substring(lastIndex + 1));
     }
 
-    private SectorResponse findSector(String accessToken, Long id) {
+    private SectorResponseForAdmin findSector(String accessToken, Long id) {
+        return given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .get("/admin/sectors/" + id)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .as(SectorResponseForAdmin.class);
+    }
+
+    private SectorResponse findUsedSector(String accessToken, Long id) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
@@ -179,12 +200,25 @@ public class SectorAcceptanceTest {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
             .when()
-            .put("/sectors/" + id)
+            .put("/admin/sectors/" + id)
             .then()
             .statusCode(HttpStatus.OK.value());
     }
 
-    private List<SectorResponse> findAllSector(String accessToken) {
+    private List<SectorResponseForAdmin> findAllSector(String accessToken) {
+        return given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .get("/admin/sectors")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .jsonPath()
+            .getList(".", SectorResponseForAdmin.class);
+    }
+
+    private List<SectorResponse> findAllUsedSector(String accessToken) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
@@ -201,7 +235,7 @@ public class SectorAcceptanceTest {
         given()
             .header("X-AUTH-TOKEN", accessToken)
             .when()
-            .delete("/sectors/" + id)
+            .delete("/admin/sectors/" + id)
             .then()
             .statusCode(HttpStatus.NO_CONTENT.value());
     }
