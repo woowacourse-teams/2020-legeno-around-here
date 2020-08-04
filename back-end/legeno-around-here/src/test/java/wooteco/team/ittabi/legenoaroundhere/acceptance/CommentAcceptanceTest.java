@@ -76,8 +76,8 @@ public class CommentAcceptanceTest {
         assertThat(commentResponse.getWriting()).isEqualTo(TEST_WRITING);
 
         // 목록 조회
-//        List<CommentResponse> commentResponses = findAllComment(postResponse.getId(), accessToken);
-//        assertThat(commentResponses).hasSize(1);
+        List<CommentResponse> commentResponses = findAllComment(postResponse.getId(), accessToken);
+        assertThat(commentResponses).hasSize(0);
 
         // 조회
 //        CommentResponse commentFoundResponse = findComment(commentId, accessToken);
@@ -93,7 +93,6 @@ public class CommentAcceptanceTest {
 //
 //        assertThat(foundPostResponses).hasSize(1);
     }
-
 
     private List<CommentResponse> findAllComment(Long postId, String accessToken) {
         return given()
@@ -161,18 +160,6 @@ public class CommentAcceptanceTest {
 //            .statusCode(HttpStatus.NO_CONTENT.value());
 //    }
 //
-//    private List<PostResponse> findAllComment(String accessToken) {
-//        return given()
-//            .accept(MediaType.APPLICATION_JSON_VALUE)
-//            .header("X-AUTH-TOKEN", accessToken)
-//            .when()
-//            .get("/posts")
-//            .then()
-//            .statusCode(HttpStatus.OK.value())
-//            .extract()
-//            .jsonPath()
-//            .getList(".", PostResponse.class);
-//    }
 
     private Long getIdFromUrl(String location) {
         int lastIndex = location.lastIndexOf("/");
