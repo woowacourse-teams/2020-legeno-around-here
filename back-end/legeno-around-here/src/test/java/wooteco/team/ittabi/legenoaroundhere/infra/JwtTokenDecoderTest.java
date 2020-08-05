@@ -14,11 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
-import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 
 @TestPropertySource(properties = {"spring.config.location=classpath:application-test.yml"})
