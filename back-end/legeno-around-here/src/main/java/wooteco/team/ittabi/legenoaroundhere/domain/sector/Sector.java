@@ -43,9 +43,9 @@ public class Sector extends BaseEntity {
     @Builder
     public Sector(String name, String description, User creator, User lastModifier,
         SectorState state) {
+        validate(creator, lastModifier, state);
         this.name = new SectorName(name);
         this.description = new SectorDescription(description);
-        validate(creator, lastModifier, state);
         this.creator = creator;
         this.lastModifier = lastModifier;
         this.state = state;
