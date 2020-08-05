@@ -54,6 +54,7 @@ public class UserService implements UserDetailsService {
         return persistUser.getId();
     }
 
+    @Transactional
     public TokenResponse login(LoginRequest loginRequest) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -68,16 +69,31 @@ public class UserService implements UserDetailsService {
             jwtTokenGenerator.createToken(user.getEmailByString(), user.getRoles()));
     }
 
+    @Transactional
     public UserResponse findUser() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return UserResponse.from(user);
     }
 
+    @Transactional
     public UserResponse updateUser(UserRequest userUpdateRequest) {
-        return null;
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User persistUser = userRepository.findByEmail(user.getEmail())
+            .orElseThrow(() -> new NotExistsException("사용자를 찾을 수 없습니다."));
+        persistUser.setNickname(new Nickname(userUpdateRequest.getNickname()));
+        persistUser
+            .setPassword(new Password(passwordEncoder.encode(userUpdateRequest.getPassword())));
+        return UserResponse.from(persistUser);
     }
 
+    @Transactional
     public void deleteUser() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User persistUser = userRepository.findByEmail(user.getEmail())
+            .orElseThrow(() -> new NotExistsException("사용자를 찾을 수 없습니다."));
+        userRepository.delete(persistUser);
     }
 
     @Override
