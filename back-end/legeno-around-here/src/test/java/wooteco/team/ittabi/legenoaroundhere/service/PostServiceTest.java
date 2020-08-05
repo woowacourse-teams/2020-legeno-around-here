@@ -31,12 +31,14 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
+import wooteco.team.ittabi.legenoaroundhere.repository.CommentRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.FileConverter;
 
 @ExtendWith(MockitoExtension.class)
 public class PostServiceTest extends AuthServiceTest {
 
+    private CommentService commentService;
     private PostService postService;
 
     @Mock
@@ -45,12 +47,16 @@ public class PostServiceTest extends AuthServiceTest {
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private CommentRepository commentRepository;
+
     private User user;
     private User another;
 
     @BeforeEach
     void setUp() {
-        postService = new PostService(postRepository, new ImageService(s3Uploader));
+        commentService = new CommentService(postRepository, commentRepository);
+        postService = new PostService(postRepository, commentService, new ImageService(s3Uploader));
         user = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         another = createUser(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         setAuthentication(user);

@@ -49,8 +49,8 @@ public class CommentServiceTest extends AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-        postService = new PostService(postRepository, new ImageService(s3Uploader));
-        commentService = new CommentService(postService, commentRepository);
+        commentService = new CommentService(postRepository, commentRepository);
+        postService = new PostService(postRepository, commentService, new ImageService(s3Uploader));
 
         user = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         another = createUser(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
@@ -87,6 +87,22 @@ public class CommentServiceTest extends AuthServiceTest {
         assertThat(foundCommentResponse.getWriting())
             .isEqualTo(createdCommentResponse.getWriting());
         assertThat(foundCommentResponse.getUser()).isEqualTo(createdCommentResponse.getUser());
+    }
+
+
+    @DisplayName("댓글 조회 - 성공, POST ID로 조회 후 댓글 개수 확인")
+    @Test
+    void findPost_FindByPostID_SuccessToFind() {
+        CommentRequest commentRequest = new CommentRequest(TEST_WRITING);
+
+        CommentResponse commentResponse = commentService
+            .createComment(postResponse.getId(), commentRequest);
+        commentService.createComment(postResponse.getId(), commentRequest);
+        commentService.createComment(postResponse.getId(), commentRequest);
+        commentService.deleteComment(commentResponse.getId());
+
+        PostResponse foundPostResponse = postService.findPost(postResponse.getId());
+        assertThat(foundPostResponse.getComments()).hasSize(2);
     }
 
     @DisplayName("댓글 조회 - 실패, 찾는 Comment가 이미 삭제 됐을 경우")

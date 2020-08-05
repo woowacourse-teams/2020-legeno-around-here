@@ -2,7 +2,6 @@ package wooteco.team.ittabi.legenoaroundhere.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -26,16 +25,9 @@ public class PostResponse {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    public static PostResponse of(Post post) {
+    public static PostResponse of(Post post, List<CommentResponse> commentResponses) {
         List<ImageResponse> imageResponses = ImageResponse.listOf(post.getImages());
-        List<CommentResponse> commentResponses = CommentResponse.listOf(post.getComments());
         return new PostResponse(post.getId(), post.getWriting(), imageResponses, commentResponses,
             UserResponse.from(post.getUser()), post.getCreatedAt(), post.getModifiedAt());
-    }
-
-    public static List<PostResponse> listOf(List<Post> posts) {
-        return posts.stream()
-            .map(PostResponse::of)
-            .collect(Collectors.toList());
     }
 }

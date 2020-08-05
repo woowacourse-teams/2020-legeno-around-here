@@ -1,7 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,19 +16,23 @@ import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.CommentRepository;
+import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class CommentService {
 
-    private final PostService postService;
+    private static final State Deleted = State.DELETED;
+
+    private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
     @Transactional
     public CommentResponse createComment(Long postId, CommentRequest commentRequest) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Post post = postService.findNotDeletedPost(postId);
+        Post post = postRepository.findByIdAndStateNot(postId, Deleted)
+            .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
         Comment comment = commentRequest.toComment(user);
 
         comment.setPost(post);
@@ -43,10 +47,10 @@ public class CommentService {
         return CommentResponse.of(comment);
     }
 
+    @Transactional(readOnly = true)
     public List<CommentResponse> findAllComment(Long postId) {
-        List<Comment> comments = commentRepository.findAllByPostId(postId).stream()
-            .filter(comment -> comment.isNotSameState(State.DELETED))
-            .collect(Collectors.toList());
+        List<Comment> comments =
+            new ArrayList<>(commentRepository.findAllByPostIdAndStateNot(postId, Deleted));
         return CommentResponse.listOf(comments);
     }
 
@@ -58,14 +62,9 @@ public class CommentService {
     }
 
     private Comment findNotDeletedComment(Long commentId) {
-        Comment comment = commentRepository.findById(commentId)
-            .orElseThrow(() -> new NotExistsException(
-                "Comment ID : " + commentId + " 에 해당하는 Comment가 없습니다!"));
-        if (comment.isSameState(State.DELETED)) {
-            log.debug("이미 삭제된 COMMENT, id = {}", commentId);
-            throw new NotExistsException("삭제된 COMMENT 입니다!");
-        }
-        return comment;
+        return commentRepository.findByIdAndStateNot(commentId, Deleted)
+            .orElseThrow(() ->
+                new NotExistsException("Comment ID : " + commentId + " 에 해당하는 Comment가 없습니다!"));
     }
 
     private void validateIsOwner(Comment comment) {

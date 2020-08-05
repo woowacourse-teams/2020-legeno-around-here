@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.Image;
 import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
+import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
@@ -24,7 +26,10 @@ import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 @AllArgsConstructor
 public class PostService {
 
+    private static final State Deleted = State.DELETED;
+
     private final PostRepository postRepository;
+    private final CommentService commentService;
     private final ImageService imageService;
 
     @Transactional
@@ -35,8 +40,9 @@ public class PostService {
 
         images.forEach(image -> image.setPost(post));
         Post savedPost = postRepository.save(post);
+        List<CommentResponse> commentResponses = commentService.findAllComment(savedPost.getId());
 
-        return PostResponse.of(savedPost);
+        return PostResponse.of(savedPost, commentResponses);
     }
 
     private List<Image> uploadImages(PostRequest postRequest) {
@@ -51,24 +57,20 @@ public class PostService {
 
     public PostResponse findPost(Long id) {
         Post post = findNotDeletedPost(id);
-        return PostResponse.of(post);
+        List<CommentResponse> commentResponses = commentService.findAllComment(post.getId());
+        return PostResponse.of(post, commentResponses);
     }
 
     public Post findNotDeletedPost(Long id) {
-        Post post = postRepository.findById(id)
+        return postRepository.findByIdAndStateNot(id, Deleted)
             .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
-        if (post.isSameState(State.DELETED)) {
-            log.debug("이미 삭제된 POST, id = {}", id);
-            throw new NotExistsException("삭제된 POST 입니다!");
-        }
-        return post;
     }
 
     public List<PostResponse> findAllPost() {
-        List<Post> posts = postRepository.findAll().stream()
-            .filter(post -> post.isNotSameState(State.DELETED))
+        List<Post> posts = new ArrayList<>(postRepository.findByStateNot(Deleted));
+        return posts.stream()
+            .map(post -> PostResponse.of(post, commentService.findAllComment(post.getId())))
             .collect(Collectors.toList());
-        return PostResponse.listOf(posts);
     }
 
     @Transactional
