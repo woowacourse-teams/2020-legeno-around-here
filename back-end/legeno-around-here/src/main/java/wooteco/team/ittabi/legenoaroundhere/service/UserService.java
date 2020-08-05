@@ -37,14 +37,14 @@ public class UserService implements UserDetailsService {
         return persistUser.getId();
     }
 
-    private User createUserBy(UserCreateRequest userCreateRequest, Role user) {
+    private User createUserBy(UserCreateRequest userCreateRequest, Role userRole) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         return userRepository.save(User.builder()
             .email(new Email(userCreateRequest.getEmail()))
             .nickname(new Nickname(userCreateRequest.getNickname()))
             .password(new Password(passwordEncoder.encode(userCreateRequest.getPassword())))
-            .roles(Collections.singletonList(user.getRoleName()))
+            .roles(Collections.singletonList(userRole.getRoleName()))
             .build());
     }
 
