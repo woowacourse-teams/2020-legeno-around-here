@@ -2,19 +2,18 @@ package wooteco.team.ittabi.legenoaroundhere.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import javax.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.LegalArea;
-import wooteco.team.ittabi.legenoaroundhere.domain.area.Region;
-import wooteco.team.ittabi.legenoaroundhere.domain.area.RegionDepth;
+import wooteco.team.ittabi.legenoaroundhere.domain.area.RegionalRelationship;
 
-@DataJpaTest
+@ActiveProfiles("test")
+@SpringBootTest
 class LegalAreaRepositoryTest {
 
     @Autowired
@@ -30,18 +29,30 @@ class LegalAreaRepositoryTest {
         assertThat(legalArea.getId()).isNotNull();
     }
 
+    //todo: 하드하게 넣은 값들 제거
+    @Transactional
     @Test
-    void findAll() {
-        List<LegalArea> all = legalAreaRepository.findAll();
-        System.out.println("hahaha");
-        System.out.println(all.size());
+    void findByCode_InitialDataStored_() {
+        LegalArea legalArea = legalAreaRepository.findByCode("1100000000");
+        List<RegionalRelationship> regionalRelationships = legalArea.getRegionalRelationships();
+        assertThat(regionalRelationships).hasSize(3);
+        for (RegionalRelationship regionalRelationship : regionalRelationships) {
+            assertThat(regionalRelationship).isNotNull();
+        }
     }
 
+    //todo: 하드하게 넣은 값들 제거
+    @Transactional
     @Test
-    void findById() {
+    void findById_InitialDataStored_Persisted() {
         LegalArea legalArea = legalAreaRepository.findById(1L)
             .orElseThrow(IllegalArgumentException::new);
-        System.out.println("kkkk");
-        System.out.println(legalArea.getRegionalRelationships());
+        assertThat(legalArea.getCode()).isEqualTo("1100000000");
+        List<RegionalRelationship> regionalRelationships = legalArea.getRegionalRelationships();
+        assertThat(regionalRelationships).hasSize(3);
+        for (RegionalRelationship regionalRelationship : regionalRelationships) {
+            assertThat(regionalRelationship).isNotNull();
+        }
     }
+
 }

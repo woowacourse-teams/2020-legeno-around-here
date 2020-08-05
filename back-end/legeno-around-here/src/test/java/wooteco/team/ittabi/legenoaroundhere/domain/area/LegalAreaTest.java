@@ -4,14 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
 class LegalAreaTest {
 
@@ -28,14 +22,14 @@ class LegalAreaTest {
     @DisplayName("1개 미만의 region을 활용한 LegalArea 생성 - 실패")
     @Test
     void construct_InvalidSize_ThrowIllegalArgumentException() {
-        assertThatThrownBy(() -> new LegalArea(Collections.emptyMap()))
+        assertThatThrownBy(() -> new LegalArea("testCode", Collections.emptyList()))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage(LegalArea.INVALID_SIZE_ERROR);
     }
 
     @Test
     void construct_RegionsNull_ThrowIllegalArgumentException() {
-        assertThatThrownBy(() -> new LegalArea(null))
+        assertThatThrownBy(() -> new LegalArea("testCode", null))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage(LegalArea.NOT_ALLOWED_NULL);
     }

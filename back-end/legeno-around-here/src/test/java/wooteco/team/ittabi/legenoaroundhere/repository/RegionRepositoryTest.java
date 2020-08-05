@@ -8,18 +8,20 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Region;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.RegionDepth;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.RegionName;
 
-@DataJpaTest
+@ActiveProfiles("test")
+@SpringBootTest
 class RegionRepositoryTest {
 
     @Autowired
     private RegionRepository regionRepository;
 
-    @DisplayName("regionName을 활용한 Region 저장")
+    @DisplayName("regionName 및 regionDepth를 활용한 Region 저장")
     @ParameterizedTest
     @MethodSource({"getCasesForSave"})
     void save(String regionName, RegionDepth regionDepth) {
