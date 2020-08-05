@@ -44,18 +44,25 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Comment(User user, Post post, String writing) {
+    public Comment(User user, String writing) {
         validateLength(writing);
         this.writing = writing;
         this.state = State.PUBLISHED;
         this.user = user;
-        this.post = post;
     }
 
     private void validateLength(String writing) {
         if (writing.length() > MAX_LENGTH) {
             throw new UserInputException(MAX_LENGTH + "글자를 초과했습니다!");
         }
+    }
+
+    public void setPost(Post post) {
+        if (Objects.nonNull(this.post)) {
+            this.post.getComments().remove(this);
+        }
+        this.post = post;
+        post.getComments().add(this);
     }
 
     public boolean isSameState(State state) {

@@ -62,16 +62,6 @@ public class Post extends BaseEntity {
         }
     }
 
-    public void addImage(Image image) {
-        images.add(image);
-        image.setPost(this);
-    }
-
-    public void addComment(Comment comment) {
-        comments.add(comment);
-        comment.setPost(this);
-    }
-
     public boolean isSameState(State state) {
         return Objects.equals(this.state, state);
     }

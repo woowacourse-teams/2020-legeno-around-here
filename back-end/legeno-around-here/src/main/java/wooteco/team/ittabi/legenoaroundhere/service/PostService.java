@@ -33,7 +33,7 @@ public class PostService {
         Post post = postRequest.toPost(user);
         List<Image> images = uploadImages(postRequest);
 
-        images.forEach(post::addImage);
+        images.forEach(image -> image.setPost(post));
         Post savedPost = postRepository.save(post);
 
         return PostResponse.of(savedPost);

@@ -29,9 +29,9 @@ public class CommentService {
     public CommentResponse createComment(Long postId, CommentRequest commentRequest) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Post post = postService.findNotDeletedPost(postId);
-        Comment comment = commentRequest.toComment(user, post);
+        Comment comment = commentRequest.toComment(user);
 
-        post.addComment(comment);
+        comment.setPost(post);
 
         Comment savedComment = commentRepository.save(comment);
         return CommentResponse.of(savedComment);
