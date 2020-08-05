@@ -15,7 +15,7 @@ import wooteco.team.ittabi.legenoaroundhere.service.SectorService;
 @AllArgsConstructor
 public class SectorController {
 
-    private SectorService sectorService;
+    private final SectorService sectorService;
 
     @GetMapping("/{id}")
     public ResponseEntity<SectorResponse> findUsedSector(@PathVariable Long id) {

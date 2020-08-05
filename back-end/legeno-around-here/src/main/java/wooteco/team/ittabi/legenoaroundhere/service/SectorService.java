@@ -11,9 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
+import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponseForAdmin;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotUniqueException;
 import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
@@ -81,13 +81,13 @@ public class SectorService {
         sector.setState(SectorState.DELETED);
     }
 
-    public SectorResponseForAdmin findSector(Long id) {
+    public AdminSectorResponse findSector(Long id) {
         Sector sector = findSectorBy(id);
-        return SectorResponseForAdmin.of(sector);
+        return AdminSectorResponse.of(sector);
     }
 
-    public List<SectorResponseForAdmin> findAllSector() {
+    public List<AdminSectorResponse> findAllSector() {
         List<Sector> sectors = sectorRepository.findAll();
-        return SectorResponseForAdmin.listOf(sectors);
+        return AdminSectorResponse.listOf(sectors);
     }
 }

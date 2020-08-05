@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponseForAdmin;
 import wooteco.team.ittabi.legenoaroundhere.service.SectorService;
 
 @RestController
@@ -22,7 +22,7 @@ import wooteco.team.ittabi.legenoaroundhere.service.SectorService;
 @AllArgsConstructor
 public class SectorAdminController {
 
-    private SectorService sectorService;
+    private final SectorService sectorService;
 
     @PostMapping
     public ResponseEntity<Void> createSector(@RequestBody SectorRequest sectorRequest) {
@@ -33,15 +33,15 @@ public class SectorAdminController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SectorResponseForAdmin> findSector(@PathVariable Long id) {
-        SectorResponseForAdmin sector = sectorService.findSector(id);
+    public ResponseEntity<AdminSectorResponse> findSector(@PathVariable Long id) {
+        AdminSectorResponse sector = sectorService.findSector(id);
         return ResponseEntity
             .ok(sector);
     }
 
     @GetMapping
-    public ResponseEntity<List<SectorResponseForAdmin>> findAllSector() {
-        List<SectorResponseForAdmin> sectors = sectorService.findAllSector();
+    public ResponseEntity<List<AdminSectorResponse>> findAllSector() {
+        List<AdminSectorResponse> sectors = sectorService.findAllSector();
         return ResponseEntity
             .ok(sectors);
     }

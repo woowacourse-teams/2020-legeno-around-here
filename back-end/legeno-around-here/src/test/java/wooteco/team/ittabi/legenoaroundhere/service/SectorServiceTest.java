@@ -22,9 +22,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
+import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponseForAdmin;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
@@ -184,7 +184,7 @@ class SectorServiceTest {
             .createSector(new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION));
         Long sectorId = createdSector.getId();
 
-        SectorResponseForAdmin sector = sectorService.findSector(sectorId);
+        AdminSectorResponse sector = sectorService.findSector(sectorId);
         assertThat(sector.getId()).isEqualTo(sectorId);
         assertThat(sector.getName()).isEqualToIgnoringCase(TEST_SECTOR_NAME);
         assertThat(sector.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
@@ -199,7 +199,7 @@ class SectorServiceTest {
         Long sectorId = createdSector.getId();
         sectorService.deleteSector(sectorId);
 
-        SectorResponseForAdmin sector = sectorService.findSector(sectorId);
+        AdminSectorResponse sector = sectorService.findSector(sectorId);
         assertThat(sector.getId()).isEqualTo(sectorId);
         assertThat(sector.getName()).isEqualToIgnoringCase(TEST_SECTOR_NAME);
         assertThat(sector.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
@@ -230,11 +230,11 @@ class SectorServiceTest {
             new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION));
         sectorService.deleteSector(sector.getId());
 
-        SectorResponseForAdmin expectedSector = sectorService.findSector(sector.getId());
-        SectorResponseForAdmin expectedAnotherSector
+        AdminSectorResponse expectedSector = sectorService.findSector(sector.getId());
+        AdminSectorResponse expectedAnotherSector
             = sectorService.findSector(anotherSector.getId());
 
-        List<SectorResponseForAdmin> sectors = sectorService.findAllSector();
+        List<AdminSectorResponse> sectors = sectorService.findAllSector();
         assertThat(sectors).contains(expectedSector);
         assertThat(sectors).contains(expectedAnotherSector);
     }

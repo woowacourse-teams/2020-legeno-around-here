@@ -14,12 +14,12 @@ import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class SectorName {
+public class Name {
 
     @Column(unique = true, nullable = false)
     private String name;
 
-    SectorName(String name) {
+    Name(String name) {
         validate(name);
         this.name = name.trim()
             .replaceAll(" +", " ")

@@ -17,7 +17,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class SectorResponseForAdmin {
+public class AdminSectorResponse {
 
     private Long id;
     private String name;
@@ -26,8 +26,8 @@ public class SectorResponseForAdmin {
     private UserResponse lastModifier;
     private String state;
 
-    public static SectorResponseForAdmin of(Sector sector) {
-        return SectorResponseForAdmin.builder()
+    public static AdminSectorResponse of(Sector sector) {
+        return AdminSectorResponse.builder()
             .id(sector.getId())
             .name(sector.getStringName())
             .description(sector.getStringDescription())
@@ -37,9 +37,9 @@ public class SectorResponseForAdmin {
             .build();
     }
 
-    public static List<SectorResponseForAdmin> listOf(List<Sector> sectors) {
+    public static List<AdminSectorResponse> listOf(List<Sector> sectors) {
         return sectors.stream()
-            .map(SectorResponseForAdmin::of)
+            .map(AdminSectorResponse::of)
             .collect(Collectors.toList());
     }
 }

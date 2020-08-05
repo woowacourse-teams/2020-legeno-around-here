@@ -23,10 +23,10 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 public class Sector extends BaseEntity {
 
     @Embedded
-    private SectorName name;
+    private Name name;
 
     @Embedded
-    private SectorDescription description;
+    private Description description;
 
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)
@@ -44,8 +44,8 @@ public class Sector extends BaseEntity {
     public Sector(String name, String description, User creator, User lastModifier,
         SectorState state) {
         validate(creator, lastModifier, state);
-        this.name = new SectorName(name);
-        this.description = new SectorDescription(description);
+        this.name = new Name(name);
+        this.description = new Description(description);
         this.creator = creator;
         this.lastModifier = lastModifier;
         this.state = state;

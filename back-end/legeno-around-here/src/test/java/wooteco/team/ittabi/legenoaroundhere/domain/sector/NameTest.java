@@ -9,24 +9,24 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 
-class SectorNameTest {
+class NameTest {
 
     @DisplayName("생성자 테스트, 성공")
     @ParameterizedTest
     @ValueSource(strings = {"01234567890123456789", " ㅎ ", "          22          ",
         "2                    2", "lowerCase"})
     void constructor_Success(String input) {
-        SectorName sectorName = new SectorName(input);
+        Name name = new Name(input);
 
         String expected = input.trim().replaceAll(" +", " ").toUpperCase();
-        assertThat(sectorName.getName()).isEqualTo(expected);
+        assertThat(name.getName()).isEqualTo(expected);
     }
 
     @DisplayName("생성자 테스트, 예외 발생 - name이 Null이거나 Empty")
     @ParameterizedTest
     @NullAndEmptySource
     void constructor_NameNullOrEmpty_ThrownException(String input) {
-        assertThatThrownBy(() -> new SectorDescription(input))
+        assertThatThrownBy(() -> new Description(input))
             .isInstanceOf(UserInputException.class);
     }
 
@@ -34,7 +34,7 @@ class SectorNameTest {
     @ParameterizedTest
     @ValueSource(strings = {" ", "  ", "   "})
     void constructor_NameEmptyAfterTrim_ThrownException(String input) {
-        assertThatThrownBy(() -> new SectorName(input))
+        assertThatThrownBy(() -> new Name(input))
             .isInstanceOf(UserInputException.class);
     }
 
@@ -47,7 +47,7 @@ class SectorNameTest {
             stringBuilder.append(letter);
         }
 
-        assertThatThrownBy(() -> new SectorName(stringBuilder.toString()))
+        assertThatThrownBy(() -> new Name(stringBuilder.toString()))
             .isInstanceOf(UserInputException.class);
     }
 }
