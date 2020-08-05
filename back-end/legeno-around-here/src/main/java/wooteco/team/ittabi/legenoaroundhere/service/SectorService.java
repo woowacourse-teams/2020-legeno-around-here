@@ -40,7 +40,7 @@ public class SectorService {
         }
     }
 
-    public SectorResponse findUsedSector(Long id) {
+    public SectorResponse findInUseSector(Long id) {
         Sector sector = findUsedSectorBy(id);
         return SectorResponse.of(sector);
     }
@@ -58,7 +58,7 @@ public class SectorService {
             .orElseThrow(() -> new NotExistsException(id + "에 해당하는 Sector가 존재하지 않습니다."));
     }
 
-    public List<SectorResponse> findAllUsedSector() {
+    public List<SectorResponse> findAllInUseSector() {
         List<Sector> sectors = sectorRepository.findAll()
             .stream()
             .filter(Sector::isUsed)

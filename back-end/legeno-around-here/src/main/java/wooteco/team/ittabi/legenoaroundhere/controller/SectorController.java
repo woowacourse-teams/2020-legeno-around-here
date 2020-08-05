@@ -18,15 +18,15 @@ public class SectorController {
     private final SectorService sectorService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<SectorResponse> findUsedSector(@PathVariable Long id) {
-        SectorResponse sector = sectorService.findUsedSector(id);
+    public ResponseEntity<SectorResponse> findInUseSector(@PathVariable Long id) {
+        SectorResponse sector = sectorService.findInUseSector(id);
         return ResponseEntity
             .ok(sector);
     }
 
     @GetMapping
-    public ResponseEntity<List<SectorResponse>> findAllUsedSector() {
-        List<SectorResponse> sectors = sectorService.findAllUsedSector();
+    public ResponseEntity<List<SectorResponse>> findAllInUseSector() {
+        List<SectorResponse> sectors = sectorService.findAllInUseSector();
         return ResponseEntity
             .ok(sectors);
     }

@@ -69,7 +69,7 @@ public class SectorAcceptanceTest {
         Long id = createSector(accessToken, TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
 
         // 사용 중인 부문 조회
-        SectorResponse sectorResponse = findUsedSector(accessToken, id);
+        SectorResponse sectorResponse = findInUseSector(accessToken, id);
         assertThat(sectorResponse.getId()).isEqualTo(id);
         assertThat(sectorResponse.getName()).isEqualToIgnoringCase(TEST_SECTOR_NAME);
         assertThat(sectorResponse.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
@@ -88,7 +88,7 @@ public class SectorAcceptanceTest {
         updateSector(accessToken, id, TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION);
 
         // 사용 중인 부문 조회
-        sectorResponse = findUsedSector(accessToken, id);
+        sectorResponse = findInUseSector(accessToken, id);
         assertThat(sectorResponse.getId()).isEqualTo(id);
         assertThat(sectorResponse.getName()).isEqualToIgnoringCase(TEST_SECTOR_ANOTHER_NAME);
         assertThat(sectorResponse.getDescription()).isEqualTo(TEST_SECTOR_ANOTHER_DESCRIPTION);
@@ -108,24 +108,24 @@ public class SectorAcceptanceTest {
         // 부문 전체 조회 + 사용하는 부문 전체 조회
         Long anotherId = createSector(accessToken, TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
         List<AdminSectorResponse> adminSectorResponses = findAllSector(accessToken);
-        List<SectorResponse> sectorResponses = findAllUsedSector(accessToken);
+        List<SectorResponse> sectorResponses = findAllInUseSector(accessToken);
         assertThat(adminSectorResponses).hasSize(2);
         assertThat(sectorResponses).hasSize(2);
 
         // 부문 삭제
         deleteSector(accessToken, id);
-        assertThatThrownBy(() -> findUsedSector(accessToken, id));
+        assertThatThrownBy(() -> findInUseSector(accessToken, id));
         adminSectorResponse = findSector(accessToken, id);
         assertThat(adminSectorResponse.getState()).isEqualTo(SectorState.DELETED.name());
 
         adminSectorResponses = findAllSector(accessToken);
-        sectorResponses = findAllUsedSector(accessToken);
+        sectorResponses = findAllInUseSector(accessToken);
         assertThat(adminSectorResponses).hasSize(2);
         assertThat(sectorResponses).hasSize(1);
 
         deleteSector(accessToken, anotherId);
         adminSectorResponses = findAllSector(accessToken);
-        sectorResponses = findAllUsedSector(accessToken);
+        sectorResponses = findAllInUseSector(accessToken);
         assertThat(adminSectorResponses).hasSize(2);
         assertThat(sectorResponses).hasSize(0);
     }
@@ -201,7 +201,7 @@ public class SectorAcceptanceTest {
             .as(AdminSectorResponse.class);
     }
 
-    private SectorResponse findUsedSector(String accessToken, Long id) {
+    private SectorResponse findInUseSector(String accessToken, Long id) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
@@ -242,7 +242,7 @@ public class SectorAcceptanceTest {
             .getList(".", AdminSectorResponse.class);
     }
 
-    private List<SectorResponse> findAllUsedSector(String accessToken) {
+    private List<SectorResponse> findAllInUseSector(String accessToken) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
