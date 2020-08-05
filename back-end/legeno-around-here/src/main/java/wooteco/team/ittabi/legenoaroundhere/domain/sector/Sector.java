@@ -66,12 +66,14 @@ public class Sector extends BaseEntity {
     }
 
     public void update(Sector sector) {
+        Objects.requireNonNull(sector, "Sector는 Null일 수 없습니다.");
         this.name = sector.name;
         this.description = sector.description;
         this.lastModifier = sector.lastModifier;
     }
 
     public void setState(SectorState state) {
+        Objects.requireNonNull(state, "SectorState는 Null일 수 없습니다.");
         this.state = state;
     }
 
