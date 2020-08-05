@@ -1,6 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.area;
 
-import java.util.List;
+import java.util.Map;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
@@ -16,7 +16,7 @@ public class LegalArea extends Area {
         super(code);
     }
 
-    public LegalArea(String code, List<RegionalRelationship> regions) {
+    public LegalArea(String code, Map<RegionDepth, RegionalRelationship> regions) {
         super(code, regions);
     }
 }

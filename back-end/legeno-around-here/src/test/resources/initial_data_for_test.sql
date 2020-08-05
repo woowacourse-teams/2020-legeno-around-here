@@ -58,44 +58,44 @@ FROM raw_legal_area
 WHERE village is not null and village != '';
 
 -- area, region, raw_legal_area 테이블을 활용하여 area 테이블과 region의 관계를 맺어줍니다. 즉 regional_relationship 테이블을 셋팅합니다.
-INSERT IGNORE INTO regional_relationship (area_id, region_id, created_at)
-SELECT prcessed_area_region.area_id, prcessed_area_region.region_id, current_time()
-FROM (SELECT DISTINCT area_id, region_id
+INSERT IGNORE INTO regional_relationship (area_id, region_id, created_at, regional_relationships_key)
+SELECT prcessed_area_region.area_id, prcessed_area_region.region_id, current_time(), depth
+FROM (SELECT DISTINCT area_id, region_id, depth
       FROM raw_legal_area
                JOIN
            (SELECT id AS area_id, code FROM area) AS area
            ON raw_legal_area.legal_code = area.code
-               JOIN (SELECT id AS region_id, name FROM region) AS region
+               JOIN (SELECT id AS region_id, name, depth FROM region) AS region
                     ON raw_legal_area.county = region.name
 
       UNION
 
-      SELECT DISTINCT area_id, region_id
+      SELECT DISTINCT area_id, region_id, depth
       FROM raw_legal_area
                JOIN
            (SELECT id AS area_id, code FROM area) AS area
            ON raw_legal_area.legal_code = area.code
-               JOIN (SELECT id AS region_id, name FROM region) AS region
+               JOIN (SELECT id AS region_id, name, depth FROM region) AS region
                     ON raw_legal_area.city = region.name
 
       UNION
 
-      SELECT DISTINCT area_id, region_id
+      SELECT DISTINCT area_id, region_id, depth
       FROM raw_legal_area
                JOIN
            (SELECT id AS area_id, code FROM area) AS area
            ON raw_legal_area.legal_code = area.code
-               JOIN (SELECT id AS region_id, name FROM region) AS region
+               JOIN (SELECT id AS region_id, name, depth FROM region) AS region
                     ON raw_legal_area.town = region.name
 
       UNION
 
-      SELECT area_id, region_id
+      SELECT area_id, region_id, depth
       FROM raw_legal_area
                JOIN
            (SELECT id AS area_id, code FROM area) AS area
            ON raw_legal_area.legal_code = area.code
-               JOIN (SELECT id AS region_id, name FROM region) AS region
+               JOIN (SELECT id AS region_id, name, depth FROM region) AS region
                     ON raw_legal_area.village = region.name
      ) AS prcessed_area_region;
 

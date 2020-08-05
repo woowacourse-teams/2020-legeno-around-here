@@ -2,7 +2,7 @@ package wooteco.team.ittabi.legenoaroundhere.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
+import java.util.Map;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.LegalArea;
+import wooteco.team.ittabi.legenoaroundhere.domain.area.RegionDepth;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.RegionalRelationship;
 
 @ActiveProfiles("test")
@@ -34,9 +35,9 @@ class LegalAreaRepositoryTest {
     @Test
     void findByCode_InitialDataStored_() {
         LegalArea legalArea = legalAreaRepository.findByCode("1100000000");
-        List<RegionalRelationship> regionalRelationships = legalArea.getRegionalRelationships();
+        Map<RegionDepth, RegionalRelationship> regionalRelationships = legalArea.getRegionalRelationships();
         assertThat(regionalRelationships).hasSize(3);
-        for (RegionalRelationship regionalRelationship : regionalRelationships) {
+        for (RegionalRelationship regionalRelationship : regionalRelationships.values()) {
             assertThat(regionalRelationship).isNotNull();
         }
     }
@@ -48,9 +49,9 @@ class LegalAreaRepositoryTest {
         LegalArea legalArea = legalAreaRepository.findById(1L)
             .orElseThrow(IllegalArgumentException::new);
         assertThat(legalArea.getCode()).isEqualTo("1100000000");
-        List<RegionalRelationship> regionalRelationships = legalArea.getRegionalRelationships();
+        Map<RegionDepth, RegionalRelationship> regionalRelationships = legalArea.getRegionalRelationships();
         assertThat(regionalRelationships).hasSize(3);
-        for (RegionalRelationship regionalRelationship : regionalRelationships) {
+        for (RegionalRelationship regionalRelationship : regionalRelationships.values()) {
             assertThat(regionalRelationship).isNotNull();
         }
     }

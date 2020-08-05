@@ -22,7 +22,7 @@ class LegalAreaTest {
     @DisplayName("1개 미만의 region을 활용한 LegalArea 생성 - 실패")
     @Test
     void construct_InvalidSize_ThrowIllegalArgumentException() {
-        assertThatThrownBy(() -> new LegalArea("testCode", Collections.emptyList()))
+        assertThatThrownBy(() -> new LegalArea("testCode", Collections.emptyMap()))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage(LegalArea.INVALID_SIZE_ERROR);
     }
