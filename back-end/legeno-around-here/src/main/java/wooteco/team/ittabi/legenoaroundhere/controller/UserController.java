@@ -2,14 +2,16 @@ package wooteco.team.ittabi.legenoaroundhere.controller;
 
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 
@@ -23,8 +25,8 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<Void> join(@RequestBody UserCreateRequest userCreateRequest) {
-        Long userId = userService.createUser(userCreateRequest);
+    public ResponseEntity<Void> join(@RequestBody UserRequest userRequest) {
+        Long userId = userService.createUser(userRequest);
         return ResponseEntity
             .created(URI.create("/users/" + userId))
             .build();
@@ -44,7 +46,20 @@ public class UserController {
     }
 
     @GetMapping("/users/myinfo")
-    public ResponseEntity<UserResponse> findUser(Authentication authentication) {
-        return ResponseEntity.ok(userService.findUser(authentication));
+    public ResponseEntity<UserResponse> findUser() {
+        return ResponseEntity.ok(userService.findUser());
+    }
+
+    @CrossOrigin
+    @PutMapping("/users/myinfo")
+    public ResponseEntity<UserResponse> updateUser(@RequestBody UserRequest userRequest) {
+        return ResponseEntity.ok(userService.updateUser(userRequest));
+    }
+
+    @CrossOrigin
+    @DeleteMapping("/users/myinfo")
+    public ResponseEntity<Void> deleteUser() {
+        userService.deleteUser();
+        return ResponseEntity.noContent().build();
     }
 }
