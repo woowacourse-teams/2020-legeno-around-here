@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
+import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 class NameTest {
 
@@ -27,7 +27,7 @@ class NameTest {
     @NullAndEmptySource
     void constructor_NameNullOrEmpty_ThrownException(String input) {
         assertThatThrownBy(() -> new Description(input))
-            .isInstanceOf(UserInputException.class);
+            .isInstanceOf(WrongUserInputException.class);
     }
 
     @DisplayName("생성자 테스트, 예외 발생 - name이 공백 제거하면 empty")
@@ -35,7 +35,7 @@ class NameTest {
     @ValueSource(strings = {" ", "  ", "   "})
     void constructor_NameEmptyAfterTrim_ThrownException(String input) {
         assertThatThrownBy(() -> new Name(input))
-            .isInstanceOf(UserInputException.class);
+            .isInstanceOf(WrongUserInputException.class);
     }
 
     @DisplayName("생성자 테스트, 예외 발생 - 20자 초과")
@@ -48,6 +48,6 @@ class NameTest {
         }
 
         assertThatThrownBy(() -> new Name(stringBuilder.toString()))
-            .isInstanceOf(UserInputException.class);
+            .isInstanceOf(WrongUserInputException.class);
     }
 }

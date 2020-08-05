@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
+import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,25 +36,25 @@ public class Nickname {
 
     private void validateNull(String nickname) {
         if (Objects.isNull(nickname)) {
-            throw new UserInputException("닉네임이 null 입니다.");
+            throw new WrongUserInputException("닉네임이 null 입니다.");
         }
     }
 
     private void validateEmpty(String nickname) {
         if (nickname.isEmpty()) {
-            throw new UserInputException("닉네임이 비어있습니다.");
+            throw new WrongUserInputException("닉네임이 비어있습니다.");
         }
     }
 
     private void validateSpace(String nickname) {
         if (nickname.contains(" ")) {
-            throw new UserInputException("닉네임은 공백을 포함할 수 없습니다.");
+            throw new WrongUserInputException("닉네임은 공백을 포함할 수 없습니다.");
         }
     }
 
     private void validateLength(String nickname) {
         if (nickname.length() > MAX_LENGTH) {
-            throw new UserInputException("닉네임은 " + MAX_LENGTH + "글자 이하여야 합니다.");
+            throw new WrongUserInputException("닉네임은 " + MAX_LENGTH + "글자 이하여야 합니다.");
         }
     }
 }

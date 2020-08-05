@@ -20,7 +20,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
-import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
+import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
 import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 
@@ -62,7 +62,7 @@ public class UserService implements UserDetailsService {
 
         if (!passwordEncoder.matches(
             loginRequest.getPassword(), user.getPasswordByString())) {
-            throw new UserInputException("잘못된 비밀번호입니다.");
+            throw new WrongUserInputException("잘못된 비밀번호입니다.");
         }
         return new TokenResponse(
             jwtTokenGenerator.createToken(user.getEmailByString(), user.getRoles()));

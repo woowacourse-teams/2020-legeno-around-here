@@ -22,7 +22,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotFoundAlgorithmException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageExtensionException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageMimeTypeException;
-import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
+import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.service.SectorService;
 
 @SpringBootTest
@@ -55,7 +55,7 @@ class GlobalExceptionHandlerTest {
     @DisplayName("UserInputException일 때, BadRequest 리턴")
     @Test
     void handleBadRequest_UserInputException_BadRequest() throws Exception {
-        doThrow(UserInputException.class).when(sectorService).findAllUsedSector();
+        doThrow(WrongUserInputException.class).when(sectorService).findAllUsedSector();
 
         this.mockMvc.perform(get("/sectors/")
             .accept(MediaType.APPLICATION_JSON))

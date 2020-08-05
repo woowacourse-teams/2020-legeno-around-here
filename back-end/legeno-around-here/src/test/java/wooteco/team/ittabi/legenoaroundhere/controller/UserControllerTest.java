@@ -30,7 +30,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
-import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
+import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 
 @SpringBootTest
@@ -89,7 +89,7 @@ class UserControllerTest {
     @Test
     @DisplayName("로그인 실패 - 이메일이 존재하지 않거나 비밀번호가 틀린 경우")
     void login_IfRequestValueIsWrong_ThrowException() throws Exception {
-        UserInputException expected = new UserInputException("회원가입 실패");
+        WrongUserInputException expected = new WrongUserInputException("회원가입 실패");
         given(userService.login(any())).willThrow(expected);
 
         String inputJson = objectMapper.writeValueAsString(

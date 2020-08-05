@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
+import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -37,7 +37,7 @@ public class Email {
 
     private void validateNull(String email) {
         if (Objects.isNull(email)) {
-            throw new UserInputException("이메일이 null입니다.");
+            throw new WrongUserInputException("이메일이 null입니다.");
         }
     }
 
@@ -45,7 +45,7 @@ public class Email {
         Matcher matcher = EMAIL_PATTERN.matcher(email);
 
         if (!matcher.matches()) {
-            throw new UserInputException("이메일 형식이 잘못됐습니다.");
+            throw new WrongUserInputException("이메일 형식이 잘못됐습니다.");
         }
     }
 }

@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
+import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 @Embeddable
 @NoArgsConstructor
@@ -28,7 +28,7 @@ public class Name {
 
     private void validate(String name) {
         if (Objects.isNull(name) || isInvalid(name.trim().replaceAll("  +", " "))) {
-            throw new UserInputException("SectorName이 유효하지 않습니다.");
+            throw new WrongUserInputException("SectorName이 유효하지 않습니다.");
         }
     }
 

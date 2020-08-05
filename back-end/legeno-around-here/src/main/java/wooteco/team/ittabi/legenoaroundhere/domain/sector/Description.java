@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
+import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 @Embeddable
 @NoArgsConstructor
@@ -27,7 +27,7 @@ public class Description {
 
     private void validate(String description) {
         if (Objects.isNull(description) || isInvalid(description.trim().replaceAll(" +", " "))) {
-            throw new UserInputException("SectorDescription이 유효하지 않습니다.");
+            throw new WrongUserInputException("SectorDescription이 유효하지 않습니다.");
         }
     }
 
