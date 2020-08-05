@@ -3,7 +3,10 @@ package wooteco.team.ittabi.legenoaroundhere.domain.area;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
 public class RegionName {
 
@@ -15,9 +18,6 @@ public class RegionName {
 
     @Column(nullable = false)
     private String name;
-
-    protected RegionName() {
-    }
 
     public RegionName(String name) {
         validate(name);

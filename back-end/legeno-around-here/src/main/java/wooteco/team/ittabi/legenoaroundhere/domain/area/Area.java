@@ -1,6 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.area;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import javax.persistence.CascadeType;
@@ -10,9 +11,12 @@ import javax.persistence.EnumType;
 import javax.persistence.MapKeyEnumerated;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
 public abstract class Area extends BaseEntity {
@@ -22,16 +26,13 @@ public abstract class Area extends BaseEntity {
     static final String INVALID_SIZE_ERROR = String
         .format("region의 갯수가 최소 갯수인 %d보다 작습니다.", MIN_SIZE);
 
-    @Column
+    @Column(nullable = false, unique = true)
     private String code;
 
     @OneToMany(mappedBy = "area", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderColumn(name = "region.depth")
     @MapKeyEnumerated(EnumType.STRING)
-    public Map<RegionDepth, RegionalRelationship> regionalRelationships;
-
-    public Area() {
-    }
+    private Map<RegionDepth, RegionalRelationship> regionalRelationships;
 
     protected Area(String code) {
         this.code = code;
@@ -44,19 +45,6 @@ public abstract class Area extends BaseEntity {
         this.code = code;
         this.regionalRelationships = regionalRelationships;
     }
-
-    public void addRegion(RegionalRelationship regionalRelationship) {
-        this.regionalRelationships.put(regionalRelationship.getDepth(), regionalRelationship);
-    }
-
-//    //todo: check
-//    Region getSmallestRegion() {
-//        RegionDepth smallestRegionDepth = regionalRelationships.keySet().stream()
-//            .max(RegionDepth::compareTo)
-//            .orElseThrow(() -> new IllegalStateException("Region이 존재하지 않습니다."));
-//        RegionalRelationship regionalRelationship = regionalRelationships.get(smallestRegionDepth);
-//        return regionalRelationship.getRegion();
-//    }
 
     private void validate(Map<RegionDepth, RegionalRelationship> regions) {
         validateNull(regions);
@@ -77,5 +65,27 @@ public abstract class Area extends BaseEntity {
 
     private boolean isNotValidSize(Map<RegionDepth, RegionalRelationship> regions) {
         return regions.size() < MIN_SIZE;
+    }
+
+    void addRegions(List<Region> regions) {
+        this.regionalRelationships = new HashMap<>(this.regionalRelationships);
+        for (Region region : regions) {
+            this.regionalRelationships.put(region.getDepth(), new RegionalRelationship(this, region));
+        }
+    }
+
+    Region getSmallestRegion() {
+        RegionDepth smallestRegionDepth = regionalRelationships.keySet().stream()
+            .max(RegionDepth::compareTo)
+            .orElseThrow(() -> new IllegalStateException("Region이 존재하지 않습니다."));
+        RegionalRelationship regionalRelationship = regionalRelationships.get(smallestRegionDepth);
+        return regionalRelationship.getRegion();
+    }
+
+    @Override
+    public String toString() {
+        return "Area{" +
+            "code='" + code + '\'' +
+            '}';
     }
 }

@@ -15,7 +15,7 @@ CREATE TABLE raw_legal_area
 );
 
 -- 컨테이너 내부로 옮겨진 raw_legal_area.csv 파일을 활용하여 raw_legal_area 테이블을 초기화합니다.
-LOAD DATA INFILE '/legeno_around_here/initial_data/test_legal_area.csv'
+LOAD DATA INFILE '/legeno_around_here/initial_data/raw_legal_area.csv'
     INTO TABLE raw_legal_area
     CHARACTER SET utf8
     FIELDS TERMINATED BY ','

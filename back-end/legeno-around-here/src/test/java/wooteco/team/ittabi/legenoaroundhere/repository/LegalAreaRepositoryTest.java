@@ -25,10 +25,14 @@ class LegalAreaRepositoryTest {
     @DisplayName("LegalArea 저장")
     @Test
     void save() {
-        LegalArea legalArea = new LegalArea();
+        //given
+        LegalArea legalArea = new LegalArea("testCode");
         assertThat(legalArea.getId()).isNull();
 
+        //when
         legalArea = legalAreaRepository.save(legalArea);
+
+        //then
         assertThat(legalArea.getId()).isNotNull();
     }
 

@@ -6,9 +6,12 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
 public class Region extends BaseEntity {
@@ -17,19 +20,17 @@ public class Region extends BaseEntity {
     @Column(nullable = false)
     private RegionName name;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private RegionDepth depth;
 
-    public Region(String name, RegionDepth depth) {
-        this(new RegionName(name), depth);
-    }
-
-    public Region(RegionName name, RegionDepth depth) {
+    Region(RegionName name, RegionDepth depth) {
         this.name = name;
         this.depth = depth;
     }
 
-    protected Region() {
+    public Region(String name, RegionDepth depth) {
+        this(new RegionName(name), depth);
     }
 
     @Override
