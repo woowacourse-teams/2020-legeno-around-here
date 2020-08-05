@@ -54,5 +54,4 @@ class LegalAreaRepositoryTest {
             assertThat(regionalRelationship).isNotNull();
         }
     }
-
 }

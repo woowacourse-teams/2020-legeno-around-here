@@ -9,9 +9,10 @@ import javax.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import wooteco.team.ittabi.legenoaroundhere.domain.Post;
+import wooteco.team.ittabi.legenoaroundhere.domain.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Nickname;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Password;
@@ -20,27 +21,41 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @ActiveProfiles("test")
 @SpringBootTest
 @Transactional
-public class UserRepositoryTest {
+class PostRepositoryTest {
+
+    @Autowired
+    private PostRepository postRepository;
 
     @Autowired
     private UserRepository userRepository;
 
-    @DisplayName("Base Entity 필드에 값이 잘 들어오는지 확인")
+    @DisplayName("Post 객체 저장")
     @Test
     void save() {
-        User notSavedUser = User.builder()
+        //given
+        String writing = "writing";
+        User user = User.builder()
             .email(new Email(TEST_MY_EMAIL))
             .nickname(new Nickname(TEST_NICKNAME))
             .password(new Password(TEST_PASSWORD))
             .build();
-        assertThat(notSavedUser.getId()).isNull();
-        assertThat(notSavedUser.getCreatedAt()).isNull();
-        assertThat(notSavedUser.getModifiedAt()).isNull();
 
-        User savedUser = userRepository.save(notSavedUser);
+        userRepository.save(user);
+        Post notSavedPost = new Post(user, writing);
+        assertThat(notSavedPost.getId()).isNull();
+        assertThat(notSavedPost.getCreatedAt()).isNull();
+        assertThat(notSavedPost.getModifiedAt()).isNull();
+        assertThat(notSavedPost.getWriting()).isEqualTo(writing);
+        assertThat(notSavedPost.getState()).isEqualTo(State.PUBLISHED);
 
-        assertThat(savedUser.getId()).isNotNull();
-        assertThat(savedUser.getCreatedAt()).isNotNull();
-        assertThat(savedUser.getModifiedAt()).isNotNull();
+        //when
+        Post savedPost = postRepository.save(notSavedPost);
+
+        //then
+        assertThat(savedPost.getId()).isNotNull();
+        assertThat(savedPost.getCreatedAt()).isNotNull();
+        assertThat(savedPost.getModifiedAt()).isNotNull();
+        assertThat(savedPost.getWriting()).isEqualTo(writing);
+        assertThat(savedPost.getState()).isEqualTo(State.PUBLISHED);
     }
 }

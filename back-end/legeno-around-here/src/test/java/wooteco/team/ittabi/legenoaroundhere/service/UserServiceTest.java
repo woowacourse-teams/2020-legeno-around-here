@@ -8,12 +8,15 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConst
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
 
+import javax.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.context.ActiveProfiles;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Nickname;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Password;
@@ -23,8 +26,10 @@ import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
 
-@DataJpaTest
+@ActiveProfiles("test")
+@SpringBootTest
 @Import({UserService.class, JwtTokenGenerator.class})
+@Transactional
 class UserServiceTest {
 
     private static final int TOKEN_MIN_SIZE = 1;
