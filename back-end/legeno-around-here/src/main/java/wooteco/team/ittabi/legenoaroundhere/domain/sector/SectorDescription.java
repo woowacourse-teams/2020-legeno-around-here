@@ -20,12 +20,12 @@ public class SectorDescription {
     private String description;
 
     SectorDescription(String description) {
-        validation(description);
+        validate(description);
         this.description = description.trim()
             .replaceAll(" +", " ");
     }
 
-    private void validation(String description) {
+    private void validate(String description) {
         if (Objects.isNull(description) || isInvalid(description.trim().replaceAll(" +", " "))) {
             throw new UserInputException("SectorDescription이 유효하지 않습니다.");
         }

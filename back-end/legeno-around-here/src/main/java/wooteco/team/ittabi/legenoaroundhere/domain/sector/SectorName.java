@@ -20,13 +20,13 @@ public class SectorName {
     private String name;
 
     SectorName(String name) {
-        validation(name);
+        validate(name);
         this.name = name.trim()
             .replaceAll(" +", " ")
             .toUpperCase();
     }
 
-    private void validation(String name) {
+    private void validate(String name) {
         if (Objects.isNull(name) || isInvalid(name.trim().replaceAll("  +", " "))) {
             throw new UserInputException("SectorName이 유효하지 않습니다.");
         }
