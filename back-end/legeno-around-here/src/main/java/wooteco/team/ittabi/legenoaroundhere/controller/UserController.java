@@ -60,6 +60,8 @@ public class UserController {
     @DeleteMapping("/users/myinfo")
     public ResponseEntity<Void> deleteUser() {
         userService.deleteUser();
-        return ResponseEntity.noContent().build();
+        return ResponseEntity
+            .noContent()
+            .build();
     }
 }

@@ -1,7 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
 import java.util.Collections;
-import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Nickname;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Password;
@@ -69,7 +69,7 @@ public class UserService implements UserDetailsService {
             jwtTokenGenerator.createToken(user.getEmailByString(), user.getRoles()));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public UserResponse findUser() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return UserResponse.from(user);
