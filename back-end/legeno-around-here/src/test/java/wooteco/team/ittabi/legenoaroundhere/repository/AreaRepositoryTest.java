@@ -1,10 +1,10 @@
 package wooteco.team.ittabi.legenoaroundhere.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Map;
 import javax.transaction.Transactional;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,43 +14,36 @@ import wooteco.team.ittabi.legenoaroundhere.domain.area.LegalArea;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.RegionDepth;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.RegionalRelationship;
 
+@Transactional
 @ActiveProfiles("test")
 @SpringBootTest
-class LegalAreaRepositoryTest {
-
+class AreaRepositoryTest {
     @Autowired
-    private LegalAreaRepository legalAreaRepository;
+    private AreaRepository<? extends Area> areaRepository;
 
-    @DisplayName("LegalArea 저장")
     @Test
-    void save() {
-        LegalArea legalArea = new LegalArea();
-        assertThat(legalArea.getId()).isNull();
-
-        legalArea = legalAreaRepository.save(legalArea);
-        assertThat(legalArea.getId()).isNotNull();
+    void dependencyInjection() {
+        assertThat(areaRepository).isNotNull();
     }
 
-    //todo: 하드하게 넣은 값들 제거
-    @Transactional
     @Test
     void findByCode_InitialDataStored_() {
-        Area legalArea = legalAreaRepository.findByCode("1100000000");
-        Map<RegionDepth, RegionalRelationship> regionalRelationships = legalArea.getRegionalRelationships();
+        Area area = areaRepository.findByCode("1100000000");
+        Map<RegionDepth, RegionalRelationship> regionalRelationships = area
+            .getRegionalRelationships();
         assertThat(regionalRelationships).hasSize(3);
         for (RegionalRelationship regionalRelationship : regionalRelationships.values()) {
             assertThat(regionalRelationship).isNotNull();
         }
     }
 
-    //todo: 하드하게 넣은 값들 제거
-    @Transactional
     @Test
     void findById_InitialDataStored_Persisted() {
-        LegalArea legalArea = legalAreaRepository.findById(1L)
+        Area area = areaRepository.findById(1L)
             .orElseThrow(IllegalArgumentException::new);
-        assertThat(legalArea.getCode()).isEqualTo("1100000000");
-        Map<RegionDepth, RegionalRelationship> regionalRelationships = legalArea.getRegionalRelationships();
+        assertThat(area.getCode()).isEqualTo("1100000000");
+        Map<RegionDepth, RegionalRelationship> regionalRelationships = area
+            .getRegionalRelationships();
         assertThat(regionalRelationships).hasSize(3);
         for (RegionalRelationship regionalRelationship : regionalRelationships.values()) {
             assertThat(regionalRelationship).isNotNull();

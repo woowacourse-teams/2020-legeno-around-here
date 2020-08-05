@@ -1,25 +1,21 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.area;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
-import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyEnumerated;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import lombok.Getter;
-import org.hibernate.annotations.IndexColumn;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 
 @Getter
 @Entity
-public class Area extends BaseEntity {
+public abstract class Area extends BaseEntity {
 
     private static final int MIN_SIZE = 1;
     static final String NOT_ALLOWED_NULL = "이름에 null은 허용되지 않습니다.";
