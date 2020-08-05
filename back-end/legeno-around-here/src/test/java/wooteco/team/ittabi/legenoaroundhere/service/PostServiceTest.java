@@ -57,6 +57,7 @@ public class PostServiceTest extends AuthServiceTest {
     void setUp() {
         commentService = new CommentService(postRepository, commentRepository);
         postService = new PostService(postRepository, commentService, new ImageService(s3Uploader));
+
         user = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         another = createUser(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         setAuthentication(user);
