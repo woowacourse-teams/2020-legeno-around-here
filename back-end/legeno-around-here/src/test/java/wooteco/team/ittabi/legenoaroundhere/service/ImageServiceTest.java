@@ -24,6 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
 import wooteco.team.ittabi.legenoaroundhere.domain.Image;
@@ -35,11 +36,11 @@ import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
 import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.FileConverter;
 
-@ActiveProfiles("test")
+@TestPropertySource(properties = {"spring.config.location=classpath:application-test.yml"})
 @ExtendWith(MockitoExtension.class)
+@Transactional
 @SpringBootTest
 @Import({UserService.class, JwtTokenGenerator.class})
-@Transactional
 public class ImageServiceTest {
 
     @Mock

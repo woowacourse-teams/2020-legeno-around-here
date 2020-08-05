@@ -17,13 +17,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.TestPropertySource;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 
+
+@TestPropertySource(properties = {"spring.config.location=classpath:application-test.yml"})
 @Transactional
-@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 //@Sql("/init-table.sql")
 public class UserAcceptanceTest {
@@ -44,27 +44,19 @@ public class UserAcceptanceTest {
     }
 
     /**
-     * Feature: 회원관리
-     * Scenario: 회원을 관리한다.
-     *
-     * When 회원 가입 요청을 한다.
-     * Then 회원으로 가입이되었다.
-     *
-     * When 로그인을 한다.
-     * Then 로그인이 되었다.
-     *
-     * When 내 정보를 조회한다.
-     * Then 내 정보가 조회된다.
-     *
-     * When 내 정보를 수정한다.
-     * Then 내 정보가 수정된다.
-     *
-     * When 로그아웃을 한다.
-     * Then 로그아웃이 된다.
-     *
-     * Given 로그인이 되어있는 상태이다.
-     * When 회원 탈퇴 요청을 한다.
-     * Then 회원 탈퇴가 되었다.
+     * Feature: 회원관리 Scenario: 회원을 관리한다.
+     * <p>
+     * When 회원 가입 요청을 한다. Then 회원으로 가입이되었다.
+     * <p>
+     * When 로그인을 한다. Then 로그인이 되었다.
+     * <p>
+     * When 내 정보를 조회한다. Then 내 정보가 조회된다.
+     * <p>
+     * When 내 정보를 수정한다. Then 내 정보가 수정된다.
+     * <p>
+     * When 로그아웃을 한다. Then 로그아웃이 된다.
+     * <p>
+     * Given 로그인이 되어있는 상태이다. When 회원 탈퇴 요청을 한다. Then 회원 탈퇴가 되었다.
      */
     @Test
     @DisplayName("회원 관리")

@@ -1,22 +1,20 @@
 package wooteco.team.ittabi.legenoaroundhere.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Map;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
-import wooteco.team.ittabi.legenoaroundhere.domain.area.LegalArea;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.RegionDepth;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.RegionalRelationship;
 
-@Transactional
 @ActiveProfiles("test")
-@SpringBootTest
+@Transactional
+@DataJpaTest
 class AreaRepositoryTest {
     @Autowired
     private AreaRepository<? extends Area> areaRepository;

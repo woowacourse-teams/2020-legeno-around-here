@@ -18,8 +18,8 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.Password;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 
 @ActiveProfiles("test")
-@SpringBootTest
 @Transactional
+@DataJpaTest
 public class UserRepositoryTest {
 
     @Autowired

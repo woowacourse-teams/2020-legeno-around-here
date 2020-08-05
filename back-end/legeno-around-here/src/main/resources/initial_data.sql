@@ -15,14 +15,20 @@ CREATE TABLE raw_legal_area
 );
 
 -- 컨테이너 내부로 옮겨진 raw_legal_area.csv 파일을 활용하여 raw_legal_area 테이블을 초기화합니다.
-LOAD DATA INFILE '/legeno_around_here/initial_data/raw_legal_area.csv'
+LOAD DATA INFILE '/legeno_around_here/initial_data/test_legal_area.csv'
     INTO TABLE raw_legal_area
     CHARACTER SET utf8
     FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
-    LINES TERMINATED BY '\n'
+    LINES
+    STARTING BY ''
+    TERMINATED BY '\r\n'
     IGNORE 1 ROWS
-    (legal_code, county, city, town, village);
+(legal_code, county, city, town, village);
+
+
+
+
 
 -- [2] 임시 테이블을 활용하여 지역 관련 초기 데이터 셋팅
 -- raw_legal_area 테이블을 활용하여 area 테이블에 데이터를 셋팅합니다.
@@ -34,62 +40,62 @@ FROM raw_legal_area as raw;
 INSERT IGNORE INTO region (name, depth)
 SELECT DISTINCT county, 'ONE'
 FROM raw_legal_area
-WHERE county is not null
+WHERE county is not null and county != ''
 
 UNION
 SELECT DISTINCT city, 'TWO'
 FROM raw_legal_area
-WHERE city is not null
+WHERE city is not null and city != ''
 
 UNION
 SELECT DISTINCT town, 'THREE'
 FROM raw_legal_area
-WHERE town is not null
+WHERE town is not null and town != ''
 
 UNION
 SELECT DISTINCT village, 'FOUR'
 FROM raw_legal_area
-WHERE village is not null;
+WHERE village is not null and village != '';
 
 -- area, region, raw_legal_area 테이블을 활용하여 area 테이블과 region의 관계를 맺어줍니다. 즉 regional_relationship 테이블을 셋팅합니다.
-INSERT IGNORE INTO regional_relationship (area_id, region_id, created_at)
-SELECT prcessed_area_region.area_id, prcessed_area_region.region_id, current_time()
-FROM (SELECT DISTINCT area_id, region_id
+INSERT IGNORE INTO regional_relationship (area_id, region_id, created_at, regional_relationships_key)
+SELECT prcessed_area_region.area_id, prcessed_area_region.region_id, current_time(), depth
+FROM (SELECT DISTINCT area_id, region_id, depth
       FROM raw_legal_area
                JOIN
-               (SELECT id AS area_id, code FROM area) AS area
-               ON raw_legal_area.legal_code = area.code
-               JOIN (SELECT id AS region_id, name FROM region) AS region
+           (SELECT id AS area_id, code FROM area) AS area
+           ON raw_legal_area.legal_code = area.code
+               JOIN (SELECT id AS region_id, name, depth FROM region) AS region
                     ON raw_legal_area.county = region.name
 
       UNION
 
-      SELECT DISTINCT area_id, region_id
+      SELECT DISTINCT area_id, region_id, depth
       FROM raw_legal_area
                JOIN
-               (SELECT id AS area_id, code FROM area) AS area
-               ON raw_legal_area.legal_code = area.code
-               JOIN (SELECT id AS region_id, name FROM region) AS region
+           (SELECT id AS area_id, code FROM area) AS area
+           ON raw_legal_area.legal_code = area.code
+               JOIN (SELECT id AS region_id, name, depth FROM region) AS region
                     ON raw_legal_area.city = region.name
 
       UNION
 
-      SELECT DISTINCT area_id, region_id
+      SELECT DISTINCT area_id, region_id, depth
       FROM raw_legal_area
                JOIN
-               (SELECT id AS area_id, code FROM area) AS area
-               ON raw_legal_area.legal_code = area.code
-               JOIN (SELECT id AS region_id, name FROM region) AS region
+           (SELECT id AS area_id, code FROM area) AS area
+           ON raw_legal_area.legal_code = area.code
+               JOIN (SELECT id AS region_id, name, depth FROM region) AS region
                     ON raw_legal_area.town = region.name
 
       UNION
 
-      SELECT area_id, region_id
+      SELECT area_id, region_id, depth
       FROM raw_legal_area
                JOIN
-               (SELECT id AS area_id, code FROM area) AS area
-               ON raw_legal_area.legal_code = area.code
-               JOIN (SELECT id AS region_id, name FROM region) AS region
+           (SELECT id AS area_id, code FROM area) AS area
+           ON raw_legal_area.legal_code = area.code
+               JOIN (SELECT id AS region_id, name, depth FROM region) AS region
                     ON raw_legal_area.village = region.name
      ) AS prcessed_area_region;
 

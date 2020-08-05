@@ -1,19 +1,13 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/legeno_around_here
-    username: root
-    password: ittabi
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: org.h2.Driver
     data: classpath:initial_data_for_test.sql
-    initialization-mode: always
   jpa:
-    hibernate:
-      ddl-auto: create
     properties:
       hibernate:
+        show-sql: true
         format_sql: true
-        dialect: org.hibernate.dialect.MySQL8Dialect
-    show-sql: true
+        dialect: org.hibernate.dialect.H2Dialect
 security:
   jwt:
     token:
@@ -26,6 +20,9 @@ logging:
         type:
           descriptor:
             sql: trace
-
-
+cloud:
+  aws:
+    s3:
+      bucket: legeno-around-here-test2
+      region: ap-northeast-2
 
