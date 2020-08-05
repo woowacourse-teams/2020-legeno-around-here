@@ -9,7 +9,7 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestCons
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.TEST_IMAGE_CONTENT_TYPE;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostTestConstants.TEST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ANOTHER_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_MY_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
 
@@ -51,7 +51,7 @@ public class PostServiceTest extends AuthServiceTest {
     @BeforeEach
     void setUp() {
         postService = new PostService(postRepository, new ImageService(s3Uploader));
-        user = createUser(TEST_MY_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        user = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         another = createUser(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         setAuthentication(user);
     }

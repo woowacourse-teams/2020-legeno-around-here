@@ -3,7 +3,7 @@ package wooteco.team.ittabi.legenoaroundhere.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostTestConstants.TEST_WRITING;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_MY_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
 
@@ -18,7 +18,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 public class PostTest {
 
     private final User user = User.builder()
-        .email(new Email(TEST_MY_EMAIL))
+        .email(new Email(TEST_EMAIL))
         .nickname(new Nickname(TEST_NICKNAME))
         .password(new Password(TEST_PASSWORD))
         .build();

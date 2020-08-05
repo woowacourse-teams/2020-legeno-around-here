@@ -3,7 +3,7 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.TEST_IMAGE_CONTENT_TYPE;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_MY_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
 
@@ -32,7 +32,7 @@ public class ImageServiceTest extends AuthServiceTest {
     @BeforeEach
     void setUp() {
         imageService = new ImageService(s3Uploader);
-        User user = createUser(TEST_MY_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        User user = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         setAuthentication(user);
     }
 

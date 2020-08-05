@@ -29,6 +29,7 @@ public class PostControllerTest {
     private static final String EXPECTED_WRITING = "Hello!!";
     private static final String ANY_ID = "1";
     private final ObjectMapper objectMapper = new ObjectMapper();
+
     @MockBean
     private PostService postService;
     private MockMvc mockMvc;

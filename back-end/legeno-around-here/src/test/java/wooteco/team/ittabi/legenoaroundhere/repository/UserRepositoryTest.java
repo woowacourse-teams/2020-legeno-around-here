@@ -1,7 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_MY_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
 
@@ -24,7 +24,7 @@ public class UserRepositoryTest {
     @Test
     void save() {
         User notSavedUser = User.builder()
-            .email(new Email(TEST_MY_EMAIL))
+            .email(new Email(TEST_EMAIL))
             .nickname(new Nickname(TEST_NICKNAME))
             .password(new Password(TEST_PASSWORD))
             .build();

@@ -4,7 +4,7 @@ import static io.restassured.RestAssured.given;
 import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostTestConstants.TEST_WRITING;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_MY_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
 
@@ -50,11 +50,11 @@ public class CommentAcceptanceTest {
      */
     @DisplayName("댓글 관리")
     @Test
-    void manageMyComment() {
+    void manageComment() {
 
         // 로그인
-        createUser(TEST_MY_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
-        TokenResponse tokenResponse = login(TEST_MY_EMAIL, TEST_PASSWORD);
+        createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
         String accessToken = tokenResponse.getAccessToken();
 
         // 이미지가 포함되지 않은 글 등록
