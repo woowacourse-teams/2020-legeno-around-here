@@ -34,8 +34,7 @@ class JwtTokenDecoderTest {
 
     @BeforeEach
     void setUp() {
-        token = jwtTokenGenerator
-            .createToken(TEST_MY_EMAIL, Collections.singletonList("ROLE_USER"));
+        token = jwtTokenGenerator.createToken(TEST_MY_EMAIL, Collections.singletonList("ROLE_USER"));
     }
 
     @Test

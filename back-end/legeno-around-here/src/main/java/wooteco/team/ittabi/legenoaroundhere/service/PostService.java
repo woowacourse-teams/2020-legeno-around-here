@@ -68,7 +68,7 @@ public class PostService {
         List<Post> posts = postRepository.findAll().stream()
             .filter(post -> post.isNotSameState(State.DELETED))
             .collect(Collectors.toList());
-        return PostResponse.listOf(posts);
+         return PostResponse.listOf(posts);
     }
 
     @Transactional

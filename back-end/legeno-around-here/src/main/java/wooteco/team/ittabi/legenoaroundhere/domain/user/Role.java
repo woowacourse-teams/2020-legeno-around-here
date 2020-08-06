@@ -5,7 +5,7 @@ public enum Role {
     REPORTED_USER("ROLE_REPORTED_USER"),
     ADMIN("ROLE_ADMIN");
 
-    private final String roleName;
+    private String roleName;
 
     Role(String roleName) {
         this.roleName = roleName;
