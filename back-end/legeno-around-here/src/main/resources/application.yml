@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/legeno_around_here
+    username: root
+    password: ittabi
+    data: classpath:initial_data.sql
+    initialization-mode: always
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+security:
+  jwt:
+    token:
+      secret-key: hihirachsecretkey
+      expire_length: 3600000
+cloud:
+  aws:
+    s3:
+      bucket: legeno-around-here-test2
+      region: ap-northeast-2
+mail:
+  host: smtp.gmail.com
+  port: 587
+  protocol: smtp
+  default-encoding: UTF-8
+  username: your-email@domain
+  password: password
+  smtp:
+    start-tls-enable: true
+    auth: true
