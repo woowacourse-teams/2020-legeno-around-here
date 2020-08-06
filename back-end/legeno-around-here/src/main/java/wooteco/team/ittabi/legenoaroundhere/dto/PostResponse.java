@@ -24,7 +24,8 @@ public class PostResponse {
 
     public static PostResponse of(Post post) {
         List<ImageResponse> imageResponses = ImageResponse.listOf(post.getImages());
-        return new PostResponse(post.getId(), post.getWriting(), imageResponses, UserResponse.from(post.getUser()));
+        return new PostResponse(post.getId(), post.getWriting(), imageResponses,
+            UserResponse.from(post.getUser()));
     }
 
     public static List<PostResponse> listOf(List<Post> posts) {
