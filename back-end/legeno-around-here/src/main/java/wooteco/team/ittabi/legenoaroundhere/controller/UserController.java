@@ -3,7 +3,6 @@ package wooteco.team.ittabi.legenoaroundhere.controller;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +22,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @CrossOrigin
     @PostMapping("/join")
     public ResponseEntity<Void> join(@RequestBody UserCreateRequest userCreateRequest) {
         Long userId = userService.createUser(userCreateRequest);
@@ -32,7 +30,6 @@ public class UserController {
             .build();
     }
 
-    @CrossOrigin
     @PostMapping("/joinAdmin")
     public ResponseEntity<Void> joinAdmin(@RequestBody UserCreateRequest userCreateRequest) {
         Long userId = userService.createAdmin(userCreateRequest);
@@ -41,13 +38,11 @@ public class UserController {
             .build();
     }
 
-    @CrossOrigin
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(userService.login(loginRequest));
     }
 
-    @CrossOrigin
     @GetMapping("/users/myinfo")
     public ResponseEntity<UserResponse> findUser(Authentication authentication) {
         return ResponseEntity.ok(userService.findUser(authentication));
