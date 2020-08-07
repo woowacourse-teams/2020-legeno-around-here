@@ -8,7 +8,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.TEST_IMAGE_DIR;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostTestConstants.TEST_WRITING;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_MY_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
 
@@ -34,11 +34,11 @@ import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PostAcceptanceTest {
 
-    @MockBean
-    private S3Uploader s3Uploader;
-
     @LocalServerPort
     public int port;
+
+    @MockBean
+    private S3Uploader s3Uploader;
 
     @BeforeEach
     void setUp() {
@@ -65,8 +65,8 @@ public class PostAcceptanceTest {
     void manageMyPost() {
 
         // 로그인
-        createUser(TEST_MY_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
-        TokenResponse tokenResponse = login(TEST_MY_EMAIL, TEST_PASSWORD);
+        createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
         String accessToken = tokenResponse.getAccessToken();
 
         // 이미지가 포함되지 않은 글 등록

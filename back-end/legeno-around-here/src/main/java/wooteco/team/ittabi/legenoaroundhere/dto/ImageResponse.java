@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
@@ -20,9 +21,12 @@ public class ImageResponse {
     private Long id;
     private String name;
     private String url;
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
 
     public static ImageResponse of(Image image) {
-        return new ImageResponse(image.getId(), image.getName(), image.getUrl());
+        return new ImageResponse(image.getId(), image.getName(), image.getUrl(),
+            image.getCreatedAt(), image.getModifiedAt());
     }
 
     public static List<ImageResponse> listOf(List<Image> images) {

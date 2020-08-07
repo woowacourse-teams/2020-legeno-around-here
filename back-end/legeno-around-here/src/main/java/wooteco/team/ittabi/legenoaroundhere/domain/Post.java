@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -24,18 +25,22 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @Table(name = "post")
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 
     private static final int MAX_LENGTH = 20;
 
+    @Lob
     @Column(nullable = false)
     private String writing;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private State state;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
@@ -55,11 +60,6 @@ public class Post extends BaseEntity {
         if (writing.length() > MAX_LENGTH) {
             throw new WrongUserInputException(MAX_LENGTH + "글자를 초과했습니다!");
         }
-    }
-
-    public void addImage(Image image) {
-        images.add(image);
-        image.setPost(this);
     }
 
     public boolean isSameState(State state) {
