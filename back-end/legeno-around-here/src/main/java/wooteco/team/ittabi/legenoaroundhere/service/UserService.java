@@ -25,8 +25,6 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
-import wooteco.team.ittabi.legenoaroundhere.infra.mail.MailHandler;
-import wooteco.team.ittabi.legenoaroundhere.infra.mail.TempKey;
 import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 
 @Service
@@ -35,7 +33,6 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final JwtTokenGenerator jwtTokenGenerator;
-    private JavaMailSender mailSender;
 
     @Transactional
     public Long createUser(UserCreateRequest userCreateRequest) {
@@ -74,20 +71,4 @@ public class UserService implements UserDetailsService {
         User user = (User) authentication.getPrincipal();
         return UserResponse.from(user);
     }
-
-    public void signUp(UserCreateRequest userCreateRequest) throws MessagingException, UnsupportedEncodingException {
-        String key = new TempKey().getKey(50, false);
-        MailHandler sendMail = new MailHandler(mailSender);
-        sendMail.setSubject("[이메일 인증]");
-        sendMail.setText(new StringBuffer().append("<h1>메일인증</h1>")
-            .append("<a href='http://localhost:8080/spring/emailConfirm?key=")
-            .append(key)
-            .append("' target='_blenk'>이메일 인증 확인</a>")
-            .toString());
-        sendMail.setFrom("보낸이메일", "이름");
-        sendMail.setTo(userCreateRequest.getEmail());
-        sendMail.send();
-    }
-
-
 }
