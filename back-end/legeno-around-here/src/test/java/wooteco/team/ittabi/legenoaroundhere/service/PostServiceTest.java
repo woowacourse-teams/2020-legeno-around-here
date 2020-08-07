@@ -9,7 +9,7 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestCons
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.TEST_IMAGE_CONTENT_TYPE;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostTestConstants.TEST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ANOTHER_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_MY_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
 
@@ -23,69 +23,43 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
-import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
+import wooteco.team.ittabi.legenoaroundhere.repository.CommentRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
-import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.FileConverter;
 
-@DataJpaTest
 @ExtendWith(MockitoExtension.class)
-@Import({UserService.class, JwtTokenGenerator.class})
-public class PostServiceTest {
+public class PostServiceTest extends AuthServiceTest {
 
+    private CommentService commentService;
     private PostService postService;
 
     @Mock
     private S3Uploader s3Uploader;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private PostRepository postRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private CommentRepository commentRepository;
 
     private User user;
     private User another;
 
     @BeforeEach
     void setUp() {
-        postService = new PostService(postRepository, new ImageService(s3Uploader));
-        user = createUser(TEST_MY_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        commentService = new CommentService(postRepository, commentRepository);
+        postService = new PostService(postRepository, commentService, new ImageService(s3Uploader));
+        user = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         another = createUser(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         setAuthentication(user);
-    }
-
-    private User createUser(String email, String nickname, String password) {
-        UserCreateRequest userCreateRequest = new UserCreateRequest(email, nickname, password);
-        Long userId = userService.createUser(userCreateRequest);
-
-        return userRepository.findById(userId)
-            .orElseThrow(() -> new NotExistsException("해당하는 사용자가 존재하지 않습니다."));
-    }
-
-    private void setAuthentication(User user) {
-        UserDetails userDetails = userService.loadUserByUsername(user.getEmailByString());
-        Authentication authToken = new UsernamePasswordAuthenticationToken(
-            user, "TestCredentials", userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authToken);
     }
 
     @DisplayName("이미지를 포함하지 않는 포스트 생성 - 성공")

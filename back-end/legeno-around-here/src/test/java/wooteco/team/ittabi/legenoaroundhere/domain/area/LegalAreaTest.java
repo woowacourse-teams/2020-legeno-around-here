@@ -15,6 +15,26 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 class LegalAreaTest {
 
+    private static Stream<Arguments> getCasesForGetSmallestRegion() {
+        return Stream.of(
+            Arguments.of(
+                new HashMap<RegionDepth, Region>() {{
+                    put(RegionDepth.ONE, new Region("서울시"));
+                    put(RegionDepth.TWO, new Region("서대문구"));
+                    put(RegionDepth.THREE, new Region("홍제동"));
+                }}, new Region("홍제동")),
+            Arguments.of(
+                new HashMap<RegionDepth, Region>() {{
+                    put(RegionDepth.ONE, new Region("서울시"));
+                    put(RegionDepth.TWO, new Region("서대문구"));
+                }}, new Region("서대문구")),
+            Arguments.of(
+                new HashMap<RegionDepth, Region>() {{
+                    put(RegionDepth.ONE, new Region("서울시"));
+                }}, new Region("서울시"))
+        );
+    }
+
     @DisplayName("1개 이상의 region을 활용한 LegalArea 생성 - 성공")
     @Test
     void construct_LegalArea() {
@@ -48,25 +68,5 @@ class LegalAreaTest {
         LegalArea legalArea = new LegalArea(regions);
         Region actualSmallestRegion = legalArea.getSmallestRegion();
         assertThat(actualSmallestRegion).isEqualTo(expectedSmallestRegion);
-    }
-
-    private static Stream<Arguments> getCasesForGetSmallestRegion() {
-        return Stream.of(
-            Arguments.of(
-                new HashMap<RegionDepth, Region>() {{
-                    put(RegionDepth.ONE, new Region("서울시"));
-                    put(RegionDepth.TWO, new Region("서대문구"));
-                    put(RegionDepth.THREE, new Region("홍제동"));
-                }}, new Region("홍제동")),
-            Arguments.of(
-                new HashMap<RegionDepth, Region>() {{
-                    put(RegionDepth.ONE, new Region("서울시"));
-                    put(RegionDepth.TWO, new Region("서대문구"));
-                }}, new Region("서대문구")),
-            Arguments.of(
-                new HashMap<RegionDepth, Region>() {{
-                    put(RegionDepth.ONE, new Region("서울시"));
-                }}, new Region("서울시"))
-        );
     }
 }

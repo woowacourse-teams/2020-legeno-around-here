@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.domain;
 
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -37,4 +38,11 @@ public class Image extends BaseEntity {
         this.url = url;
     }
 
+    public void setPost(Post post) {
+        if (Objects.nonNull(this.post)) {
+            this.post.getImages().remove(this);
+        }
+        this.post = post;
+        post.getImages().add(this);
+    }
 }

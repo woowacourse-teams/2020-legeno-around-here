@@ -1,11 +1,8 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Collections;
-import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
