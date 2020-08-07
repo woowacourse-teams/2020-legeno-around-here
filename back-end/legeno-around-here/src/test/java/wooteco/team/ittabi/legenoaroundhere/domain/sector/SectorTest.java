@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_PASSWORD;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_MY_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_ANOTHER_DESCRIPTION;
@@ -29,7 +29,7 @@ class SectorTest {
 
     @BeforeEach
     void setUp() {
-        user = makeUser(TEST_MY_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        user = makeUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         admin = makeUser(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_PASSWORD);
     }
 
@@ -39,7 +39,7 @@ class SectorTest {
             .nickname(new Nickname(nickname))
             .password(new Password(password))
             .roles(new ArrayList<>())
-            .post(new ArrayList<>())
+            .posts(new ArrayList<>())
             .build();
     }
 
