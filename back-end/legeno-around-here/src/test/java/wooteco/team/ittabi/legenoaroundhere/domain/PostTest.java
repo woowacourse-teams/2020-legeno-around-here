@@ -13,7 +13,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Nickname;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Password;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
-import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
+import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 public class PostTest {
 
@@ -28,7 +28,7 @@ public class PostTest {
     void validateLength_OverLength_ThrownException() {
         String overLengthInput = "aaaaaaaaaaaaaaaaaaaaa";
         assertThatThrownBy(() -> new Post(user, overLengthInput))
-            .isInstanceOf(UserInputException.class);
+            .isInstanceOf(WrongUserInputException.class);
     }
 
     @DisplayName("같은 상태인지 확인")

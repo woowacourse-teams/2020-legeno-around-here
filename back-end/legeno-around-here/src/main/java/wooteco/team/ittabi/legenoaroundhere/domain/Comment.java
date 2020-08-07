@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
-import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
+import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 @Entity
 @Table(name = "comment")
@@ -53,7 +53,7 @@ public class Comment extends BaseEntity {
 
     private void validateLength(String writing) {
         if (writing.length() > MAX_LENGTH) {
-            throw new UserInputException(MAX_LENGTH + "글자를 초과했습니다!");
+            throw new WrongUserInputException(MAX_LENGTH + "글자를 초과했습니다!");
         }
     }
 

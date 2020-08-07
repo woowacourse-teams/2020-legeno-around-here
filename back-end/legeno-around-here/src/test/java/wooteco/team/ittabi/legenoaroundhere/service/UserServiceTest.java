@@ -4,6 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_PASSWORD;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
@@ -38,6 +41,16 @@ class UserServiceTest {
         UserCreateRequest userCreateRequest =
             new UserCreateRequest(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         Long userId = userService.createUser(userCreateRequest);
+
+        assertThat(userId).isNotNull();
+    }
+
+    @Test
+    @DisplayName("Admin 생성")
+    void createAdmin() {
+        UserCreateRequest adminCreateRequest =
+            new UserCreateRequest(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_PASSWORD);
+        Long userId = userService.createAdmin(adminCreateRequest);
 
         assertThat(userId).isNotNull();
     }

@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
+import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -34,7 +34,7 @@ public class Password {
 
     private void validateEmpty(String password) {
         if (Objects.isNull(password) || password.isEmpty()) {
-            throw new UserInputException("비밀번호가 비어있습니다.");
+            throw new WrongUserInputException("비밀번호가 비어있습니다.");
         }
     }
 }

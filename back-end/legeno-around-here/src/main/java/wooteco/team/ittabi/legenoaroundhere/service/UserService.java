@@ -20,7 +20,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
-import wooteco.team.ittabi.legenoaroundhere.exception.UserInputException;
+import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
 import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 
@@ -33,14 +33,24 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public Long createUser(UserCreateRequest userCreateRequest) {
+        User persistUser = createUserBy(userCreateRequest, Role.USER);
+        return persistUser.getId();
+    }
+
+    private User createUserBy(UserCreateRequest userCreateRequest, Role userRole) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-        User persistUser = userRepository.save(User.builder()
+        return userRepository.save(User.builder()
             .email(new Email(userCreateRequest.getEmail()))
             .nickname(new Nickname(userCreateRequest.getNickname()))
             .password(new Password(passwordEncoder.encode(userCreateRequest.getPassword())))
-            .roles(Collections.singletonList(Role.USER.getRoleName()))
+            .roles(Collections.singletonList(userRole.getRoleName()))
             .build());
+    }
+
+    @Transactional
+    public Long createAdmin(UserCreateRequest userCreateRequest) {
+        User persistUser = createUserBy(userCreateRequest, Role.ADMIN);
         return persistUser.getId();
     }
 
@@ -52,7 +62,7 @@ public class UserService implements UserDetailsService {
 
         if (!passwordEncoder.matches(
             loginRequest.getPassword(), user.getPasswordByString())) {
-            throw new UserInputException("잘못된 비밀번호입니다.");
+            throw new WrongUserInputException("잘못된 비밀번호입니다.");
         }
         return new TokenResponse(
             jwtTokenGenerator.createToken(user.getEmailByString(), user.getRoles()));
