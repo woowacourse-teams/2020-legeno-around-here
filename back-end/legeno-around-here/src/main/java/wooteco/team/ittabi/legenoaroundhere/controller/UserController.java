@@ -33,8 +33,8 @@ public class UserController {
     }
 
     @PostMapping("/joinAdmin")
-    public ResponseEntity<Void> joinAdmin(@RequestBody UserCreateRequest userCreateRequest) {
-        Long userId = userService.createAdmin(userCreateRequest);
+    public ResponseEntity<Void> joinAdmin(@RequestBody UserRequest userRequest) {
+        Long userId = userService.createAdmin(userRequest);
         return ResponseEntity
             .created(URI.create("/users/" + userId))
             .build();

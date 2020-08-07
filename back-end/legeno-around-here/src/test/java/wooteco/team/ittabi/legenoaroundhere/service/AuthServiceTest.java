@@ -7,7 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
 import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
@@ -23,8 +23,8 @@ public abstract class AuthServiceTest {
     private UserRepository userRepository;
 
     protected User createUser(String email, String nickname, String password) {
-        UserCreateRequest userCreateRequest = new UserCreateRequest(email, nickname, password);
-        Long userId = userService.createUser(userCreateRequest);
+        UserRequest userRequest = new UserRequest(email, nickname, password);
+        Long userId = userService.createUser(userRequest);
 
         return userRepository.findById(userId)
             .orElseThrow(() -> new NotExistsException("해당하는 사용자가 존재하지 않습니다."));

@@ -25,7 +25,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotUniqueException;
@@ -55,9 +55,9 @@ class SectorServiceTest {
     }
 
     private User createAdmin() {
-        UserCreateRequest userCreateRequest
-            = new UserCreateRequest(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_EMAIL);
-        Long userId = userService.createAdmin(userCreateRequest);
+        UserRequest userRequest
+            = new UserRequest(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_EMAIL);
+        Long userId = userService.createAdmin(userRequest);
 
         return userRepository.findById(userId)
             .orElseThrow(() -> new NotExistsException("해당하는 사용자가 존재하지 않습니다."));

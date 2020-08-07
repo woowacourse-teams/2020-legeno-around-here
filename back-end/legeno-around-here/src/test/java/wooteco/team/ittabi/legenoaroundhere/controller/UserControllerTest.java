@@ -107,7 +107,7 @@ class UserControllerTest {
     @Test
     @DisplayName("로그인 실패 - 이메일 형식이 잘못된 경우")
     void login_IfEmailFormatIsWrong_ThrowException() throws Exception {
-        UserInputException expected = new UserInputException("회원가입 실패");
+        WrongUserInputException expected = new WrongUserInputException("회원가입 실패");
         given(userService.login(any())).willThrow(expected);
 
         String inputJson = objectMapper.writeValueAsString(
@@ -124,7 +124,7 @@ class UserControllerTest {
     @Test
     @DisplayName("로그인 실패 - 패스워드 형식이 잘못된 경우")
     void login_IfPasswordFormatIsWrong_ThrowException() throws Exception {
-        UserInputException expected = new UserInputException("회원가입 실패");
+        WrongUserInputException expected = new WrongUserInputException("회원가입 실패");
         given(userService.login(any())).willThrow(expected);
 
         String inputJson = objectMapper.writeValueAsString(
