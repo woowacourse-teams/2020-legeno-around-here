@@ -28,6 +28,13 @@ public class Sector extends BaseEntity {
     @Embedded
     private Description description;
 
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
+    private SectorState state;
+
+    @Column(nullable = false)
+    private String reason = "";
+
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)
     private User creator;
@@ -35,12 +42,6 @@ public class Sector extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "last_modifier_id", nullable = false)
     private User lastModifier;
-
-    @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false)
-    private SectorState state;
-
-    private String reason = "";
 
     @Builder
     public Sector(String name, String description, User creator, User lastModifier,
