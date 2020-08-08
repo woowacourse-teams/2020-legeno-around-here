@@ -19,6 +19,7 @@ import io.restassured.RestAssured;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,7 @@ import org.springframework.test.context.jdbc.Sql;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorWithReasonResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -177,22 +179,22 @@ public class SectorAcceptanceTest {
         Long sectorAId = createPendingSector(userAToken, "A", TEST_SECTOR_DESCRIPTION);
         Long sectorBId = createPendingSector(userAToken, "B", TEST_SECTOR_DESCRIPTION);
         Long sectorCId = createPendingSector(userAToken, "C", TEST_SECTOR_DESCRIPTION);
-//
-//        // 사용자 A - 본인 승인 신청 부문 확인
-//        List<SectorWithReasonResponse> sectors = getMySectors(userAToken);
-//        List<Long> sectorIds = sectors.stream()
-//            .map(sector -> sector.getId)
-//            .collect(Collectors.toList());
-//        assertThat(sectorsIds).contains(sectorAId);
-//        assertThat(sectorsIds).contains(sectorBId);
-//        assertThat(sectorsIds).contains(sectorCId);
-//
-//        // 관리자 - 부문 등록
-//        Long sectorDId = createSector(adminToken, "D", TEST_SECTOR_DESCRIPTION);
-//
-//        // 관리자 - 부문 A 승인
+
+        // 사용자 A - 본인 승인 신청 부문 확인
+        List<SectorWithReasonResponse> sectors = getMySectors(userAToken);
+        List<Long> sectorIds = sectors.stream()
+            .map(SectorWithReasonResponse::getId)
+            .collect(Collectors.toList());
+        assertThat(sectorIds).contains(sectorAId);
+        assertThat(sectorIds).contains(sectorBId);
+        assertThat(sectorIds).contains(sectorCId);
+
+        // 관리자 - 부문 등록
+        Long sectorDId = createSector(adminToken, "D", TEST_SECTOR_DESCRIPTION);
+
+        // 관리자 - 부문 A 승인
 //        approveSector(adminToken, sectorAId);
-//
+
 //        // 관리자 - 부문 B 반려
 //        String wrongSectorName = "부적합한 부문명";
 //        rejectSector(adminToken, sectorBId, wrongSectorName);
@@ -222,10 +224,12 @@ public class SectorAcceptanceTest {
 //
 //        // 사용자 A - 승인 목록 조회
 //        sectors = getMySectors(userAToken);
-//        assertThat(sectors.get(sectorAId).getState()).isEqaulTo("승인");
-//        assertThat(sectors.get(sectorBId).getState()).isEqaulTo("반려");
-//        assertThat(sectors.get(sectorBId).getReason()).isEqaulTo(wrongSectorName);
-//        assertThat(sectors.get(sectorCId).getState()).isEqaulTo("승인 신청");
+//        Map<Long, SectorWithReasonResponse> sectorsWithId = sectors.stream()
+//            .collect(Collectors.toMap(SectorWithReasonResponse::getId, sector -> sector));
+//        assertThat(sectorsWithId.get(sectorAId).getState()).isEqualTo("승인");
+//        assertThat(sectorsWithId.get(sectorBId).getState()).isEqualTo("반려");
+//        assertThat(sectorsWithId.get(sectorBId).getReason()).isEqualTo(wrongSectorName);
+//        assertThat(sectorsWithId.get(sectorCId).getState()).isEqualTo("승인 신청");
     }
 
     private String getCreateAdminToken() {
@@ -402,6 +406,19 @@ public class SectorAcceptanceTest {
             .extract()
             .jsonPath()
             .getList(".", SectorResponse.class);
+    }
+
+    private List<SectorWithReasonResponse> getMySectors(String accessToken) {
+        return given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .get("/my/sectors")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .jsonPath()
+            .getList(".", SectorWithReasonResponse.class);
     }
 
     private void deleteSector(String accessToken, Long id) {

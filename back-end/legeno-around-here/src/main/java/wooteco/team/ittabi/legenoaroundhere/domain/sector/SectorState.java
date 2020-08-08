@@ -2,13 +2,19 @@ package wooteco.team.ittabi.legenoaroundhere.domain.sector;
 
 public enum SectorState {
 
-    PUBLISHED(true),
-    DELETED(false);
+    PUBLISHED("등록", true),
+    DELETED("삭제", false);
 
+    private final String name;
     private final boolean used;
 
-    SectorState(boolean used) {
+    SectorState(String name, boolean used) {
+        this.name = name;
         this.used = used;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public boolean isUsed() {

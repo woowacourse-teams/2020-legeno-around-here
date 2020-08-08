@@ -84,4 +84,8 @@ public class Sector extends BaseEntity {
     public String getStringDescription() {
         return this.description.getDescription();
     }
+
+    public String getStateName() {
+        return state.getName();
+    }
 }
