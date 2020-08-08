@@ -50,10 +50,7 @@ public class UserAcceptanceTest {
      * <p>
      * When 내 정보를 수정한다. Then 내 정보가 수정된다.
      * <p>
-     * <<<<<<< HEAD When 로그아웃을 한다. Then 로그아웃이 된다.
-     * <p>
-     * ======= >>>>>>> feat: 조회/탈퇴 인수테스트 작성 Given 로그인이 되어있는 상태이다. When 회원 탈퇴 요청을 한다. Then 회원 탈퇴가
-     * 되었다.
+     * Given 로그인이 되어있는 상태이다. * When 회원 탈퇴 요청을 한다. Then 회원 탈퇴가 되었다.
      */
     @Test
     @DisplayName("회원 관리")
@@ -62,12 +59,12 @@ public class UserAcceptanceTest {
         //회원 가입
         String location = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         assertThat(location).matches(USER_LOCATION_FORMAT);
-        TokenResponse tokenResponseForJoin = login(TEST_EMAIL, TEST_PASSWORD);
-        UserResponse userResponseForJoin = findUser(tokenResponseForJoin.getAccessToken());
-        assertThat(userResponseForJoin).isNotNull();
-        assertThat(userResponseForJoin.getId()).isNotNull();
-        assertThat(userResponseForJoin.getEmail()).isEqualTo(TEST_EMAIL);
-        assertThat(userResponseForJoin.getNickname()).isEqualTo(TEST_NICKNAME);
+        TokenResponse joinedTokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
+        UserResponse joinedUserResponse = findUser(joinedTokenResponse.getAccessToken());
+        assertThat(joinedUserResponse).isNotNull();
+        assertThat(joinedUserResponse.getId()).isNotNull();
+        assertThat(joinedUserResponse.getEmail()).isEqualTo(TEST_EMAIL);
+        assertThat(joinedUserResponse.getNickname()).isEqualTo(TEST_NICKNAME);
 
         // 로그인
         TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);

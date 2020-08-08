@@ -16,7 +16,7 @@ function MyPage() {
       },
     };
     axios
-      .get("http://13.209.62.31:8080/users/myinfo", config)
+      .get("http://localhost:8080/users/myinfo", config)
       .then(async (response) => {
         const userResponse = await response.data;
         setEmail(userResponse.email);
