@@ -1,21 +1,24 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.SectorWithReasonResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorUpdateStateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.service.SectorService;
 
@@ -25,7 +28,7 @@ public class SectorController {
 
     private final SectorService sectorService;
 
-    private Map<Long, SectorResponse> sectorResponses;
+    private Map<Long, SectorDetailResponse> sectorDetailResponses;
 
     @GetMapping("/sectors/{id}")
     public ResponseEntity<SectorResponse> findInUseSector(@PathVariable Long id) {
@@ -43,13 +46,15 @@ public class SectorController {
 
     @PostMapping("/sectors")
     public ResponseEntity<Void> createPendingSector(@RequestBody SectorRequest sectorRequest) {
-        Long id = sectorResponses.size() + 1L;
-        sectorResponses.put(id, SectorResponse.builder()
+        Long id = sectorDetailResponses.size() + 1L;
+        sectorDetailResponses.put(id, SectorDetailResponse.builder()
             .id(id)
             .name(sectorRequest.getName())
             .description(sectorRequest.getDescription())
             .creator(UserResponse
                 .from((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()))
+            .state(SectorState.PENDING.name())
+            .reason("")
             .build());
         return ResponseEntity
             .created(URI.create("/sectors/1"))
@@ -57,19 +62,29 @@ public class SectorController {
     }
 
     @GetMapping("/my/sectors")
-    public ResponseEntity<List<SectorWithReasonResponse>> findMySectors() {
-        List<SectorWithReasonResponse> responses = sectorResponses.values()
-            .stream()
-            .map(sectorResponse -> SectorWithReasonResponse.builder()
-                .id(sectorResponse.getId())
-                .name(sectorResponse.getName())
-                .description(sectorResponse.getDescription())
-                .reason("부적합한 부문명")
-                .creator(sectorResponse.getCreator())
-                .build())
-            .collect(Collectors.toList());
+    public ResponseEntity<List<SectorDetailResponse>> findMySectors() {
 
         return ResponseEntity
-            .ok(responses);
+            .ok(new ArrayList<>(sectorDetailResponses.values()));
+    }
+
+    @PutMapping("/admin/sectors/{id}/state")
+    public ResponseEntity<Void> updateSectorState(@PathVariable Long id,
+        @RequestBody SectorUpdateStateRequest sectorUpdateStateRequest) {
+
+        SectorDetailResponse sectorDetailResponse = sectorDetailResponses.get(id);
+
+        sectorDetailResponses.put(id, SectorDetailResponse.builder()
+            .id(sectorDetailResponse.getId())
+            .name(sectorDetailResponse.getName())
+            .description(sectorDetailResponse.getDescription())
+            .creator(sectorDetailResponse.getCreator())
+            .state(sectorUpdateStateRequest.getState())
+            .reason(sectorUpdateStateRequest.getReason())
+            .build());
+
+        return ResponseEntity
+            .ok()
+            .build();
     }
 }

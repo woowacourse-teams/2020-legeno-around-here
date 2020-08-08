@@ -40,6 +40,8 @@ public class Sector extends BaseEntity {
     @Column(nullable = false)
     private SectorState state;
 
+    private String reason = "";
+
     @Builder
     public Sector(String name, String description, User creator, User lastModifier,
         SectorState state) {

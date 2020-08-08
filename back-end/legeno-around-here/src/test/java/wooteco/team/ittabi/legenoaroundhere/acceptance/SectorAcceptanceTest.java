@@ -30,8 +30,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.SectorWithReasonResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -181,9 +181,9 @@ public class SectorAcceptanceTest {
         Long sectorCId = createPendingSector(userAToken, "C", TEST_SECTOR_DESCRIPTION);
 
         // 사용자 A - 본인 승인 신청 부문 확인
-        List<SectorWithReasonResponse> sectors = getMySectors(userAToken);
+        List<SectorDetailResponse> sectors = getMySectors(userAToken);
         List<Long> sectorIds = sectors.stream()
-            .map(SectorWithReasonResponse::getId)
+            .map(SectorDetailResponse::getId)
             .collect(Collectors.toList());
         assertThat(sectorIds).contains(sectorAId);
         assertThat(sectorIds).contains(sectorBId);
@@ -193,7 +193,7 @@ public class SectorAcceptanceTest {
         Long sectorDId = createSector(adminToken, "D", TEST_SECTOR_DESCRIPTION);
 
         // 관리자 - 부문 A 승인
-//        approveSector(adminToken, sectorAId);
+        approveSector(adminToken, sectorAId);
 
 //        // 관리자 - 부문 B 반려
 //        String wrongSectorName = "부적합한 부문명";
@@ -408,7 +408,7 @@ public class SectorAcceptanceTest {
             .getList(".", SectorResponse.class);
     }
 
-    private List<SectorWithReasonResponse> getMySectors(String accessToken) {
+    private List<SectorDetailResponse> getMySectors(String accessToken) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
@@ -418,7 +418,7 @@ public class SectorAcceptanceTest {
             .statusCode(HttpStatus.OK.value())
             .extract()
             .jsonPath()
-            .getList(".", SectorWithReasonResponse.class);
+            .getList(".", SectorDetailResponse.class);
     }
 
     private void deleteSector(String accessToken, Long id) {
@@ -428,5 +428,24 @@ public class SectorAcceptanceTest {
             .delete("/admin/sectors/" + id)
             .then()
             .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    private void approveSector(String accessToken, Long sectorId) {
+        updateStateSector(accessToken, sectorId, "approve", "승인함");
+    }
+
+    private void updateStateSector(String accessToken, Long id, String state, String reason) {
+        Map<String, String> params = new HashMap<>();
+        params.put("state", state);
+        params.put("reason", reason);
+
+        given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .put("/admin/sectors/" + id + "/state")
+            .then()
+            .statusCode(HttpStatus.OK.value());
     }
 }
