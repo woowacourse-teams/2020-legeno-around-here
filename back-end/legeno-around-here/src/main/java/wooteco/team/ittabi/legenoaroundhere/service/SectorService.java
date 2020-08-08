@@ -10,6 +10,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
@@ -97,5 +98,11 @@ public class SectorService {
         Sector sector = sectorRequest.toSector(user, SectorState.PENDING);
 
         return saveSector(sector);
+    }
+
+    public List<SectorDetailResponse> findAllMySector() {
+        User user = (User) authenticationFacade.getPrincipal();
+        List<Sector> sectors = sectorRepository.findAllByCreator(user);
+        return SectorDetailResponse.listOf(sectors);
     }
 }

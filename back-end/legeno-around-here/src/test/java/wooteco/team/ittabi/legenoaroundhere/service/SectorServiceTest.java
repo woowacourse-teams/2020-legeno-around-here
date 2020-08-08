@@ -9,7 +9,9 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConst
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_NAME;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -264,5 +266,21 @@ class SectorServiceTest {
 
         assertThatThrownBy(() -> sectorService.createPendingSector(sectorRequest))
             .isInstanceOf(NotUniqueException.class);
+    }
+
+    @DisplayName("현재 사용자와 관련된 모든 부문 조회")
+    @Test
+    void findAllMySector_Success() {
+        List<Long> sectorIds = new ArrayList<>();
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        sectorIds.add(sectorService.createPendingSector(sectorRequest).getId());
+        SectorRequest sectorAnotherRequest
+            = new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_DESCRIPTION);
+        sectorIds.add(sectorService.createPendingSector(sectorAnotherRequest).getId());
+
+        List<AdminSectorResponse> sectors = sectorService.findAllSector();
+        assertThat(sectors.stream()
+            .filter(sector -> sectorIds.contains(sector.getId()))
+            .collect(Collectors.toList())).hasSize(2);
     }
 }

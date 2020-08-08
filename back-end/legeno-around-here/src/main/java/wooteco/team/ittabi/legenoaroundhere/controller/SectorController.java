@@ -90,10 +90,11 @@ public class SectorController {
     }
 
     @GetMapping("/my/sectors")
-    public ResponseEntity<List<SectorDetailResponse>> findMySectors() {
+    public ResponseEntity<List<SectorDetailResponse>> findAllMySector() {
+        List<SectorDetailResponse> sectorDetailResponses = sectorService.findAllMySector();
 
         return ResponseEntity
-            .ok(new ArrayList<>(sectorDetailResponses.values()));
+            .ok(new ArrayList<>(this.sectorDetailResponses.values()));
     }
 
     @PutMapping("/admin/sectors/{id}/state")
