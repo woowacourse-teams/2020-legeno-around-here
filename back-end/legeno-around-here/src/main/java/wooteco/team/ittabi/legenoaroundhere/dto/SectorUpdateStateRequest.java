@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
@@ -16,4 +17,8 @@ public class SectorUpdateStateRequest {
 
     private String state;
     private String reason;
+
+    private SectorState getSectorState() {
+        return SectorState.of(state);
+    }
 }

@@ -22,6 +22,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotFoundAlgorithmException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageExtensionException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageMimeTypeException;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotUniqueException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.service.SectorService;
 
@@ -100,6 +101,17 @@ class GlobalExceptionHandlerTest {
     @Test
     void handleBadRequest_FileIOException_BadRequest() throws Exception {
         doThrow(FileIOException.class).when(sectorService).findAllInUseSector();
+
+        this.mockMvc.perform(get("/sectors/")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("errorMessage").hasJsonPath());
+    }
+
+    @DisplayName("NotUniqueException일 때, BadRequest 리턴")
+    @Test
+    void handleBadRequest_NotUniqueException_BadRequest() throws Exception {
+        doThrow(NotUniqueException.class).when(sectorService).findAllInUseSector();
 
         this.mockMvc.perform(get("/sectors/")
             .accept(MediaType.APPLICATION_JSON))

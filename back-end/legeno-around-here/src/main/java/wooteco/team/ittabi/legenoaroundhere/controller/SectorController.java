@@ -20,6 +20,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorUpdateStateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotUniqueException;
 import wooteco.team.ittabi.legenoaroundhere.service.SectorService;
 
 @RestController
@@ -46,6 +47,7 @@ public class SectorController {
 
     @PostMapping("/sectors")
     public ResponseEntity<Void> createPendingSector(@RequestBody SectorRequest sectorRequest) {
+        validate(sectorRequest);
         Long id = sectorDetailResponses.size() + 1L;
         sectorDetailResponses.put(id, SectorDetailResponse.builder()
             .id(id)
@@ -53,12 +55,36 @@ public class SectorController {
             .description(sectorRequest.getDescription())
             .creator(UserResponse
                 .from((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()))
-            .state(SectorState.PENDING.name())
+            .state(SectorState.PENDING.getName())
             .reason("")
             .build());
         return ResponseEntity
-            .created(URI.create("/sectors/1"))
+            .created(URI.create("/sectors/" + id))
             .build();
+    }
+
+    private void validate(SectorRequest sectorRequest) {
+        String name = sectorRequest.getName();
+        sectorDetailResponses.values().stream()
+            .filter(sectorDetailResponse -> sectorDetailResponse.getName().equals(name))
+            .peek(System.out::println)
+            .findFirst()
+            .ifPresent(sectorDetailResponse -> throwException(sectorDetailResponse.getState()));
+    }
+
+    private void throwException(String state) {
+        if (state.equals(SectorState.APPROVED.getName())) {
+            throw new NotUniqueException("사용 부문");
+        }
+        if (state.equals(SectorState.PENDING.getName())) {
+            throw new NotUniqueException("승인 신청 부문");
+        }
+        if (state.equals(SectorState.REJECTED.getName())) {
+            throw new NotUniqueException("반려 부문");
+        }
+        if (state.equals(SectorState.PUBLISHED.getName())) {
+            throw new NotUniqueException("사용 부문");
+        }
     }
 
     @GetMapping("/my/sectors")
@@ -74,9 +100,13 @@ public class SectorController {
 
         SectorDetailResponse sectorDetailResponse = sectorDetailResponses.get(id);
 
+        String name = sectorDetailResponse.getName();
+        if (sectorUpdateStateRequest.getState().equals("반려")) {
+            name += "_REJECTED";
+        }
         sectorDetailResponses.put(id, SectorDetailResponse.builder()
             .id(sectorDetailResponse.getId())
-            .name(sectorDetailResponse.getName())
+            .name(name)
             .description(sectorDetailResponse.getDescription())
             .creator(sectorDetailResponse.getCreator())
             .state(sectorUpdateStateRequest.getState())

@@ -30,6 +30,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.ErrorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
@@ -193,43 +194,43 @@ public class SectorAcceptanceTest {
         Long sectorDId = createSector(adminToken, "D", TEST_SECTOR_DESCRIPTION);
 
         // 관리자 - 부문 A 승인
-        approveSector(adminToken, sectorAId);
+        updateStateSector(adminToken, sectorAId, "승인", "승인함");
 
-//        // 관리자 - 부문 B 반려
-//        String wrongSectorName = "부적합한 부문명";
-//        rejectSector(adminToken, sectorBId, wrongSectorName);
-//
-//        // 사용자 B - 부문 A, B, C, D 등록 (실패)
-//        String failReasonSectorA
-//            = createPendingSectorAndFail(userAToken, "A", TEST_SECTOR_DESCRIPTION);
-//        String failReasonSectorB
-//            = createPendingSectorAndFail(userAToken, "B_반려", TEST_SECTOR_DESCRIPTION);
-//        String failReasonSectorC
-//            = createPendingSectorAndFail(userAToken, "C", TEST_SECTOR_DESCRIPTION);
+        // 관리자 - 부문 B 반려
+        String wrongSectorName = "부적합한 부문명";
+        updateStateSector(adminToken, sectorBId, "반려", wrongSectorName);
+
+        // 사용자 B - 부문 A, B, C, D 등록 (실패)
+        String failReasonSectorA
+            = createPendingSectorAndFail(userAToken, "A", TEST_SECTOR_DESCRIPTION);
+        String failReasonSectorB
+            = createPendingSectorAndFail(userAToken, "B_REJECTED", TEST_SECTOR_DESCRIPTION);
+        String failReasonSectorC
+            = createPendingSectorAndFail(userAToken, "C", TEST_SECTOR_DESCRIPTION);
 //        String failReasonSectorD
 //            = createPendingSectorAndFail(userAToken, "D", TEST_SECTOR_DESCRIPTION);
-//
-//        assertThat(failReasonSectorA).contains("사용");
-//        assertThat(failReasonSectorB).contains("반려");
-//        assertThat(failReasonSectorC).contains("요청");
+
+        assertThat(failReasonSectorA).contains("사용");
+        assertThat(failReasonSectorB).contains("반려");
+        assertThat(failReasonSectorC).contains("신청");
 //        assertThat(failReasonSectorD).contains("사용");
-//
-//        // 사용자 B - 사용할 수 있는 부문 조회
-//        List<SectorResponse> allInUseSector = findAllInUseSector(userBToken);
-//
+
+        // 사용자 B - 사용할 수 있는 부문 조회
+        List<SectorResponse> allInUseSector = findAllInUseSector(userBToken);
+
 //        assertThat(allInUseSector).contains(findInUseSector(userBToken, sectorAId));
 //        assertThatThrownBy(() -> findInUseSector(userBToken, sectorBId));
 //        assertThat(allInUseSector).contains(findInUseSector(userBToken, sectorCId));
 //        assertThatThrownBy(() -> findInUseSector(userBToken, sectorDId));
-//
-//        // 사용자 A - 승인 목록 조회
-//        sectors = getMySectors(userAToken);
-//        Map<Long, SectorWithReasonResponse> sectorsWithId = sectors.stream()
-//            .collect(Collectors.toMap(SectorWithReasonResponse::getId, sector -> sector));
-//        assertThat(sectorsWithId.get(sectorAId).getState()).isEqualTo("승인");
-//        assertThat(sectorsWithId.get(sectorBId).getState()).isEqualTo("반려");
-//        assertThat(sectorsWithId.get(sectorBId).getReason()).isEqualTo(wrongSectorName);
-//        assertThat(sectorsWithId.get(sectorCId).getState()).isEqualTo("승인 신청");
+
+        // 사용자 A - 승인 목록 조회
+        sectors = getMySectors(userAToken);
+        Map<Long, SectorDetailResponse> sectorsWithId = sectors.stream()
+            .collect(Collectors.toMap(SectorDetailResponse::getId, sector -> sector));
+        assertThat(sectorsWithId.get(sectorAId).getState()).isEqualTo("승인");
+        assertThat(sectorsWithId.get(sectorBId).getState()).isEqualTo("반려");
+        assertThat(sectorsWithId.get(sectorBId).getReason()).isEqualTo(wrongSectorName);
+        assertThat(sectorsWithId.get(sectorCId).getState()).isEqualTo("승인 신청");
     }
 
     private String getCreateAdminToken() {
@@ -337,6 +338,26 @@ public class SectorAcceptanceTest {
         return getIdFromUrl(location);
     }
 
+    private String createPendingSectorAndFail(String accessToken, String sectorName,
+        String sectorDescription) {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", sectorName);
+        params.put("description", sectorDescription);
+
+        return given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/sectors")
+            .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .extract()
+            .as(ErrorResponse.class)
+            .getErrorMessage();
+    }
+
     private Long getIdFromUrl(String location) {
         int lastIndex = location.lastIndexOf("/");
         return Long.valueOf(location.substring(lastIndex + 1));
@@ -428,10 +449,6 @@ public class SectorAcceptanceTest {
             .delete("/admin/sectors/" + id)
             .then()
             .statusCode(HttpStatus.NO_CONTENT.value());
-    }
-
-    private void approveSector(String accessToken, Long sectorId) {
-        updateStateSector(accessToken, sectorId, "approve", "승인함");
     }
 
     private void updateStateSector(String accessToken, Long id, String state, String reason) {
