@@ -59,11 +59,9 @@ public class SectorAcceptanceTest {
      */
     @DisplayName("관리자의 부문 관리")
     @Test
-    void manageSector_admin() {
+    void manageSector_Admin() {
         // 관리자 로그인
-        createAdmin(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_PASSWORD);
-        TokenResponse tokenResponse = login(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD);
-        String accessToken = tokenResponse.getAccessToken();
+        String accessToken = getCreateAdminToken();
 
         // 부문 등록
         Long id = createSector(accessToken, TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
@@ -130,6 +128,114 @@ public class SectorAcceptanceTest {
         assertThat(sectorResponses).hasSize(0);
     }
 
+    /**
+     * Feature: 부문 관리 Scenario: 사용자가 부문을 관리한다.
+     * <p>
+     * Given 관리자, 사용자 A, 사용자 B가 있다.
+     * <p>
+     * Given 사용자 A가 로그인 되어있다.
+     * <p>
+     * When A, B, C 부문을 각각 승인 신청한다. Then A, B, C 부문이 각각 승인 신청된다.
+     * <p>
+     * When 본인이 승인 신청한 부문 목록을 확인한다. Then 본인이 승인 신청한 부문들이 확인된다.(A, B, C)
+     * <p>
+     * Given 관리자가 로그인 되어 있다. D 부문을 등록한다.
+     * <p>
+     * When A 부문을 승인한다. Then A 부문이 승인 상태이다.
+     * <p>
+     * When B 부문을 반려한다. Then B 부문이 반려 상태이다.
+     * <p>
+     * Given 사용자 B가 로그인 되어있다.
+     * <p>
+     * When A 부문을 승인 신청한다. Then A 부문을 승인 신청할 수 없다. (기존 - 승인됨)
+     * <p>
+     * When B 부문을 승인 신청한다. Then B 부문을 승인 신청할 수 없다. (기존 - 반려됨)
+     * <p>
+     * When C 부문을 승인 신청한다. Then C 부문을 승인 신청할 수 없다. (기존 - 승인 신청됨)
+     * <p>
+     * When D 부문을 승인 신청한다. Then D 부문을 승인 신청할 수 없다. (기존 - 등록됨)
+     * <p>
+     * When 사용할 수 있는 부문들을 조회한다. Then 사용할 수 있는 부문이 조회된다.(A, D), 사용할 수 없는 부문은 조회 실패(C, B)
+     * <p>
+     * Given 사용자 A가 로그인 되어있다.
+     * <p>
+     * When 본인이 승인 신청한 목록을 확인한다. Then 승인된 부문이 확인된다.(A) 반려된 부문이 확인된다.(B) 승인 신청한 부문이 확인된다.(C)
+     */
+    @DisplayName("사용자의 부문 관리")
+    @Test
+    void manageSector_User() {
+//        // 관리자, 사용자 A, 사용자 B 로그인
+//        String adminToken = getCreateAdminToken();
+//        String userAToken = getCreateUserToken(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+//        String userBToken = getCreateUserToken(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+//
+//        // 사용자 A - 부문 승인 신청
+//        Long sectorAId = createPendingSector(userAToken, "A", TEST_SECTOR_DESCRIPTION);
+//        Long sectorBId = createPendingSector(userAToken, "B", TEST_SECTOR_DESCRIPTION);
+//        Long sectorCId = createPendingSector(userAToken, "C", TEST_SECTOR_DESCRIPTION);
+//
+//        // 사용자 A - 본인 승인 신청 부문 확인
+//        List<SectorWithReasonResponse> sectors = getMySectors(userAToken);
+//        List<Long> sectorIds = sectors.stream()
+//            .map(sector -> sector.getId)
+//            .collect(Collectors.toList());
+//        assertThat(sectorsIds).contains(sectorAId);
+//        assertThat(sectorsIds).contains(sectorBId);
+//        assertThat(sectorsIds).contains(sectorCId);
+//
+//        // 관리자 - 부문 등록
+//        Long sectorDId = createSector(adminToken, "D", TEST_SECTOR_DESCRIPTION);
+//
+//        // 관리자 - 부문 A 승인
+//        approveSector(adminToken, sectorAId);
+//
+//        // 관리자 - 부문 B 반려
+//        String wrongSectorName = "부적합한 부문명";
+//        rejectSector(adminToken, sectorBId, wrongSectorName);
+//
+//        // 사용자 B - 부문 A, B, C, D 등록 (실패)
+//        String failReasonSectorA
+//            = createPendingSectorAndFail(userAToken, "A", TEST_SECTOR_DESCRIPTION);
+//        String failReasonSectorB
+//            = createPendingSectorAndFail(userAToken, "B_반려", TEST_SECTOR_DESCRIPTION);
+//        String failReasonSectorC
+//            = createPendingSectorAndFail(userAToken, "C", TEST_SECTOR_DESCRIPTION);
+//        String failReasonSectorD
+//            = createPendingSectorAndFail(userAToken, "D", TEST_SECTOR_DESCRIPTION);
+//
+//        assertThat(failReasonSectorA).contains("사용");
+//        assertThat(failReasonSectorB).contains("반려");
+//        assertThat(failReasonSectorC).contains("요청");
+//        assertThat(failReasonSectorD).contains("사용");
+//
+//        // 사용자 B - 사용할 수 있는 부문 조회
+//        List<SectorResponse> allInUseSector = findAllInUseSector(userBToken);
+//
+//        assertThat(allInUseSector).contains(findInUseSector(userBToken, sectorAId));
+//        assertThatThrownBy(() -> findInUseSector(userBToken, sectorBId));
+//        assertThat(allInUseSector).contains(findInUseSector(userBToken, sectorCId));
+//        assertThatThrownBy(() -> findInUseSector(userBToken, sectorDId));
+//
+//        // 사용자 A - 승인 목록 조회
+//        sectors = getMySectors(userAToken);
+//        assertThat(sectors.get(sectorAId).getState()).isEqaulTo("승인");
+//        assertThat(sectors.get(sectorBId).getState()).isEqaulTo("반려");
+//        assertThat(sectors.get(sectorBId).getReason()).isEqaulTo(wrongSectorName);
+//        assertThat(sectors.get(sectorCId).getState()).isEqaulTo("승인 신청");
+    }
+
+    private String getCreateAdminToken() {
+        createAdmin(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_PASSWORD);
+        TokenResponse tokenResponse = login(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD);
+        return tokenResponse.getAccessToken();
+    }
+
+    private String getCreateUserToken(String email, String nickname, String password) {
+        createUser(email, nickname, password);
+        TokenResponse tokenResponse = login(email, password);
+        return tokenResponse.getAccessToken();
+    }
+
     private String createAdmin(String email, String nickname, String password) {
         Map<String, String> params = new HashMap<>();
         params.put("email", email);
@@ -142,6 +248,24 @@ public class SectorAcceptanceTest {
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .post("/joinAdmin")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract()
+            .header("Location");
+    }
+
+    private String createUser(String email, String nickname, String password) {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("nickname", nickname);
+        params.put("password", password);
+
+        return given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/join")
             .then()
             .statusCode(HttpStatus.CREATED.value())
             .extract()
