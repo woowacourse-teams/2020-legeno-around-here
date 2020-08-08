@@ -48,7 +48,9 @@ public class SectorController {
     @PostMapping("/sectors")
     public ResponseEntity<Void> createPendingSector(@RequestBody SectorRequest sectorRequest) {
         validate(sectorRequest);
-        Long id = sectorDetailResponses.size() + 1L;
+        SectorResponse sectorResponse = sectorService.createPendingSector(sectorRequest);
+        Long id = sectorResponse.getId();
+        id = sectorDetailResponses.size() + 1L;
         sectorDetailResponses.put(id, SectorDetailResponse.builder()
             .id(id)
             .name(sectorRequest.getName())

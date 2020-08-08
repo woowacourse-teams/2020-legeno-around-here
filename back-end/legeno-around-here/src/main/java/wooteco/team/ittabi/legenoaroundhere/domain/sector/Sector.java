@@ -90,4 +90,8 @@ public class Sector extends BaseEntity {
     public String getStateName() {
         return state.getName();
     }
+
+    public String getStateExceptionName() {
+        return state.getExceptionName();
+    }
 }

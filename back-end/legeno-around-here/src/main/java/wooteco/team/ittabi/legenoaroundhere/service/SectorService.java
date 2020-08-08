@@ -3,8 +3,6 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
@@ -28,17 +26,19 @@ public class SectorService {
     @Transactional
     public SectorResponse createSector(SectorRequest sectorRequest) {
         User user = (User) authenticationFacade.getPrincipal();
-        try {
-            Sector sector = sectorRepository
-                .save(sectorRequest.toSector(user, SectorState.PUBLISHED));
-            return SectorResponse.of(sector);
-        } catch (DataIntegrityViolationException e) {
-            if (e.getCause() instanceof ConstraintViolationException) {
-                throw new NotUniqueException(
-                    "Sector 이름 [" + sectorRequest.getName() + "](이)가 Unique하지 않습니다.");
-            }
-            throw e;
-        }
+        Sector sector = sectorRequest.toSector(user, SectorState.PUBLISHED);
+        return saveSector(sector);
+    }
+
+    private SectorResponse saveSector(Sector sector) {
+        sectorRepository.findByName(sector.getName())
+            .ifPresent(foundSector -> {
+                throw new NotUniqueException(foundSector.getStateExceptionName() + " 상태의 ["
+                    + foundSector.getName() + "] 부문이 이미 존재합니다.");
+            });
+
+        Sector savedSector = sectorRepository.save(sector);
+        return SectorResponse.of(savedSector);
     }
 
     public SectorResponse findInUseSector(Long id) {
@@ -90,5 +90,12 @@ public class SectorService {
     public List<AdminSectorResponse> findAllSector() {
         List<Sector> sectors = sectorRepository.findAll();
         return AdminSectorResponse.listOf(sectors);
+    }
+
+    public SectorResponse createPendingSector(SectorRequest sectorRequest) {
+        User user = (User) authenticationFacade.getPrincipal();
+        Sector sector = sectorRequest.toSector(user, SectorState.PENDING);
+
+        return saveSector(sector);
     }
 }

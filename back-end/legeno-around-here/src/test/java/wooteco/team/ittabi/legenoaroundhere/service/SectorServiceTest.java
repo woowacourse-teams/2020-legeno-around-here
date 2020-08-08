@@ -243,4 +243,26 @@ class SectorServiceTest {
         assertThat(sectors).contains(expectedSector);
         assertThat(sectors).contains(expectedAnotherSector);
     }
+
+    @DisplayName("승인 신청 상태의 Sector 생성 - 성공")
+    @Test
+    void createPendingSector_Success() {
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        SectorResponse sector = sectorService.createPendingSector(sectorRequest);
+
+        assertThat(sector.getId()).isNotNull();
+        assertThat(sector.getName()).isEqualToIgnoringCase(sectorRequest.getName());
+        assertThat(sector.getDescription()).isEqualTo(sectorRequest.getDescription());
+        assertThat(sector.getCreator()).isEqualTo(UserResponse.from(admin));
+    }
+
+    @DisplayName("승인 신청 상태의 Sector 생성 - 예외 발생, 동일 이름의 Sector 존재")
+    @Test
+    void createPendingSector_DuplicateName_ThrownException() {
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        sectorService.createPendingSector(sectorRequest);
+
+        assertThatThrownBy(() -> sectorService.createPendingSector(sectorRequest))
+            .isInstanceOf(NotUniqueException.class);
+    }
 }
