@@ -30,6 +30,7 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final JwtTokenGenerator jwtTokenGenerator;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Transactional
     public Long createUser(UserRequest userRequest) {
@@ -38,8 +39,6 @@ public class UserService implements UserDetailsService {
     }
 
     private User createUserBy(UserRequest userCreateRequest, Role userRole) {
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
         return userRepository.save(User.builder()
             .email(new Email(userCreateRequest.getEmail()))
             .nickname(new Nickname(userCreateRequest.getNickname()))
@@ -56,8 +55,6 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public TokenResponse login(LoginRequest loginRequest) {
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
         User user = userRepository.findByEmail(new Email(loginRequest.getEmail()))
             .orElseThrow(() -> new NotExistsException("가입되지 않은 회원입니다."));
 
