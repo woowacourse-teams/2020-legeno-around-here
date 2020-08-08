@@ -74,15 +74,22 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public UserResponse updateUser(UserRequest userUpdateRequest) {
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User persistUser = userRepository.findByEmail(user.getEmail())
             .orElseThrow(() -> new NotExistsException("사용자를 찾을 수 없습니다."));
-        persistUser.setNickname(new Nickname(userUpdateRequest.getNickname()));
-        persistUser
-            .setPassword(new Password(passwordEncoder.encode(userUpdateRequest.getPassword())));
+
+        updatePersistUser(persistUser, userUpdateRequest);
+
         return UserResponse.from(persistUser);
+    }
+
+    private void updatePersistUser(User persistUser, UserRequest userUpdateRequest) {
+        Nickname newNickname = new Nickname(userUpdateRequest.getNickname());
+        Password newPassword = new Password(
+            passwordEncoder.encode(userUpdateRequest.getPassword()));
+
+        persistUser.setNickname(newNickname);
+        persistUser.setPassword(newPassword);
     }
 
     @Transactional
