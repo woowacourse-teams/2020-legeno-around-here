@@ -6,6 +6,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ANOTHER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_ANOTHER_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_ANOTHER_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_DESCRIPTION;
@@ -164,15 +168,15 @@ public class SectorAcceptanceTest {
     @DisplayName("사용자의 부문 관리")
     @Test
     void manageSector_User() {
-//        // 관리자, 사용자 A, 사용자 B 로그인
-//        String adminToken = getCreateAdminToken();
-//        String userAToken = getCreateUserToken(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
-//        String userBToken = getCreateUserToken(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
-//
-//        // 사용자 A - 부문 승인 신청
-//        Long sectorAId = createPendingSector(userAToken, "A", TEST_SECTOR_DESCRIPTION);
-//        Long sectorBId = createPendingSector(userAToken, "B", TEST_SECTOR_DESCRIPTION);
-//        Long sectorCId = createPendingSector(userAToken, "C", TEST_SECTOR_DESCRIPTION);
+        // 관리자, 사용자 A, 사용자 B 로그인
+        String adminToken = getCreateAdminToken();
+        String userAToken = getCreateUserToken(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        String userBToken = getCreateUserToken(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+
+        // 사용자 A - 부문 승인 신청
+        Long sectorAId = createPendingSector(userAToken, "A", TEST_SECTOR_DESCRIPTION);
+        Long sectorBId = createPendingSector(userAToken, "B", TEST_SECTOR_DESCRIPTION);
+        Long sectorCId = createPendingSector(userAToken, "C", TEST_SECTOR_DESCRIPTION);
 //
 //        // 사용자 A - 본인 승인 신청 부문 확인
 //        List<SectorWithReasonResponse> sectors = getMySectors(userAToken);
@@ -300,6 +304,27 @@ public class SectorAcceptanceTest {
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .post("/admin/sectors")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract()
+            .header("Location");
+
+        return getIdFromUrl(location);
+    }
+
+    private Long createPendingSector(String accessToken, String sectorName,
+        String sectorDescription) {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", sectorName);
+        params.put("description", sectorDescription);
+
+        String location = given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/sectors")
             .then()
             .statusCode(HttpStatus.CREATED.value())
             .extract()
