@@ -4,16 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import wooteco.team.ittabi.legenoaroundhere.config.AuthenticationFacade;
+import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
 import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 
 @DataJpaTest
-@Import({UserService.class, JwtTokenGenerator.class})
+@Import({UserService.class, JwtTokenGenerator.class, AuthenticationFacade.class})
 public abstract class AuthServiceTest {
 
     @Autowired
@@ -22,9 +23,12 @@ public abstract class AuthServiceTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private IAuthenticationFacade authenticationFacade;
+
     protected User createUser(String email, String nickname, String password) {
-        UserCreateRequest userCreateRequest = new UserCreateRequest(email, nickname, password);
-        Long userId = userService.createUser(userCreateRequest);
+        UserRequest userRequest = new UserRequest(email, nickname, password);
+        Long userId = userService.createUser(userRequest);
 
         return userRepository.findById(userId)
             .orElseThrow(() -> new NotExistsException("해당하는 사용자가 존재하지 않습니다."));
@@ -34,6 +38,6 @@ public abstract class AuthServiceTest {
         UserDetails userDetails = userService.loadUserByUsername(user.getEmailByString());
         org.springframework.security.core.Authentication authToken = new UsernamePasswordAuthenticationToken(
             user, "TestCredentials", userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authToken);
+        authenticationFacade.setAuthentication(authToken);
     }
 }

@@ -25,6 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
+import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
@@ -38,8 +39,9 @@ import wooteco.team.ittabi.legenoaroundhere.utils.FileConverter;
 @ExtendWith(MockitoExtension.class)
 public class PostServiceTest extends AuthServiceTest {
 
-    private CommentService commentService;
     private PostService postService;
+    private CommentService commentService;
+    private ImageService imageService;
 
     @Mock
     private S3Uploader s3Uploader;
@@ -50,13 +52,20 @@ public class PostServiceTest extends AuthServiceTest {
     @Autowired
     private CommentRepository commentRepository;
 
+    @Autowired
+    private IAuthenticationFacade authenticationFacade;
+
     private User user;
     private User another;
 
     @BeforeEach
     void setUp() {
-        commentService = new CommentService(postRepository, commentRepository);
-        postService = new PostService(postRepository, commentService, new ImageService(s3Uploader));
+        commentService = new CommentService(postRepository, commentRepository,
+            authenticationFacade);
+        imageService = new ImageService(s3Uploader, authenticationFacade);
+        postService = new PostService(postRepository, commentService, imageService,
+            authenticationFacade);
+
         user = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         another = createUser(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         setAuthentication(user);

@@ -24,7 +24,7 @@ function LoginForm() {
 
   const login = useCallback(() => {
     axios
-      .post("http://13.209.62.31:8080/login", {
+      .post("http://localhost:8080/login", {
         email,
         password,
       })

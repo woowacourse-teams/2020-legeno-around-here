@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
+import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
@@ -37,6 +38,7 @@ public class CommentServiceTest extends AuthServiceTest {
     private PostResponse postResponse;
     private PostService postService;
     private CommentService commentService;
+    private ImageService imageService;
 
     @Mock
     private S3Uploader s3Uploader;
@@ -47,10 +49,16 @@ public class CommentServiceTest extends AuthServiceTest {
     @Autowired
     private CommentRepository commentRepository;
 
+    @Autowired
+    private IAuthenticationFacade authenticationFacade;
+
     @BeforeEach
     void setUp() {
-        commentService = new CommentService(postRepository, commentRepository);
-        postService = new PostService(postRepository, commentService, new ImageService(s3Uploader));
+        commentService = new CommentService(postRepository, commentRepository,
+            authenticationFacade);
+        imageService = new ImageService(s3Uploader, authenticationFacade);
+        postService = new PostService(postRepository, commentService, imageService
+            , authenticationFacade);
 
         user = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         another = createUser(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);

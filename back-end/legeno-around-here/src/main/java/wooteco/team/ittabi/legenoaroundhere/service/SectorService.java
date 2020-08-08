@@ -5,9 +5,9 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
@@ -23,10 +23,11 @@ import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
 public class SectorService {
 
     private final SectorRepository sectorRepository;
+    private final IAuthenticationFacade authenticationFacade;
 
     @Transactional
     public SectorResponse createSector(SectorRequest sectorRequest) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = (User) authenticationFacade.getPrincipal();
         try {
             Sector sector = sectorRepository
                 .save(sectorRequest.toSector(user, SectorState.PUBLISHED));
@@ -71,7 +72,7 @@ public class SectorService {
     public void updateSector(Long id, SectorRequest sectorRequest) {
         Sector sector = findUsedSectorBy(id);
 
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = (User) authenticationFacade.getPrincipal();
         sector.update(sectorRequest.toSector(user, SectorState.PUBLISHED));
     }
 

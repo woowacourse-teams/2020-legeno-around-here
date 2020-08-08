@@ -5,13 +5,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 import javax.xml.bind.DatatypeConverter;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.Tika;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
+import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.Image;
 import wooteco.team.ittabi.legenoaroundhere.domain.ImageExtension;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
@@ -21,6 +22,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotImageMimeTypeException;
 @Slf4j
 @Transactional
 @Service
+@AllArgsConstructor
 public class ImageService {
 
     public static final String IMAGE_TYPE = "image";
@@ -28,13 +30,10 @@ public class ImageService {
     public static final String ALGORITHM_NAME = "MD5";
 
     private final S3Uploader s3Uploader;
-
-    public ImageService(S3Uploader s3Uploader) {
-        this.s3Uploader = s3Uploader;
-    }
+    private final IAuthenticationFacade authenticationFacade;
 
     public Image upload(MultipartFile multipartFile) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = (User) authenticationFacade.getPrincipal();
         validateImage(multipartFile);
         String imageUrl = s3Uploader
             .upload(multipartFile, IMAGE_DIR + calculateUserHashCode(user));

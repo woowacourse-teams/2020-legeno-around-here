@@ -50,16 +50,21 @@ public class UserAcceptanceTest {
      * <p>
      * When 내 정보를 수정한다. Then 내 정보가 수정된다.
      * <p>
-     * When 로그아웃을 한다. Then 로그아웃이 된다.
-     * <p>
-     * Given 로그인이 되어있는 상태이다. When 회원 탈퇴 요청을 한다. Then 회원 탈퇴가 되었다.
+     * Given 로그인이 되어있는 상태이다. * When 회원 탈퇴 요청을 한다. Then 회원 탈퇴가 되었다.
      */
     @Test
     @DisplayName("회원 관리")
     void manageUser() {
+
+        //회원 가입
         String location = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
-        // Todo: 내 정보 조회 api 구현 후, 조회가 잘 되는지 확인하는 코드로 바꿀 것.
         assertThat(location).matches(USER_LOCATION_FORMAT);
+        TokenResponse joinedTokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
+        UserResponse joinedUserResponse = findUser(joinedTokenResponse.getAccessToken());
+        assertThat(joinedUserResponse).isNotNull();
+        assertThat(joinedUserResponse.getId()).isNotNull();
+        assertThat(joinedUserResponse.getEmail()).isEqualTo(TEST_EMAIL);
+        assertThat(joinedUserResponse.getNickname()).isEqualTo(TEST_NICKNAME);
 
         // 로그인
         TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
@@ -74,11 +79,18 @@ public class UserAcceptanceTest {
         assertThat(userResponse.getEmail()).isEqualTo(TEST_EMAIL);
         assertThat(userResponse.getNickname()).isEqualTo(TEST_NICKNAME);
 
-        // Todo: 내 정보 수정
+        // 내 정보 수정
+        updateUser(tokenResponse.getAccessToken(), "newname", "newpassword");
+        UserResponse updatedUserResponse = findUser(tokenResponse.getAccessToken());
+        assertThat(updatedUserResponse.getNickname()).isEqualTo("newname");
+        TokenResponse updatedTokenResponse = login(TEST_EMAIL, "newpassword");
+        assertThat(updatedTokenResponse).isNotNull();
+        assertThat(updatedTokenResponse.getAccessToken())
+            .hasSizeGreaterThanOrEqualTo(TOKEN_MIN_SIZE);
 
-        // Todo: 로그아웃
-
-        // Todo: 회원 탈퇴
+        // 회원 탈퇴
+        deleteUser(updatedTokenResponse.getAccessToken());
+        findNotExistUser(updatedTokenResponse.getAccessToken());
     }
 
     private String createUser(String email, String nickname, String password) {
@@ -124,5 +136,41 @@ public class UserAcceptanceTest {
             .then()
             .statusCode(HttpStatus.OK.value())
             .extract().as(UserResponse.class);
+    }
+
+    private void findNotExistUser(String accessToken) {
+        given()
+            .header("X-AUTH-TOKEN", accessToken)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/users/myinfo")
+            .then()
+            .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+    }
+
+    private UserResponse updateUser(String accessToken, String nickname, String password) {
+        Map<String, String> params = new HashMap<>();
+        params.put("nickname", nickname);
+        params.put("password", password);
+
+        return given()
+            .header("X-AUTH-TOKEN", accessToken)
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .put("/users/myinfo")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract().as(UserResponse.class);
+    }
+
+    private void deleteUser(String accessToken) {
+        given()
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .delete("/users/myinfo")
+            .then()
+            .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }

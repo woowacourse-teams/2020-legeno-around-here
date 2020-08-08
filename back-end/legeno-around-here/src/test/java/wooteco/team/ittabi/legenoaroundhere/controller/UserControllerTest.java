@@ -4,8 +4,10 @@ package wooteco.team.ittabi.legenoaroundhere.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,13 +24,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
@@ -41,7 +42,7 @@ class UserControllerTest {
     private UserService userService;
 
     private MockMvc mockMvc;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext) {
@@ -56,7 +57,7 @@ class UserControllerTest {
         given(userService.createUser(any())).willReturn(TEST_ID);
 
         String inputJson = objectMapper.writeValueAsString(
-            new UserCreateRequest(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD));
+            new UserRequest(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD));
 
         this.mockMvc.perform(post("/join")
             .content(inputJson)
@@ -75,7 +76,7 @@ class UserControllerTest {
         String inputJson = objectMapper.writeValueAsString(
             new LoginRequest(TEST_EMAIL, TEST_PASSWORD));
 
-        MockHttpServletResponse response = this.mockMvc.perform(post("/login")
+        this.mockMvc.perform(post("/login")
             .content(inputJson)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON))
@@ -104,16 +105,44 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("로그인 실패 - 요청 형식 자체가 잘못된 경우")
-    void login_IfRequestFormatIsWrong_ThrowException() {
-        // Todo: ExceptionHandler로 처리하도록 구현한 뒤, 이 테스트도 구현해야함
+    @DisplayName("로그인 실패 - 이메일 형식이 잘못된 경우")
+    void login_IfEmailFormatIsWrong_ThrowException() throws Exception {
+        WrongUserInputException expected = new WrongUserInputException("회원가입 실패");
+        given(userService.login(any())).willThrow(expected);
+
+        String inputJson = objectMapper.writeValueAsString(
+            new LoginRequest("@@@.@@", TEST_PASSWORD));
+
+        this.mockMvc.perform(post("/login")
+            .content(inputJson)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("errorMessage").hasJsonPath());
+    }
+
+    @Test
+    @DisplayName("로그인 실패 - 패스워드 형식이 잘못된 경우")
+    void login_IfPasswordFormatIsWrong_ThrowException() throws Exception {
+        WrongUserInputException expected = new WrongUserInputException("회원가입 실패");
+        given(userService.login(any())).willThrow(expected);
+
+        String inputJson = objectMapper.writeValueAsString(
+            new LoginRequest(TEST_EMAIL, "aa"));
+
+        this.mockMvc.perform(post("/login")
+            .content(inputJson)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("errorMessage").hasJsonPath());
     }
 
     @Test
     @DisplayName("내 정보 얻기")
     void findUser() throws Exception {
         UserResponse expected = new UserResponse(TEST_ID, TEST_EMAIL, TEST_NICKNAME);
-        given(userService.findUser(any())).willReturn(expected);
+        given(userService.findUser()).willReturn(expected);
 
         String expectedJson = objectMapper.writeValueAsString(expected);
 
@@ -126,5 +155,34 @@ class UserControllerTest {
             .getResponse().getContentAsString();
 
         assertThat(actual).isEqualTo(expectedJson);
+    }
+
+    @Test
+    @DisplayName("내 정보 수정")
+    void updateUser() throws Exception {
+        UserResponse expected = new UserResponse(TEST_ID, TEST_EMAIL, TEST_NICKNAME);
+        given(userService.updateUser(any())).willReturn(expected);
+
+        String expectedJson = objectMapper.writeValueAsString(expected);
+
+        String actual = this.mockMvc.perform(put("/users/myinfo")
+            .content(expectedJson)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andDo(print())
+            .andReturn()
+            .getResponse().getContentAsString();
+
+        assertThat(actual).isEqualTo(expectedJson);
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴")
+    void deleteUser() throws Exception {
+        this.mockMvc.perform(delete("/users/myinfo")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNoContent());
     }
 }
