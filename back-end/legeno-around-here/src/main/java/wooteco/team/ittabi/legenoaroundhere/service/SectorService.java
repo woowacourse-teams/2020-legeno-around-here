@@ -82,8 +82,10 @@ public class SectorService {
 
     @Transactional
     public void deleteSector(Long id) {
+        User user = (User) authenticationFacade.getPrincipal();
+
         Sector sector = findUsedSectorBy(id);
-        sector.setState(SectorState.DELETED, "삭제");
+        sector.setState(SectorState.DELETED, "삭제", user);
     }
 
     @Transactional(readOnly = true)
@@ -115,8 +117,9 @@ public class SectorService {
 
     @Transactional
     public void updateSectorState(Long id, SectorUpdateStateRequest sectorUpdateStateRequest) {
+        User user = (User) authenticationFacade.getPrincipal();
         Sector sector = findSectorBy(id);
         sector.setState(sectorUpdateStateRequest.getSectorState(),
-            sectorUpdateStateRequest.getReason());
+            sectorUpdateStateRequest.getReason(), user);
     }
 }

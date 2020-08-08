@@ -93,7 +93,7 @@ class SectorTest {
         Sector sector
             = makeSector(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION, user, SectorState.PUBLISHED);
 
-        sector.setState(SectorState.DELETED, "삭제");
+        sector.setState(SectorState.DELETED, "삭제", user);
 
         assertThat(sector.getStringName()).isEqualToIgnoringCase(TEST_SECTOR_NAME);
         assertThat(sector.getState()).isEqualTo(SectorState.DELETED);
@@ -105,7 +105,7 @@ class SectorTest {
         Sector sector
             = makeSector(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION, user, SectorState.PUBLISHED);
 
-        sector.setState(SectorState.REJECTED, "반려");
+        sector.setState(SectorState.REJECTED, "반려", user);
 
         assertThat(sector.getStringName()).isEqualToIgnoringCase(TEST_SECTOR_NAME + "_REJECTED");
         assertThat(sector.getState()).isEqualTo(SectorState.REJECTED);
