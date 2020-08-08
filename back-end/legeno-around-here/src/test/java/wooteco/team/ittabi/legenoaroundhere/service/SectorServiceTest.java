@@ -18,8 +18,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import wooteco.team.ittabi.legenoaroundhere.config.AuthenticationFacade;
+import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
@@ -33,7 +34,8 @@ import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
 import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 
 @DataJpaTest
-@Import({SectorService.class, UserService.class, JwtTokenGenerator.class})
+@Import({SectorService.class, UserService.class, JwtTokenGenerator.class,
+    AuthenticationFacade.class})
 class SectorServiceTest {
 
     private static final long INVALID_ID = -1L;
@@ -45,6 +47,9 @@ class SectorServiceTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private IAuthenticationFacade authenticationFacade;
 
     private User admin;
 
@@ -67,7 +72,7 @@ class SectorServiceTest {
         UserDetails userDetails = userService.loadUserByUsername(user.getEmailByString());
         Authentication authToken = new UsernamePasswordAuthenticationToken(
             user, "TestCredentials", userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authToken);
+        authenticationFacade.setAuthentication(authToken);
     }
 
     @DisplayName("Sector 생성 - 성공")

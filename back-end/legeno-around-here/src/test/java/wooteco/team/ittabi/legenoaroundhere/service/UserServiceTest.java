@@ -17,9 +17,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebM
 import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import wooteco.team.ittabi.legenoaroundhere.config.AuthenticationFacade;
+import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
@@ -32,7 +33,7 @@ import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 
 @AutoConfigureWebMvc
 @DataJpaTest
-@Import({UserService.class, JwtTokenGenerator.class})
+@Import({UserService.class, JwtTokenGenerator.class, AuthenticationFacade.class})
 class UserServiceTest {
 
     private static final int TOKEN_MIN_SIZE = 1;
@@ -42,6 +43,9 @@ class UserServiceTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private IAuthenticationFacade authenticationFacade;
 
     @Test
     @DisplayName("User 생성")
@@ -126,7 +130,7 @@ class UserServiceTest {
         UserDetails userDetails = userService.loadUserByUsername(user.getEmailByString());
         Authentication authToken = new UsernamePasswordAuthenticationToken(
             user, "TestCredentials", userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authToken);
+        authenticationFacade.setAuthentication(authToken);
     }
 
     @Test
@@ -153,7 +157,7 @@ class UserServiceTest {
 
         userService.deleteUser();
 
-        User authUser = (User) SecurityContextHolder.getContext().getAuthentication()
+        User authUser = (User) authenticationFacade.getAuthentication()
             .getPrincipal();
         assertThatThrownBy(() -> userService.loadUserByUsername(authUser.getEmailByString()))
             .isInstanceOf(UsernameNotFoundException.class);

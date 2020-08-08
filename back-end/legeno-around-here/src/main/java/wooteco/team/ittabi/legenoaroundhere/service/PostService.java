@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.Image;
 import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.State;
@@ -31,10 +31,11 @@ public class PostService {
     private final PostRepository postRepository;
     private final CommentService commentService;
     private final ImageService imageService;
+    private final IAuthenticationFacade authenticationFacade;
 
     @Transactional
     public PostResponse createPost(PostRequest postRequest) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = (User) authenticationFacade.getPrincipal();
         Post post = postRequest.toPost(user);
         List<Image> images = uploadImages(postRequest);
 
@@ -89,7 +90,7 @@ public class PostService {
     }
 
     private void validateIsOwner(Post post) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = (User) authenticationFacade.getPrincipal();
 
         if (user.isNotSame(post.getUser())) {
             throw new NotAuthorizedException("권한이 없습니다.");

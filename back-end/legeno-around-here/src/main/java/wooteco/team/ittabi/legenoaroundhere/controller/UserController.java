@@ -2,7 +2,6 @@ package wooteco.team.ittabi.legenoaroundhere.controller;
 
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,14 +51,12 @@ public class UserController {
             .ok(userService.findUser());
     }
 
-    @CrossOrigin
     @PutMapping("/users/myinfo")
     public ResponseEntity<UserResponse> updateUser(@RequestBody UserRequest userRequest) {
         return ResponseEntity
             .ok(userService.updateUser(userRequest));
     }
 
-    @CrossOrigin
     @DeleteMapping("/users/myinfo")
     public ResponseEntity<Void> deleteUser() {
         userService.deleteUser();

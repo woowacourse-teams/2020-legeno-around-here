@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.State;
@@ -27,10 +27,11 @@ public class CommentService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final IAuthenticationFacade authenticationFacade;
 
     @Transactional
     public CommentResponse createComment(Long postId, CommentRequest commentRequest) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = (User) authenticationFacade.getPrincipal();
         Post post = postRepository.findByIdAndStateNot(postId, Deleted)
             .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
         Comment comment = commentRequest.toComment(user);
@@ -68,7 +69,7 @@ public class CommentService {
     }
 
     private void validateIsOwner(Comment comment) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = (User) authenticationFacade.getPrincipal();
 
         if (user.isNotSame(comment.getUser())) {
             throw new NotAuthorizedException("권한이 없습니다.");

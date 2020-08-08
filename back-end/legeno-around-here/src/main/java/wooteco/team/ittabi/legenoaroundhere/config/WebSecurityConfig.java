@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.config;
 
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,13 +13,16 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenDecoder;
 
+@AllArgsConstructor
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenDecoder jwtTokenDecoder;
+    private final IAuthenticationFacade authenticationFacade;
 
-    public WebSecurityConfig(JwtTokenDecoder jwtTokenDecoder) {
-        this.jwtTokenDecoder = jwtTokenDecoder;
+    @Bean
+    public IAuthenticationFacade authenticationFacadeBean() {
+        return new AuthenticationFacade();
     }
 
     @Bean
@@ -59,7 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .cors()
             .and()
-            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenDecoder),
+            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenDecoder, authenticationFacade),
                 UsernamePasswordAuthenticationFilter.class);
     }
 }

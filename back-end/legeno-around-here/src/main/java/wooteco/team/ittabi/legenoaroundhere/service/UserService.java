@@ -2,7 +2,6 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import java.util.Collections;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Nickname;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Password;
@@ -30,6 +30,7 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final JwtTokenGenerator jwtTokenGenerator;
+    private final IAuthenticationFacade authenticationFacade;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Transactional
@@ -68,13 +69,13 @@ public class UserService implements UserDetailsService {
 
     @Transactional(readOnly = true)
     public UserResponse findUser() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = (User) authenticationFacade.getPrincipal();
         return UserResponse.from(user);
     }
 
     @Transactional
     public UserResponse updateUser(UserRequest userUpdateRequest) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = (User) authenticationFacade.getPrincipal();
         User persistUser = userRepository.findByEmail(user.getEmail())
             .orElseThrow(() -> new NotExistsException("사용자를 찾을 수 없습니다."));
 
@@ -94,7 +95,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void deleteUser() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = (User) authenticationFacade.getPrincipal();
         User persistUser = userRepository.findByEmail(user.getEmail())
             .orElseThrow(() -> new NotExistsException("사용자를 찾을 수 없습니다."));
         userRepository.delete(persistUser);
