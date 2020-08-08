@@ -2,8 +2,10 @@ package wooteco.team.ittabi.legenoaroundhere.domain.sector;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_NAME;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -49,5 +51,25 @@ class NameTest {
 
         assertThatThrownBy(() -> new Name(stringBuilder.toString()))
             .isInstanceOf(WrongUserInputException.class);
+    }
+
+    @DisplayName("_REJECTED SUFFIX가 없는 경우 _REJECTED를 붙여줌")
+    @Test
+    void setSuffixRejected_NotSuffixReject_PlusSuffix() {
+        String expected = TEST_SECTOR_NAME + "_REJECTED";
+        Name name = new Name(TEST_SECTOR_NAME);
+        name.setSuffixRejected();
+
+        assertThat(name.getName()).isEqualToIgnoringCase(expected);
+    }
+
+    @DisplayName("_REJECTED SUFFIX가 있는 경우 _REJECTED를 붙여주지 않음")
+    @Test
+    void setSuffixRejected_SuffixReject_Nothing() {
+        String expected = TEST_SECTOR_NAME + "_REJECTED";
+        Name name = new Name(expected);
+        name.setSuffixRejected();
+
+        assertThat(name.getName()).isEqualToIgnoringCase(expected);
     }
 }

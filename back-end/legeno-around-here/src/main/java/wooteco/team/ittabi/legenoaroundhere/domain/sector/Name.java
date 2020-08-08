@@ -37,7 +37,7 @@ public class Name {
         return name.isEmpty() || name.length() > 20;
     }
 
-    public void setNameRejected() {
+    public void setSuffixRejected() {
         if (name.endsWith(REJECTED_SUFFIX)) {
             return;
         }

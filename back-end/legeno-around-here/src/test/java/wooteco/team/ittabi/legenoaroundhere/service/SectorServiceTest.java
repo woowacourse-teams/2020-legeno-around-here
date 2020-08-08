@@ -197,6 +197,7 @@ class SectorServiceTest {
         assertThat(sector.getName()).isEqualToIgnoringCase(TEST_SECTOR_NAME);
         assertThat(sector.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
         assertThat(sector.getState()).isEqualTo(SectorState.PUBLISHED.getName());
+        assertThat(sector.getReason()).isNotNull();
     }
 
     @DisplayName("사용중인 Sector 조회 - 성공, 사용중이 아닌 ID가 있는 경우")
