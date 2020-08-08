@@ -42,18 +42,21 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
-        return ResponseEntity.ok(userService.login(loginRequest));
+        return ResponseEntity
+            .ok(userService.login(loginRequest));
     }
 
     @GetMapping("/users/myinfo")
     public ResponseEntity<UserResponse> findUser() {
-        return ResponseEntity.ok(userService.findUser());
+        return ResponseEntity
+            .ok(userService.findUser());
     }
 
     @CrossOrigin
     @PutMapping("/users/myinfo")
     public ResponseEntity<UserResponse> updateUser(@RequestBody UserRequest userRequest) {
-        return ResponseEntity.ok(userService.updateUser(userRequest));
+        return ResponseEntity
+            .ok(userService.updateUser(userRequest));
     }
 
     @CrossOrigin
