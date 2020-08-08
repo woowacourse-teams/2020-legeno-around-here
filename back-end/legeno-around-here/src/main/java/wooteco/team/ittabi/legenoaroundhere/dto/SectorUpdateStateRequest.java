@@ -18,7 +18,7 @@ public class SectorUpdateStateRequest {
     private String state;
     private String reason;
 
-    private SectorState getSectorState() {
+    public SectorState getSectorState() {
         return SectorState.of(state);
     }
 }

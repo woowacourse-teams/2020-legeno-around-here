@@ -16,6 +16,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @ToString
 public class Name {
 
+    protected static final String REJECTED_SUFFIX = "_" + SectorState.REJECTED.name();
     @Column(unique = true, nullable = false)
     private String name;
 
@@ -34,5 +35,12 @@ public class Name {
 
     private boolean isInvalid(String name) {
         return name.isEmpty() || name.length() > 20;
+    }
+
+    public void setNameRejected() {
+        if (name.endsWith(REJECTED_SUFFIX)) {
+            return;
+        }
+        name += REJECTED_SUFFIX;
     }
 }

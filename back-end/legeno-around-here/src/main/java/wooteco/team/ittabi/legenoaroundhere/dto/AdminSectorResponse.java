@@ -25,6 +25,7 @@ public class AdminSectorResponse {
     private UserResponse creator;
     private UserResponse lastModifier;
     private String state;
+    private String reason;
 
     public static AdminSectorResponse of(Sector sector) {
         return AdminSectorResponse.builder()
@@ -33,7 +34,8 @@ public class AdminSectorResponse {
             .description(sector.getStringDescription())
             .creator(UserResponse.from(sector.getCreator()))
             .lastModifier(UserResponse.from(sector.getLastModifier()))
-            .state(sector.getState().name())
+            .state(sector.getStateName())
+            .reason(sector.getReason())
             .build();
     }
 

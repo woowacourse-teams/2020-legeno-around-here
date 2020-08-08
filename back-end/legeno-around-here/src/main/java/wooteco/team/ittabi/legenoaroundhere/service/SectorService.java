@@ -13,6 +13,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorUpdateStateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotUniqueException;
 import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
@@ -42,6 +43,7 @@ public class SectorService {
         return SectorResponse.of(savedSector);
     }
 
+    @Transactional(readOnly = true)
     public SectorResponse findInUseSector(Long id) {
         Sector sector = findUsedSectorBy(id);
         return SectorResponse.of(sector);
@@ -60,6 +62,7 @@ public class SectorService {
             .orElseThrow(() -> new NotExistsException(id + "에 해당하는 Sector가 존재하지 않습니다."));
     }
 
+    @Transactional(readOnly = true)
     public List<SectorResponse> findAllInUseSector() {
         List<Sector> sectors = sectorRepository.findAll()
             .stream()
@@ -80,19 +83,22 @@ public class SectorService {
     @Transactional
     public void deleteSector(Long id) {
         Sector sector = findUsedSectorBy(id);
-        sector.setState(SectorState.DELETED);
+        sector.setState(SectorState.DELETED, "삭제");
     }
 
+    @Transactional(readOnly = true)
     public AdminSectorResponse findSector(Long id) {
         Sector sector = findSectorBy(id);
         return AdminSectorResponse.of(sector);
     }
 
+    @Transactional(readOnly = true)
     public List<AdminSectorResponse> findAllSector() {
         List<Sector> sectors = sectorRepository.findAll();
         return AdminSectorResponse.listOf(sectors);
     }
 
+    @Transactional
     public SectorResponse createPendingSector(SectorRequest sectorRequest) {
         User user = (User) authenticationFacade.getPrincipal();
         Sector sector = sectorRequest.toSector(user, SectorState.PENDING);
@@ -100,9 +106,17 @@ public class SectorService {
         return saveSector(sector);
     }
 
+    @Transactional(readOnly = true)
     public List<SectorDetailResponse> findAllMySector() {
         User user = (User) authenticationFacade.getPrincipal();
         List<Sector> sectors = sectorRepository.findAllByCreator(user);
         return SectorDetailResponse.listOf(sectors);
+    }
+
+    @Transactional
+    public void updateSectorState(Long id, SectorUpdateStateRequest sectorUpdateStateRequest) {
+        Sector sector = findSectorBy(id);
+        sector.setState(sectorUpdateStateRequest.getSectorState(),
+            sectorUpdateStateRequest.getReason());
     }
 }

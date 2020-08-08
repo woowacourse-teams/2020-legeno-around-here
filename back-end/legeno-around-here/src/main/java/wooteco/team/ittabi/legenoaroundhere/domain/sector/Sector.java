@@ -74,9 +74,14 @@ public class Sector extends BaseEntity {
         this.lastModifier = sector.lastModifier;
     }
 
-    public void setState(SectorState state) {
+    public void setState(SectorState state, String reason) {
         Objects.requireNonNull(state, "SectorState는 Null일 수 없습니다.");
+        Objects.requireNonNull(reason, "Reason은 Null일 수 없습니다.");
+        if (state.equals(SectorState.REJECTED)) {
+            name.setNameRejected();
+        }
         this.state = state;
+        this.reason = reason;
     }
 
     public String getStringName() {

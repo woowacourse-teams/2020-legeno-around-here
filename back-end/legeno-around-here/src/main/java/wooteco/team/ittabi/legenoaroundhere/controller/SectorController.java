@@ -101,6 +101,7 @@ public class SectorController {
     public ResponseEntity<Void> updateSectorState(@PathVariable Long id,
         @RequestBody SectorUpdateStateRequest sectorUpdateStateRequest) {
 
+        sectorService.updateSectorState(id, sectorUpdateStateRequest);
         SectorDetailResponse sectorDetailResponse = sectorDetailResponses.get(id);
 
         String name = sectorDetailResponse.getName();

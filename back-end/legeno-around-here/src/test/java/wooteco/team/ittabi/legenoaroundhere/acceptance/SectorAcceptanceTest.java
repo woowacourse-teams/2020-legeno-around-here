@@ -87,7 +87,7 @@ public class SectorAcceptanceTest {
         assertThat(adminSectorResponse.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
         assertThat(adminSectorResponse.getCreator()).isNotNull();
         assertThat(adminSectorResponse.getLastModifier()).isNotNull();
-        assertThat(adminSectorResponse.getState()).isEqualTo(SectorState.PUBLISHED.name());
+        assertThat(adminSectorResponse.getState()).isEqualTo(SectorState.PUBLISHED.getName());
 
         // 부문 수정
         updateSector(accessToken, id, TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION);
@@ -108,7 +108,7 @@ public class SectorAcceptanceTest {
             .isEqualTo(TEST_SECTOR_ANOTHER_DESCRIPTION);
         assertThat(adminSectorResponse.getCreator()).isNotNull();
         assertThat(adminSectorResponse.getLastModifier()).isNotNull();
-        assertThat(adminSectorResponse.getState()).isEqualTo(SectorState.PUBLISHED.name());
+        assertThat(adminSectorResponse.getState()).isEqualTo(SectorState.PUBLISHED.getName());
 
         // 부문 전체 조회 + 사용하는 부문 전체 조회
         Long anotherId = createSector(accessToken, TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
@@ -121,7 +121,7 @@ public class SectorAcceptanceTest {
         deleteSector(accessToken, id);
         assertThatThrownBy(() -> findInUseSector(accessToken, id));
         adminSectorResponse = findSector(accessToken, id);
-        assertThat(adminSectorResponse.getState()).isEqualTo(SectorState.DELETED.name());
+        assertThat(adminSectorResponse.getState()).isEqualTo(SectorState.DELETED.getName());
 
         adminSectorResponses = findAllSector(accessToken);
         sectorResponses = findAllInUseSector(accessToken);

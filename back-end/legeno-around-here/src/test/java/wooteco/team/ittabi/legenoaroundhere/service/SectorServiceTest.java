@@ -28,6 +28,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorUpdateStateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
@@ -195,7 +196,7 @@ class SectorServiceTest {
         assertThat(sector.getId()).isEqualTo(sectorId);
         assertThat(sector.getName()).isEqualToIgnoringCase(TEST_SECTOR_NAME);
         assertThat(sector.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
-        assertThat(sector.getState()).isEqualTo(SectorState.PUBLISHED.name());
+        assertThat(sector.getState()).isEqualTo(SectorState.PUBLISHED.getName());
     }
 
     @DisplayName("사용중인 Sector 조회 - 성공, 사용중이 아닌 ID가 있는 경우")
@@ -210,7 +211,7 @@ class SectorServiceTest {
         assertThat(sector.getId()).isEqualTo(sectorId);
         assertThat(sector.getName()).isEqualToIgnoringCase(TEST_SECTOR_NAME);
         assertThat(sector.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
-        assertThat(sector.getState()).isEqualTo(SectorState.DELETED.name());
+        assertThat(sector.getState()).isEqualTo(SectorState.DELETED.getName());
     }
 
     @DisplayName("Sector 삭제 - 예외 발생, ID가 없는 경우")
@@ -282,5 +283,22 @@ class SectorServiceTest {
         assertThat(sectors.stream()
             .filter(sector -> sectorIds.contains(sector.getId()))
             .collect(Collectors.toList())).hasSize(2);
+    }
+
+    @DisplayName("SectorState 업데이트")
+    @Test
+    void updateSectorState_Success() {
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        Long sectorId = sectorService.createSector(sectorRequest).getId();
+
+        String state = SectorState.APPROVED.getName();
+        String reason = "이유";
+        SectorUpdateStateRequest sectorUpdateStateRequest
+            = new SectorUpdateStateRequest(state, reason);
+        sectorService.updateSectorState(sectorId, sectorUpdateStateRequest);
+
+        AdminSectorResponse sector = sectorService.findSector(sectorId);
+        assertThat(sector.getState()).isEqualTo(state);
+        assertThat(sector.getReason()).isEqualTo(reason);
     }
 }
