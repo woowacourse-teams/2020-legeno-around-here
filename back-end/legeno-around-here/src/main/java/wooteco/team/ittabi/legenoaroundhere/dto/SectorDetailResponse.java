@@ -32,7 +32,7 @@ public class SectorDetailResponse {
             .name(sector.getStringName())
             .description(sector.getStringDescription())
             .state(sector.getStateName())
-            .reason("mock data")
+            .reason(sector.getReason())
             .creator(UserResponse.from(sector.getCreator()))
             .build();
     }
