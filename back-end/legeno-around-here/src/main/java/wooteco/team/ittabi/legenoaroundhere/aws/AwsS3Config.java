@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("classpath:aws.properties")
 public class AwsS3Config {
 
     @Value("${cloud.aws.s3.bucket}")
@@ -20,19 +19,9 @@ public class AwsS3Config {
     @Value("${cloud.aws.s3.region}")
     private String region;
 
-    @Value("${cloud.aws.credentials.accessKey}")
-    private String accessKey;
-
-    @Value("${cloud.aws.credentials.secretKey}")
-    private String secretKey;
-
     @Bean
     public AmazonS3 amazonS3Client() {
-        AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
-
-        return AmazonS3ClientBuilder
-            .standard()
-            .withCredentials(new AWSStaticCredentialsProvider(credentials))
+        return AmazonS3ClientBuilder.standard()
             .withRegion(region)
             .build();
     }

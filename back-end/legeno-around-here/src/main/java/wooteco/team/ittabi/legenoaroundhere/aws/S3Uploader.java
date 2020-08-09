@@ -21,11 +21,11 @@ public class S3Uploader {
     public static final String DIR_DELIMITER = "/";
     public static final String FILE_NAME_DELIMITER = "_";
 
-    private final AmazonS3 amazonS3;
+    private final AmazonS3 amazonS3Client;
     private final String bucket;
 
-    public S3Uploader(AmazonS3 amazonS3, String bucket) {
-        this.amazonS3 = amazonS3;
+    public S3Uploader(AmazonS3 amazonS3Client, String bucket) {
+        this.amazonS3Client = amazonS3Client;
         this.bucket = bucket;
     }
 
@@ -46,9 +46,9 @@ public class S3Uploader {
     }
 
     private String putS3(File uploadFile, String fileName) {
-        amazonS3.putObject(new PutObjectRequest(bucket, fileName, uploadFile)
+        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile)
             .withCannedAcl(CannedAccessControlList.PublicRead));
-        return amazonS3.getUrl(bucket, fileName).toString();
+        return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
     private void removeNewFile(File targetFile) {
