@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -29,6 +30,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 
+    public static final long DEFAULT_LIKE_COUNT = 0L;
     private static final int MAX_LENGTH = 20;
 
     @Lob
@@ -48,6 +50,9 @@ public class Post extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Embedded
+    private LikeCount likeCount = new LikeCount(DEFAULT_LIKE_COUNT);
 
     public Post(User user, String writing) {
         validateLength(writing);
@@ -70,4 +75,11 @@ public class Post extends BaseEntity {
         return !Objects.equals(this.state, state);
     }
 
+    public void minusLikeCount() {
+        likeCount = likeCount.minusLikeCount();
+    }
+
+    public void addLikeCount() {
+        likeCount = likeCount.addLikeCount();
+    }
 }
