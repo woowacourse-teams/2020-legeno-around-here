@@ -9,7 +9,6 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConst
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_NAME;
 
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -139,7 +138,7 @@ class SectorServiceTest {
             new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION));
         sectorService.deleteSector(sector.getId());
 
-        List<SectorResponse> sectors = sectorService.findAllInUseSector();
+        Page<SectorResponse> sectors = sectorService.findAllInUseSector(Pageable.unpaged());
         assertThat(sectors).doesNotContain(sector);
         assertThat(sectors).contains(anotherSector);
     }

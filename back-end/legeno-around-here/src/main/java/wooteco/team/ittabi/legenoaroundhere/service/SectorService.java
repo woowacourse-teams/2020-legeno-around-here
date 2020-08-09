@@ -1,7 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -61,13 +59,11 @@ public class SectorService {
             .orElseThrow(() -> new NotExistsException(id + "에 해당하는 Sector가 존재하지 않습니다."));
     }
 
-    public List<SectorResponse> findAllInUseSector() {
-        List<Sector> sectors = sectorRepository.findAll()
-            .stream()
-            .filter(Sector::isUsed)
-            .collect(Collectors.toList());
+    public Page<SectorResponse> findAllInUseSector(Pageable pageable) {
+        Page<Sector> sectorsPage = sectorRepository.findAllByStateIn(pageable,
+            SectorState.getAllInUsed());
 
-        return SectorResponse.listOf(sectors);
+        return sectorsPage.map(SectorResponse::of);
     }
 
     @Transactional

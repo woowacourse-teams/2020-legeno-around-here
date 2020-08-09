@@ -110,7 +110,7 @@ public class SectorAcceptanceTest {
         List<AdminSectorResponse> adminSectorResponses
             = findAllSector(accessToken, 0, 10, "id", "asc");
         assertThat(adminSectorResponses).hasSize(2);
-        List<SectorResponse> sectorResponses = findAllInUseSector(accessToken);
+        List<SectorResponse> sectorResponses = findAllInUseSector(accessToken, 0, 10, "id", "asc");
         assertThat(sectorResponses).hasSize(2);
 
         // 부문 삭제
@@ -120,13 +120,13 @@ public class SectorAcceptanceTest {
         assertThat(adminSectorResponse.getState()).isEqualTo(SectorState.DELETED.name());
 
         adminSectorResponses = findAllSector(accessToken, 0, 10, "id", "asc");
-        sectorResponses = findAllInUseSector(accessToken);
+        sectorResponses = findAllInUseSector(accessToken, 0, 10, "id", "asc");
         assertThat(adminSectorResponses).hasSize(2);
         assertThat(sectorResponses).hasSize(1);
 
         deleteSector(accessToken, anotherId);
         adminSectorResponses = findAllSector(accessToken, 0, 10, "id", "asc");
-        sectorResponses = findAllInUseSector(accessToken);
+        sectorResponses = findAllInUseSector(accessToken, 0, 10, "id", "asc");
         assertThat(adminSectorResponses).hasSize(2);
         assertThat(sectorResponses).hasSize(0);
     }
@@ -247,17 +247,21 @@ public class SectorAcceptanceTest {
             .getList("content");
     }
 
-    private List<SectorResponse> findAllInUseSector(String accessToken) {
+    private List<SectorResponse> findAllInUseSector(String accessToken, int page, int size,
+        String sortedBy, String direction) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
             .when()
-            .get("/sectors")
+            .get("/sectors?page=" + page + "&size=" + size + "&sortedBy=" + sortedBy
+                + "&direction=" + direction)
             .then()
             .statusCode(HttpStatus.OK.value())
+            .log()
+            .body()
             .extract()
             .jsonPath()
-            .getList(".", SectorResponse.class);
+            .getList("content", SectorResponse.class);
     }
 
     private void deleteSector(String accessToken, Long id) {
