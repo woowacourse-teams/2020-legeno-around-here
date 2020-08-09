@@ -28,6 +28,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.CommentRepository;
+import wooteco.team.ittabi.legenoaroundhere.repository.LikeRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,7 +39,7 @@ public class CommentServiceTest extends AuthServiceTest {
     private PostResponse postResponse;
     private PostService postService;
     private CommentService commentService;
-    private ImageService imageService;
+    private LikeService likeService;
 
     @Mock
     private S3Uploader s3Uploader;
@@ -50,15 +51,18 @@ public class CommentServiceTest extends AuthServiceTest {
     private CommentRepository commentRepository;
 
     @Autowired
+    private LikeRepository likeRepository;
+    @Autowired
     private IAuthenticationFacade authenticationFacade;
 
     @BeforeEach
     void setUp() {
+        likeService = new LikeService(postRepository, likeRepository);
         commentService = new CommentService(postRepository, commentRepository,
             authenticationFacade);
-        imageService = new ImageService(s3Uploader, authenticationFacade);
-        postService = new PostService(postRepository, commentService, imageService
-            , authenticationFacade);
+        postService = new PostService(postRepository, commentService,
+            new ImageService(s3Uploader, authenticationFacade), likeService, authenticationFacade
+        );
 
         user = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         another = createUser(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);

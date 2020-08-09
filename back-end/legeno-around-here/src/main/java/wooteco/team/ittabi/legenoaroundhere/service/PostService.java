@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
@@ -14,6 +15,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.LikeResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
@@ -26,24 +28,25 @@ import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 @AllArgsConstructor
 public class PostService {
 
-    private static final State Deleted = State.DELETED;
-
     private final PostRepository postRepository;
     private final CommentService commentService;
     private final ImageService imageService;
+    private final LikeService likeService;
     private final IAuthenticationFacade authenticationFacade;
 
     @Transactional
     public PostResponse createPost(PostRequest postRequest) {
         User user = (User) authenticationFacade.getPrincipal();
         Post post = postRequest.toPost(user);
-        List<Image> images = uploadImages(postRequest);
 
+        List<Image> images = uploadImages(postRequest);
         images.forEach(image -> image.setPost(post));
         Post savedPost = postRepository.save(post);
         List<CommentResponse> commentResponses = commentService.findAllComment(savedPost.getId());
+        LikeResponse likeResponse = LikeResponse
+            .of(savedPost.getLikeCount().getLikeCount(), State.INACTIVATED);
 
-        return PostResponse.of(savedPost, commentResponses);
+        return PostResponse.of(savedPost, commentResponses, likeResponse);
     }
 
     private List<Image> uploadImages(PostRequest postRequest) {
@@ -57,21 +60,28 @@ public class PostService {
     }
 
     public PostResponse findPost(Long id) {
+        User user = (User) authenticationFacade.getPrincipal();
         Post post = findNotDeletedPost(id);
         List<CommentResponse> commentResponses = commentService.findAllComment(post.getId());
-        return PostResponse.of(post, commentResponses);
+        LikeResponse likeResponse = likeService.findByPostId(post.getId(), user);
+
+        return PostResponse.of(post, commentResponses, likeResponse);
     }
 
-    public Post findNotDeletedPost(Long id) {
-        return postRepository.findByIdAndStateNot(id, Deleted)
+    private Post findNotDeletedPost(Long id) {
+        return postRepository.findByIdAndStateNot(id, State.DELETED)
             .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
     }
 
     public List<PostResponse> findAllPost() {
-        List<Post> posts = new ArrayList<>(postRepository.findByStateNot(Deleted));
+        User user = (User) authenticationFacade.getPrincipal();
+        List<Post> posts = new ArrayList<>(postRepository.findByStateNot(State.DELETED));
         return posts.stream()
-            .map(post -> PostResponse.of(post, commentService.findAllComment(post.getId())))
-            .collect(Collectors.toList());
+            .map(post -> PostResponse.of(
+                post,
+                commentService.findAllComment(post.getId()),
+                likeService.findByPostId(post.getId(), user))
+            ).collect(Collectors.toList());
     }
 
     @Transactional

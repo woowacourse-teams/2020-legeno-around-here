@@ -22,12 +22,15 @@ public class PostResponse {
     private List<ImageResponse> images;
     private List<CommentResponse> comments;
     private UserResponse user;
+    private LikeResponse likeResponse;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    public static PostResponse of(Post post, List<CommentResponse> commentResponses) {
+    public static PostResponse of(Post post, List<CommentResponse> commentResponses,
+        LikeResponse likeResponse) {
         List<ImageResponse> imageResponses = ImageResponse.listOf(post.getImages());
         return new PostResponse(post.getId(), post.getWriting(), imageResponses, commentResponses,
-            UserResponse.from(post.getUser()), post.getCreatedAt(), post.getModifiedAt());
+            UserResponse.from(post.getUser()), likeResponse,
+            post.getCreatedAt(), post.getModifiedAt());
     }
 }

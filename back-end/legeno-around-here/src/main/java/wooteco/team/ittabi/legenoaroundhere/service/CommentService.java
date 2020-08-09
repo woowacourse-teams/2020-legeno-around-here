@@ -23,8 +23,6 @@ import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 @AllArgsConstructor
 public class CommentService {
 
-    private static final State Deleted = State.DELETED;
-
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final IAuthenticationFacade authenticationFacade;
@@ -32,7 +30,7 @@ public class CommentService {
     @Transactional
     public CommentResponse createComment(Long postId, CommentRequest commentRequest) {
         User user = (User) authenticationFacade.getPrincipal();
-        Post post = postRepository.findByIdAndStateNot(postId, Deleted)
+        Post post = postRepository.findByIdAndStateNot(postId, State.DELETED)
             .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
         Comment comment = commentRequest.toComment(user);
 
@@ -51,7 +49,7 @@ public class CommentService {
     @Transactional(readOnly = true)
     public List<CommentResponse> findAllComment(Long postId) {
         List<Comment> comments =
-            new ArrayList<>(commentRepository.findAllByPostIdAndStateNot(postId, Deleted));
+            new ArrayList<>(commentRepository.findAllByPostIdAndStateNot(postId, State.DELETED));
         return CommentResponse.listOf(comments);
     }
 
@@ -63,7 +61,7 @@ public class CommentService {
     }
 
     private Comment findNotDeletedComment(Long commentId) {
-        return commentRepository.findByIdAndStateNot(commentId, Deleted)
+        return commentRepository.findByIdAndStateNot(commentId, State.DELETED)
             .orElseThrow(() ->
                 new NotExistsException("Comment ID : " + commentId + " 에 해당하는 Comment가 없습니다!"));
     }
