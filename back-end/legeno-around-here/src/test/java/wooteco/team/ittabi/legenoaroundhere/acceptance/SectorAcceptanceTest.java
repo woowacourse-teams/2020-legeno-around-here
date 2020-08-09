@@ -107,9 +107,10 @@ public class SectorAcceptanceTest {
 
         // 부문 전체 조회 + 사용하는 부문 전체 조회
         Long anotherId = createSector(accessToken, TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
-        List<AdminSectorResponse> adminSectorResponses = findAllSector(accessToken);
-        List<SectorResponse> sectorResponses = findAllInUseSector(accessToken);
+        List<AdminSectorResponse> adminSectorResponses
+            = findAllSector(accessToken, 0, 10, "id", "asc");
         assertThat(adminSectorResponses).hasSize(2);
+        List<SectorResponse> sectorResponses = findAllInUseSector(accessToken);
         assertThat(sectorResponses).hasSize(2);
 
         // 부문 삭제
@@ -118,13 +119,13 @@ public class SectorAcceptanceTest {
         adminSectorResponse = findSector(accessToken, id);
         assertThat(adminSectorResponse.getState()).isEqualTo(SectorState.DELETED.name());
 
-        adminSectorResponses = findAllSector(accessToken);
+        adminSectorResponses = findAllSector(accessToken, 0, 10, "id", "asc");
         sectorResponses = findAllInUseSector(accessToken);
         assertThat(adminSectorResponses).hasSize(2);
         assertThat(sectorResponses).hasSize(1);
 
         deleteSector(accessToken, anotherId);
-        adminSectorResponses = findAllSector(accessToken);
+        adminSectorResponses = findAllSector(accessToken, 0, 10, "id", "asc");
         sectorResponses = findAllInUseSector(accessToken);
         assertThat(adminSectorResponses).hasSize(2);
         assertThat(sectorResponses).hasSize(0);
@@ -229,17 +230,21 @@ public class SectorAcceptanceTest {
             .statusCode(HttpStatus.OK.value());
     }
 
-    private List<AdminSectorResponse> findAllSector(String accessToken) {
+    private List<AdminSectorResponse> findAllSector(String accessToken, int page, int size,
+        String sortedBy, String direction) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
             .when()
-            .get("/admin/sectors")
+            .get("/admin/sectors?page=" + page + "&size=" + size + "&sortedBy=" + sortedBy
+                + "&direction=" + direction)
             .then()
             .statusCode(HttpStatus.OK.value())
+            .log()
+            .body()
             .extract()
             .jsonPath()
-            .getList(".", AdminSectorResponse.class);
+            .getList("content");
     }
 
     private List<SectorResponse> findAllInUseSector(String accessToken) {

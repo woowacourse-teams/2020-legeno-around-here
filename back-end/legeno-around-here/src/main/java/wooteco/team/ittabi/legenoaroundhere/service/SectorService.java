@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
@@ -87,8 +89,8 @@ public class SectorService {
         return AdminSectorResponse.of(sector);
     }
 
-    public List<AdminSectorResponse> findAllSector() {
-        List<Sector> sectors = sectorRepository.findAll();
-        return AdminSectorResponse.listOf(sectors);
+    public Page<AdminSectorResponse> findAllSector(Pageable pageable) {
+        Page<Sector> sectorsPage = sectorRepository.findAll(pageable);
+        return sectorsPage.map(AdminSectorResponse::of);
     }
 }

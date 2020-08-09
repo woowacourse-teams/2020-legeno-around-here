@@ -16,6 +16,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -239,7 +241,7 @@ class SectorServiceTest {
         AdminSectorResponse expectedAnotherSector
             = sectorService.findSector(anotherSector.getId());
 
-        List<AdminSectorResponse> sectors = sectorService.findAllSector();
+        Page<AdminSectorResponse> sectors = sectorService.findAllSector(Pageable.unpaged());
         assertThat(sectors).contains(expectedSector);
         assertThat(sectors).contains(expectedAnotherSector);
     }
