@@ -22,7 +22,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @Table(name = "comment")
 @Getter
 @Setter
-@ToString(exclude = {"post", "user"})
+@ToString(exclude = {"post", "creator"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseEntity {
 
@@ -41,14 +41,14 @@ public class Comment extends BaseEntity {
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "creator_id")
+    private User creator;
 
-    public Comment(User user, String writing) {
+    public Comment(User creator, String writing) {
         validateLength(writing);
         this.writing = writing;
         this.state = State.PUBLISHED;
-        this.user = user;
+        this.creator = creator;
     }
 
     private void validateLength(String writing) {

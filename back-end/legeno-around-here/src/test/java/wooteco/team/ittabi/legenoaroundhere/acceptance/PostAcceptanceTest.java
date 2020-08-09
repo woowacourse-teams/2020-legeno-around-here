@@ -33,6 +33,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -94,7 +95,7 @@ public class PostAcceptanceTest {
         assertThat(postWithImageResponse.getImages()).hasSize(2);
 
         // 목록 조회
-        List<PostResponse> postResponses = findAllPost(accessToken);
+        List<PostWithCommentsCountResponse> postResponses = findAllPost(accessToken);
         assertThat(postResponses).hasSize(2);
 
         // 수정
@@ -116,7 +117,7 @@ public class PostAcceptanceTest {
         deletePost(postWithoutImageId, accessToken);
         findNotExistsPost(postWithoutImageId, accessToken);
 
-        List<PostResponse> foundPostResponses = findAllPost(accessToken);
+        List<PostWithCommentsCountResponse> foundPostResponses = findAllPost(accessToken);
 
         assertThat(foundPostResponses).hasSize(1);
     }
@@ -150,7 +151,7 @@ public class PostAcceptanceTest {
         }
 
         // 글 1Page 20Size를 정렬(기준:id 방향:오름차순) 조회
-        List<PostResponse> posts
+        List<PostWithCommentsCountResponse> posts
             = findAllPost(accessToken, "page=1&size=20&sortedBy=id&direction=asc");
         assertThat(posts).hasSize(20);
         List<Long> expectedIds = ids.subList(0, 20);
@@ -211,9 +212,9 @@ public class PostAcceptanceTest {
         findAllPostWithWrongParameter(accessToken, "page=1&size=20&sortedBy=ㄷ&direction=asc");
     }
 
-    private List<Long> getPostIds(List<PostResponse> posts) {
+    private List<Long> getPostIds(List<PostWithCommentsCountResponse> posts) {
         return posts.stream()
-            .map(PostResponse::getId)
+            .map(PostWithCommentsCountResponse::getId)
             .collect(Collectors.toList());
     }
 
@@ -284,7 +285,7 @@ public class PostAcceptanceTest {
             .statusCode(HttpStatus.OK.value());
     }
 
-    private List<PostResponse> findAllPost(String accessToken) {
+    private List<PostWithCommentsCountResponse> findAllPost(String accessToken) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
@@ -294,10 +295,10 @@ public class PostAcceptanceTest {
             .statusCode(HttpStatus.OK.value())
             .extract()
             .jsonPath()
-            .getList("content", PostResponse.class);
+            .getList("content", PostWithCommentsCountResponse.class);
     }
 
-    private List<PostResponse> findAllPost(String accessToken, String parameter) {
+    private List<PostWithCommentsCountResponse> findAllPost(String accessToken, String parameter) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
@@ -307,7 +308,7 @@ public class PostAcceptanceTest {
             .statusCode(HttpStatus.OK.value())
             .extract()
             .jsonPath()
-            .getList("content", PostResponse.class);
+            .getList("content", PostWithCommentsCountResponse.class);
     }
 
     private void findAllPostWithWrongParameter(String accessToken, String parameter) {

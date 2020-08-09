@@ -17,6 +17,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
@@ -68,31 +69,32 @@ public class PostService {
             .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
     }
 
-    public Page<PostResponse> findAllPost(Pageable pageable) {
+    public Page<PostWithCommentsCountResponse> findAllPost(Pageable pageable) {
         Page<Post> posts = postRepository.findByStateNot(pageable, Deleted);
         return posts
-            .map(post -> PostResponse.of(post, commentService.findAllComment(post.getId())));
+            .map(post -> PostWithCommentsCountResponse
+                .of(post, commentService.findAllComment(post.getId())));
     }
 
     @Transactional
     public void updatePost(Long id, PostRequest postRequest) {
         Post post = postRepository.findById(id)
             .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
-        validateIsOwner(post);
+        validateIsCreator(post);
         post.setWriting(postRequest.getWriting());
     }
 
     @Transactional
     public void deletePost(Long id) {
         Post post = findNotDeletedPost(id);
-        validateIsOwner(post);
+        validateIsCreator(post);
         post.setState(State.DELETED);
     }
 
-    private void validateIsOwner(Post post) {
+    private void validateIsCreator(Post post) {
         User user = (User) authenticationFacade.getPrincipal();
 
-        if (user.isNotSame(post.getUser())) {
+        if (user.isNotSame(post.getCreator())) {
             throw new NotAuthorizedException("권한이 없습니다.");
         }
     }
