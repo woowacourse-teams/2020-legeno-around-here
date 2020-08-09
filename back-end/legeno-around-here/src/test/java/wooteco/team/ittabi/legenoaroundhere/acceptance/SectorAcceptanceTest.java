@@ -230,9 +230,7 @@ public class SectorAcceptanceTest {
 
     private List<Long> getSectorIds(List<AdminSectorResponse> sectors) {
         return sectors.stream()
-            .peek(System.out::println)
             .map(AdminSectorResponse::getId)
-            .peek(System.out::println)
             .collect(Collectors.toList());
     }
 
