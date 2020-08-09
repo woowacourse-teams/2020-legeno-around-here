@@ -1,11 +1,12 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
@@ -67,11 +68,10 @@ public class PostService {
             .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
     }
 
-    public List<PostResponse> findAllPost() {
-        List<Post> posts = new ArrayList<>(postRepository.findByStateNot(Deleted));
-        return posts.stream()
-            .map(post -> PostResponse.of(post, commentService.findAllComment(post.getId())))
-            .collect(Collectors.toList());
+    public Page<PostResponse> findAllPost(Pageable pageable) {
+        Page<Post> posts = postRepository.findByStateNot(pageable, Deleted);
+        return posts
+            .map(post -> PostResponse.of(post, commentService.findAllComment(post.getId())));
     }
 
     @Transactional

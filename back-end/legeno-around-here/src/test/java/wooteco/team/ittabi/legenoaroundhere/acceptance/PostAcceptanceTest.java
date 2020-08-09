@@ -188,12 +188,12 @@ public class PostAcceptanceTest {
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
             .when()
-            .get("/posts")
+            .get("/posts?page=1&size=50&sortedBy=id&direction=asc")
             .then()
             .statusCode(HttpStatus.OK.value())
             .extract()
             .jsonPath()
-            .getList(".", PostResponse.class);
+            .getList("content", PostResponse.class);
     }
 
     private Long getIdFromUrl(String location) {

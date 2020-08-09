@@ -15,7 +15,6 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConst
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +22,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
@@ -139,7 +140,7 @@ public class PostServiceTest extends AuthServiceTest {
         postService.createPost(postRequest);
         postService.createPost(postRequest);
 
-        List<PostResponse> posts = postService.findAllPost();
+        Page<PostResponse> posts = postService.findAllPost(Pageable.unpaged());
 
         assertThat(posts).hasSize(2);
     }
