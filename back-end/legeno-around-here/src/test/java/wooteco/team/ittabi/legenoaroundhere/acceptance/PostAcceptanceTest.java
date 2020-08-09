@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
-import static io.restassured.RestAssured.given;
 import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -21,7 +20,6 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -31,8 +29,7 @@ import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class PostAcceptanceTest {
+public class PostAcceptanceTest extends AcceptanceTest {
 
     @LocalServerPort
     public int port;
@@ -116,40 +113,6 @@ public class PostAcceptanceTest {
         assertThat(foundPostResponses).hasSize(1);
     }
 
-    private String createUser(String email, String nickname, String password) {
-        Map<String, String> params = new HashMap<>();
-        params.put("email", email);
-        params.put("nickname", nickname);
-        params.put("password", password);
-
-        return given()
-            .body(params)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/join")
-            .then()
-            .statusCode(HttpStatus.CREATED.value())
-            .extract()
-            .header("Location");
-    }
-
-    private TokenResponse login(String email, String password) {
-        Map<String, String> params = new HashMap<>();
-        params.put("email", email);
-        params.put("password", password);
-
-        return given()
-            .body(params)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/login")
-            .then()
-            .statusCode(HttpStatus.OK.value())
-            .extract().as(TokenResponse.class);
-    }
-
     private void findNotExistsPost(Long id, String accessToken) {
         given()
             .header("X-AUTH-TOKEN", accessToken)
@@ -194,39 +157,6 @@ public class PostAcceptanceTest {
             .extract()
             .jsonPath()
             .getList(".", PostResponse.class);
-    }
-
-    private Long getIdFromUrl(String location) {
-        int lastIndex = location.lastIndexOf("/");
-        return Long.valueOf(location.substring(lastIndex + 1));
-    }
-
-    private PostResponse findPost(Long id, String accessToken) {
-        return given()
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header("X-AUTH-TOKEN", accessToken)
-            .when()
-            .get("/posts/" + id)
-            .then()
-            .statusCode(HttpStatus.OK.value())
-            .extract()
-            .as(PostResponse.class);
-    }
-
-    private String createPostWithoutImage(String accessToken) {
-
-        return given()
-            .log().all()
-            .formParam("writing", TEST_WRITING)
-            .header("X-AUTH-TOKEN", accessToken)
-            .config(RestAssuredConfig.config()
-                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
-            .when()
-            .post("/posts")
-            .then()
-            .statusCode(HttpStatus.CREATED.value())
-            .extract()
-            .header("Location");
     }
 
     private String createPostWithImage(String accessToken) {
