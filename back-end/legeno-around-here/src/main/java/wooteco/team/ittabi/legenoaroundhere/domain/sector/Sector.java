@@ -29,7 +29,7 @@ public class Sector extends BaseEntity {
     @Embedded
     private Description description;
 
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private SectorState state;
 
