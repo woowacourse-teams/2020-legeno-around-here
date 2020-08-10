@@ -19,9 +19,9 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
-import wooteco.team.ittabi.legenoaroundhere.domain.area.AreaRepository;
 import wooteco.team.ittabi.legenoaroundhere.dto.AreaResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
+import wooteco.team.ittabi.legenoaroundhere.repository.AreaRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql("/init-table.sql")
@@ -41,22 +41,20 @@ public class AreaAcceptanceTest {
         accessToken = tokenResponse.getAccessToken();
     }
 
-    private String createUser() {
+    private void createUser() {
         Map<String, String> params = new HashMap<>();
         params.put("email", TEST_EMAIL);
         params.put("nickname", TEST_NICKNAME);
         params.put("password", TEST_PASSWORD);
 
-        return given()
+        given()
             .body(params)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .post("/join")
             .then()
-            .statusCode(HttpStatus.CREATED.value())
-            .extract()
-            .header("Location");
+            .statusCode(HttpStatus.CREATED.value());
     }
 
     private TokenResponse login() {
@@ -76,11 +74,62 @@ public class AreaAcceptanceTest {
     }
 
     /**
+     * Feature: 지역 키워드 조회
+     * <p>
+     * Scenario: 지역을 키워드로 조회한다.
+     * <p>
+     * Given 사용자가 로그인 되어있다. 법정동은 기등록된 상태(서울특별시 이하 지역)이다.
+     * <p>
+     * When 사용자가 키워드를 입력하지 않고 지역을 50Page, 10Size 조회한다. Then 3건이 조회된다.
+     * <p>
+     * When 사용자가 키워드를 비워두고 지역을 50Page, 10Size 조회한다. Then 3건이 조회된다.
+     * <p>
+     * When 사용자가 "서울특별시"라는 키워드로 지역을 50Page, 10Size 조회한다. Then 3건이 조회된다.
+     * <p>
+     * When 사용자가 "서울특별시 "라는 키워드로 지역을 50Page, 10Size 조회한다. 조회한다. Then 2건이 조회된다.
+     * <p>
+     * When 사용자가 "서울시"라는 키워드로 지역을 1Page, 10Size 조회한다. Then 1건도 조회되지 않는다.
+     * <p>
+     * When 사용자가 " 잠실"이라는 키워드로 지역을 1Page, 10Size 조회한다. Then 1건이 조회된다.
+     * <p>
+     * When 사용자가 "잠실"이라는 키워드로 지역을 1Page, 10Size 조회한다. Then 1건이 조회된다.
+     * <p>
+     * When 사용자가 "잠실 "이라는 키워드로 지역을 1Page, 10Size 조회한다. Then 1건도 조회되지 않는다.
+     */
+    @DisplayName("지역 키워드 조회")
+    @Test
+    void findAreaByKeyword() {
+        List<AreaResponse> areas = findAllArea(accessToken, "page=50&size=10");
+        assertThat(areas).hasSize(3);
+
+        areas = findAllArea(accessToken, "page=50&size=10&keyword=");
+        assertThat(areas).hasSize(3);
+
+        areas = findAllArea(accessToken, "page=50&size=10&keyword=서울특별시");
+        assertThat(areas).hasSize(3);
+
+        areas = findAllArea(accessToken, "page=50&size=10&keyword=서울특별시 ");
+        assertThat(areas).hasSize(2);
+
+        areas = findAllArea(accessToken, "page=1&size=10&keyword=서울시");
+        assertThat(areas).hasSize(0);
+
+        areas = findAllArea(accessToken, "page=1&size=10&keyword= 잠실");
+        assertThat(areas).hasSize(1);
+
+        areas = findAllArea(accessToken, "page=1&size=10&keyword=잠실");
+        assertThat(areas).hasSize(1);
+
+        areas = findAllArea(accessToken, "page=1&size=10&keyword=잠실 ");
+        assertThat(areas).hasSize(0);
+    }
+
+    /**
      * Feature: 지역 조회
      * <p>
      * Scenario: 부문을 페이징 조회한다.
      * <p>
-     * Given 관리자가 로그인 되어있다. 지역 100개가 등록되어 있다.
+     * Given 사용자가 로그인 되어있다. 법정동은 기등록된 상태(서울특별시 이하 지역)이다.
      * <p>
      * When 지역 1Page 20Size를 정렬(기준:id 방향:오름차순) 조회한다. Then 1~20까지의 Sector가 조회된다.
      * <p>
@@ -95,7 +144,7 @@ public class AreaAcceptanceTest {
      */
     @DisplayName("지역 페이징 조회")
     @Test
-    void pagingFindSector() {
+    void pagingFindArea() {
         // 지역 1Page 20Size를 정렬(기준:id 방향:오름차순) 조회
         List<AreaResponse> areas
             = findAllArea(accessToken, "page=1&size=20&sortedBy=id&direction=asc");
