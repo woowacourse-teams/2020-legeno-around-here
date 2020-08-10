@@ -14,10 +14,9 @@ import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 public class Area extends BaseEntity {
 
     String fullName;
-    String FirstDepthName;
-    String SecondDepthName;
-    String ThirdDepthName;
-    String FourthDepthName;
+    String firstDepthName;
+    String secondDepthName;
+    String thirdDepthName;
+    String fourthDepthName;
     byte used;
-
 }
