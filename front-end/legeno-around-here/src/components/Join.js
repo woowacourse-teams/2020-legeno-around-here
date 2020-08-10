@@ -1,10 +1,24 @@
 import React, { useState, useCallback, useMemo } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import styled from 'styled-components';
 
+import OutBox from "./OutBox";
 import Input from "./Input";
+import Button from "./Button"
 
-function JoinForm() {
+const InputInvalidMessage = styled.p`
+  height: 50px;
+  line-height: 50px;
+
+  padding: 0 10px;
+  margin-bottom: 7px;
+
+  color: red;
+  font-size: 10px;
+`;
+
+function Join() {
   const NICKNAME_MIN_LENGTH = 1;
   const NICKNAME_MAX_LENGTH = 10;
   const PASSWORD_MIN_LENGTH = 8;
@@ -40,33 +54,29 @@ function JoinForm() {
 
   const emailCheck = useMemo(() => {
     return (
-      validateEmail && (
-        <p className="alert">올바른 이메일 형식을 입력해주세요.</p>
-      )
+      validateEmail && 
+        <InputInvalidMessage>올바른 이메일 형식을 입력해주세요.</InputInvalidMessage>
     );
   }, [validateEmail]);
 
   const nicknameCheck = useMemo(() => {
     return (
-      validateNickname && (
-        <p className="alert">닉네임 길이는 1 ~ 10 자로 해주세요.</p>
-      )
+      validateNickname && 
+        <InputInvalidMessage>닉네임 길이는 1 ~ 10 자로 해주세요.</InputInvalidMessage>
     );
   }, [validateNickname]);
 
   const passwordCheck = useMemo(() => {
     return (
-      validatePassword && (
-        <p className="alert">비밀번호 길이는 8 ~ 16 자로 해주세요.</p>
-      )
+      validatePassword &&
+        <InputInvalidMessage>비밀번호 길이는 8 ~ 16 자로 해주세요.</InputInvalidMessage>
     );
   }, [validatePassword]);
 
   const passwordRepeatCheck = useMemo(() => {
     return (
-      validatePasswordRepeat && (
-        <p className="alert">비밀번호가 일치하지 않습니다.</p>
-      )
+      validatePasswordRepeat &&
+        <InputInvalidMessage>비밀번호가 일치하지 않습니다.</InputInvalidMessage>
     );
   }, [validatePasswordRepeat]);
 
@@ -134,41 +144,43 @@ function JoinForm() {
   );
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Input
-        type="email"
-        placeholder="이메일"
-        value={email}
-        onChange={handleChangeEmail}
-        check={emailCheck}
-      />
-      <Input
-        type="text"
-        placeholder="닉네임"
-        value={nickname}
-        onChange={handleChangeNickname}
-        check={nicknameCheck}
-      />
-      <Input
-        type="password"
-        placeholder="비밀번호"
-        value={password}
-        onChange={handleChangePassword}
-        check={passwordCheck}
-      />
-      <Input
-        type="password"
-        placeholder="비밀번호 확인"
-        value={passwordRepeat}
-        onChange={handleChangePasswordRepeat}
-        check={passwordRepeatCheck}
-      />
-      <button type="submit">회원가입</button>
-      <Link to="/">
-        <button type="button">홈으로</button>
-      </Link>
-    </form>
+    <OutBox>
+      <form onSubmit={handleSubmit}>
+        <Input
+          type="email"
+          placeholder="이메일"
+          value={email}
+          onChange={handleChangeEmail}
+          check={emailCheck}
+        />
+        <Input
+          type="text"
+          placeholder="닉네임"
+          value={nickname}
+          onChange={handleChangeNickname}
+          check={nicknameCheck}
+        />
+        <Input
+          type="password"
+          placeholder="비밀번호"
+          value={password}
+          onChange={handleChangePassword}
+          check={passwordCheck}
+        />
+        <Input
+          type="password"
+          placeholder="비밀번호 확인"
+          value={passwordRepeat}
+          onChange={handleChangePasswordRepeat}
+          check={passwordRepeatCheck}
+        />
+        <Button type="submit">회원가입</Button>
+        <Link to="/">
+          <Button type="button">홈으로</Button>
+        </Link>
+      </form>
+    </OutBox>
   );
 }
 
-export default JoinForm;
+export default Join;

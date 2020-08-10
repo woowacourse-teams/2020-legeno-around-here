@@ -1,7 +1,10 @@
 import React, { useState, useMemo } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { getAccessTokenFromCookie } from "../../util/TokenUtils";
+
+import OutBox from "./OutBox"
+import Button from "./Button"
+import { getAccessTokenFromCookie } from "../util/TokenUtils";
 
 function MyPage() {
   const [accessToken] = useState(getAccessTokenFromCookie());
@@ -28,14 +31,16 @@ function MyPage() {
   }, [accessToken]);
 
   return (
-    <div>
-      <p>메일: {email}</p>
-      <p>닉네임: {nickname}</p>
-      <button type="submit">정보 수정</button>
-      <Link to="/">
-        <button type="button">홈으로</button>
-      </Link>
-    </div>
+    <OutBox>
+      <div>
+        <p>메일: {email}</p>
+        <p>닉네임: {nickname}</p>
+        <Button type="submit">정보 수정</Button>
+        <Link to="/">
+          <Button type="button">홈으로</Button>
+        </Link>
+      </div>
+    </OutBox>
   );
 }
 

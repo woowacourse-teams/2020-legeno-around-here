@@ -1,11 +1,13 @@
 import React, { useState, useCallback } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { setAccessTokenCookie } from "../../util/TokenUtils";
+import { setAccessTokenCookie } from "../util/TokenUtils";
 
+import OutBox from "./OutBox"
 import Input from "./Input";
+import Button from "./Button"
 
-function LoginForm() {
+function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -49,7 +51,8 @@ function LoginForm() {
   );
 
   return (
-    <form onSubmit={handleSubmit}>
+    <OutBox>
+      <form onSubmit={handleSubmit}>
       <Input
         type="email"
         placeholder="이메일"
@@ -62,12 +65,13 @@ function LoginForm() {
         value={password}
         onChange={handleChangePassword}
       />
-      <button type="submit">로그인</button>
+      <Button type="submit">로그인</Button>
       <Link to="/">
-        <button type="button">홈으로</button>
+        <Button type="button">홈으로</Button>
       </Link>
     </form>
+  </OutBox>
   );
 }
 
-export default LoginForm;
+export default Login;
