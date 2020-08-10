@@ -1,41 +1,23 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.area;
 
-import java.util.Map;
+import javax.persistence.Entity;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 
-abstract class Area {
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+@ToString
+public class Area extends BaseEntity {
 
-    private static final int MIN_SIZE = 1;
-    static final String INVALID_SIZE_ERROR = String
-        .format("region의 갯수가 최소 갯수인 %d보다 작습니다.", MIN_SIZE);
+    String fullName;
+    String FirstDepthName;
+    String SecondDepthName;
+    String ThirdDepthName;
+    String FourthDepthName;
+    byte used;
 
-    private final Map<RegionDepth, Region> regions;
-
-    protected Area(Map<RegionDepth, Region> regions) {
-        validate(regions);
-        this.regions = regions;
-    }
-
-    Region getSmallestRegion() {
-        RegionDepth smallestRegionDepth = regions.keySet().stream()
-            .max(RegionDepth::compareTo)
-            .orElseThrow(() -> new IllegalStateException("Region이 존재하지 않습니다."));
-        return regions.get(smallestRegionDepth);
-    }
-
-    private void validate(Map<RegionDepth, Region> regions) {
-        if (isNotValidSize(regions)) {
-            throw new IllegalArgumentException(INVALID_SIZE_ERROR);
-        }
-    }
-
-    private boolean isNotValidSize(Map<RegionDepth, Region> regions) {
-        return regions.size() < MIN_SIZE;
-    }
-
-    @Override
-    public String toString() {
-        return "Area{" +
-            "regions=" + regions +
-            '}';
-    }
 }
