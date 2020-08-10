@@ -4,26 +4,30 @@ import styled from 'styled-components';
 import cancle from '../images/cancle.png';
 import submit from '../images/submit.png';
 
-const Cancle = styled.div`
+export const Cancle = styled.button`
   background: url(${cancle}) no-repeat;
   background-size: 30px;
   width: 30px;
   height: 30px;
   margin-left: 8px;
   margin-right: auto;
+  border: 0;
+  outline: 0;
 `;
 
-const Submit = styled.div`
+export const Submit = styled.button`
   background: url(${submit}) no-repeat;
   background-size: 30px;
   width: 30px;
   height: 30px;
   margin-right: 8px;
   margin-left: auto;
+  border: 0;
+  outline: 0;
 `;
 
-const TopBarBackground = styled.div`
-  background: #eeeeee;
+export const TopBarBackground = styled.div`
+  background: #dddddd;
   color: black;
   height: 4rem;
   font-size: 1.5rem;
@@ -31,15 +35,3 @@ const TopBarBackground = styled.div`
   align-items: center;
   justify-content: center;
 `;
-
-const PostingTopBar = () => {
-  return (
-    <TopBarBackground>
-      <Cancle/>
-      <div>성북구</div>
-      <Submit/>
-    </TopBarBackground>
-  );
-};
-
-export default PostingTopBar;
