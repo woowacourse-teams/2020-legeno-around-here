@@ -105,14 +105,14 @@ class SectorServiceTest {
         SectorResponse createdSector = sectorService.createSector(sectorRequest);
         Long createdSectorId = createdSector.getId();
 
-        SectorResponse foundSector = sectorService.findInUseSector(createdSectorId);
+        SectorResponse foundSector = sectorService.findAvailableSector(createdSectorId);
         assertThat(foundSector).isEqualTo(createdSector);
     }
 
     @DisplayName("사용중인 Sector 조회 - 예외 발생, ID가 없는 경우")
     @Test
     void findUsedSector_HasNotId_ThrowException() {
-        assertThatThrownBy(() -> sectorService.findInUseSector(INVALID_ID))
+        assertThatThrownBy(() -> sectorService.findAvailableSector(INVALID_ID))
             .isInstanceOf(NotExistsException.class);
     }
 
@@ -124,7 +124,7 @@ class SectorServiceTest {
         Long sectorId = createdSector.getId();
         sectorService.deleteSector(sectorId);
 
-        assertThatThrownBy(() -> sectorService.findInUseSector(sectorId))
+        assertThatThrownBy(() -> sectorService.findAvailableSector(sectorId))
             .isInstanceOf(NotExistsException.class);
     }
 
@@ -138,7 +138,7 @@ class SectorServiceTest {
             new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION));
         sectorService.deleteSector(sector.getId());
 
-        Page<SectorResponse> sectors = sectorService.findAllInUseSector(Pageable.unpaged());
+        Page<SectorResponse> sectors = sectorService.findAllAvailableSector(Pageable.unpaged());
         assertThat(sectors).doesNotContain(sector);
         assertThat(sectors).contains(anotherSector);
     }
@@ -154,7 +154,7 @@ class SectorServiceTest {
             new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION);
         sectorService.updateSector(id, sectorRequest);
 
-        SectorResponse updatedSector = sectorService.findInUseSector(id);
+        SectorResponse updatedSector = sectorService.findAvailableSector(id);
         assertThat(updatedSector.getId()).isEqualTo(id);
         assertThat(updatedSector.getName()).isEqualToIgnoringCase(TEST_SECTOR_ANOTHER_NAME);
         assertThat(updatedSector.getDescription()).isEqualTo(TEST_SECTOR_ANOTHER_DESCRIPTION);
@@ -179,7 +179,7 @@ class SectorServiceTest {
 
         sectorService.deleteSector(id);
 
-        assertThatThrownBy(() -> sectorService.findInUseSector(id))
+        assertThatThrownBy(() -> sectorService.findAvailableSector(id))
             .isInstanceOf(NotExistsException.class);
     }
 

@@ -19,15 +19,16 @@ public class SectorController {
     private final SectorService sectorService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<SectorResponse> findInUseSector(@PathVariable Long id) {
-        SectorResponse sector = sectorService.findInUseSector(id);
+    public ResponseEntity<SectorResponse> findAvailableSector(@PathVariable Long id) {
+        SectorResponse sector = sectorService.findAvailableSector(id);
         return ResponseEntity
             .ok(sector);
     }
 
     @GetMapping
-    public ResponseEntity<Page<SectorResponse>> findAllInUseSector(PageRequest pageRequest) {
-        Page<SectorResponse> sectors = sectorService.findAllInUseSector(pageRequest.getPageable());
+    public ResponseEntity<Page<SectorResponse>> findAllAvailableSector(PageRequest pageRequest) {
+        Page<SectorResponse> sectors = sectorService
+            .findAllAvailableSector(pageRequest.getPageable());
         return ResponseEntity
             .ok(sectors);
     }

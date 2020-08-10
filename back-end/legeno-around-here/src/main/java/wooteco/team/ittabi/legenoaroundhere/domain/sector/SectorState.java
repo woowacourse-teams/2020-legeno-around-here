@@ -14,7 +14,7 @@ public enum SectorState {
         this.used = used;
     }
 
-    public static Iterable<SectorState> getAllInUsed() {
+    public static Iterable<SectorState> getAllAvailable() {
         return Arrays.stream(SectorState.values())
             .filter(sector -> sector.used)
             .collect(Collectors.toList());

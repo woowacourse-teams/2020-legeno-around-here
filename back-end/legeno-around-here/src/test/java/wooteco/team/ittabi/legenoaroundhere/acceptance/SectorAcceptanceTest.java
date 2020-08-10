@@ -72,7 +72,7 @@ public class SectorAcceptanceTest {
         Long id = createSector(accessToken, TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
 
         // 사용 중인 부문 조회
-        SectorResponse sectorResponse = findInUseSector(accessToken, id);
+        SectorResponse sectorResponse = findAvailableSector(accessToken, id);
         assertThat(sectorResponse.getId()).isEqualTo(id);
         assertThat(sectorResponse.getName()).isEqualToIgnoringCase(TEST_SECTOR_NAME);
         assertThat(sectorResponse.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
@@ -91,7 +91,7 @@ public class SectorAcceptanceTest {
         updateSector(accessToken, id, TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION);
 
         // 사용 중인 부문 조회
-        sectorResponse = findInUseSector(accessToken, id);
+        sectorResponse = findAvailableSector(accessToken, id);
         assertThat(sectorResponse.getId()).isEqualTo(id);
         assertThat(sectorResponse.getName()).isEqualToIgnoringCase(TEST_SECTOR_ANOTHER_NAME);
         assertThat(sectorResponse.getDescription()).isEqualTo(TEST_SECTOR_ANOTHER_DESCRIPTION);
@@ -113,23 +113,23 @@ public class SectorAcceptanceTest {
         List<AdminSectorResponse> adminSectorResponses
             = findAllSector(accessToken);
         assertThat(adminSectorResponses).hasSize(2);
-        List<SectorResponse> sectorResponses = findAllInUseSector(accessToken);
+        List<SectorResponse> sectorResponses = findAllAvailableSector(accessToken);
         assertThat(sectorResponses).hasSize(2);
 
         // 부문 삭제
         deleteSector(accessToken, id);
-        assertThatThrownBy(() -> findInUseSector(accessToken, id));
+        assertThatThrownBy(() -> findAvailableSector(accessToken, id));
         adminSectorResponse = findSector(accessToken, id);
         assertThat(adminSectorResponse.getState()).isEqualTo(SectorState.DELETED.name());
 
         adminSectorResponses = findAllSector(accessToken);
-        sectorResponses = findAllInUseSector(accessToken);
+        sectorResponses = findAllAvailableSector(accessToken);
         assertThat(adminSectorResponses).hasSize(2);
         assertThat(sectorResponses).hasSize(1);
 
         deleteSector(accessToken, anotherId);
         adminSectorResponses = findAllSector(accessToken);
-        sectorResponses = findAllInUseSector(accessToken);
+        sectorResponses = findAllAvailableSector(accessToken);
         assertThat(adminSectorResponses).hasSize(2);
         assertThat(sectorResponses).hasSize(0);
     }
@@ -305,7 +305,7 @@ public class SectorAcceptanceTest {
             .as(AdminSectorResponse.class);
     }
 
-    private SectorResponse findInUseSector(String accessToken, Long id) {
+    private SectorResponse findAvailableSector(String accessToken, Long id) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
@@ -372,7 +372,7 @@ public class SectorAcceptanceTest {
             .log().all();
     }
 
-    private List<SectorResponse> findAllInUseSector(String accessToken) {
+    private List<SectorResponse> findAllAvailableSector(String accessToken) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
