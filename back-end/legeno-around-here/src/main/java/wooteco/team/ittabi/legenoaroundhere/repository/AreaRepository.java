@@ -7,5 +7,5 @@ import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 
 public interface AreaRepository extends JpaRepository<Area, Long> {
 
-    Page<Area> findAllByFullNameIsLike(Pageable pageable, String keywords);
+    Page<Area> findAllByFullNameIsLike(Pageable pageable, String keyword);
 }
