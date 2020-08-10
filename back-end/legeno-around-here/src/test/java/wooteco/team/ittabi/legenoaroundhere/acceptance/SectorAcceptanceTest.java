@@ -435,7 +435,7 @@ public class SectorAcceptanceTest {
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
             .when()
-            .get("/my/sectors")
+            .get("/sectors/me")
             .then()
             .statusCode(HttpStatus.OK.value())
             .extract()

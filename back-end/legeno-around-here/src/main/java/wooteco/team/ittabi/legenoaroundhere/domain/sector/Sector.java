@@ -22,6 +22,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @ToString
 public class Sector extends BaseEntity {
 
+    protected static final String DEFAULT_REASON = "";
     @Embedded
     private Name name;
 
@@ -33,7 +34,7 @@ public class Sector extends BaseEntity {
     private SectorState state;
 
     @Column(nullable = false)
-    private String reason = "";
+    private String reason = DEFAULT_REASON;
 
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)

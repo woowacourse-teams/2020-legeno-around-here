@@ -43,7 +43,7 @@ public class SectorController {
             .build();
     }
 
-    @GetMapping("/my/sectors")
+    @GetMapping("/sectors/me")
     public ResponseEntity<List<SectorDetailResponse>> findAllMySector() {
         List<SectorDetailResponse> sectorDetailResponses = sectorService.findAllMySector();
 

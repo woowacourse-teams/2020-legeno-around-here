@@ -38,12 +38,13 @@ public class SectorService {
         List<Sector> sectors = sectorRepository.findAllByName(sector.getName());
         sectors.remove(sector);
 
-        for (Sector foundSector : sectors) {
-            if (foundSector.isUniqueState()) {
+        sectors.stream()
+            .filter(Sector::isUniqueState)
+            .findFirst()
+            .ifPresent(foundSector -> {
                 throw new NotUniqueException(foundSector.getStateExceptionName() + " 상태의 ["
                     + foundSector.getName() + "] 부문이 이미 존재합니다.");
-            }
-        }
+            });
     }
 
     private SectorResponse saveSector(Sector sector) {
