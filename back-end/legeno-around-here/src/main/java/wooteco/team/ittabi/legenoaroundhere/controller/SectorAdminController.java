@@ -16,6 +16,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PageRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorUpdateStateRequest;
 import wooteco.team.ittabi.legenoaroundhere.service.SectorService;
 
 @RestController
@@ -62,6 +63,16 @@ public class SectorAdminController {
         sectorService.deleteSector(id);
         return ResponseEntity
             .noContent()
+            .build();
+    }
+
+    @PutMapping("/{id}/state")
+    public ResponseEntity<Void> updateSectorState(@PathVariable Long id,
+        @RequestBody SectorUpdateStateRequest sectorUpdateStateRequest) {
+        sectorService.updateSectorState(id, sectorUpdateStateRequest);
+
+        return ResponseEntity
+            .ok()
             .build();
     }
 }

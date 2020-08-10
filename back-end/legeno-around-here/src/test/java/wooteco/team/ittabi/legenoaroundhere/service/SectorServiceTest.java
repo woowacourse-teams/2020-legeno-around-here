@@ -9,6 +9,9 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConst
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_NAME;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,8 +28,10 @@ import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorUpdateStateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
@@ -194,7 +199,8 @@ class SectorServiceTest {
         assertThat(sector.getId()).isEqualTo(sectorId);
         assertThat(sector.getName()).isEqualToIgnoringCase(TEST_SECTOR_NAME);
         assertThat(sector.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
-        assertThat(sector.getState()).isEqualTo(SectorState.PUBLISHED.name());
+        assertThat(sector.getState()).isEqualTo(SectorState.PUBLISHED.getName());
+        assertThat(sector.getReason()).isNotNull();
     }
 
     @DisplayName("사용중인 Sector 조회 - 성공, 사용중이 아닌 ID가 있는 경우")
@@ -209,7 +215,7 @@ class SectorServiceTest {
         assertThat(sector.getId()).isEqualTo(sectorId);
         assertThat(sector.getName()).isEqualToIgnoringCase(TEST_SECTOR_NAME);
         assertThat(sector.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
-        assertThat(sector.getState()).isEqualTo(SectorState.DELETED.name());
+        assertThat(sector.getState()).isEqualTo(SectorState.DELETED.getName());
     }
 
     @DisplayName("Sector 삭제 - 예외 발생, ID가 없는 경우")
@@ -243,5 +249,60 @@ class SectorServiceTest {
         Page<AdminSectorResponse> sectors = sectorService.findAllSector(Pageable.unpaged());
         assertThat(sectors).contains(expectedSector);
         assertThat(sectors).contains(expectedAnotherSector);
+    }
+
+    @DisplayName("승인 신청 상태의 Sector 생성 - 성공")
+    @Test
+    void createPendingSector_Success() {
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        SectorResponse sector = sectorService.createPendingSector(sectorRequest);
+
+        assertThat(sector.getId()).isNotNull();
+        assertThat(sector.getName()).isEqualToIgnoringCase(sectorRequest.getName());
+        assertThat(sector.getDescription()).isEqualTo(sectorRequest.getDescription());
+        assertThat(sector.getCreator()).isEqualTo(UserResponse.from(admin));
+    }
+
+    @DisplayName("승인 신청 상태의 Sector 생성 - 예외 발생, 동일 이름의 Sector 존재")
+    @Test
+    void createPendingSector_DuplicateName_ThrownException() {
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        sectorService.createPendingSector(sectorRequest);
+
+        assertThatThrownBy(() -> sectorService.createPendingSector(sectorRequest))
+            .isInstanceOf(NotUniqueException.class);
+    }
+
+    @DisplayName("현재 사용자와 관련된 모든 부문 조회")
+    @Test
+    void findAllMySector_Success() {
+        List<Long> sectorIds = new ArrayList<>();
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        sectorIds.add(sectorService.createPendingSector(sectorRequest).getId());
+        SectorRequest sectorAnotherRequest
+            = new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_DESCRIPTION);
+        sectorIds.add(sectorService.createPendingSector(sectorAnotherRequest).getId());
+
+        Page<SectorDetailResponse> sectors = sectorService.findAllMySector(Pageable.unpaged());
+        assertThat(sectors.stream()
+            .filter(sector -> sectorIds.contains(sector.getId()))
+            .collect(Collectors.toList())).hasSize(2);
+    }
+
+    @DisplayName("SectorState 업데이트")
+    @Test
+    void updateSectorState_Success() {
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        Long sectorId = sectorService.createSector(sectorRequest).getId();
+
+        String state = SectorState.APPROVED.getName();
+        String reason = "이유";
+        SectorUpdateStateRequest sectorUpdateStateRequest
+            = new SectorUpdateStateRequest(state, reason);
+        sectorService.updateSectorState(sectorId, sectorUpdateStateRequest);
+
+        AdminSectorResponse sector = sectorService.findSector(sectorId);
+        assertThat(sector.getState()).isEqualTo(state);
+        assertThat(sector.getReason()).isEqualTo(reason);
     }
 }

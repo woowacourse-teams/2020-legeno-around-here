@@ -16,6 +16,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotFoundAlgorithmException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageExtensionException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageMimeTypeException;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotUniqueException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 @Slf4j
@@ -31,7 +32,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({WrongUserInputException.class, NotImageMimeTypeException.class,
         NotImageExtensionException.class, MultipartFileConvertException.class,
-        FileIOException.class, PropertyReferenceException.class, BindException.class})
+        FileIOException.class, NotUniqueException.class, PropertyReferenceException.class,
+        BindException.class})
     public ResponseEntity<ErrorResponse> handleBadRequest(Exception e) {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)

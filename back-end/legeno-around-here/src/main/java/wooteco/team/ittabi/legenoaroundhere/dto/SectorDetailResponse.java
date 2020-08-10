@@ -1,7 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,31 +15,23 @@ import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class AdminSectorResponse {
+public class SectorDetailResponse {
 
     private Long id;
     private String name;
     private String description;
-    private UserResponse creator;
-    private UserResponse lastModifier;
     private String state;
     private String reason;
+    private UserResponse creator;
 
-    public static AdminSectorResponse of(Sector sector) {
-        return AdminSectorResponse.builder()
+    public static SectorDetailResponse of(Sector sector) {
+        return SectorDetailResponse.builder()
             .id(sector.getId())
             .name(sector.getStringName())
             .description(sector.getStringDescription())
-            .creator(UserResponse.from(sector.getCreator()))
-            .lastModifier(UserResponse.from(sector.getLastModifier()))
             .state(sector.getStateName())
             .reason(sector.getReason())
+            .creator(UserResponse.from(sector.getCreator()))
             .build();
-    }
-
-    public static List<AdminSectorResponse> listOf(List<Sector> sectors) {
-        return sectors.stream()
-            .map(AdminSectorResponse::of)
-            .collect(Collectors.toList());
     }
 }

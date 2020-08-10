@@ -6,6 +6,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ANOTHER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_ANOTHER_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_ANOTHER_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_DESCRIPTION;
@@ -28,6 +32,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.ErrorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
@@ -62,11 +68,9 @@ public class SectorAcceptanceTest {
      */
     @DisplayName("관리자의 부문 관리")
     @Test
-    void manageSector_admin() {
+    void manageSector_Admin() {
         // 관리자 로그인
-        createAdmin(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_PASSWORD);
-        TokenResponse tokenResponse = login(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD);
-        String accessToken = tokenResponse.getAccessToken();
+        String accessToken = getCreateAdminToken();
 
         // 부문 등록
         Long id = createSector(accessToken, TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
@@ -85,7 +89,7 @@ public class SectorAcceptanceTest {
         assertThat(adminSectorResponse.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
         assertThat(adminSectorResponse.getCreator()).isNotNull();
         assertThat(adminSectorResponse.getLastModifier()).isNotNull();
-        assertThat(adminSectorResponse.getState()).isEqualTo(SectorState.PUBLISHED.name());
+        assertThat(adminSectorResponse.getState()).isEqualTo(SectorState.PUBLISHED.getName());
 
         // 부문 수정
         updateSector(accessToken, id, TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION);
@@ -106,7 +110,7 @@ public class SectorAcceptanceTest {
             .isEqualTo(TEST_SECTOR_ANOTHER_DESCRIPTION);
         assertThat(adminSectorResponse.getCreator()).isNotNull();
         assertThat(adminSectorResponse.getLastModifier()).isNotNull();
-        assertThat(adminSectorResponse.getState()).isEqualTo(SectorState.PUBLISHED.name());
+        assertThat(adminSectorResponse.getState()).isEqualTo(SectorState.PUBLISHED.getName());
 
         // 부문 전체 조회 + 사용하는 부문 전체 조회
         Long anotherId = createSector(accessToken, TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
@@ -120,7 +124,7 @@ public class SectorAcceptanceTest {
         deleteSector(accessToken, id);
         assertThatThrownBy(() -> findAvailableSector(accessToken, id));
         adminSectorResponse = findSector(accessToken, id);
-        assertThat(adminSectorResponse.getState()).isEqualTo(SectorState.DELETED.name());
+        assertThat(adminSectorResponse.getState()).isEqualTo(SectorState.DELETED.getName());
 
         adminSectorResponses = findAllSector(accessToken);
         sectorResponses = findAllAvailableSector(accessToken);
@@ -132,6 +136,117 @@ public class SectorAcceptanceTest {
         sectorResponses = findAllAvailableSector(accessToken);
         assertThat(adminSectorResponses).hasSize(2);
         assertThat(sectorResponses).hasSize(0);
+    }
+
+    /**
+     * Feature: 부문 관리 Scenario: 사용자가 부문을 관리한다.
+     * <p>
+     * Given 관리자, 사용자 A, 사용자 B가 있다.
+     * <p>
+     * Given 사용자 A가 로그인 되어있다.
+     * <p>
+     * When A, B, C 부문을 각각 승인 신청한다. Then A, B, C 부문이 각각 승인 신청된다.
+     * <p>
+     * When 본인이 승인 신청한 부문 목록을 확인한다. Then 본인이 승인 신청한 부문들이 확인된다.(A, B, C)
+     * <p>
+     * Given 관리자가 로그인 되어 있다. D 부문을 등록한다.
+     * <p>
+     * When A 부문을 승인한다. Then A 부문이 승인 상태이다.
+     * <p>
+     * When B 부문을 반려한다. Then B 부문이 반려 상태이다.
+     * <p>
+     * Given 사용자 B가 로그인 되어있다.
+     * <p>
+     * When A 부문을 승인 신청한다. Then A 부문을 승인 신청할 수 없다. (기존 - 승인됨)
+     * <p>
+     * When B 부문을 승인 신청한다. Then B 부문을 승인 신청할 수 없다. (기존 - 반려됨)
+     * <p>
+     * When C 부문을 승인 신청한다. Then C 부문을 승인 신청할 수 없다. (기존 - 승인 신청됨)
+     * <p>
+     * When D 부문을 승인 신청한다. Then D 부문을 승인 신청할 수 없다. (기존 - 등록됨)
+     * <p>
+     * When 사용할 수 있는 부문들을 조회한다. Then 사용할 수 있는 부문이 조회된다.(A, D), 사용할 수 없는 부문은 조회 실패(C, B)
+     * <p>
+     * Given 사용자 A가 로그인 되어있다.
+     * <p>
+     * When 본인이 승인 신청한 목록을 확인한다. Then 승인된 부문이 확인된다.(A) 반려된 부문이 확인된다.(B) 승인 신청한 부문이 확인된다.(C)
+     */
+    @DisplayName("사용자의 부문 관리")
+    @Test
+    void manageSector_User() {
+        // 관리자, 사용자 A, 사용자 B 로그인
+        String adminToken = getCreateAdminToken();
+        String userAToken = getCreateUserToken(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        String userBToken = getCreateUserToken(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+
+        // 사용자 A - 부문 승인 신청
+        Long sectorAId = createPendingSector(userAToken, "A", TEST_SECTOR_DESCRIPTION);
+        Long sectorBId = createPendingSector(userAToken, "B", TEST_SECTOR_DESCRIPTION);
+        Long sectorCId = createPendingSector(userAToken, "C", TEST_SECTOR_DESCRIPTION);
+
+        // 사용자 A - 본인 승인 신청 부문 확인
+        List<SectorDetailResponse> sectors = getAllMySector(userAToken);
+        List<Long> sectorIds = sectors.stream()
+            .map(SectorDetailResponse::getId)
+            .collect(Collectors.toList());
+        assertThat(sectorIds).contains(sectorAId);
+        assertThat(sectorIds).contains(sectorBId);
+        assertThat(sectorIds).contains(sectorCId);
+
+        // 관리자 - 부문 등록
+        Long sectorDId = createSector(adminToken, "D", TEST_SECTOR_DESCRIPTION);
+
+        // 관리자 - 부문 A 승인
+        updateStateSector(adminToken, sectorAId, "승인", "승인함");
+
+        // 관리자 - 부문 B 반려
+        String wrongSectorName = "부적합한 부문명";
+        updateStateSector(adminToken, sectorBId, "반려", wrongSectorName);
+
+        // 사용자 B - 부문 B 등록 (성공)
+        Long sectorNewBId = createPendingSector(userAToken, "B", TEST_SECTOR_DESCRIPTION);
+
+        // 사용자 B - 부문 A, C, D 등록 (실패)
+        String failReasonSectorA
+            = createPendingSectorAndFail(userAToken, "A", TEST_SECTOR_DESCRIPTION);
+        String failReasonSectorC
+            = createPendingSectorAndFail(userAToken, "C", TEST_SECTOR_DESCRIPTION);
+        String failReasonSectorD
+            = createPendingSectorAndFail(userAToken, "D", TEST_SECTOR_DESCRIPTION);
+
+        assertThat(failReasonSectorA).contains("사용");
+        assertThat(failReasonSectorC).contains("신청");
+        assertThat(failReasonSectorD).contains("사용");
+
+        // 사용자 B - 사용할 수 있는 부문 조회
+        List<SectorResponse> allInUseSector = findAllAvailableSector(userBToken);
+
+        assertThat(allInUseSector).contains(findAvailableSector(userBToken, sectorAId)); // 승인
+        assertThatThrownBy(() -> findAvailableSector(userBToken, sectorBId));            // 반려
+        assertThatThrownBy(() -> findAvailableSector(userBToken, sectorCId));            // 승인 신청
+        assertThat(allInUseSector).contains(findAvailableSector(userBToken, sectorDId)); // 등록
+        assertThatThrownBy(() -> findAvailableSector(userBToken, sectorNewBId));         // 승인 신청
+
+        // 사용자 A - 승인 목록 조회
+        sectors = getAllMySector(userAToken);
+        Map<Long, SectorDetailResponse> sectorsWithId = sectors.stream()
+            .collect(Collectors.toMap(SectorDetailResponse::getId, sector -> sector));
+        assertThat(sectorsWithId.get(sectorAId).getState()).isEqualTo("승인");
+        assertThat(sectorsWithId.get(sectorBId).getState()).isEqualTo("반려");
+        assertThat(sectorsWithId.get(sectorBId).getReason()).isEqualTo(wrongSectorName);
+        assertThat(sectorsWithId.get(sectorCId).getState()).isEqualTo("승인 신청");
+    }
+
+    private String getCreateAdminToken() {
+        createAdmin(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_PASSWORD);
+        TokenResponse tokenResponse = login(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD);
+        return tokenResponse.getAccessToken();
+    }
+
+    private String getCreateUserToken(String email, String nickname, String password) {
+        createUser(email, nickname, password);
+        TokenResponse tokenResponse = login(email, password);
+        return tokenResponse.getAccessToken();
     }
 
     /**
@@ -252,6 +367,24 @@ public class SectorAcceptanceTest {
             .header("Location");
     }
 
+    private String createUser(String email, String nickname, String password) {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("nickname", nickname);
+        params.put("password", password);
+
+        return given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/join")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract()
+            .header("Location");
+    }
+
     private TokenResponse login(String email, String password) {
         Map<String, String> params = new HashMap<>();
         params.put("email", email);
@@ -286,6 +419,47 @@ public class SectorAcceptanceTest {
             .header("Location");
 
         return getIdFromUrl(location);
+    }
+
+    private Long createPendingSector(String accessToken, String sectorName,
+        String sectorDescription) {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", sectorName);
+        params.put("description", sectorDescription);
+
+        String location = given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/sectors")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract()
+            .header("Location");
+
+        return getIdFromUrl(location);
+    }
+
+    private String createPendingSectorAndFail(String accessToken, String sectorName,
+        String sectorDescription) {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", sectorName);
+        params.put("description", sectorDescription);
+
+        return given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/sectors")
+            .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .extract()
+            .as(ErrorResponse.class)
+            .getErrorMessage();
     }
 
     private Long getIdFromUrl(String location) {
@@ -386,6 +560,19 @@ public class SectorAcceptanceTest {
             .getList("content", SectorResponse.class);
     }
 
+    private List<SectorDetailResponse> getAllMySector(String accessToken) {
+        return given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .get("/sectors/me")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .jsonPath()
+            .getList("content", SectorDetailResponse.class);
+    }
+
     private void deleteSector(String accessToken, Long id) {
         given()
             .header("X-AUTH-TOKEN", accessToken)
@@ -393,5 +580,20 @@ public class SectorAcceptanceTest {
             .delete("/admin/sectors/" + id)
             .then()
             .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    private void updateStateSector(String accessToken, Long id, String state, String reason) {
+        Map<String, String> params = new HashMap<>();
+        params.put("state", state);
+        params.put("reason", reason);
+
+        given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .put("/admin/sectors/" + id + "/state")
+            .then()
+            .statusCode(HttpStatus.OK.value());
     }
 }

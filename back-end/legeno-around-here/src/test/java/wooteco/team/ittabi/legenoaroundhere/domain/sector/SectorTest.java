@@ -89,12 +89,13 @@ class SectorTest {
 
     @DisplayName("Sector의 상태를 Update 한다.")
     @Test
-    void setState() {
+    void setState_Success() {
         Sector sector
             = makeSector(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION, user, SectorState.PUBLISHED);
 
-        sector.setState(SectorState.DELETED);
+        sector.setState(SectorState.DELETED, "삭제", user);
 
+        assertThat(sector.getStringName()).isEqualToIgnoringCase(TEST_SECTOR_NAME);
         assertThat(sector.getState()).isEqualTo(SectorState.DELETED);
     }
 }
