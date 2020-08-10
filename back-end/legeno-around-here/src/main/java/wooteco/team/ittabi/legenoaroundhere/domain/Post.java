@@ -18,8 +18,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
@@ -27,7 +25,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @Table(name = "post")
 @Getter
 @Setter
-@ToString(exclude = "user")
+@ToString(exclude = "creator")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 
@@ -42,22 +40,20 @@ public class Post extends BaseEntity {
     private State state;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Image> images = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "creator_id")
+    private User creator;
 
-    public Post(User user, String writing) {
+    public Post(User creator, String writing) {
         validateLength(writing);
         this.writing = writing;
         this.state = State.PUBLISHED;
-        this.user = user;
+        this.creator = creator;
     }
 
     private void validateLength(String writing) {

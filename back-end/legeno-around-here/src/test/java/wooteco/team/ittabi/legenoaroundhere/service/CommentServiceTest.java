@@ -54,7 +54,7 @@ public class CommentServiceTest extends ServiceTest {
 
         assertThat(createdCommentResponse.getId()).isNotNull();
         assertThat(createdCommentResponse.getWriting()).isEqualTo(TEST_WRITING);
-        assertThat(createdCommentResponse.getUser()).isEqualTo(UserResponse.from(user));
+        assertThat(createdCommentResponse.getCreator()).isEqualTo(UserResponse.from(user));
     }
 
     @DisplayName("댓글 조회 - 성공")
@@ -70,7 +70,8 @@ public class CommentServiceTest extends ServiceTest {
         assertThat(foundCommentResponse.getId()).isEqualTo(createdCommentResponse.getId());
         assertThat(foundCommentResponse.getWriting())
             .isEqualTo(createdCommentResponse.getWriting());
-        assertThat(foundCommentResponse.getUser()).isEqualTo(createdCommentResponse.getUser());
+        assertThat(foundCommentResponse.getCreator())
+            .isEqualTo(createdCommentResponse.getCreator());
     }
 
 
@@ -138,7 +139,7 @@ public class CommentServiceTest extends ServiceTest {
 
     @DisplayName("댓글 삭제 - 실패, 댓글 작성자가 아님")
     @Test
-    void deleteComment_IfNotOwner_ThrowException() {
+    void deleteComment_IfNotCreator_ThrowException() {
         CommentRequest commentRequest = new CommentRequest(TEST_WRITING);
         CommentResponse commentResponse = commentService
             .createComment(postResponse.getId(), commentRequest);

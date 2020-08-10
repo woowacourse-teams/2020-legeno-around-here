@@ -22,11 +22,19 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @ToString
 public class Sector extends BaseEntity {
 
+    protected static final String DEFAULT_REASON = "";
     @Embedded
     private Name name;
 
     @Embedded
     private Description description;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private SectorState state;
+
+    @Column(nullable = false)
+    private String reason = DEFAULT_REASON;
 
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)
@@ -35,10 +43,6 @@ public class Sector extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "last_modifier_id", nullable = false)
     private User lastModifier;
-
-    @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false)
-    private SectorState state;
 
     @Builder
     public Sector(String name, String description, User creator, User lastModifier,
@@ -72,9 +76,13 @@ public class Sector extends BaseEntity {
         this.lastModifier = sector.lastModifier;
     }
 
-    public void setState(SectorState state) {
+    public void setState(SectorState state, String reason, User lastModifier) {
         Objects.requireNonNull(state, "SectorState는 Null일 수 없습니다.");
+        Objects.requireNonNull(reason, "Reason은 Null일 수 없습니다.");
+        Objects.requireNonNull(lastModifier, "LastModifier는 Null일 수 없습니다.");
         this.state = state;
+        this.reason = reason;
+        this.lastModifier = lastModifier;
     }
 
     public String getStringName() {
@@ -83,5 +91,17 @@ public class Sector extends BaseEntity {
 
     public String getStringDescription() {
         return this.description.getDescription();
+    }
+
+    public String getStateName() {
+        return state.getName();
+    }
+
+    public String getStateExceptionName() {
+        return state.getExceptionName();
+    }
+
+    public boolean isUniqueState() {
+        return state.isUnique();
     }
 }
