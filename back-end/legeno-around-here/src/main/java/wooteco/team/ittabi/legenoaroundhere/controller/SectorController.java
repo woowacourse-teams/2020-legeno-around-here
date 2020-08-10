@@ -7,13 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.SectorUpdateStateRequest;
 import wooteco.team.ittabi.legenoaroundhere.service.SectorService;
 
 @RestController
@@ -51,15 +49,5 @@ public class SectorController {
 
         return ResponseEntity
             .ok(sectorDetailResponses);
-    }
-
-    @PutMapping("/admin/sectors/{id}/state")
-    public ResponseEntity<Void> updateSectorState(@PathVariable Long id,
-        @RequestBody SectorUpdateStateRequest sectorUpdateStateRequest) {
-        sectorService.updateSectorState(id, sectorUpdateStateRequest);
-
-        return ResponseEntity
-            .ok()
-            .build();
     }
 }
