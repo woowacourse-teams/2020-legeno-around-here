@@ -80,5 +80,4 @@ public class ImageService {
         return !tika.detect(multipartFile.getBytes())
             .startsWith(IMAGE_TYPE);
     }
-
 }
