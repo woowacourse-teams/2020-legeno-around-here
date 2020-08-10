@@ -118,10 +118,10 @@ public class SectorService {
     }
 
     @Transactional(readOnly = true)
-    public List<SectorDetailResponse> findAllMySector() {
+    public Page<SectorDetailResponse> findAllMySector(Pageable pageable) {
         User user = (User) authenticationFacade.getPrincipal();
-        List<Sector> sectors = sectorRepository.findAllByCreator(user);
-        return SectorDetailResponse.listOf(sectors);
+        Page<Sector> sectors = sectorRepository.findAllByCreator(pageable, user);
+        return sectors.map(SectorDetailResponse::of);
     }
 
     @Transactional

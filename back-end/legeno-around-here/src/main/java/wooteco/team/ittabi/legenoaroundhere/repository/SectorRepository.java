@@ -13,7 +13,7 @@ public interface SectorRepository extends JpaRepository<Sector, Long> {
 
     List<Sector> findAllByName(Name name);
 
-    List<Sector> findAllByCreator(User user);
+    Page<Sector> findAllByCreator(Pageable pageable, User user);
 
     Page<Sector> findAllByStateIn(Pageable pageable, Iterable<SectorState> states);
 }

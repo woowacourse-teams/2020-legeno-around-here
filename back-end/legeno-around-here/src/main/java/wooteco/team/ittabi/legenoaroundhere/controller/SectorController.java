@@ -1,7 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
 import java.net.URI;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -49,8 +48,9 @@ public class SectorController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<List<SectorDetailResponse>> findAllMySector() {
-        List<SectorDetailResponse> sectorDetailResponses = sectorService.findAllMySector();
+    public ResponseEntity<Page<SectorDetailResponse>> findAllMySector(PageRequest pageRequest) {
+        Page<SectorDetailResponse> sectorDetailResponses
+            = sectorService.findAllMySector(pageRequest.getPageable());
 
         return ResponseEntity
             .ok(sectorDetailResponses);

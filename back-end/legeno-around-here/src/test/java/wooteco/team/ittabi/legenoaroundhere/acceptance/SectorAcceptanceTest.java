@@ -570,7 +570,7 @@ public class SectorAcceptanceTest {
             .statusCode(HttpStatus.OK.value())
             .extract()
             .jsonPath()
-            .getList(".", SectorDetailResponse.class);
+            .getList("content", SectorDetailResponse.class);
     }
 
     private void deleteSector(String accessToken, Long id) {

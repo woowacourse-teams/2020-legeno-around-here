@@ -28,6 +28,7 @@ import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorUpdateStateRequest;
@@ -282,7 +283,7 @@ class SectorServiceTest {
             = new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_DESCRIPTION);
         sectorIds.add(sectorService.createPendingSector(sectorAnotherRequest).getId());
 
-        Page<AdminSectorResponse> sectors = sectorService.findAllSector(Pageable.unpaged());
+        Page<SectorDetailResponse> sectors = sectorService.findAllMySector(Pageable.unpaged());
         assertThat(sectors.stream()
             .filter(sector -> sectorIds.contains(sector.getId()))
             .collect(Collectors.toList())).hasSize(2);
