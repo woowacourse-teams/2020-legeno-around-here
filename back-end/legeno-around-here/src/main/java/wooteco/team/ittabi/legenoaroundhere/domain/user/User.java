@@ -49,11 +49,11 @@ public class User extends BaseEntity implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
     @Builder.Default
     private List<Post> posts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "creator")
     @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 

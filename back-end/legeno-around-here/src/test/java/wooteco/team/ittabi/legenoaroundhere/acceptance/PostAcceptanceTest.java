@@ -15,9 +15,12 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConst
 import io.restassured.RestAssured;
 import io.restassured.config.RestAssuredConfig;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,12 +29,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql("/init-table.sql")
 public class PostAcceptanceTest {
 
     @LocalServerPort
@@ -40,9 +46,15 @@ public class PostAcceptanceTest {
     @MockBean
     private S3Uploader s3Uploader;
 
+    private String accessToken;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+
+        createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
+        accessToken = tokenResponse.getAccessToken();
     }
 
     /**
@@ -63,12 +75,6 @@ public class PostAcceptanceTest {
     @DisplayName("글 관리")
     @Test
     void manageMyPost() {
-
-        // 로그인
-        createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
-        TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
-        String accessToken = tokenResponse.getAccessToken();
-
         // 이미지가 포함되지 않은 글 등록
         String postWithoutImageLocation = createPostWithoutImage(accessToken);
         Long postWithoutImageId = getIdFromUrl(postWithoutImageLocation);
@@ -89,7 +95,7 @@ public class PostAcceptanceTest {
         assertThat(postWithImageResponse.getImages()).hasSize(2);
 
         // 목록 조회
-        List<PostResponse> postResponses = findAllPost(accessToken);
+        List<PostWithCommentsCountResponse> postResponses = findAllPost(accessToken);
         assertThat(postResponses).hasSize(2);
 
         // 수정
@@ -111,9 +117,105 @@ public class PostAcceptanceTest {
         deletePost(postWithoutImageId, accessToken);
         findNotExistsPost(postWithoutImageId, accessToken);
 
-        List<PostResponse> foundPostResponses = findAllPost(accessToken);
+        List<PostWithCommentsCountResponse> foundPostResponses = findAllPost(accessToken);
 
         assertThat(foundPostResponses).hasSize(1);
+    }
+
+    /**
+     * Feature: 글 조회
+     * <p>
+     * Scenario: 글 페이징 조회한다.
+     * <p>
+     * Given 관리자가 로그인 되어있다. 글 100개가 등록되어 있다.
+     * <p>
+     * When 글 1Page 20Size를 정렬(기준:id 방향:오름차순) 조회한다. Then 1~20까지의 Post가 조회된다.
+     * <p>
+     * When 글 1Page 20Size를 정렬(기준:id 방향:내림차순) 조회한다. Then 100~81까지의 Post가 조회된다.
+     * <p>
+     * When 글 2Page 40Size를 정렬(기준:id 방향:오름차순) 조회한다. Then 21~40까지의 Post가 조회된다.
+     * <p>
+     * When 글 -1Page -1Size를 정렬(기준:id 방향:abc) 조회한다. Then 1의 Post가 조회된다. (기본 값 : 1Page, 1Size,
+     * 방향:오름차순)
+     * <p>
+     * When 글 1Page 20Size를 정렬(기준:test-id 방향:오름차순) 조회한다. Then BadRequest가 발생한다.
+     */
+    @DisplayName("부문 페이징 조회")
+    @Test
+    void pagingFindSector() {
+        List<Long> ids = new ArrayList<>();
+        // 글 100개 등록
+        for (int i = 0; i < 100; i++) {
+            String postWithoutImageLocation = createPostWithoutImage(accessToken);
+            ids.add(getIdFromUrl(postWithoutImageLocation));
+        }
+
+        // 글 1Page 20Size를 정렬(기준:id 방향:오름차순) 조회
+        List<PostWithCommentsCountResponse> posts
+            = findAllPost(accessToken, "page=1&size=20&sortedBy=id&direction=asc");
+        assertThat(posts).hasSize(20);
+        List<Long> expectedIds = ids.subList(0, 20);
+        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
+
+        // 글 1Page 20Size를 정렬(기준:id 방향:내림차순) 조회
+        posts = findAllPost(accessToken, "page=1&size=20&sortedBy=id&direction=desc");
+        assertThat(posts).hasSize(20);
+        expectedIds = ids.subList(80, 100);
+        Collections.reverse(expectedIds);
+        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
+
+        // 글 2Page 20Size를 정렬(기준:id 방향:오름차순) 조회
+        posts = findAllPost(accessToken, "page=2&size=20&sortedBy=id&direction=asc");
+        assertThat(posts).hasSize(20);
+        expectedIds = ids.subList(20, 40);
+        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
+
+        // Page, Size, Direction 오기입 조회 (자동 값 : 1Page, 1Size, 방향:오름차순)
+        posts = findAllPost(accessToken, "page=-1&size=1&sortedBy=id&direction=asc");
+        assertThat(posts).hasSize(1);
+        expectedIds = ids.subList(0, 1);
+        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
+
+        posts = findAllPost(accessToken, "page=1&size=-1&sortedBy=id&direction=asc");
+        assertThat(posts).hasSize(1);
+        expectedIds = ids.subList(0, 1);
+        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
+
+        posts = findAllPost(accessToken, "page=1&size=51&sortedBy=id&direction=asc");
+        assertThat(posts).hasSize(50);
+        expectedIds = ids.subList(0, 50);
+        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
+
+        posts = findAllPost(accessToken, "page=1&size=1&sortedBy=id&direction=abc");
+        assertThat(posts).hasSize(1);
+        expectedIds = ids.subList(0, 1);
+        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
+
+        posts = findAllPost(accessToken, "size=1&sortedBy=id&direction=abc");
+        assertThat(posts).hasSize(1);
+        expectedIds = ids.subList(0, 1);
+        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
+
+        posts = findAllPost(accessToken, "page=1&sortedBy=id&direction=abc");
+        assertThat(posts).hasSize(10);
+        expectedIds = ids.subList(0, 10);
+        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
+
+        posts = findAllPost(accessToken, "page=1&size=1&sortedBy=id");
+        assertThat(posts).hasSize(1);
+        expectedIds = ids.subList(0, 1);
+        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
+
+        // 유효하지 않은 필드로 정렬
+        findAllPostWithWrongParameter(accessToken, "page=ㄱ&size=1&sortedBy=id");
+        findAllPostWithWrongParameter(accessToken, "page=1&size=ㄴ&sortedBy=id");
+        findAllPostWithWrongParameter(accessToken, "page=1&size=20&sortedBy=ㄷ&direction=asc");
+    }
+
+    private List<Long> getPostIds(List<PostWithCommentsCountResponse> posts) {
+        return posts.stream()
+            .map(PostWithCommentsCountResponse::getId)
+            .collect(Collectors.toList());
     }
 
     private String createUser(String email, String nickname, String password) {
@@ -183,17 +285,40 @@ public class PostAcceptanceTest {
             .statusCode(HttpStatus.OK.value());
     }
 
-    private List<PostResponse> findAllPost(String accessToken) {
+    private List<PostWithCommentsCountResponse> findAllPost(String accessToken) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
             .when()
-            .get("/posts")
+            .get("/posts?page=1&size=50&sortedBy=id&direction=asc")
             .then()
             .statusCode(HttpStatus.OK.value())
             .extract()
             .jsonPath()
-            .getList(".", PostResponse.class);
+            .getList("content", PostWithCommentsCountResponse.class);
+    }
+
+    private List<PostWithCommentsCountResponse> findAllPost(String accessToken, String parameter) {
+        return given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .get("/posts?" + parameter)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .jsonPath()
+            .getList("content", PostWithCommentsCountResponse.class);
+    }
+
+    private void findAllPostWithWrongParameter(String accessToken, String parameter) {
+        given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .get("/posts?" + parameter)
+            .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     private Long getIdFromUrl(String location) {
