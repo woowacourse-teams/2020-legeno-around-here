@@ -1,6 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.sector;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 public enum SectorState {
@@ -28,6 +29,12 @@ public enum SectorState {
             .filter(sectorState -> sectorState.getName().equals(name))
             .findFirst()
             .orElseThrow(() -> new WrongUserInputException("Sector 상태를 잘못 입력하셨습니다."));
+    }
+
+    public static Iterable<SectorState> getAllAvailable() {
+        return Arrays.stream(SectorState.values())
+            .filter(sector -> sector.used)
+            .collect(Collectors.toList());
     }
 
     public String getName() {

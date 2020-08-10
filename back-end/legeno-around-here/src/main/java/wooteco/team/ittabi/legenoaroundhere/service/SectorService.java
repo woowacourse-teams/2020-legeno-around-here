@@ -1,8 +1,9 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
@@ -53,7 +54,7 @@ public class SectorService {
     }
 
     @Transactional(readOnly = true)
-    public SectorResponse findInUseSector(Long id) {
+    public SectorResponse findAvailableSector(Long id) {
         Sector sector = findUsedSectorBy(id);
         return SectorResponse.of(sector);
     }
@@ -72,13 +73,11 @@ public class SectorService {
     }
 
     @Transactional(readOnly = true)
-    public List<SectorResponse> findAllInUseSector() {
-        List<Sector> sectors = sectorRepository.findAll()
-            .stream()
-            .filter(Sector::isUsed)
-            .collect(Collectors.toList());
+    public Page<SectorResponse> findAllAvailableSector(Pageable pageable) {
+        Page<Sector> sectorsPage = sectorRepository.findAllByStateIn(pageable,
+            SectorState.getAllAvailable());
 
-        return SectorResponse.listOf(sectors);
+        return sectorsPage.map(SectorResponse::of);
     }
 
     @Transactional
@@ -104,9 +103,9 @@ public class SectorService {
     }
 
     @Transactional(readOnly = true)
-    public List<AdminSectorResponse> findAllSector() {
-        List<Sector> sectors = sectorRepository.findAll();
-        return AdminSectorResponse.listOf(sectors);
+    public Page<AdminSectorResponse> findAllSector(Pageable pageable) {
+        Page<Sector> sectorsPage = sectorRepository.findAll(pageable);
+        return sectorsPage.map(AdminSectorResponse::of);
     }
 
     @Transactional

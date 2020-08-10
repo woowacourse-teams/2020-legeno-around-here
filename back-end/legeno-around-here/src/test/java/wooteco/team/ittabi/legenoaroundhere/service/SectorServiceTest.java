@@ -18,6 +18,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -107,14 +109,14 @@ class SectorServiceTest {
         SectorResponse createdSector = sectorService.createSector(sectorRequest);
         Long createdSectorId = createdSector.getId();
 
-        SectorResponse foundSector = sectorService.findInUseSector(createdSectorId);
+        SectorResponse foundSector = sectorService.findAvailableSector(createdSectorId);
         assertThat(foundSector).isEqualTo(createdSector);
     }
 
     @DisplayName("사용중인 Sector 조회 - 예외 발생, ID가 없는 경우")
     @Test
     void findUsedSector_HasNotId_ThrowException() {
-        assertThatThrownBy(() -> sectorService.findInUseSector(INVALID_ID))
+        assertThatThrownBy(() -> sectorService.findAvailableSector(INVALID_ID))
             .isInstanceOf(NotExistsException.class);
     }
 
@@ -126,7 +128,7 @@ class SectorServiceTest {
         Long sectorId = createdSector.getId();
         sectorService.deleteSector(sectorId);
 
-        assertThatThrownBy(() -> sectorService.findInUseSector(sectorId))
+        assertThatThrownBy(() -> sectorService.findAvailableSector(sectorId))
             .isInstanceOf(NotExistsException.class);
     }
 
@@ -140,7 +142,7 @@ class SectorServiceTest {
             new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION));
         sectorService.deleteSector(sector.getId());
 
-        List<SectorResponse> sectors = sectorService.findAllInUseSector();
+        Page<SectorResponse> sectors = sectorService.findAllAvailableSector(Pageable.unpaged());
         assertThat(sectors).doesNotContain(sector);
         assertThat(sectors).contains(anotherSector);
     }
@@ -156,7 +158,7 @@ class SectorServiceTest {
             new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION);
         sectorService.updateSector(id, sectorRequest);
 
-        SectorResponse updatedSector = sectorService.findInUseSector(id);
+        SectorResponse updatedSector = sectorService.findAvailableSector(id);
         assertThat(updatedSector.getId()).isEqualTo(id);
         assertThat(updatedSector.getName()).isEqualToIgnoringCase(TEST_SECTOR_ANOTHER_NAME);
         assertThat(updatedSector.getDescription()).isEqualTo(TEST_SECTOR_ANOTHER_DESCRIPTION);
@@ -181,7 +183,7 @@ class SectorServiceTest {
 
         sectorService.deleteSector(id);
 
-        assertThatThrownBy(() -> sectorService.findInUseSector(id))
+        assertThatThrownBy(() -> sectorService.findAvailableSector(id))
             .isInstanceOf(NotExistsException.class);
     }
 
@@ -243,7 +245,7 @@ class SectorServiceTest {
         AdminSectorResponse expectedAnotherSector
             = sectorService.findSector(anotherSector.getId());
 
-        List<AdminSectorResponse> sectors = sectorService.findAllSector();
+        Page<AdminSectorResponse> sectors = sectorService.findAllSector(Pageable.unpaged());
         assertThat(sectors).contains(expectedSector);
         assertThat(sectors).contains(expectedAnotherSector);
     }
@@ -280,7 +282,7 @@ class SectorServiceTest {
             = new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_DESCRIPTION);
         sectorIds.add(sectorService.createPendingSector(sectorAnotherRequest).getId());
 
-        List<AdminSectorResponse> sectors = sectorService.findAllSector();
+        Page<AdminSectorResponse> sectors = sectorService.findAllSector(Pageable.unpaged());
         assertThat(sectors.stream()
             .filter(sector -> sectorIds.contains(sector.getId()))
             .collect(Collectors.toList())).hasSize(2);

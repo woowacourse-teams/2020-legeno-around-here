@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -45,9 +46,10 @@ class GlobalExceptionHandlerTest {
     @DisplayName("NotExistsException일 때, NotFound 리턴")
     @Test
     void handleNotFound_NotExistsException_NotFound() throws Exception {
-        doThrow(NotExistsException.class).when(sectorService).findAllInUseSector();
+        doThrow(NotExistsException.class)
+            .when(sectorService).findAllAvailableSector(any());
 
-        this.mockMvc.perform(get("/sectors/")
+        this.mockMvc.perform(get("/sectors")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("errorMessage").hasJsonPath());
@@ -56,9 +58,9 @@ class GlobalExceptionHandlerTest {
     @DisplayName("UserInputException일 때, BadRequest 리턴")
     @Test
     void handleBadRequest_UserInputException_BadRequest() throws Exception {
-        doThrow(WrongUserInputException.class).when(sectorService).findAllInUseSector();
-
-        this.mockMvc.perform(get("/sectors/")
+        doThrow(WrongUserInputException.class)
+            .when(sectorService).findAllAvailableSector(any());
+        this.mockMvc.perform(get("/sectors")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("errorMessage").hasJsonPath());
@@ -67,9 +69,10 @@ class GlobalExceptionHandlerTest {
     @DisplayName("NotImageMimeTypeException일 때, BadRequest 리턴")
     @Test
     void handleBadRequest_NotImageMimeTypeException_BadRequest() throws Exception {
-        doThrow(NotImageMimeTypeException.class).when(sectorService).findAllInUseSector();
+        doThrow(NotImageMimeTypeException.class)
+            .when(sectorService).findAllAvailableSector(any());
 
-        this.mockMvc.perform(get("/sectors/")
+        this.mockMvc.perform(get("/sectors")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("errorMessage").hasJsonPath());
@@ -78,9 +81,10 @@ class GlobalExceptionHandlerTest {
     @DisplayName("NotImageExtensionException일 때, BadRequest 리턴")
     @Test
     void handleBadRequest_NotImageExtensionException_BadRequest() throws Exception {
-        doThrow(NotImageExtensionException.class).when(sectorService).findAllInUseSector();
+        doThrow(NotImageExtensionException.class)
+            .when(sectorService).findAllAvailableSector(any());
 
-        this.mockMvc.perform(get("/sectors/")
+        this.mockMvc.perform(get("/sectors")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("errorMessage").hasJsonPath());
@@ -89,9 +93,10 @@ class GlobalExceptionHandlerTest {
     @DisplayName("MultipartFileConvertException일 때, BadRequest 리턴")
     @Test
     void handleBadRequest_MultipartFileConvertException_BadRequest() throws Exception {
-        doThrow(MultipartFileConvertException.class).when(sectorService).findAllInUseSector();
+        doThrow(MultipartFileConvertException.class)
+            .when(sectorService).findAllAvailableSector(any());
 
-        this.mockMvc.perform(get("/sectors/")
+        this.mockMvc.perform(get("/sectors")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("errorMessage").hasJsonPath());
@@ -100,9 +105,10 @@ class GlobalExceptionHandlerTest {
     @DisplayName("FileIOException일 때, BadRequest 리턴")
     @Test
     void handleBadRequest_FileIOException_BadRequest() throws Exception {
-        doThrow(FileIOException.class).when(sectorService).findAllInUseSector();
+        doThrow(FileIOException.class)
+            .when(sectorService).findAllAvailableSector(any());
 
-        this.mockMvc.perform(get("/sectors/")
+        this.mockMvc.perform(get("/sectors")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("errorMessage").hasJsonPath());
@@ -111,7 +117,8 @@ class GlobalExceptionHandlerTest {
     @DisplayName("NotUniqueException일 때, BadRequest 리턴")
     @Test
     void handleBadRequest_NotUniqueException_BadRequest() throws Exception {
-        doThrow(NotUniqueException.class).when(sectorService).findAllInUseSector();
+        doThrow(NotUniqueException.class)
+            .when(sectorService).findAllAvailableSector(any());
 
         this.mockMvc.perform(get("/sectors/")
             .accept(MediaType.APPLICATION_JSON))
@@ -122,9 +129,10 @@ class GlobalExceptionHandlerTest {
     @DisplayName("UserInputException일 때, Forbidden 리턴")
     @Test
     void handleForbidden_NotAuthorizedException_Forbidden() throws Exception {
-        doThrow(NotAuthorizedException.class).when(sectorService).findAllInUseSector();
+        doThrow(NotAuthorizedException.class)
+            .when(sectorService).findAllAvailableSector(any());
 
-        this.mockMvc.perform(get("/sectors/")
+        this.mockMvc.perform(get("/sectors")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden())
             .andExpect(jsonPath("errorMessage").hasJsonPath());
@@ -134,7 +142,8 @@ class GlobalExceptionHandlerTest {
     @Test
     void handleInternalServerError_NotFoundAlgorithmException_InternalServerError()
         throws Exception {
-        doThrow(NotFoundAlgorithmException.class).when(sectorService).findAllInUseSector();
+        doThrow(NotFoundAlgorithmException.class)
+            .when(sectorService).findAllAvailableSector(any());
 
         this.mockMvc.perform(get("/sectors/")
             .accept(MediaType.APPLICATION_JSON))
@@ -145,7 +154,8 @@ class GlobalExceptionHandlerTest {
     @DisplayName("RuntimeException 때, InternalServerError 리턴")
     @Test
     void handleInternalServerError_RuntimeException_InternalServerError() throws Exception {
-        doThrow(RuntimeException.class).when(sectorService).findAllInUseSector();
+        doThrow(RuntimeException.class)
+            .when(sectorService).findAllAvailableSector(any());
 
         this.mockMvc.perform(get("/sectors/")
             .accept(MediaType.APPLICATION_JSON))
