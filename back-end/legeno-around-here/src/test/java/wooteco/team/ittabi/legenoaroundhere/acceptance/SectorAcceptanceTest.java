@@ -117,7 +117,7 @@ public class SectorAcceptanceTest {
         List<AdminSectorResponse> adminSectorResponses
             = findAllSector(accessToken);
         assertThat(adminSectorResponses).hasSize(2);
-        List<SectorResponse> sectorResponses = findAllAvailableSector(accessToken);
+        List<SectorResponse> sectorResponses = searchAvailableSectors(accessToken);
         assertThat(sectorResponses).hasSize(2);
 
         // 부문 삭제
@@ -127,13 +127,13 @@ public class SectorAcceptanceTest {
         assertThat(adminSectorResponse.getState()).isEqualTo(SectorState.DELETED.getName());
 
         adminSectorResponses = findAllSector(accessToken);
-        sectorResponses = findAllAvailableSector(accessToken);
+        sectorResponses = searchAvailableSectors(accessToken);
         assertThat(adminSectorResponses).hasSize(2);
         assertThat(sectorResponses).hasSize(1);
 
         deleteSector(accessToken, anotherId);
         adminSectorResponses = findAllSector(accessToken);
-        sectorResponses = findAllAvailableSector(accessToken);
+        sectorResponses = searchAvailableSectors(accessToken);
         assertThat(adminSectorResponses).hasSize(2);
         assertThat(sectorResponses).hasSize(0);
     }
@@ -219,7 +219,7 @@ public class SectorAcceptanceTest {
         assertThat(failReasonSectorD).contains("사용");
 
         // 사용자 B - 사용할 수 있는 부문 조회
-        List<SectorResponse> allInUseSector = findAllAvailableSector(userBToken);
+        List<SectorResponse> allInUseSector = searchAvailableSectors(userBToken);
 
         assertThat(allInUseSector).contains(findAvailableSector(userBToken, sectorAId)); // 승인
         assertThatThrownBy(() -> findAvailableSector(userBToken, sectorBId));            // 반려
@@ -546,7 +546,7 @@ public class SectorAcceptanceTest {
             .log().all();
     }
 
-    private List<SectorResponse> findAllAvailableSector(String accessToken) {
+    private List<SectorResponse> searchAvailableSectors(String accessToken) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)

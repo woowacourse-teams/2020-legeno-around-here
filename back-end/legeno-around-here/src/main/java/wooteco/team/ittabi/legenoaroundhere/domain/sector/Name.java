@@ -19,20 +19,27 @@ public class Name {
     @Column(nullable = false)
     private String name;
 
-    Name(String name) {
-        validate(name);
-        this.name = name.trim()
-            .replaceAll(" +", " ")
-            .toUpperCase();
+    private Name(String name) {
+        this.name = name.toUpperCase();
     }
 
-    private void validate(String name) {
+    static Name of(String name) {
+        validate(name);
+        return new Name(name.trim()
+            .replaceAll(" +", " "));
+    }
+
+    public static Name getKeywordName(String keyword) {
+        return new Name(keyword);
+    }
+
+    private static void validate(String name) {
         if (Objects.isNull(name) || isInvalid(name.trim().replaceAll("  +", " "))) {
             throw new WrongUserInputException("SectorName이 유효하지 않습니다.");
         }
     }
 
-    private boolean isInvalid(String name) {
+    private static boolean isInvalid(String name) {
         return name.isEmpty() || name.length() > 20;
     }
 }

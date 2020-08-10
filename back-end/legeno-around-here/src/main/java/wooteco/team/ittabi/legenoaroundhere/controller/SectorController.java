@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import wooteco.team.ittabi.legenoaroundhere.dto.PageRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
@@ -31,9 +32,10 @@ public class SectorController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<SectorResponse>> findAllAvailableSector(PageRequest pageRequest) {
-        Page<SectorResponse> sectors = sectorService
-            .findAllAvailableSector(pageRequest.getPageable());
+    public ResponseEntity<Page<SectorResponse>> searchAvailableSectors(PageRequest pageRequest,
+        @RequestParam(defaultValue = "") String keyword) {
+        Page<SectorResponse> sectors
+            = sectorService.searchAvailableSector(pageRequest.getPageable(), keyword);
         return ResponseEntity
             .ok(sectors);
     }

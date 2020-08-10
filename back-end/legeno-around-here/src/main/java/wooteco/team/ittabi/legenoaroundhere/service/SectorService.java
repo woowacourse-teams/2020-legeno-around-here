@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
+import wooteco.team.ittabi.legenoaroundhere.domain.sector.Name;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
@@ -23,6 +24,7 @@ import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
 @AllArgsConstructor
 public class SectorService {
 
+    private static final String DB_LIKE_FORMAT = "%%%s%%";
     private final SectorRepository sectorRepository;
     private final IAuthenticationFacade authenticationFacade;
 
@@ -73,10 +75,10 @@ public class SectorService {
     }
 
     @Transactional(readOnly = true)
-    public Page<SectorResponse> findAllAvailableSector(Pageable pageable) {
-        Page<Sector> sectorsPage = sectorRepository.findAllByStateIn(pageable,
-            SectorState.getAllAvailable());
-
+    public Page<SectorResponse> searchAvailableSector(Pageable pageable, String keyword) {
+        String likeKeyword = String.format(DB_LIKE_FORMAT, keyword);
+        Page<Sector> sectorsPage = sectorRepository.findAllByStateInAndNameIsLike(pageable,
+            SectorState.getAllAvailable(), Name.getKeywordName(likeKeyword));
         return sectorsPage.map(SectorResponse::of);
     }
 
