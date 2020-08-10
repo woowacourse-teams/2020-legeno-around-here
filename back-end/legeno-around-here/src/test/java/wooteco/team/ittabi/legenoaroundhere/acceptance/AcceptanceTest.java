@@ -24,6 +24,8 @@ public abstract class AcceptanceTest {
     @LocalServerPort
     public int port;
 
+    protected String accessToken;
+
     static RequestSpecification given() {
         return RestAssured.given().log().all();
     }

@@ -12,33 +12,31 @@ import lombok.ToString;
 import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode
-@Builder
 @ToString
-public class PostResponse {
+public class PostWithCommentsCountResponse {
 
     private Long id;
     private String writing;
     private List<ImageResponse> images;
-    private List<CommentResponse> comments;
+    private int commentsCount;
     private LikeResponse likeResponse;
     private UserResponse creator;
     private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
 
-    public static PostResponse of(Post post, List<CommentResponse> commentResponses,
-        LikeResponse likeResponse) {
-        return PostResponse.builder()
+    public static PostWithCommentsCountResponse of(Post post,
+        List<CommentResponse> commentResponses, LikeResponse likeResponse) {
+        return PostWithCommentsCountResponse.builder()
             .id(post.getId())
             .writing(post.getWriting())
             .images(ImageResponse.listOf(post.getImages()))
-            .comments(commentResponses)
+            .commentsCount(commentResponses.size())
             .creator(UserResponse.from(post.getCreator()))
             .likeResponse(likeResponse)
             .createdAt(post.getCreatedAt())
-            .modifiedAt(post.getModifiedAt())
             .build();
     }
 }

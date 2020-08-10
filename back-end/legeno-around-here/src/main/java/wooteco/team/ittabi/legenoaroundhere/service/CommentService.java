@@ -56,7 +56,7 @@ public class CommentService {
     @Transactional
     public void deleteComment(Long commentId) {
         Comment comment = findNotDeletedComment(commentId);
-        validateIsOwner(comment);
+        validateIsCreator(comment);
         comment.setState(State.DELETED);
     }
 
@@ -66,10 +66,10 @@ public class CommentService {
                 new NotExistsException("Comment ID : " + commentId + " 에 해당하는 Comment가 없습니다!"));
     }
 
-    private void validateIsOwner(Comment comment) {
+    private void validateIsCreator(Comment comment) {
         User user = (User) authenticationFacade.getPrincipal();
 
-        if (user.isNotSame(comment.getUser())) {
+        if (user.isNotSame(comment.getCreator())) {
             throw new NotAuthorizedException("권한이 없습니다.");
         }
     }
