@@ -79,9 +79,6 @@ public class Sector extends BaseEntity {
         Objects.requireNonNull(state, "SectorState는 Null일 수 없습니다.");
         Objects.requireNonNull(reason, "Reason은 Null일 수 없습니다.");
         Objects.requireNonNull(lastModifier, "LastModifier는 Null일 수 없습니다.");
-        if (state.equals(SectorState.REJECTED)) {
-            name.setSuffixRejected();
-        }
         this.state = state;
         this.reason = reason;
         this.lastModifier = lastModifier;
@@ -101,5 +98,9 @@ public class Sector extends BaseEntity {
 
     public String getStateExceptionName() {
         return state.getExceptionName();
+    }
+
+    public boolean isUniqueState() {
+        return state.isUnique();
     }
 }

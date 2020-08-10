@@ -98,16 +98,4 @@ class SectorTest {
         assertThat(sector.getStringName()).isEqualToIgnoringCase(TEST_SECTOR_NAME);
         assertThat(sector.getState()).isEqualTo(SectorState.DELETED);
     }
-
-    @DisplayName("Sector의 상태를 REJECTED로 Update시 Sector명에 _REJECTED Suffix를 붙인다.")
-    @Test
-    void setState_UpdateReject_SectorNameSuffixReject() {
-        Sector sector
-            = makeSector(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION, user, SectorState.PUBLISHED);
-
-        sector.setState(SectorState.REJECTED, "반려", user);
-
-        assertThat(sector.getStringName()).isEqualToIgnoringCase(TEST_SECTOR_NAME + "_REJECTED");
-        assertThat(sector.getState()).isEqualTo(SectorState.REJECTED);
-    }
 }

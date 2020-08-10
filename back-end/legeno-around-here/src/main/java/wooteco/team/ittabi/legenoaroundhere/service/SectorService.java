@@ -29,16 +29,24 @@ public class SectorService {
     public SectorResponse createSector(SectorRequest sectorRequest) {
         User user = (User) authenticationFacade.getPrincipal();
         Sector sector = sectorRequest.toSector(user, SectorState.PUBLISHED);
+
+        validateSectorUnique(sector);
         return saveSector(sector);
     }
 
-    private SectorResponse saveSector(Sector sector) {
-        sectorRepository.findByName(sector.getName())
-            .ifPresent(foundSector -> {
+    private void validateSectorUnique(Sector sector) {
+        List<Sector> sectors = sectorRepository.findAllByName(sector.getName());
+        sectors.remove(sector);
+
+        for (Sector foundSector : sectors) {
+            if (foundSector.isUniqueState()) {
                 throw new NotUniqueException(foundSector.getStateExceptionName() + " 상태의 ["
                     + foundSector.getName() + "] 부문이 이미 존재합니다.");
-            });
+            }
+        }
+    }
 
+    private SectorResponse saveSector(Sector sector) {
         Sector savedSector = sectorRepository.save(sector);
         return SectorResponse.of(savedSector);
     }
@@ -105,6 +113,7 @@ public class SectorService {
         User user = (User) authenticationFacade.getPrincipal();
         Sector sector = sectorRequest.toSector(user, SectorState.PENDING);
 
+        validateSectorUnique(sector);
         return saveSector(sector);
     }
 
@@ -119,6 +128,8 @@ public class SectorService {
     public void updateSectorState(Long id, SectorUpdateStateRequest sectorUpdateStateRequest) {
         User user = (User) authenticationFacade.getPrincipal();
         Sector sector = findSectorBy(id);
+
+        validateSectorUnique(sector);
         sector.setState(sectorUpdateStateRequest.getSectorState(),
             sectorUpdateStateRequest.getReason(), user);
     }

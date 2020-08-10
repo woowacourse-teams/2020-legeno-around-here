@@ -5,20 +5,22 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 public enum SectorState {
 
-    PUBLISHED("등록", "사용", true),
-    DELETED("삭제", "삭제", false),
-    PENDING("승인 신청", "승인 신청", false),
-    APPROVED("승인", "사용", true),
-    REJECTED("반려", "반려", false);
+    PUBLISHED("등록", "사용", true, true),
+    DELETED("삭제", "삭제", false, false),
+    PENDING("승인 신청", "승인 신청", false, true),
+    APPROVED("승인", "사용", true, true),
+    REJECTED("반려", "반려", false, false);
 
     private final String name;
     private final String exceptionName;
     private final boolean used;
+    private final boolean unique;
 
-    SectorState(String name, String exceptionName, boolean used) {
+    SectorState(String name, String exceptionName, boolean used, boolean unique) {
         this.name = name;
         this.exceptionName = exceptionName;
         this.used = used;
+        this.unique = unique;
     }
 
     public static SectorState of(String name) {
@@ -38,5 +40,9 @@ public enum SectorState {
 
     public boolean isUsed() {
         return used;
+    }
+
+    public boolean isUnique() {
+        return unique;
     }
 }

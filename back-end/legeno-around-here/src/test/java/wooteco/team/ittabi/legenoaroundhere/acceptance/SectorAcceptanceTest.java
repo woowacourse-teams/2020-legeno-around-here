@@ -200,28 +200,29 @@ public class SectorAcceptanceTest {
         String wrongSectorName = "부적합한 부문명";
         updateStateSector(adminToken, sectorBId, "반려", wrongSectorName);
 
-        // 사용자 B - 부문 A, B, C, D 등록 (실패)
+        // 사용자 B - 부문 B 등록 (성공)
+        Long sectorNewBId = createPendingSector(userAToken, "B", TEST_SECTOR_DESCRIPTION);
+
+        // 사용자 B - 부문 A, C, D 등록 (실패)
         String failReasonSectorA
             = createPendingSectorAndFail(userAToken, "A", TEST_SECTOR_DESCRIPTION);
-        String failReasonSectorB
-            = createPendingSectorAndFail(userAToken, "B_REJECTED", TEST_SECTOR_DESCRIPTION);
         String failReasonSectorC
             = createPendingSectorAndFail(userAToken, "C", TEST_SECTOR_DESCRIPTION);
-//        String failReasonSectorD
-//            = createPendingSectorAndFail(userAToken, "D", TEST_SECTOR_DESCRIPTION);
+        String failReasonSectorD
+            = createPendingSectorAndFail(userAToken, "D", TEST_SECTOR_DESCRIPTION);
 
         assertThat(failReasonSectorA).contains("사용");
-        assertThat(failReasonSectorB).contains("반려");
         assertThat(failReasonSectorC).contains("신청");
-//        assertThat(failReasonSectorD).contains("사용");
+        assertThat(failReasonSectorD).contains("사용");
 
         // 사용자 B - 사용할 수 있는 부문 조회
         List<SectorResponse> allInUseSector = findAllInUseSector(userBToken);
 
-//        assertThat(allInUseSector).contains(findInUseSector(userBToken, sectorAId));
-//        assertThatThrownBy(() -> findInUseSector(userBToken, sectorBId));
-//        assertThat(allInUseSector).contains(findInUseSector(userBToken, sectorCId));
-//        assertThatThrownBy(() -> findInUseSector(userBToken, sectorDId));
+        assertThat(allInUseSector).contains(findInUseSector(userBToken, sectorAId)); // 승인
+        assertThatThrownBy(() -> findInUseSector(userBToken, sectorBId));            // 반려
+        assertThatThrownBy(() -> findInUseSector(userBToken, sectorCId));            // 승인 신청
+        assertThat(allInUseSector).contains(findInUseSector(userBToken, sectorDId)); // 등록
+        assertThatThrownBy(() -> findInUseSector(userBToken, sectorNewBId));         // 승인 신청
 
         // 사용자 A - 승인 목록 조회
         sectors = getAllMySector(userAToken);

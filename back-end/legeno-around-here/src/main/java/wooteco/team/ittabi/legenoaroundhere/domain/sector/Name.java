@@ -18,7 +18,7 @@ public class Name {
 
     private static final String REJECTED_SUFFIX = "_" + SectorState.REJECTED.name();
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String name;
 
     Name(String name) {
@@ -36,12 +36,5 @@ public class Name {
 
     private boolean isInvalid(String name) {
         return name.isEmpty() || name.length() > 20;
-    }
-
-    public void setSuffixRejected() {
-        if (name.endsWith(REJECTED_SUFFIX)) {
-            return;
-        }
-        name += REJECTED_SUFFIX;
     }
 }
