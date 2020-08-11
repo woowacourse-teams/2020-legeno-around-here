@@ -38,7 +38,8 @@ public class SectorService {
     }
 
     private void validateSectorUnique(Sector sector) {
-        List<Sector> sectors = sectorRepository.findAllByName(sector.getName());
+        Name targetName = Name.of(sector.getName());
+        List<Sector> sectors = sectorRepository.findAllByName(targetName);
         sectors.remove(sector);
 
         sectors.stream()

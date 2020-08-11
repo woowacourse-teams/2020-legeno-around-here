@@ -23,7 +23,7 @@ public class Name {
         this.name = name.toUpperCase();
     }
 
-    static Name of(String name) {
+    public static Name of(String name) {
         validate(name);
         return new Name(name.trim()
             .replaceAll(" +", " "));

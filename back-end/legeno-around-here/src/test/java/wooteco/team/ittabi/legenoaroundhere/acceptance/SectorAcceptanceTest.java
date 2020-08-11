@@ -3,17 +3,17 @@ package wooteco.team.ittabi.legenoaroundhere.acceptance;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_PASSWORD;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ANOTHER_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_ANOTHER_DESCRIPTION;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_ANOTHER_NAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_DESCRIPTION;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ANOTHER_DESCRIPTION;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ANOTHER_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ANOTHER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
 
 import io.restassured.RestAssured;
 import java.util.ArrayList;
@@ -302,47 +302,40 @@ public class SectorAcceptanceTest {
         expectedIds = ids.subList(20, 40);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
-        // Page, Size, Direction 오기입 조회 (자동 값 : 1Page, 1Size, 방향:오름차순)
-        sectors = findAllSectorWithParameter(accessToken,
-            "page=-1&size=1&sortedBy=id&direction=asc");
+        // 비워두고 조회
+        sectors = findAllSectorWithParameter(accessToken, "size=1&sortedBy=id&direction=asc");
         assertThat(sectors).hasSize(1);
         expectedIds = ids.subList(0, 1);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
-        sectors = findAllSectorWithParameter(accessToken,
-            "page=1&size=-1&sortedBy=id&direction=asc");
+        sectors = findAllSectorWithParameter(accessToken, "page=&size=1&sortedBy=id&direction=asc");
         assertThat(sectors).hasSize(1);
         expectedIds = ids.subList(0, 1);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
-        sectors = findAllSectorWithParameter(accessToken,
-            "page=1&size=51&sortedBy=id&direction=asc");
-        assertThat(sectors).hasSize(50);
-        expectedIds = ids.subList(0, 50);
-        assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
-
-        sectors = findAllSectorWithParameter(accessToken,
-            "page=1&size=1&sortedBy=id&direction=abc");
-        assertThat(sectors).hasSize(1);
-        expectedIds = ids.subList(0, 1);
-        assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
-
-        sectors = findAllSectorWithParameter(accessToken, "size=1&sortedBy=id&direction=abc");
-        assertThat(sectors).hasSize(1);
-        expectedIds = ids.subList(0, 1);
-        assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
-
-        sectors = findAllSectorWithParameter(accessToken, "page=1&sortedBy=id&direction=abc");
+        sectors = findAllSectorWithParameter(accessToken, "page=1&sortedBy=id&direction=asc");
         assertThat(sectors).hasSize(10);
         expectedIds = ids.subList(0, 10);
-        assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
+
+        sectors = findAllSectorWithParameter(accessToken, "page=1&size=&sortedBy=id&direction=asc");
+        assertThat(sectors).hasSize(10);
+        expectedIds = ids.subList(0, 10);
 
         sectors = findAllSectorWithParameter(accessToken, "page=1&size=1&sortedBy=id");
         assertThat(sectors).hasSize(1);
         expectedIds = ids.subList(0, 1);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
+        sectors = findAllSectorWithParameter(accessToken, "page=1&size=1&sortedBy=id&direction=");
+        assertThat(sectors).hasSize(1);
+        expectedIds = ids.subList(0, 1);
+        assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
+
         // 유효하지 않은 필드로 정렬
+        findAllSectorWithWrongParameter(accessToken, "page=-1&size=1&sortedBy=id&direction=asc");
+        findAllSectorWithWrongParameter(accessToken, "page=1&size=-1&sortedBy=id&direction=asc");
+        findAllSectorWithWrongParameter(accessToken, "page=1&size=51&sortedBy=id&direction=asc");
+        findAllSectorWithWrongParameter(accessToken, "page=1&size=1&sortedBy=id&direction=abc");
         findAllSectorWithWrongParameter(accessToken, "page=ㄱ&size=1&sortedBy=id");
         findAllSectorWithWrongParameter(accessToken, "page=1&size=ㄴ&sortedBy=id");
         findAllSectorWithWrongParameter(accessToken, "page=1&size=20&sortedBy=ㄷ&direction=asc");
@@ -380,26 +373,27 @@ public class SectorAcceptanceTest {
             createSector(accessToken, TEST_SECTOR_NAME + i, TEST_SECTOR_DESCRIPTION);
         }
 
-        List<SectorResponse> sectors = searchAvailableSectorsWithParameter(accessToken,
-            "page=10&size=11");
+        List<SectorResponse> sectors
+            = searchAvailableSectorsWithParameter(accessToken, "page=10&size=11");
         assertThat(sectors).hasSize(1);
 
         sectors = searchAvailableSectorsWithParameter(accessToken, "keyword=&page=10&size=11");
         assertThat(sectors).hasSize(1);
 
-        sectors = searchAvailableSectorsWithParameter(accessToken,
-            "keyword=SECTOR&page=10&size=11");
+        sectors
+            = searchAvailableSectorsWithParameter(accessToken, "keyword=SECTOR&page=10&size=11");
         assertThat(sectors).hasSize(1);
 
-        sectors = searchAvailableSectorsWithParameter(accessToken,
-            "keyword=sector&page=10&size=11");
+        sectors
+            = searchAvailableSectorsWithParameter(accessToken, "keyword=sector&page=10&size=11");
         assertThat(sectors).hasSize(1);
 
-        sectors = searchAvailableSectorsWithParameter(accessToken,
-            "keyword=Sector&page=10&size=11");
+        sectors
+            = searchAvailableSectorsWithParameter(accessToken, "keyword=Sector&page=10&size=11");
         assertThat(sectors).hasSize(1);
 
-        sectors = searchAvailableSectorsWithParameter(accessToken, "keyword=9&page=1&size=20");
+        sectors
+            = searchAvailableSectorsWithParameter(accessToken, "keyword=9&page=1&size=20");
         assertThat(sectors).hasSize(19);
     }
 

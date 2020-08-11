@@ -2,12 +2,13 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_ANOTHER_DESCRIPTION;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_ANOTHER_NAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_DESCRIPTION;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_INVALID_SECTOR_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ANOTHER_DESCRIPTION;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ANOTHER_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_NICKNAME;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,6 @@ import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
     AuthenticationFacade.class})
 class SectorServiceTest {
 
-    private static final long INVALID_ID = -1L;
     @Autowired
     SectorService sectorService;
 
@@ -117,7 +117,7 @@ class SectorServiceTest {
     @DisplayName("사용중인 Sector 조회 - 예외 발생, ID가 없는 경우")
     @Test
     void findUsedSector_HasNotId_ThrowException() {
-        assertThatThrownBy(() -> sectorService.findAvailableSector(INVALID_ID))
+        assertThatThrownBy(() -> sectorService.findAvailableSector(TEST_INVALID_SECTOR_ID))
             .isInstanceOf(NotExistsException.class);
     }
 
@@ -186,7 +186,7 @@ class SectorServiceTest {
     void updateSector_HasNotId_ThrownException() {
         SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
 
-        assertThatThrownBy(() -> sectorService.updateSector(INVALID_ID, sectorRequest))
+        assertThatThrownBy(() -> sectorService.updateSector(TEST_INVALID_SECTOR_ID, sectorRequest))
             .isInstanceOf(NotExistsException.class);
     }
 
@@ -236,14 +236,14 @@ class SectorServiceTest {
     @DisplayName("Sector 삭제 - 예외 발생, ID가 없는 경우")
     @Test
     void deleteSector_HasNotId_ThrownException() {
-        assertThatThrownBy(() -> sectorService.deleteSector(INVALID_ID))
+        assertThatThrownBy(() -> sectorService.deleteSector(TEST_INVALID_SECTOR_ID))
             .isInstanceOf(NotExistsException.class);
     }
 
     @DisplayName("Sector 조회 - 예외 발생, ID가 없는 경우")
     @Test
     void findSector_HasNotId_ThrowException() {
-        assertThatThrownBy(() -> sectorService.findSector(INVALID_ID))
+        assertThatThrownBy(() -> sectorService.findSector(TEST_INVALID_SECTOR_ID))
             .isInstanceOf(NotExistsException.class);
     }
 

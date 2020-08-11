@@ -1,7 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.infra;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
 
 import java.util.ArrayList;
 import java.util.List;
