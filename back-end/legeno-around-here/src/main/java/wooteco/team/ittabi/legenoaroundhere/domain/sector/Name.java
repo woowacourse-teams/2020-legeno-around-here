@@ -19,7 +19,7 @@ public class Name {
     @Column(nullable = false)
     private String name;
 
-    Name(String name) {
+    public Name(String name) {
         validate(name);
         this.name = name.trim()
             .replaceAll(" +", " ")

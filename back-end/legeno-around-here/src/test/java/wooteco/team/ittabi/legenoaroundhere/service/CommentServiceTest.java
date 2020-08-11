@@ -2,12 +2,14 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.EMPTY_MULTIPART_FILES;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostTestConstants.TEST_WRITING;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ANOTHER_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.EMPTY_MULTIPART_FILES;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_INVALID_POST_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_WRITING;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_REQUEST;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ANOTHER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
@@ -30,6 +32,9 @@ public class CommentServiceTest extends ServiceTest {
     private PostResponse postResponse;
 
     @Autowired
+    private SectorService sectorService;
+
+    @Autowired
     private PostService postService;
 
     @Autowired
@@ -40,8 +45,11 @@ public class CommentServiceTest extends ServiceTest {
         user = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         another = createUser(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         setAuthentication(user);
-        PostRequest postRequest = new PostRequest(TEST_WRITING, EMPTY_MULTIPART_FILES);
-        postResponse = postService.createPost(postRequest);
+
+        Long sectorId = sectorService.createSector(TEST_SECTOR_REQUEST).getId();
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_WRITING,
+            EMPTY_MULTIPART_FILES, sectorId);
+        postResponse = postService.createPost(postCreateRequest);
     }
 
     @DisplayName("댓글 생성 - 성공")
@@ -105,9 +113,7 @@ public class CommentServiceTest extends ServiceTest {
     @DisplayName("댓글 조회 - 실패, 찾는 Comment ID가 없을 경우")
     @Test
     void findComment_HasNotCommentId_ThrownException() {
-        Long invalidId = -1L;
-
-        assertThatThrownBy(() -> commentService.findComment(invalidId))
+        assertThatThrownBy(() -> commentService.findComment(TEST_INVALID_POST_ID))
             .isInstanceOf(NotExistsException.class);
     }
 

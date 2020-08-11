@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
+import wooteco.team.ittabi.legenoaroundhere.domain.sector.Name;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
@@ -36,7 +37,8 @@ public class SectorService {
     }
 
     private void validateSectorUnique(Sector sector) {
-        List<Sector> sectors = sectorRepository.findAllByName(sector.getName());
+        Name targetName = new Name(sector.getName());
+        List<Sector> sectors = sectorRepository.findAllByName(targetName);
         sectors.remove(sector);
 
         sectors.stream()

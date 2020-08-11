@@ -6,11 +6,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.TEST_IMAGE_DIR;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostTestConstants.TEST_WRITING;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_DIR;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_WRITING;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
 
 import io.restassured.RestAssured;
 import io.restassured.config.RestAssuredConfig;
@@ -47,6 +52,7 @@ public class PostAcceptanceTest {
     private S3Uploader s3Uploader;
 
     private String accessToken;
+    private Long sectorId;
 
     @BeforeEach
     void setUp() {
@@ -55,6 +61,8 @@ public class PostAcceptanceTest {
         createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
         accessToken = tokenResponse.getAccessToken();
+
+        sectorId = createSector();
     }
 
     /**
@@ -252,6 +260,50 @@ public class PostAcceptanceTest {
             .extract().as(TokenResponse.class);
     }
 
+    private Long createSector() {
+        String accessToken = getCreateAdminToken();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("name", TEST_SECTOR_NAME);
+        params.put("description", TEST_SECTOR_DESCRIPTION);
+
+        String location = given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/admin/sectors")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract()
+            .header("Location");
+
+        return getIdFromUrl(location);
+    }
+
+    private String getCreateAdminToken() {
+        createAdmin();
+        TokenResponse tokenResponse = login(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD);
+        return tokenResponse.getAccessToken();
+    }
+
+    private void createAdmin() {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", TEST_ADMIN_EMAIL);
+        params.put("nickname", TEST_ADMIN_NICKNAME);
+        params.put("password", TEST_ADMIN_PASSWORD);
+
+        given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/joinAdmin")
+            .then()
+            .statusCode(HttpStatus.CREATED.value());
+    }
+
     private void findNotExistsPost(Long id, String accessToken) {
         given()
             .header("X-AUTH-TOKEN", accessToken)
@@ -343,6 +395,7 @@ public class PostAcceptanceTest {
         return given()
             .log().all()
             .formParam("writing", TEST_WRITING)
+            .formParam("sectorId", sectorId)
             .header("X-AUTH-TOKEN", accessToken)
             .config(RestAssuredConfig.config()
                 .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
@@ -361,6 +414,7 @@ public class PostAcceptanceTest {
         return given()
             .log().all()
             .formParam("writing", TEST_WRITING)
+            .formParam("sectorId", sectorId)
             .header("X-AUTH-TOKEN", accessToken)
             .config(RestAssuredConfig.config()
                 .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
