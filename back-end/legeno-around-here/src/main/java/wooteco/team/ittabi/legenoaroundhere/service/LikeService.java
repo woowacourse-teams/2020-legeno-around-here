@@ -3,14 +3,13 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.like.Like;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.like.LikeState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.LikeResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
-import wooteco.team.ittabi.legenoaroundhere.repository.LikeRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 
 @Service
@@ -18,42 +17,33 @@ import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 public class LikeService {
 
     private final PostRepository postRepository;
-    private final LikeRepository likeRepository;
+    private final IAuthenticationFacade authenticationFacade;
 
     @Transactional
-    public LikeResponse pressLike(Long postId, User user) {
+    public LikeResponse pressLike(Long postId) {
+        User user = (User) authenticationFacade.getPrincipal();
         Post post = findNotDeletedPost(postId);
-        boolean isLikeAlreadyExists = isLikeExists(post, user);
+        Like like = executeLike(post, user);
+        return LikeResponse.of(post.getLikeCount(), like.getLikeState());
+    }
 
-        if (isLikeAlreadyExists) {
+    private Like executeLike(Post post, User user) {
+        if (post.existLikeBy(user)) {
             return inactivateLike(post, user);
         }
         return activateLike(post, user);
     }
 
-    private boolean isLikeExists(Post post, User user) {
-        return likeRepository.existsByPostIdAndUserId(post.getId(), user.getId());
+    private Like inactivateLike(Post post, User user) {
+        Like like = post.findLikeBySameUser(user);
+        like.inactivate(post);
+        return like;
     }
 
-    private LikeResponse inactivateLike(Post post, User user) {
-        likeRepository.deleteByPostIdAndUserId(post.getId(), user.getId());
-        post.minusLikeCount();
-        return LikeResponse.of(post.getLikeCount(), LikeState.INACTIVATED);
-    }
-
-    private LikeResponse activateLike(Post post, User user) {
-        likeRepository.save(new Like(post, user));
-        post.plusLikeCount();
-        return LikeResponse.of(post.getLikeCount(), LikeState.ACTIVATED);
-    }
-
-    @Transactional(readOnly = true)
-    public LikeResponse findByPostId(Long postId, User user) {
-        Post post = findNotDeletedPost(postId);
-        if (isLikeExists(post, user)) {
-            return LikeResponse.of(post.getLikeCount(), LikeState.ACTIVATED);
-        }
-        return LikeResponse.of(post.getLikeCount(), LikeState.INACTIVATED);
+    private Like activateLike(Post post, User user) {
+        Like like = new Like(post, user);
+        like.activate(post);
+        return like;
     }
 
     private Post findNotDeletedPost(Long postId) {

@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,19 +11,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.Image;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.like.Like;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.like.LikeState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
-import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.LikeResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
+import wooteco.team.ittabi.legenoaroundhere.repository.CommentRepository;
+import wooteco.team.ittabi.legenoaroundhere.repository.LikeRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
+import wooteco.team.ittabi.legenoaroundhere.utils.ImageUploader;
 
 @Slf4j
 @Transactional
@@ -31,43 +35,37 @@ import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final CommentService commentService;
-    private final ImageService imageService;
-    private final LikeService likeService;
+    private final CommentRepository commentRepository;
+    private final LikeRepository likeRepository;
+    private final ImageUploader imageUploader;
     private final IAuthenticationFacade authenticationFacade;
 
     @Transactional
     public PostResponse createPost(PostRequest postRequest) {
         User user = (User) authenticationFacade.getPrincipal();
         Post post = postRequest.toPost(user);
-        List<Image> images = uploadImages(postRequest);
+        uploadImages(postRequest).forEach(image -> image.setPost(post));
 
-        images.forEach(image -> image.setPost(post));
         Post savedPost = postRepository.save(post);
-        List<CommentResponse> commentResponses = commentService.findAllComment(savedPost.getId());
-        LikeResponse likeResponse = LikeResponse
-            .of(savedPost.getLikeCount(), LikeState.INACTIVATED);
-
-        return PostResponse.of(savedPost, commentResponses, likeResponse);
+        List<Comment> comments = findAllComment(post.getId());
+        LikeState likeState = findLike(post).getLikeState();
+        return PostResponse.of(savedPost, comments, likeState);
     }
 
     private List<Image> uploadImages(PostRequest postRequest) {
         if (postRequest.isImagesNull()) {
             return Collections.emptyList();
         }
-
         return postRequest.getImages().stream()
-            .map(imageService::upload)
+            .map(imageUploader::uploadImage)
             .collect(Collectors.toList());
     }
 
     public PostResponse findPost(Long id) {
-        User user = (User) authenticationFacade.getPrincipal();
         Post post = findNotDeletedPost(id);
-        List<CommentResponse> commentResponses = commentService.findAllComment(post.getId());
-        LikeResponse likeResponse = likeService.findByPostId(post.getId(), user);
-
-        return PostResponse.of(post, commentResponses, likeResponse);
+        List<Comment> comments = findAllComment(post.getId());
+        LikeState likeState = findLike(post).getLikeState();
+        return PostResponse.of(post, comments, likeState);
     }
 
     private Post findNotDeletedPost(Long id) {
@@ -76,13 +74,13 @@ public class PostService {
     }
 
     public Page<PostWithCommentsCountResponse> findAllPost(Pageable pageable) {
-        User user = (User) authenticationFacade.getPrincipal();
         Page<Post> posts = postRepository.findByStateNot(pageable, State.DELETED);
         return posts
-            .map(post -> PostWithCommentsCountResponse.of(post,
-                commentService.findAllComment(post.getId()),
-                likeService.findByPostId(post.getId(), user)
-            ));
+            .map(post -> {
+                List<Comment> comments = findAllComment(post.getId());
+                LikeState likeState = findLike(post).getLikeState();
+                return PostWithCommentsCountResponse.of(post, comments, likeState);
+            });
     }
 
     @Transactional
@@ -98,6 +96,16 @@ public class PostService {
         Post post = findNotDeletedPost(id);
         validateIsCreator(post);
         post.setState(State.DELETED);
+    }
+
+    private List<Comment> findAllComment(Long postId) {
+        return new ArrayList<>(commentRepository.findAllByPostIdAndStateNot(postId, State.DELETED));
+    }
+
+    private Like findLike(Post post) {
+        User user = (User) authenticationFacade.getPrincipal();
+        return likeRepository.findByPostIdAndCreatorId(post.getId(), user.getId())
+            .orElseGet(() -> new Like(post, user));
     }
 
     private void validateIsCreator(Post post) {

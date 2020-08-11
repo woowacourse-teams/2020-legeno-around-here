@@ -3,7 +3,6 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.EMPTY_MULTIPART_FILES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostTestConstants.TEST_WRITING;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ANOTHER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
@@ -21,7 +20,6 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 public class LikeServiceTest extends ServiceTest {
 
     private User user;
-    private User another;
     private PostResponse postResponse;
 
     @Autowired
@@ -33,7 +31,6 @@ public class LikeServiceTest extends ServiceTest {
     @BeforeEach
     void setUp() {
         user = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
-        another = createUser(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         setAuthentication(user);
 
         PostRequest postRequest = new PostRequest(TEST_WRITING, EMPTY_MULTIPART_FILES);
@@ -43,19 +40,19 @@ public class LikeServiceTest extends ServiceTest {
     @DisplayName("비활성화된 좋아요를 활성화")
     @Test
     void pressLike_activeLike_SuccessToActiveLike() {
-        LikeResponse activateLikeResponse = likeService.pressLike(postResponse.getId(), user);
+        LikeResponse activateLikeResponse = likeService.pressLike(postResponse.getId());
 
         assertThat(activateLikeResponse.getLikeCount()).isEqualTo(1L);
-        assertThat(activateLikeResponse.getState()).isEqualTo(LikeState.ACTIVATED);
+        assertThat(activateLikeResponse.getLikeState()).isEqualTo(LikeState.ACTIVATED.name());
     }
 
     @DisplayName("활성화된 좋아요를 비활성화")
     @Test
     void pressLike_inactiveLike_SuccessToInactiveLike() {
-        likeService.pressLike(postResponse.getId(), user);
-        LikeResponse inactivatedLikeResponse = likeService.pressLike(postResponse.getId(), user);
+        likeService.pressLike(postResponse.getId());
+        LikeResponse inactivatedLikeResponse = likeService.pressLike(postResponse.getId());
 
         assertThat(inactivatedLikeResponse.getLikeCount()).isEqualTo(0L);
-        assertThat(inactivatedLikeResponse.getState()).isEqualTo(LikeState.INACTIVATED);
+        assertThat(inactivatedLikeResponse.getLikeState()).isEqualTo(LikeState.INACTIVATED.name());
     }
 }

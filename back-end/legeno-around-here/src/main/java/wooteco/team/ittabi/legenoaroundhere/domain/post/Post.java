@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -21,8 +20,9 @@ import lombok.Setter;
 import lombok.ToString;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.Image;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.like.LikeCount;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.like.Like;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 @Entity
@@ -50,12 +50,12 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
+
     @ManyToOne
     @JoinColumn(name = "creator_id")
     private User creator;
-
-    @Embedded
-    private LikeCount likeCount = new LikeCount(DEFAULT_LIKE_COUNT);
 
     public Post(User creator, String writing) {
         validateLength(writing);
@@ -78,15 +78,27 @@ public class Post extends BaseEntity {
         return !Objects.equals(this.state, state);
     }
 
-    public void plusLikeCount() {
-        likeCount = likeCount.plusLikeCount();
+    public int getLikeCount() {
+        return likes.size();
     }
 
-    public void minusLikeCount() {
-        likeCount = likeCount.minusLikeCount();
+    public boolean existLikeBy(User user) {
+        return likes.stream()
+            .anyMatch(like -> like.isSameUser(user));
     }
 
-    public long getLikeCount() {
-        return likeCount.getLikeCount();
+    public Like findLikeBySameUser(User user) {
+        return likes.stream()
+            .filter(like -> like.isSameUser(user))
+            .findFirst()
+            .orElseThrow(() -> new NotExistsException("해당하는 user의 Like가 없습니다!"));
+    }
+
+    public void addLike(Like like) {
+        likes.add(like);
+    }
+
+    public void removeLike(Like like) {
+        likes.remove(like);
     }
 }

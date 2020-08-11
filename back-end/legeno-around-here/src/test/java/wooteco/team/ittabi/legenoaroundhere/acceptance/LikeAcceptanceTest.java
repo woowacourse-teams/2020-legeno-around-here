@@ -49,13 +49,19 @@ public class LikeAcceptanceTest extends AcceptanceTest {
         LikeResponse activatedLikeResponse = pressLike(postResponse.getId(), accessToken);
 
         assertThat(activatedLikeResponse.getLikeCount()).isEqualTo(1L);
-        assertThat(activatedLikeResponse.getState()).isEqualTo(LikeState.ACTIVATED);
+        assertThat(activatedLikeResponse.getLikeState()).isEqualTo(LikeState.ACTIVATED.name());
 
         // 활성화된 좋아요를 비활성화
         LikeResponse inactivatedLikeResponse = pressLike(postResponse.getId(), accessToken);
 
         assertThat(inactivatedLikeResponse.getLikeCount()).isEqualTo(0L);
-        assertThat(inactivatedLikeResponse.getState()).isEqualTo(LikeState.INACTIVATED);
+        assertThat(inactivatedLikeResponse.getLikeState()).isEqualTo(LikeState.INACTIVATED.name());
+
+        // 비활성화된 좋아요를 다시 활성화
+        LikeResponse againActivatedLikeResponse = pressLike(postResponse.getId(), accessToken);
+
+        assertThat(againActivatedLikeResponse.getLikeCount()).isEqualTo(1L);
+        assertThat(againActivatedLikeResponse.getLikeState()).isEqualTo(LikeState.ACTIVATED.name());
     }
 
     private LikeResponse pressLike(Long postId, String accessToken) {
