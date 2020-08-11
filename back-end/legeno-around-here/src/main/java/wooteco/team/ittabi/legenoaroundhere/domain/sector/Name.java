@@ -16,7 +16,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @ToString
 public class Name {
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String name;
 
     Name(String name) {

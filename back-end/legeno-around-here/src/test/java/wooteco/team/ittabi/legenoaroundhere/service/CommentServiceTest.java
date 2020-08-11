@@ -13,12 +13,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
-import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
@@ -27,43 +22,24 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
-import wooteco.team.ittabi.legenoaroundhere.repository.CommentRepository;
-import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 
-@ExtendWith(MockitoExtension.class)
-public class CommentServiceTest extends AuthServiceTest {
+public class CommentServiceTest extends ServiceTest {
 
     private User user;
     private User another;
     private PostResponse postResponse;
+
+    @Autowired
     private PostService postService;
+
+    @Autowired
     private CommentService commentService;
-    private ImageService imageService;
-
-    @Mock
-    private S3Uploader s3Uploader;
-
-    @Autowired
-    private PostRepository postRepository;
-
-    @Autowired
-    private CommentRepository commentRepository;
-
-    @Autowired
-    private IAuthenticationFacade authenticationFacade;
 
     @BeforeEach
     void setUp() {
-        commentService = new CommentService(postRepository, commentRepository,
-            authenticationFacade);
-        imageService = new ImageService(s3Uploader, authenticationFacade);
-        postService = new PostService(postRepository, commentService, imageService
-            , authenticationFacade);
-
         user = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         another = createUser(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         setAuthentication(user);
-
         PostRequest postRequest = new PostRequest(TEST_WRITING, EMPTY_MULTIPART_FILES);
         postResponse = postService.createPost(postRequest);
     }
@@ -78,7 +54,7 @@ public class CommentServiceTest extends AuthServiceTest {
 
         assertThat(createdCommentResponse.getId()).isNotNull();
         assertThat(createdCommentResponse.getWriting()).isEqualTo(TEST_WRITING);
-        assertThat(createdCommentResponse.getUser()).isEqualTo(UserResponse.from(user));
+        assertThat(createdCommentResponse.getCreator()).isEqualTo(UserResponse.from(user));
     }
 
     @DisplayName("댓글 조회 - 성공")
@@ -94,7 +70,8 @@ public class CommentServiceTest extends AuthServiceTest {
         assertThat(foundCommentResponse.getId()).isEqualTo(createdCommentResponse.getId());
         assertThat(foundCommentResponse.getWriting())
             .isEqualTo(createdCommentResponse.getWriting());
-        assertThat(foundCommentResponse.getUser()).isEqualTo(createdCommentResponse.getUser());
+        assertThat(foundCommentResponse.getCreator())
+            .isEqualTo(createdCommentResponse.getCreator());
     }
 
 
@@ -162,7 +139,7 @@ public class CommentServiceTest extends AuthServiceTest {
 
     @DisplayName("댓글 삭제 - 실패, 댓글 작성자가 아님")
     @Test
-    void deleteComment_IfNotOwner_ThrowException() {
+    void deleteComment_IfNotCreator_ThrowException() {
         CommentRequest commentRequest = new CommentRequest(TEST_WRITING);
         CommentResponse commentResponse = commentService
             .createComment(postResponse.getId(), commentRequest);
