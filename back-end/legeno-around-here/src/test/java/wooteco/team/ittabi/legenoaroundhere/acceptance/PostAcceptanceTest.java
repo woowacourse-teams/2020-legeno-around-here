@@ -21,12 +21,9 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import io.restassured.RestAssured;
 import io.restassured.config.RestAssuredConfig;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -136,61 +133,6 @@ public class PostAcceptanceTest {
         List<PostWithCommentsCountResponse> foundPostResponses = findAllPost(accessToken);
 
         assertThat(foundPostResponses).hasSize(1);
-    }
-
-    /**
-     * Feature: 글 조회
-     * <p>
-     * Scenario: 글 페이징 조회한다.
-     * <p>
-     * Given 관리자가 로그인 되어있다. 글 100개가 등록되어 있다.
-     * <p>
-     * When 글 1Page 20Size를 정렬(기준:id 방향:오름차순) 조회한다. Then 1~20까지의 Post가 조회된다.
-     * <p>
-     * When 글 1Page 20Size를 정렬(기준:id 방향:내림차순) 조회한다. Then 100~81까지의 Post가 조회된다.
-     * <p>
-     * When 글 2Page 40Size를 정렬(기준:id 방향:오름차순) 조회한다. Then 21~40까지의 Post가 조회된다.
-     * <p>
-     * When 글 -1Page -1Size를 정렬(기준:id 방향:abc) 조회한다. Then 1의 Post가 조회된다. (기본 값 : 1Page, 1Size,
-     * 방향:오름차순)
-     * <p>
-     * When 글 1Page 20Size를 정렬(기준:test-id 방향:오름차순) 조회한다. Then BadRequest가 발생한다.
-     */
-    @DisplayName("글 페이징 조회")
-    @Test
-    void pagingFindPost() {
-        List<Long> ids = new ArrayList<>();
-        // 글 100개 등록
-        for (int i = 0; i < 100; i++) {
-            String postWithoutImageLocation = createPostWithoutImage(accessToken);
-            ids.add(getIdFromUrl(postWithoutImageLocation));
-        }
-
-        // 글 1Page 20Size를 정렬(기준:id 방향:오름차순) 조회
-        List<PostWithCommentsCountResponse> posts
-            = findAllPost(accessToken, "page=1&size=20&sortedBy=id&direction=asc");
-        assertThat(posts).hasSize(20);
-        List<Long> expectedIds = ids.subList(0, 20);
-        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
-
-        // 글 1Page 20Size를 정렬(기준:id 방향:내림차순) 조회
-        posts = findAllPost(accessToken, "page=1&size=20&sortedBy=id&direction=desc");
-        assertThat(posts).hasSize(20);
-        expectedIds = ids.subList(80, 100);
-        Collections.reverse(expectedIds);
-        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
-
-        // 글 2Page 20Size를 정렬(기준:id 방향:오름차순) 조회
-        posts = findAllPost(accessToken, "page=2&size=20&sortedBy=id&direction=asc");
-        assertThat(posts).hasSize(20);
-        expectedIds = ids.subList(20, 40);
-        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
-    }
-
-    private List<Long> getPostIds(List<PostWithCommentsCountResponse> posts) {
-        return posts.stream()
-            .map(PostWithCommentsCountResponse::getId)
-            .collect(Collectors.toList());
     }
 
     private String createUser(String email, String nickname, String password) {
@@ -329,19 +271,6 @@ public class PostAcceptanceTest {
             .getList("content", PostWithCommentsCountResponse.class);
     }
 
-    private List<PostWithCommentsCountResponse> findAllPost(String accessToken, String parameter) {
-        return given()
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header("X-AUTH-TOKEN", accessToken)
-            .when()
-            .get("/posts?" + parameter)
-            .then()
-            .statusCode(HttpStatus.OK.value())
-            .extract()
-            .jsonPath()
-            .getList("content", PostWithCommentsCountResponse.class);
-    }
-
     private Long getIdFromUrl(String location) {
         int lastIndex = location.lastIndexOf("/");
         return Long.valueOf(location.substring(lastIndex + 1));
@@ -360,7 +289,6 @@ public class PostAcceptanceTest {
     }
 
     private String createPostWithoutImage(String accessToken) {
-
         return given()
             .log().all()
             .formParam("writing", TEST_WRITING)
