@@ -11,6 +11,7 @@ const SubmitButton = styled.button`
   margin-left: auto;
   border: 0;
   outline: 0;
+  cursor: pointer;
 `;
 
 export default SubmitButton;
