@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.EMPTY_MULTIPART_FILES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ID;
 
@@ -63,7 +64,8 @@ public class PostControllerTest {
         doThrow(NotAuthorizedException.class).when(postService).deletePost(any());
 
         String inputJson = objectMapper.writeValueAsString(
-            new PostCreateRequest(EXPECTED_WRITING, EMPTY_MULTIPART_FILES, TEST_SECTOR_ID));
+            new PostCreateRequest(EXPECTED_WRITING, EMPTY_MULTIPART_FILES, TEST_AREA_ID,
+                TEST_SECTOR_ID));
 
         this.mockMvc.perform(delete("/posts/" + ANY_ID)
             .content(inputJson)

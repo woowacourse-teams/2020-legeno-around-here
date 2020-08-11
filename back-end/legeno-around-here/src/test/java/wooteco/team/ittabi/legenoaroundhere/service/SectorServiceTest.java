@@ -135,9 +135,24 @@ class SectorServiceTest {
             .isInstanceOf(NotExistsException.class);
     }
 
+    @DisplayName("사용중인 Sector 키워드 조회 - 성공")
+    @Test
+    void searchAvailableSectors_SearchKeyword_Success() {
+        SectorResponse sector = sectorService
+            .createSector(new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION));
+        SectorResponse anotherSector = sectorService.createSector(
+            new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION));
+
+        Page<SectorResponse> sectors = sectorService
+            .searchAvailableSectors(Pageable.unpaged(), TEST_SECTOR_ANOTHER_NAME.substring(3));
+
+        assertThat(sectors.getContent()).doesNotContain(sector);
+        assertThat(sectors.getContent()).contains(anotherSector);
+    }
+
     @DisplayName("사용중인 Sector 전체 조회 - 성공")
     @Test
-    void findAllUsedSector_Success() {
+    void searchAvailableSectors_Success() {
         SectorResponse sector
             = sectorService
             .createSector(new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION));
@@ -145,9 +160,9 @@ class SectorServiceTest {
             new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION));
         sectorService.deleteSector(sector.getId());
 
-        Page<SectorResponse> sectors = sectorService.findAllAvailableSector(Pageable.unpaged());
-        assertThat(sectors).doesNotContain(sector);
-        assertThat(sectors).contains(anotherSector);
+        Page<SectorResponse> sectors = sectorService.searchAvailableSectors(Pageable.unpaged(), "");
+        assertThat(sectors.getContent()).doesNotContain(sector);
+        assertThat(sectors.getContent()).contains(anotherSector);
     }
 
     @DisplayName("Sector 수정 - 성공, ID가 있는 경우")
@@ -249,8 +264,8 @@ class SectorServiceTest {
             = sectorService.findSector(anotherSector.getId());
 
         Page<AdminSectorResponse> sectors = sectorService.findAllSector(Pageable.unpaged());
-        assertThat(sectors).contains(expectedSector);
-        assertThat(sectors).contains(expectedAnotherSector);
+        assertThat(sectors.getContent()).contains(expectedSector);
+        assertThat(sectors.getContent()).contains(expectedAnotherSector);
     }
 
     @DisplayName("승인 신청 상태의 Sector 생성 - 성공")
@@ -286,7 +301,7 @@ class SectorServiceTest {
         sectorIds.add(sectorService.createPendingSector(sectorAnotherRequest).getId());
 
         Page<SectorDetailResponse> sectors = sectorService.findAllMySector(Pageable.unpaged());
-        assertThat(sectors.stream()
+        assertThat(sectors.getContent().stream()
             .filter(sector -> sectorIds.contains(sector.getId()))
             .collect(Collectors.toList())).hasSize(2);
     }

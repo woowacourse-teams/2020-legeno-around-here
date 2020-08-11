@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_DIR;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
@@ -94,6 +95,7 @@ public class PostAcceptanceTest {
 
         assertThat(postWithoutImageResponse.getId()).isEqualTo(postWithoutImageId);
         assertThat(postWithoutImageResponse.getWriting()).isEqualTo(TEST_WRITING);
+        assertThat(postWithoutImageResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
         assertThat(postWithoutImageResponse.getSector()).isEqualTo(sector);
 
         // 이미지가 포함된 글 등록
@@ -105,6 +107,7 @@ public class PostAcceptanceTest {
         assertThat(postWithImageResponse.getId()).isEqualTo(postWithImageId);
         assertThat(postWithImageResponse.getWriting()).isEqualTo(TEST_WRITING);
         assertThat(postWithImageResponse.getImages()).hasSize(2);
+        assertThat(postWithoutImageResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
         assertThat(postWithoutImageResponse.getSector()).isEqualTo(sector);
 
         // 목록 조회
@@ -361,6 +364,7 @@ public class PostAcceptanceTest {
         return given()
             .log().all()
             .formParam("writing", TEST_WRITING)
+            .formParam("areaId", TEST_AREA_ID)
             .formParam("sectorId", sectorId)
             .header("X-AUTH-TOKEN", accessToken)
             .config(RestAssuredConfig.config()
@@ -380,6 +384,7 @@ public class PostAcceptanceTest {
         return given()
             .log().all()
             .formParam("writing", TEST_WRITING)
+            .formParam("areaId", TEST_AREA_ID)
             .formParam("sectorId", sectorId)
             .header("X-AUTH-TOKEN", accessToken)
             .config(RestAssuredConfig.config()

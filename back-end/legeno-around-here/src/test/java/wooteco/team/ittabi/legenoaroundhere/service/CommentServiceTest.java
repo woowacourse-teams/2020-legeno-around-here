@@ -2,6 +2,7 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.EMPTY_MULTIPART_FILES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_INVALID_POST_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_WRITING;
@@ -47,8 +48,8 @@ public class CommentServiceTest extends ServiceTest {
         setAuthentication(user);
 
         Long sectorId = sectorService.createSector(TEST_SECTOR_REQUEST).getId();
-        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_WRITING,
-            EMPTY_MULTIPART_FILES, sectorId);
+        PostCreateRequest postCreateRequest
+            = new PostCreateRequest(TEST_WRITING, EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
         postResponse = postService.createPost(postCreateRequest);
     }
 

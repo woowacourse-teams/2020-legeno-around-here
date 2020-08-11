@@ -24,6 +24,7 @@ import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
 @AllArgsConstructor
 public class SectorService {
 
+    private static final String DB_LIKE_FORMAT = "%%%s%%";
     private final SectorRepository sectorRepository;
     private final IAuthenticationFacade authenticationFacade;
 
@@ -37,7 +38,7 @@ public class SectorService {
     }
 
     private void validateSectorUnique(Sector sector) {
-        Name targetName = new Name(sector.getName());
+        Name targetName = Name.of(sector.getName());
         List<Sector> sectors = sectorRepository.findAllByName(targetName);
         sectors.remove(sector);
 
@@ -75,10 +76,10 @@ public class SectorService {
     }
 
     @Transactional(readOnly = true)
-    public Page<SectorResponse> findAllAvailableSector(Pageable pageable) {
-        Page<Sector> sectorsPage = sectorRepository.findAllByStateIn(pageable,
-            SectorState.getAllAvailable());
-
+    public Page<SectorResponse> searchAvailableSectors(Pageable pageable, String keyword) {
+        String likeKeyword = String.format(DB_LIKE_FORMAT, keyword);
+        Page<Sector> sectorsPage = sectorRepository.findAllByStateInAndNameIsLike(pageable,
+            SectorState.getAllAvailable(), Name.getKeywordName(likeKeyword));
         return sectorsPage.map(SectorResponse::of);
     }
 

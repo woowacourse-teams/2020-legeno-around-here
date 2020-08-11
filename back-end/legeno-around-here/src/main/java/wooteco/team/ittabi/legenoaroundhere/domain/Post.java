@@ -13,10 +13,12 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
@@ -34,29 +36,35 @@ public class Post extends BaseEntity {
     @Column(nullable = false)
     private String writing;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private State state;
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
-
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "sector_id")
+    @JoinColumn(name = "area_id", nullable = false)
+    private Area area;
+
+    @ManyToOne
+    @JoinColumn(name = "sector_id", nullable = false)
     private Sector sector;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private State state;
 
     @ManyToOne
     @JoinColumn(name = "creator_id")
     private User creator;
 
-    public Post(User creator, String writing, Sector sector) {
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @Builder
+    public Post(String writing, Area area, Sector sector, User creator) {
         validateLength(writing);
         this.writing = writing;
-        this.state = State.PUBLISHED;
+        this.area = area;
         this.sector = sector;
+        this.state = State.PUBLISHED;
         this.creator = creator;
     }
 

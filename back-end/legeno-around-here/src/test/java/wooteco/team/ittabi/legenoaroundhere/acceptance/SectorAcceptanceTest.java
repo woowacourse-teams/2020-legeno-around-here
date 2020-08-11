@@ -114,10 +114,9 @@ public class SectorAcceptanceTest {
 
         // 부문 전체 조회 + 사용하는 부문 전체 조회
         Long anotherId = createSector(accessToken, TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
-        List<AdminSectorResponse> adminSectorResponses
-            = findAllSector(accessToken);
+        List<AdminSectorResponse> adminSectorResponses = findAllSector(accessToken);
         assertThat(adminSectorResponses).hasSize(2);
-        List<SectorResponse> sectorResponses = findAllAvailableSector(accessToken);
+        List<SectorResponse> sectorResponses = searchAvailableSectors(accessToken);
         assertThat(sectorResponses).hasSize(2);
 
         // 부문 삭제
@@ -127,13 +126,13 @@ public class SectorAcceptanceTest {
         assertThat(adminSectorResponse.getState()).isEqualTo(SectorState.DELETED.getName());
 
         adminSectorResponses = findAllSector(accessToken);
-        sectorResponses = findAllAvailableSector(accessToken);
+        sectorResponses = searchAvailableSectors(accessToken);
         assertThat(adminSectorResponses).hasSize(2);
         assertThat(sectorResponses).hasSize(1);
 
         deleteSector(accessToken, anotherId);
         adminSectorResponses = findAllSector(accessToken);
-        sectorResponses = findAllAvailableSector(accessToken);
+        sectorResponses = searchAvailableSectors(accessToken);
         assertThat(adminSectorResponses).hasSize(2);
         assertThat(sectorResponses).hasSize(0);
     }
@@ -219,7 +218,7 @@ public class SectorAcceptanceTest {
         assertThat(failReasonSectorD).contains("사용");
 
         // 사용자 B - 사용할 수 있는 부문 조회
-        List<SectorResponse> allInUseSector = findAllAvailableSector(userBToken);
+        List<SectorResponse> allInUseSector = searchAvailableSectors(userBToken);
 
         assertThat(allInUseSector).contains(findAvailableSector(userBToken, sectorAId)); // 승인
         assertThatThrownBy(() -> findAvailableSector(userBToken, sectorBId));            // 반려
@@ -250,7 +249,7 @@ public class SectorAcceptanceTest {
     }
 
     /**
-     * Feature: 부문 조회
+     * Feature: 부문 페이징 조회
      * <p>
      * Scenario: 부문을 페이징 조회한다.
      * <p>
@@ -283,51 +282,53 @@ public class SectorAcceptanceTest {
 
         // 부문 1Page 20Size를 정렬(기준:id 방향:오름차순) 조회
         List<AdminSectorResponse> sectors
-            = findAllSector(accessToken, "page=1&size=20&sortedBy=id&direction=asc");
+            = findAllSectorWithParameter(accessToken, "page=1&size=20&sortedBy=id&direction=asc");
         assertThat(sectors).hasSize(20);
         List<Long> expectedIds = ids.subList(0, 20);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
         // 부문 1Page 20Size를 정렬(기준:id 방향:내림차순) 조회
-        sectors = findAllSector(accessToken, "page=1&size=20&sortedBy=id&direction=desc");
+        sectors = findAllSectorWithParameter(accessToken,
+            "page=1&size=20&sortedBy=id&direction=desc");
         assertThat(sectors).hasSize(20);
         expectedIds = ids.subList(80, 100);
         Collections.reverse(expectedIds);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
         // 부문 2Page 20Size를 정렬(기준:id 방향:오름차순) 조회
-        sectors = findAllSector(accessToken, "page=2&size=20&sortedBy=id&direction=asc");
+        sectors = findAllSectorWithParameter(accessToken,
+            "page=2&size=20&sortedBy=id&direction=asc");
         assertThat(sectors).hasSize(20);
         expectedIds = ids.subList(20, 40);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
         // 비워두고 조회
-        sectors = findAllSector(accessToken, "size=1&sortedBy=id&direction=asc");
+        sectors = findAllSectorWithParameter(accessToken, "size=1&sortedBy=id&direction=asc");
         assertThat(sectors).hasSize(1);
         expectedIds = ids.subList(0, 1);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
-        sectors = findAllSector(accessToken, "page=&size=1&sortedBy=id&direction=asc");
+        sectors = findAllSectorWithParameter(accessToken, "page=&size=1&sortedBy=id&direction=asc");
         assertThat(sectors).hasSize(1);
         expectedIds = ids.subList(0, 1);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
-        sectors = findAllSector(accessToken, "page=1&sortedBy=id&direction=asc");
+        sectors = findAllSectorWithParameter(accessToken, "page=1&sortedBy=id&direction=asc");
         assertThat(sectors).hasSize(10);
         expectedIds = ids.subList(0, 10);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
-        sectors = findAllSector(accessToken, "page=1&size=&sortedBy=id&direction=asc");
+        sectors = findAllSectorWithParameter(accessToken, "page=1&size=&sortedBy=id&direction=asc");
         assertThat(sectors).hasSize(10);
         expectedIds = ids.subList(0, 10);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
-        sectors = findAllSector(accessToken, "page=1&size=1&sortedBy=id");
+        sectors = findAllSectorWithParameter(accessToken, "page=1&size=1&sortedBy=id");
         assertThat(sectors).hasSize(1);
         expectedIds = ids.subList(0, 1);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
-        sectors = findAllSector(accessToken, "page=1&size=1&sortedBy=id&direction=");
+        sectors = findAllSectorWithParameter(accessToken, "page=1&size=1&sortedBy=id&direction=");
         assertThat(sectors).hasSize(1);
         expectedIds = ids.subList(0, 1);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
@@ -340,6 +341,62 @@ public class SectorAcceptanceTest {
         findAllSectorWithWrongParameter(accessToken, "page=ㄱ&size=1&sortedBy=id");
         findAllSectorWithWrongParameter(accessToken, "page=1&size=ㄴ&sortedBy=id");
         findAllSectorWithWrongParameter(accessToken, "page=1&size=20&sortedBy=ㄷ&direction=asc");
+    }
+
+    /**
+     * Feature: 부문 키워드 조회
+     * <p>
+     * Scenario: 부문을 키워드 조회한다.
+     * <p>
+     * Given 관리자가 로그인 되어있다. 부문 100개가 등록되어 있다.
+     * <p>
+     * When 사용자가 키워드를 입력하지 않고 부문을 10Page, 11Size 조회한다. Then 1건이 조회된다.
+     * <p>
+     * When 사용자가 키워드를 비워두고 부문을 10Page, 11Size 조회한다. Then 1건이 조회된다.
+     * <p>
+     * When 사용자가 "SECTOR"라는 키워드로 지역을 10Page, 11Size 조회한다. 조회한다. Then 1건이 조회된다.
+     * <p>
+     * When 사용자가 "sector"라는 키워드로 지역을 10Page, 11Size 조회한다. 조회한다. Then 1건이 조회된다.
+     * <p>
+     * When 사용자가 "Sector"라는 키워드로 지역을 10Page, 11Size 조회한다. 조회한다. Then 1건이 조회된다.
+     * <p>
+     * When 사용자가 "9"라는 키워드로 지역을 1Page, 20Size 조회한다. Then 19건이 조회된다.
+     */
+    @DisplayName("부문 키워드 조회")
+    @Test
+    void findAreaByKeyword() {
+        // 관리자 로그인
+        createAdmin(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_PASSWORD);
+        TokenResponse tokenResponse = login(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD);
+        String accessToken = tokenResponse.getAccessToken();
+
+        // 부문 100개 등록
+        for (int i = 0; i < 100; i++) {
+            createSector(accessToken, TEST_SECTOR_NAME + i, TEST_SECTOR_DESCRIPTION);
+        }
+
+        List<SectorResponse> sectors
+            = searchAvailableSectorsWithParameter(accessToken, "page=10&size=11");
+        assertThat(sectors).hasSize(1);
+
+        sectors = searchAvailableSectorsWithParameter(accessToken, "keyword=&page=10&size=11");
+        assertThat(sectors).hasSize(1);
+
+        sectors
+            = searchAvailableSectorsWithParameter(accessToken, "keyword=SECTOR&page=10&size=11");
+        assertThat(sectors).hasSize(1);
+
+        sectors
+            = searchAvailableSectorsWithParameter(accessToken, "keyword=sector&page=10&size=11");
+        assertThat(sectors).hasSize(1);
+
+        sectors
+            = searchAvailableSectorsWithParameter(accessToken, "keyword=Sector&page=10&size=11");
+        assertThat(sectors).hasSize(1);
+
+        sectors
+            = searchAvailableSectorsWithParameter(accessToken, "keyword=9&page=1&size=20");
+        assertThat(sectors).hasSize(19);
     }
 
     private List<Long> getSectorIds(List<AdminSectorResponse> sectors) {
@@ -507,20 +564,11 @@ public class SectorAcceptanceTest {
     }
 
     private List<AdminSectorResponse> findAllSector(String accessToken) {
-        return given()
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header("X-AUTH-TOKEN", accessToken)
-            .when()
-            .get("/admin/sectors?page=1&size=10&sortedBy=id&direction=asc")
-            .then()
-            .statusCode(HttpStatus.OK.value())
-            .log().body()
-            .extract()
-            .jsonPath()
-            .getList("content", AdminSectorResponse.class);
+        return findAllSectorWithParameter(accessToken, "page=1&size=10&sortedBy=id&direction=asc");
     }
 
-    private List<AdminSectorResponse> findAllSector(String accessToken, String parameter) {
+    private List<AdminSectorResponse> findAllSectorWithParameter(String accessToken,
+        String parameter) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
@@ -545,12 +593,18 @@ public class SectorAcceptanceTest {
             .log().all();
     }
 
-    private List<SectorResponse> findAllAvailableSector(String accessToken) {
+    private List<SectorResponse> searchAvailableSectors(String accessToken) {
+        return searchAvailableSectorsWithParameter(accessToken,
+            "page=1&size=10&sortedBy=id&direction=asc");
+    }
+
+    private List<SectorResponse> searchAvailableSectorsWithParameter(String accessToken,
+        String parameter) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
             .when()
-            .get("/sectors?page=1&size=10&sortedBy=id&direction=asc")
+            .get("/sectors?" + parameter)
             .then()
             .statusCode(HttpStatus.OK.value())
             .log().body()

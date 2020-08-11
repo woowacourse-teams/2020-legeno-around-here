@@ -57,7 +57,7 @@ public class Sector extends BaseEntity {
     public Sector(String name, String description, User creator, User lastModifier,
         SectorState state) {
         validate(creator, lastModifier, state);
-        this.name = new Name(name);
+        this.name = Name.of(name);
         this.description = new Description(description);
         this.creator = creator;
         this.lastModifier = lastModifier;
