@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import axios, { post } from 'axios';
+import { post } from 'axios';
 
 import { getAccessTokenFromCookie } from "../util/TokenUtils";
 import OutBox from './OutBox';
 import TopBarBackground from './posting/TopBarBackground';
 import Cancle from './posting/Cancle';
-import TextInput from './posting/TextArea';
+import TextInput from './posting/TextInput';
 import ImageInput from './posting/ImageInput';
 import SubmitButton from './posting/SubmitButton';
 
@@ -25,11 +25,11 @@ const PostingBox = styled.div`
 const Posting = () => {
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [writing, setWriting] = useState("");
-  const [images, setImages] = useState(null);
+  // const [images, setImages] = useState(null);
 
-  const onImagesChanged = e => {
-    setImages(e.target.files[0]);
-  };
+  // const onImagesChanged = e => {
+  //   setImages(e.target.files[0]);
+  // };
 
   const onWritingChanged = e => {
     setWriting(e.target.value);
@@ -69,7 +69,7 @@ const Posting = () => {
         <PostingBox>
           <TextInput placeholder="자랑거리를 입력해주세요" 
             onChange={ onWritingChanged } value={ writing } />
-          <ImageInput type="file" onChange={ onImagesChanged }></ImageInput>
+          <ImageInput type="file" /*onChange={ onImagesChanged }*/></ImageInput>
           <button>부문을 추가해주세요</button>
         </PostingBox>
       </Form>
