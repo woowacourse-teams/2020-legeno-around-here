@@ -18,6 +18,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 @ToString
 public class AreaResponse {
 
+    private Long id;
     private String fullName;
     private String firstDepthName;
     private String secondDepthName;
@@ -29,6 +30,7 @@ public class AreaResponse {
             return null;
         }
         return AreaResponse.builder()
+            .id(area.getId())
             .fullName(area.getFullName())
             .firstDepthName(area.getFirstDepthName())
             .secondDepthName(area.getSecondDepthName())

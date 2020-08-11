@@ -44,7 +44,6 @@ public class UserService implements UserDetailsService {
     }
 
     private User createUserBy(UserRequest userCreateRequest, Role userRole) {
-
         Area area = findAreaBy(userCreateRequest.getAreaId());
 
         return userRepository.save(User.builder()
