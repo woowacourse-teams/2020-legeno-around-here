@@ -13,6 +13,7 @@ const CancleButton = styled.button`
   margin-right: auto;
   border: 0;
   outline: 0;
+  cursor: pointer;
 `;
 
 const CancleLink = styled(Link)`
