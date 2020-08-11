@@ -316,10 +316,12 @@ public class SectorAcceptanceTest {
         sectors = findAllSectorWithParameter(accessToken, "page=1&sortedBy=id&direction=asc");
         assertThat(sectors).hasSize(10);
         expectedIds = ids.subList(0, 10);
+        assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
         sectors = findAllSectorWithParameter(accessToken, "page=1&size=&sortedBy=id&direction=asc");
         assertThat(sectors).hasSize(10);
         expectedIds = ids.subList(0, 10);
+        assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
         sectors = findAllSectorWithParameter(accessToken, "page=1&size=1&sortedBy=id");
         assertThat(sectors).hasSize(1);

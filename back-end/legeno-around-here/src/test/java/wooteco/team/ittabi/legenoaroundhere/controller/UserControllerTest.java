@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
@@ -57,7 +58,7 @@ class UserControllerTest {
         given(userService.createUser(any())).willReturn(TEST_ID);
 
         String inputJson = objectMapper.writeValueAsString(
-            new UserRequest(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD));
+            new UserRequest(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD, TEST_AREA_ID));
 
         this.mockMvc.perform(post("/join")
             .content(inputJson)
@@ -141,7 +142,7 @@ class UserControllerTest {
     @Test
     @DisplayName("내 정보 얻기")
     void findUser() throws Exception {
-        UserResponse expected = new UserResponse(TEST_ID, TEST_EMAIL, TEST_NICKNAME);
+        UserResponse expected = new UserResponse(TEST_ID, TEST_EMAIL, TEST_NICKNAME, null);
         given(userService.findUser()).willReturn(expected);
 
         String expectedJson = objectMapper.writeValueAsString(expected);
@@ -160,7 +161,7 @@ class UserControllerTest {
     @Test
     @DisplayName("내 정보 수정")
     void updateUser() throws Exception {
-        UserResponse expected = new UserResponse(TEST_ID, TEST_EMAIL, TEST_NICKNAME);
+        UserResponse expected = new UserResponse(TEST_ID, TEST_EMAIL, TEST_NICKNAME, null);
         given(userService.updateUser(any())).willReturn(expected);
 
         String expectedJson = objectMapper.writeValueAsString(expected);

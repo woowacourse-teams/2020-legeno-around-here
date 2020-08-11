@@ -2,6 +2,7 @@ package wooteco.team.ittabi.legenoaroundhere.infra;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
@@ -41,7 +42,8 @@ class JwtTokenDecoderTest {
     @Test
     @DisplayName("토큰으로부터 Authentication 얻기")
     void getAuthentication() {
-        userService.createUser(new UserRequest(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD));
+        userService
+            .createUser(new UserRequest(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD, TEST_AREA_ID));
         userService.login(new LoginRequest(TEST_EMAIL, TEST_PASSWORD));
 
         assertThat(jwtTokenDecoder.getAuthentication(token))
