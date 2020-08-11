@@ -2,6 +2,7 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.EMPTY_MULTIPART_FILES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_CONTENT_TYPE;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_INVALID_POST_ID;
@@ -59,7 +60,7 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void createPostWithoutImage_SuccessToCreate() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_WRITING,
-            EMPTY_MULTIPART_FILES, sectorId);
+            EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
 
         PostResponse postResponse = postService.createPost(postCreateRequest);
 
@@ -75,7 +76,7 @@ public class PostServiceTest extends ServiceTest {
         MultipartFile multipartFile = FileConverter
             .convert("right_image1.jpg", TEST_IMAGE_CONTENT_TYPE);
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_WRITING,
-            Collections.singletonList(multipartFile), sectorId);
+            Collections.singletonList(multipartFile), TEST_AREA_ID, sectorId);
 
         PostResponse postResponse = postService.createPost(postCreateRequest);
 
@@ -89,7 +90,7 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void findPost_HasId_SuccessToFind() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_WRITING,
-            EMPTY_MULTIPART_FILES, sectorId);
+            EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(postCreateRequest);
 
         PostResponse postResponse = postService.findPost(createdPostResponse.getId());
@@ -104,7 +105,7 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void findPost_AlreadyDeletedPost_ThrownException() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_WRITING,
-            EMPTY_MULTIPART_FILES, sectorId);
+            EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(postCreateRequest);
         postService.deletePost(createdPostResponse.getId());
 
@@ -123,7 +124,7 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void findAllPost_SuccessToFind() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_WRITING,
-            EMPTY_MULTIPART_FILES, sectorId);
+            EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
         postService.createPost(postCreateRequest);
         postService.createPost(postCreateRequest);
 
@@ -137,7 +138,7 @@ public class PostServiceTest extends ServiceTest {
     void updatePost_HasId_SuccessToUpdate() {
         String updatedPostWriting = "Jamie and BingBong";
         PostCreateRequest createdPostCreateRequest
-            = new PostCreateRequest(TEST_WRITING, EMPTY_MULTIPART_FILES, sectorId);
+            = new PostCreateRequest(TEST_WRITING, EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(createdPostCreateRequest);
         PostUpdateRequest postUpdateRequest
             = new PostUpdateRequest(updatedPostWriting, EMPTY_MULTIPART_FILES);
@@ -165,7 +166,7 @@ public class PostServiceTest extends ServiceTest {
     void updatePost_IfNotCreator_ThrowException() {
         String updatedPostWriting = "Jamie and BingBong";
         PostCreateRequest createdPostCreateRequest
-            = new PostCreateRequest(TEST_WRITING, EMPTY_MULTIPART_FILES, sectorId);
+            = new PostCreateRequest(TEST_WRITING, EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(createdPostCreateRequest);
         PostUpdateRequest postUpdateRequest
             = new PostUpdateRequest(updatedPostWriting, EMPTY_MULTIPART_FILES);
@@ -180,7 +181,7 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void deletePost_HasId_SuccessToDelete() {
         PostCreateRequest createdPostCreateRequest
-            = new PostCreateRequest(TEST_WRITING, EMPTY_MULTIPART_FILES, sectorId);
+            = new PostCreateRequest(TEST_WRITING, EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(createdPostCreateRequest);
 
         postService.deletePost(createdPostResponse.getId());
@@ -200,7 +201,7 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void deletePost_AlreadyDeletedId_ThrownException() {
         PostCreateRequest createdPostCreateRequest
-            = new PostCreateRequest(TEST_WRITING, EMPTY_MULTIPART_FILES, sectorId);
+            = new PostCreateRequest(TEST_WRITING, EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(createdPostCreateRequest);
 
         postService.deletePost(createdPostResponse.getId());
@@ -213,7 +214,7 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void deletePost_IfNotCreator_ThrowException() {
         PostCreateRequest createdPostCreateRequest
-            = new PostCreateRequest(TEST_WRITING, EMPTY_MULTIPART_FILES, sectorId);
+            = new PostCreateRequest(TEST_WRITING, EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(createdPostCreateRequest);
 
         setAuthentication(another);

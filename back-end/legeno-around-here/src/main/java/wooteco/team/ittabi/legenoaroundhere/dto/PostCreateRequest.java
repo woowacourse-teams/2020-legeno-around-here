@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.domain.Post;
+import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 
@@ -24,13 +25,19 @@ public class PostCreateRequest {
 
     private String writing;
     private List<MultipartFile> images;
+    private Long areaId;
     private Long sectorId;
 
     public boolean isImagesNull() {
         return Objects.isNull(images);
     }
 
-    public Post toPost(User user, Sector sector) {
-        return new Post(user, writing, sector);
+    public Post toPost(Area area, Sector sector, User user) {
+        return Post.builder()
+            .writing(writing)
+            .area(area)
+            .sector(sector)
+            .creator(user)
+            .build();
     }
 }
