@@ -99,28 +99,28 @@ public class AreaAcceptanceTest {
     @DisplayName("지역 키워드 조회")
     @Test
     void findAreaByKeyword() {
-        List<AreaResponse> areas = findAllArea(accessToken, "page=50&size=10");
+        List<AreaResponse> areas = searchAllArea(accessToken, "page=50&size=10");
         assertThat(areas).hasSize(3);
 
-        areas = findAllArea(accessToken, "page=50&size=10&keyword=");
+        areas = searchAllArea(accessToken, "page=50&size=10&keyword=");
         assertThat(areas).hasSize(3);
 
-        areas = findAllArea(accessToken, "page=50&size=10&keyword=서울특별시");
+        areas = searchAllArea(accessToken, "page=50&size=10&keyword=서울특별시");
         assertThat(areas).hasSize(3);
 
-        areas = findAllArea(accessToken, "page=50&size=10&keyword=서울특별시 ");
+        areas = searchAllArea(accessToken, "page=50&size=10&keyword=서울특별시 ");
         assertThat(areas).hasSize(2);
 
-        areas = findAllArea(accessToken, "page=1&size=10&keyword=서울시");
+        areas = searchAllArea(accessToken, "page=1&size=10&keyword=서울시");
         assertThat(areas).hasSize(0);
 
-        areas = findAllArea(accessToken, "page=1&size=10&keyword= 잠실");
+        areas = searchAllArea(accessToken, "page=1&size=10&keyword= 잠실");
         assertThat(areas).hasSize(1);
 
-        areas = findAllArea(accessToken, "page=1&size=10&keyword=잠실");
+        areas = searchAllArea(accessToken, "page=1&size=10&keyword=잠실");
         assertThat(areas).hasSize(1);
 
-        areas = findAllArea(accessToken, "page=1&size=10&keyword=잠실 ");
+        areas = searchAllArea(accessToken, "page=1&size=10&keyword=잠실 ");
         assertThat(areas).hasSize(0);
     }
 
@@ -147,47 +147,47 @@ public class AreaAcceptanceTest {
     void pagingFindArea() {
         // 지역 1Page 20Size를 정렬(기준:id 방향:오름차순) 조회
         List<AreaResponse> areas
-            = findAllArea(accessToken, "page=1&size=20&sortedBy=id&direction=asc");
+            = searchAllArea(accessToken, "page=1&size=20&sortedBy=id&direction=asc");
         assertThat(areas).hasSize(20);
 
         // 지역 1Page 20Size를 정렬(기준:id 방향:내림차순) 조회
-        areas = findAllArea(accessToken, "page=1&size=20&sortedBy=id&direction=desc");
+        areas = searchAllArea(accessToken, "page=1&size=20&sortedBy=id&direction=desc");
         assertThat(areas).hasSize(20);
 
         // 지역 2Page 20Size를 정렬(기준:id 방향:오름차순) 조회
-        areas = findAllArea(accessToken, "page=2&size=20&sortedBy=id&direction=asc");
+        areas = searchAllArea(accessToken, "page=2&size=20&sortedBy=id&direction=asc");
         assertThat(areas).hasSize(20);
 
         // Page, Size, Direction 오기입 조회 (자동 값 : 1Page, 1Size, 방향:오름차순)
-        areas = findAllArea(accessToken, "page=-1&size=1&sortedBy=id&direction=asc");
+        areas = searchAllArea(accessToken, "page=-1&size=1&sortedBy=id&direction=asc");
         assertThat(areas).hasSize(1);
 
-        areas = findAllArea(accessToken, "page=1&size=-1&sortedBy=id&direction=asc");
+        areas = searchAllArea(accessToken, "page=1&size=-1&sortedBy=id&direction=asc");
         assertThat(areas).hasSize(1);
 
-        areas = findAllArea(accessToken, "page=1&size=51&sortedBy=id&direction=asc");
+        areas = searchAllArea(accessToken, "page=1&size=51&sortedBy=id&direction=asc");
         assertThat(areas).hasSize(50);
 
-        areas = findAllArea(accessToken, "page=1&size=1&sortedBy=id&direction=abc");
+        areas = searchAllArea(accessToken, "page=1&size=1&sortedBy=id&direction=abc");
         assertThat(areas).hasSize(1);
 
-        areas = findAllArea(accessToken, "size=1&sortedBy=id&direction=abc");
+        areas = searchAllArea(accessToken, "size=1&sortedBy=id&direction=abc");
         assertThat(areas).hasSize(1);
 
-        areas = findAllArea(accessToken, "page=1&sortedBy=id&direction=abc");
+        areas = searchAllArea(accessToken, "page=1&sortedBy=id&direction=abc");
         assertThat(areas).hasSize(10);
 
-        areas = findAllArea(accessToken, "page=1&size=1&sortedBy=id");
+        areas = searchAllArea(accessToken, "page=1&size=1&sortedBy=id");
         assertThat(areas).hasSize(1);
 
         // 유효하지 않은 필드로 정렬
-        findAllAreaWithWrongParameter(accessToken, "page=ㄱ&size=1&sortedBy=id");
-        findAllAreaWithWrongParameter(accessToken, "page=1&size=ㄴ&sortedBy=id");
-        findAllAreaWithWrongParameter(accessToken,
+        searchAllAreaWithWrongParameter(accessToken, "page=ㄱ&size=1&sortedBy=id");
+        searchAllAreaWithWrongParameter(accessToken, "page=1&size=ㄴ&sortedBy=id");
+        searchAllAreaWithWrongParameter(accessToken,
             "page=1&size=20&sortedBy=ㄷ&direction=asc");
     }
 
-    private List<AreaResponse> findAllArea(String accessToken, String parameter) {
+    private List<AreaResponse> searchAllArea(String accessToken, String parameter) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
@@ -201,7 +201,7 @@ public class AreaAcceptanceTest {
             .getList("content", AreaResponse.class);
     }
 
-    private void findAllAreaWithWrongParameter(String accessToken, String parameter) {
+    private void searchAllAreaWithWrongParameter(String accessToken, String parameter) {
         given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)

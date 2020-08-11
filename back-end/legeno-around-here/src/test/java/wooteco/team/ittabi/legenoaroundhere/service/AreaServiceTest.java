@@ -21,7 +21,7 @@ class AreaServiceTest extends ServiceTest {
     @ParameterizedTest
     @CsvSource(value = {"서울특, 493", "송파, 14", "잠실, 1", "동, 427"})
     void searchAllAreaBy_ExistsKeyword_Success(String keyword, int expectedCount) {
-        Page<AreaResponse> areas = areaService.searchAllAreaBy(Pageable.unpaged(), keyword);
+        Page<AreaResponse> areas = areaService.searchAllArea(Pageable.unpaged(), keyword);
         assertThat(areas.getContent()).hasSize(expectedCount);
     }
 
@@ -29,7 +29,7 @@ class AreaServiceTest extends ServiceTest {
     @ParameterizedTest
     @ValueSource(strings = "마마마, 강남시, 서울시, 대한민국")
     void searchAllAreaBy_NotExistsKeyword_SearchAnything(String keyword) {
-        Page<AreaResponse> areas = areaService.searchAllAreaBy(Pageable.unpaged(), keyword);
+        Page<AreaResponse> areas = areaService.searchAllArea(Pageable.unpaged(), keyword);
         assertThat(areas.getContent()).hasSize(0);
     }
 }

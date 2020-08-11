@@ -21,7 +21,7 @@ public class AreaController {
     @GetMapping
     public ResponseEntity<Page<AreaResponse>> searchAllArea(PageRequest pageRequest,
         @RequestParam(defaultValue = "") String keyword) {
-        Page<AreaResponse> areas = areaService.searchAllAreaBy(pageRequest.getPageable(), keyword);
+        Page<AreaResponse> areas = areaService.searchAllArea(pageRequest.getPageable(), keyword);
         return ResponseEntity
             .ok(areas);
     }
