@@ -29,6 +29,7 @@ public class AreaAcceptanceTest {
 
     @LocalServerPort
     public int port;
+
     @Autowired
     AreaRepository areaRepository;
     private String accessToken;
@@ -124,69 +125,6 @@ public class AreaAcceptanceTest {
         assertThat(areas).hasSize(0);
     }
 
-    /**
-     * Feature: 지역 조회
-     * <p>
-     * Scenario: 부문을 페이징 조회한다.
-     * <p>
-     * Given 사용자가 로그인 되어있다. 법정동은 기등록된 상태(서울특별시 이하 지역)이다.
-     * <p>
-     * When 지역 1Page 20Size를 정렬(기준:id 방향:오름차순) 조회한다. Then 1~20까지의 Sector가 조회된다.
-     * <p>
-     * When 지역 1Page 20Size를 정렬(기준:id 방향:내림차순) 조회한다. Then 100~81까지의 Sector가 조회된다.
-     * <p>
-     * When 지역 2Page 40Size를 정렬(기준:id 방향:오름차순) 조회한다. Then 21~40까지의 Sector가 조회된다.
-     * <p>
-     * When 지역 -1Page -1Size를 정렬(기준:id 방향:abc) 조회한다. Then 1의 Sector가 조회된다. (기본 값 : 1Page, 1Size,
-     * 방향:오름차순)
-     * <p>
-     * When 지역 1Page 20Size를 정렬(기준:test-id 방향:오름차순) 조회한다. Then BadRequest가 발생한다.
-     */
-    @DisplayName("지역 페이징 조회")
-    @Test
-    void pagingFindArea() {
-        // 지역 1Page 20Size를 정렬(기준:id 방향:오름차순) 조회
-        List<AreaResponse> areas
-            = searchAllArea(accessToken, "page=1&size=20&sortedBy=id&direction=asc");
-        assertThat(areas).hasSize(20);
-
-        // 지역 1Page 20Size를 정렬(기준:id 방향:내림차순) 조회
-        areas = searchAllArea(accessToken, "page=1&size=20&sortedBy=id&direction=desc");
-        assertThat(areas).hasSize(20);
-
-        // 지역 2Page 20Size를 정렬(기준:id 방향:오름차순) 조회
-        areas = searchAllArea(accessToken, "page=2&size=20&sortedBy=id&direction=asc");
-        assertThat(areas).hasSize(20);
-
-        // Page, Size, Direction 오기입 조회 (자동 값 : 1Page, 1Size, 방향:오름차순)
-        areas = searchAllArea(accessToken, "page=-1&size=1&sortedBy=id&direction=asc");
-        assertThat(areas).hasSize(1);
-
-        areas = searchAllArea(accessToken, "page=1&size=-1&sortedBy=id&direction=asc");
-        assertThat(areas).hasSize(1);
-
-        areas = searchAllArea(accessToken, "page=1&size=51&sortedBy=id&direction=asc");
-        assertThat(areas).hasSize(50);
-
-        areas = searchAllArea(accessToken, "page=1&size=1&sortedBy=id&direction=abc");
-        assertThat(areas).hasSize(1);
-
-        areas = searchAllArea(accessToken, "size=1&sortedBy=id&direction=abc");
-        assertThat(areas).hasSize(1);
-
-        areas = searchAllArea(accessToken, "page=1&sortedBy=id&direction=abc");
-        assertThat(areas).hasSize(10);
-
-        areas = searchAllArea(accessToken, "page=1&size=1&sortedBy=id");
-        assertThat(areas).hasSize(1);
-
-        // 유효하지 않은 필드로 정렬
-        searchAllAreaWithWrongParameter(accessToken, "page=ㄱ&size=1&sortedBy=id");
-        searchAllAreaWithWrongParameter(accessToken, "page=1&size=ㄴ&sortedBy=id");
-        searchAllAreaWithWrongParameter(accessToken,
-            "page=1&size=20&sortedBy=ㄷ&direction=asc");
-    }
-
     private List<AreaResponse> searchAllArea(String accessToken, String parameter) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -199,15 +137,5 @@ public class AreaAcceptanceTest {
             .extract()
             .jsonPath()
             .getList("content", AreaResponse.class);
-    }
-
-    private void searchAllAreaWithWrongParameter(String accessToken, String parameter) {
-        given()
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header("X-AUTH-TOKEN", accessToken)
-            .when()
-            .get("/areas?" + parameter)
-            .then()
-            .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }

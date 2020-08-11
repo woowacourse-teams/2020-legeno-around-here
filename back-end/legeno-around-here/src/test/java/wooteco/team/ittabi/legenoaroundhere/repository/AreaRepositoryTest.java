@@ -12,6 +12,8 @@ import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 @DataJpaTest
 class AreaRepositoryTest {
 
+    protected static final int INIT_DATA_SIZE = 493;
+
     @Autowired
     AreaRepository areaRepository;
 
@@ -19,6 +21,6 @@ class AreaRepositoryTest {
     @Test
     void init_checkingArea() {
         List<Area> areas = areaRepository.findAll();
-        assertThat(areas).hasSize(493);
+        assertThat(areas).hasSize(INIT_DATA_SIZE);
     }
 }
