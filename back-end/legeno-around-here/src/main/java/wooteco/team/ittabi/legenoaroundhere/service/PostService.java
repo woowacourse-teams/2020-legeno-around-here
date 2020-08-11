@@ -46,7 +46,7 @@ public class PostService {
         Post savedPost = postRepository.save(post);
         List<CommentResponse> commentResponses = commentService.findAllComment(savedPost.getId());
         LikeResponse likeResponse = LikeResponse
-            .of(savedPost.getLikeCount().getLikeCount(), LikeState.INACTIVATED);
+            .of(savedPost.getLikeCount(), LikeState.INACTIVATED);
 
         return PostResponse.of(savedPost, commentResponses, likeResponse);
     }
@@ -79,11 +79,10 @@ public class PostService {
         User user = (User) authenticationFacade.getPrincipal();
         Page<Post> posts = postRepository.findByStateNot(pageable, State.DELETED);
         return posts
-            .map(post -> PostWithCommentsCountResponse
-                .of(post,
-                    commentService.findAllComment(post.getId()),
-                    likeService.findByPostId(post.getId(), user)
-                ));
+            .map(post -> PostWithCommentsCountResponse.of(post,
+                commentService.findAllComment(post.getId()),
+                likeService.findByPostId(post.getId(), user)
+            ));
     }
 
     @Transactional

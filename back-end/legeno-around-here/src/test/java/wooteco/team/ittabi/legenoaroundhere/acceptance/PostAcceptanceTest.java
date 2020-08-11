@@ -68,7 +68,6 @@ public class PostAcceptanceTest extends AcceptanceTest {
     @DisplayName("글 관리")
     @Test
     void manageMyPost() {
-
         // 이미지가 포함되지 않은 글 등록
         String postWithoutImageLocation = createPostWithoutImage(accessToken);
         Long postWithoutImageId = getIdFromUrl(postWithoutImageLocation);

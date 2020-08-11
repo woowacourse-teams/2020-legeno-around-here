@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 
 @Entity
@@ -29,11 +28,11 @@ public class Like extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    private State state;
+    private LikeState state;
 
     public Like(Post post, User user) {
         this.post = post;
         this.user = user;
-        this.state = State.PUBLISHED;
+        this.state = LikeState.INACTIVATED;
     }
 }

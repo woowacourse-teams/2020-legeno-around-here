@@ -22,7 +22,7 @@ public class LikeService {
 
     @Transactional
     public LikeResponse pressLike(Long postId, User user) {
-        Post post = findPost(postId);
+        Post post = findNotDeletedPost(postId);
         boolean isLikeAlreadyExists = isLikeExists(post, user);
 
         if (isLikeAlreadyExists) {
@@ -38,25 +38,25 @@ public class LikeService {
     private LikeResponse inactivateLike(Post post, User user) {
         likeRepository.deleteByPostIdAndUserId(post.getId(), user.getId());
         post.minusLikeCount();
-        return LikeResponse.of(post.getLikeCount().getLikeCount(), LikeState.INACTIVATED);
+        return LikeResponse.of(post.getLikeCount(), LikeState.INACTIVATED);
     }
 
     private LikeResponse activateLike(Post post, User user) {
         likeRepository.save(new Like(post, user));
         post.plusLikeCount();
-        return LikeResponse.of(post.getLikeCount().getLikeCount(), LikeState.ACTIVATED);
+        return LikeResponse.of(post.getLikeCount(), LikeState.ACTIVATED);
     }
 
     @Transactional(readOnly = true)
     public LikeResponse findByPostId(Long postId, User user) {
-        Post post = findPost(postId);
+        Post post = findNotDeletedPost(postId);
         if (isLikeExists(post, user)) {
-            return LikeResponse.of(post.getLikeCount().getLikeCount(), LikeState.ACTIVATED);
+            return LikeResponse.of(post.getLikeCount(), LikeState.ACTIVATED);
         }
-        return LikeResponse.of(post.getLikeCount().getLikeCount(), LikeState.INACTIVATED);
+        return LikeResponse.of(post.getLikeCount(), LikeState.INACTIVATED);
     }
 
-    private Post findPost(Long postId) {
+    private Post findNotDeletedPost(Long postId) {
         return postRepository.findByIdAndStateNot(postId, State.DELETED)
             .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
     }

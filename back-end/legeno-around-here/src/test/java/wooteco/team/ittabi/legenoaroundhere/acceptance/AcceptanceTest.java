@@ -26,7 +26,7 @@ public abstract class AcceptanceTest {
 
     protected String accessToken;
 
-    static RequestSpecification given() {
+    protected static RequestSpecification given() {
         return RestAssured.given().log().all();
     }
 

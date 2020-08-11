@@ -85,4 +85,8 @@ public class Post extends BaseEntity {
     public void minusLikeCount() {
         likeCount = likeCount.minusLikeCount();
     }
+
+    public long getLikeCount() {
+        return likeCount.getLikeCount();
+    }
 }
