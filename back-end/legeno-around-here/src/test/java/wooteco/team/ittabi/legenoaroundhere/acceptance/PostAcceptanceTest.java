@@ -182,47 +182,6 @@ public class PostAcceptanceTest {
         assertThat(posts).hasSize(20);
         expectedIds = ids.subList(20, 40);
         assertThat(getPostIds(posts)).isEqualTo(expectedIds);
-
-        // Page, Size, Direction 오기입 조회 (자동 값 : 1Page, 1Size, 방향:오름차순)
-        posts = findAllPost(accessToken, "page=-1&size=1&sortedBy=id&direction=asc");
-        assertThat(posts).hasSize(1);
-        expectedIds = ids.subList(0, 1);
-        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
-
-        posts = findAllPost(accessToken, "page=1&size=-1&sortedBy=id&direction=asc");
-        assertThat(posts).hasSize(1);
-        expectedIds = ids.subList(0, 1);
-        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
-
-        posts = findAllPost(accessToken, "page=1&size=51&sortedBy=id&direction=asc");
-        assertThat(posts).hasSize(50);
-        expectedIds = ids.subList(0, 50);
-        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
-
-        posts = findAllPost(accessToken, "page=1&size=1&sortedBy=id&direction=abc");
-        assertThat(posts).hasSize(1);
-        expectedIds = ids.subList(0, 1);
-        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
-
-        posts = findAllPost(accessToken, "size=1&sortedBy=id&direction=abc");
-        assertThat(posts).hasSize(1);
-        expectedIds = ids.subList(0, 1);
-        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
-
-        posts = findAllPost(accessToken, "page=1&sortedBy=id&direction=abc");
-        assertThat(posts).hasSize(10);
-        expectedIds = ids.subList(0, 10);
-        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
-
-        posts = findAllPost(accessToken, "page=1&size=1&sortedBy=id");
-        assertThat(posts).hasSize(1);
-        expectedIds = ids.subList(0, 1);
-        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
-
-        // 유효하지 않은 필드로 정렬
-        findAllPostWithWrongParameter(accessToken, "page=ㄱ&size=1&sortedBy=id");
-        findAllPostWithWrongParameter(accessToken, "page=1&size=ㄴ&sortedBy=id");
-        findAllPostWithWrongParameter(accessToken, "page=1&size=20&sortedBy=ㄷ&direction=asc");
     }
 
     private List<Long> getPostIds(List<PostWithCommentsCountResponse> posts) {
@@ -378,16 +337,6 @@ public class PostAcceptanceTest {
             .extract()
             .jsonPath()
             .getList("content", PostWithCommentsCountResponse.class);
-    }
-
-    private void findAllPostWithWrongParameter(String accessToken, String parameter) {
-        given()
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header("X-AUTH-TOKEN", accessToken)
-            .when()
-            .get("/posts?" + parameter)
-            .then()
-            .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     private Long getIdFromUrl(String location) {

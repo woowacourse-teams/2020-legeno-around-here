@@ -301,33 +301,23 @@ public class SectorAcceptanceTest {
         expectedIds = ids.subList(20, 40);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
-        // Page, Size, Direction 오기입 조회 (자동 값 : 1Page, 1Size, 방향:오름차순)
-        sectors = findAllSector(accessToken, "page=-1&size=1&sortedBy=id&direction=asc");
+        // 비워두고 조회
+        sectors = findAllSector(accessToken, "size=1&sortedBy=id&direction=asc");
         assertThat(sectors).hasSize(1);
         expectedIds = ids.subList(0, 1);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
-        sectors = findAllSector(accessToken, "page=1&size=-1&sortedBy=id&direction=asc");
+        sectors = findAllSector(accessToken, "page=&size=1&sortedBy=id&direction=asc");
         assertThat(sectors).hasSize(1);
         expectedIds = ids.subList(0, 1);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
-        sectors = findAllSector(accessToken, "page=1&size=51&sortedBy=id&direction=asc");
-        assertThat(sectors).hasSize(50);
-        expectedIds = ids.subList(0, 50);
+        sectors = findAllSector(accessToken, "page=1&sortedBy=id&direction=asc");
+        assertThat(sectors).hasSize(10);
+        expectedIds = ids.subList(0, 10);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
-        sectors = findAllSector(accessToken, "page=1&size=1&sortedBy=id&direction=abc");
-        assertThat(sectors).hasSize(1);
-        expectedIds = ids.subList(0, 1);
-        assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
-
-        sectors = findAllSector(accessToken, "size=1&sortedBy=id&direction=abc");
-        assertThat(sectors).hasSize(1);
-        expectedIds = ids.subList(0, 1);
-        assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
-
-        sectors = findAllSector(accessToken, "page=1&sortedBy=id&direction=abc");
+        sectors = findAllSector(accessToken, "page=1&size=&sortedBy=id&direction=asc");
         assertThat(sectors).hasSize(10);
         expectedIds = ids.subList(0, 10);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
@@ -337,7 +327,16 @@ public class SectorAcceptanceTest {
         expectedIds = ids.subList(0, 1);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
+        sectors = findAllSector(accessToken, "page=1&size=1&sortedBy=id&direction=");
+        assertThat(sectors).hasSize(1);
+        expectedIds = ids.subList(0, 1);
+        assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
+
         // 유효하지 않은 필드로 정렬
+        findAllSectorWithWrongParameter(accessToken, "page=-1&size=1&sortedBy=id&direction=asc");
+        findAllSectorWithWrongParameter(accessToken, "page=1&size=-1&sortedBy=id&direction=asc");
+        findAllSectorWithWrongParameter(accessToken, "page=1&size=51&sortedBy=id&direction=asc");
+        findAllSectorWithWrongParameter(accessToken, "page=1&size=1&sortedBy=id&direction=abc");
         findAllSectorWithWrongParameter(accessToken, "page=ㄱ&size=1&sortedBy=id");
         findAllSectorWithWrongParameter(accessToken, "page=1&size=ㄴ&sortedBy=id");
         findAllSectorWithWrongParameter(accessToken, "page=1&size=20&sortedBy=ㄷ&direction=asc");
