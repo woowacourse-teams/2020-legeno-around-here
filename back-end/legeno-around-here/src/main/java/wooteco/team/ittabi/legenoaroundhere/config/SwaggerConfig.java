@@ -15,7 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 
-    public static final String BASE_PACKAGE_CONTROLLER_NAME = "wooteco.team.ittabi.legenoaroundhere.controller";
+    public static final String CONTROLLER_PACKAGE_NAME = "wooteco.team.ittabi.legenoaroundhere.controller";
     public static final String DEFAULT_TITLE = "Legeno Around Here ";
 
     private String groupName;
@@ -50,7 +50,7 @@ public class SwaggerConfig {
             .groupName(groupName)
             .select()
             .apis(RequestHandlerSelectors
-                .basePackage(BASE_PACKAGE_CONTROLLER_NAME))
+                .basePackage(CONTROLLER_PACKAGE_NAME))
             .paths(PathSelectors.ant(groupUrl))
             .build()
             .apiInfo(apiInfo(title, groupName));
