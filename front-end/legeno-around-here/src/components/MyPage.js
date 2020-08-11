@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
+import TopBarBackground from "./mypage/TopBarBackground";
 import OutBox from "./OutBox"
 import Button from "./Button"
 import { getAccessTokenFromCookie } from "../util/TokenUtils";
@@ -35,6 +36,7 @@ function MyPage() {
 
   return (
     <OutBox>
+      <TopBarBackground></TopBarBackground>
       <TopSection>
         <ProfilePhoto></ProfilePhoto>
         <PrivacyBox>

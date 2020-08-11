@@ -1,11 +1,13 @@
 import styled from 'styled-components';
 
+import { MAIN_COLOR } from "../../constants/Color";
+
 export const ProfilePhoto = styled.div`
   width: 100px;
   height: 100px;
-  background-color: skyblue;
+  background-color: white;
   border-radius: 300px;
-  border: 1px solid blue;
+  border: 1px solid ${ MAIN_COLOR };
 `;
 
 export const Nickname = styled.div`
