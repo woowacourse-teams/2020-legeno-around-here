@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.domain.Post;
+import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -19,7 +20,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @Setter
 @EqualsAndHashCode
 @ToString
-public class PostRequest {
+public class PostUpdateRequest {
 
     private String writing;
     private List<MultipartFile> images;
@@ -28,7 +29,7 @@ public class PostRequest {
         return Objects.isNull(images);
     }
 
-    public Post toPost(User user) {
-        return new Post(user, writing);
+    public Post toPost(User user, Sector sector) {
+        return new Post(user, writing, null);
     }
 }

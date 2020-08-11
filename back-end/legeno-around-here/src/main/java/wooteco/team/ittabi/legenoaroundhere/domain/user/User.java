@@ -31,7 +31,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"posts", "comments"})
 public class User extends BaseEntity implements UserDetails {
 
     @Embedded
@@ -50,7 +50,7 @@ public class User extends BaseEntity implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Post> posts = new ArrayList<>();
 

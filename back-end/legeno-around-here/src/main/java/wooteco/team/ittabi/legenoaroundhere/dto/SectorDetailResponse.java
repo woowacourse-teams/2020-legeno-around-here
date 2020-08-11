@@ -27,9 +27,9 @@ public class SectorDetailResponse {
     public static SectorDetailResponse of(Sector sector) {
         return SectorDetailResponse.builder()
             .id(sector.getId())
-            .name(sector.getStringName())
-            .description(sector.getStringDescription())
-            .state(sector.getStateName())
+            .name(sector.getName())
+            .description(sector.getDescription())
+            .state(sector.getState())
             .reason(sector.getReason())
             .creator(UserResponse.from(sector.getCreator()))
             .build();
