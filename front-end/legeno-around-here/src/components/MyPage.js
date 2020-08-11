@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import OutBox from "./OutBox"
 import Button from "./Button"
 import { getAccessTokenFromCookie } from "../util/TokenUtils";
+import { ProfilePhoto, Nickname, Email, TopSection, PrivacyBox, PrivacyEditBox } from "./mypage/TopSection";
 
 function MyPage() {
   const [accessToken] = useState(getAccessTokenFromCookie());
@@ -27,19 +28,23 @@ function MyPage() {
       })
       .catch((error) => {
         alert(`회원정보를 가져올 수 없습니다.${error}`);
+        document.location.href = "/";
       });
   }, [accessToken]);
 
   return (
     <OutBox>
-      <div>
-        <p>메일: {email}</p>
-        <p>닉네임: {nickname}</p>
-        <Button type="submit">정보 수정</Button>
-        <Link to="/">
-          <Button type="button">홈으로</Button>
-        </Link>
-      </div>
+      <TopSection>
+        <ProfilePhoto></ProfilePhoto>
+        <PrivacyBox>
+          <Nickname>{ nickname }</Nickname>
+          <Email>{ email }</Email>
+        </PrivacyBox>
+        <PrivacyEditBox>수정</PrivacyEditBox>
+      </TopSection>
+      <Link to="/">
+        <Button type="button">홈으로</Button>
+      </Link>
     </OutBox>
   );
 }
