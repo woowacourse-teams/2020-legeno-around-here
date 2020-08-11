@@ -11,32 +11,20 @@ import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
-import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
-import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.Image;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageMimeTypeException;
 import wooteco.team.ittabi.legenoaroundhere.utils.FileConverter;
 
-@ExtendWith(MockitoExtension.class)
-public class ImageServiceTest extends AuthServiceTest {
-
-    @Mock
-    private S3Uploader s3Uploader;
+public class ImageServiceTest extends ServiceTest {
 
     @Autowired
-    private IAuthenticationFacade authenticationFacade;
-
     private ImageService imageService;
 
     @BeforeEach
     void setUp() {
-        imageService = new ImageService(s3Uploader, authenticationFacade);
         User user = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         setAuthentication(user);
     }

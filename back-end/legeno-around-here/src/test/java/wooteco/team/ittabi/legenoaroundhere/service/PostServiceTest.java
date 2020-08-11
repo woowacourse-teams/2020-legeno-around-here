@@ -2,9 +2,6 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.EMPTY_MULTIPART_FILES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.TEST_IMAGE_CONTENT_TYPE;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostTestConstants.TEST_WRITING;
@@ -18,15 +15,10 @@ import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
-import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
-import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
@@ -34,45 +26,18 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
-import wooteco.team.ittabi.legenoaroundhere.repository.CommentRepository;
-import wooteco.team.ittabi.legenoaroundhere.repository.LikeRepository;
-import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.FileConverter;
 
-@ExtendWith(MockitoExtension.class)
-public class PostServiceTest extends AuthServiceTest {
+public class PostServiceTest extends ServiceTest {
 
     private User user;
     private User another;
-    private PostResponse postResponse;
+
+    @Autowired
     private PostService postService;
-    private CommentService commentService;
-    private LikeService likeService;
-
-    @Mock
-    private S3Uploader s3Uploader;
-
-    @Autowired
-    private PostRepository postRepository;
-
-    @Autowired
-    private CommentRepository commentRepository;
-
-    @Autowired
-    private LikeRepository likeRepository;
-
-    @Autowired
-    private IAuthenticationFacade authenticationFacade;
 
     @BeforeEach
     void setUp() {
-        likeService = new LikeService(postRepository, likeRepository);
-        commentService = new CommentService(postRepository, commentRepository,
-            authenticationFacade);
-        postService = new PostService(postRepository, commentService,
-            new ImageService(s3Uploader, authenticationFacade), likeService, authenticationFacade
-        );
-
         user = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         another = createUser(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         setAuthentication(user);
@@ -97,7 +62,6 @@ public class PostServiceTest extends AuthServiceTest {
             .convert("right_image1.jpg", TEST_IMAGE_CONTENT_TYPE);
         PostRequest postRequest = new PostRequest(TEST_WRITING,
             Collections.singletonList(multipartFile));
-        when(s3Uploader.upload(any(MultipartFile.class), anyString())).thenReturn("imageUrl");
 
         PostResponse postResponse = postService.createPost(postRequest);
 

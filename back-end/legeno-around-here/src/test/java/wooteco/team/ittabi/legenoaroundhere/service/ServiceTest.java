@@ -1,30 +1,28 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import wooteco.team.ittabi.legenoaroundhere.config.AuthenticationFacade;
+import org.springframework.test.context.jdbc.Sql;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
-import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
 import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 
-@DataJpaTest
-@Import({UserService.class, JwtTokenGenerator.class, AuthenticationFacade.class})
-public abstract class AuthServiceTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql("/init-table.sql")
+public abstract class ServiceTest {
 
     @Autowired
-    private UserService userService;
+    protected UserService userService;
 
     @Autowired
-    private UserRepository userRepository;
+    protected UserRepository userRepository;
 
     @Autowired
-    private IAuthenticationFacade authenticationFacade;
+    protected IAuthenticationFacade authenticationFacade;
 
     protected User createUser(String email, String nickname, String password) {
         UserRequest userRequest = new UserRequest(email, nickname, password);

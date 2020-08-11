@@ -54,6 +54,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
+            .antMatchers(
+                "/v2/api-docs",
+                "/swagger-resources/**",
+                "/swagger-ui.html",
+                "/webjars/**").permitAll()
             .antMatchers("/join").permitAll()
             .antMatchers("/joinAdmin").permitAll()
             .antMatchers("/login").permitAll()
@@ -67,3 +72,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 UsernamePasswordAuthenticationFilter.class);
     }
 }
+

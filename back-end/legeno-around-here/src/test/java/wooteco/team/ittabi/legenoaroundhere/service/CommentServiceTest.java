@@ -13,12 +13,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
-import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
@@ -27,47 +22,24 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
-import wooteco.team.ittabi.legenoaroundhere.repository.CommentRepository;
-import wooteco.team.ittabi.legenoaroundhere.repository.LikeRepository;
-import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 
-@ExtendWith(MockitoExtension.class)
-public class CommentServiceTest extends AuthServiceTest {
+public class CommentServiceTest extends ServiceTest {
 
     private User user;
     private User another;
     private PostResponse postResponse;
+
+    @Autowired
     private PostService postService;
+
+    @Autowired
     private CommentService commentService;
-    private LikeService likeService;
-
-    @Mock
-    private S3Uploader s3Uploader;
-
-    @Autowired
-    private PostRepository postRepository;
-
-    @Autowired
-    private CommentRepository commentRepository;
-
-    @Autowired
-    private LikeRepository likeRepository;
-    @Autowired
-    private IAuthenticationFacade authenticationFacade;
 
     @BeforeEach
     void setUp() {
-        likeService = new LikeService(postRepository, likeRepository);
-        commentService = new CommentService(postRepository, commentRepository,
-            authenticationFacade);
-        postService = new PostService(postRepository, commentService,
-            new ImageService(s3Uploader, authenticationFacade), likeService, authenticationFacade
-        );
-
         user = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         another = createUser(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         setAuthentication(user);
-
         PostRequest postRequest = new PostRequest(TEST_WRITING, EMPTY_MULTIPART_FILES);
         postResponse = postService.createPost(postRequest);
     }
