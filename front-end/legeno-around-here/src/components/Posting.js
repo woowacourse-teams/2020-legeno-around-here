@@ -1,21 +1,12 @@
 import styled from 'styled-components';
-import { Link } from "react-router-dom";
 
 import React from 'react';
 import OutBox from './OutBox';
-import { TopBarBackground, Cancle, Submit } from './PostingTopBar';
-import TextInput from './TextArea';
-import ImageInput from './ImageInput'
-
-const PostingTopBar = () => {
-  return (
-    <TopBarBackground>
-      <Cancle linkTo="/"></Cancle>
-      <div>성북구</div>
-      <Submit/>
-    </TopBarBackground>
-  );
-};
+import TopBarBackground from './posting/TopBarBackground';
+import Cancle from './posting/Cancle';
+import TextInput from './posting/TextArea';
+import ImageInput from './posting/ImageInput';
+import Submit from './posting/Submit';
 
 const PostingBox = styled.div`
   width: 100%;
@@ -27,12 +18,16 @@ const PostingBox = styled.div`
 const Posting = () => {
   return (<>
     <OutBox>
-        <PostingTopBar/>
-        <PostingBox>
-          <TextInput/>
-          <ImageInput> + 자랑할 사진을 올려주세요</ImageInput>
-          <button>부문을 추가해주세요</button>
-        </PostingBox>
+      <TopBarBackground>
+        <Cancle linkTo="/"></Cancle>
+        <div>성북구</div>
+        <Submit/>
+      </TopBarBackground>
+      <PostingBox>
+        <TextInput/>
+        <ImageInput> + 자랑할 사진을 올려주세요</ImageInput>
+        <button>부문을 추가해주세요</button>
+      </PostingBox>
     </OutBox>
   </>);
 };
