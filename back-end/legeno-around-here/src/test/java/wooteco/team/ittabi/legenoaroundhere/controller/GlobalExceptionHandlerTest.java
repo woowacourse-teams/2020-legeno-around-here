@@ -47,7 +47,7 @@ class GlobalExceptionHandlerTest {
     @Test
     void handleNotFound_NotExistsException_NotFound() throws Exception {
         doThrow(NotExistsException.class)
-            .when(sectorService).searchAvailableSector(any(), any());
+            .when(sectorService).searchAvailableSectors(any(), any());
 
         this.mockMvc.perform(get("/sectors")
             .accept(MediaType.APPLICATION_JSON))
@@ -59,7 +59,7 @@ class GlobalExceptionHandlerTest {
     @Test
     void handleBadRequest_UserInputException_BadRequest() throws Exception {
         doThrow(WrongUserInputException.class)
-            .when(sectorService).searchAvailableSector(any(), any());
+            .when(sectorService).searchAvailableSectors(any(), any());
         this.mockMvc.perform(get("/sectors")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest())
@@ -70,7 +70,7 @@ class GlobalExceptionHandlerTest {
     @Test
     void handleBadRequest_NotImageMimeTypeException_BadRequest() throws Exception {
         doThrow(NotImageMimeTypeException.class)
-            .when(sectorService).searchAvailableSector(any(), any());
+            .when(sectorService).searchAvailableSectors(any(), any());
 
         this.mockMvc.perform(get("/sectors")
             .accept(MediaType.APPLICATION_JSON))
@@ -82,7 +82,7 @@ class GlobalExceptionHandlerTest {
     @Test
     void handleBadRequest_NotImageExtensionException_BadRequest() throws Exception {
         doThrow(NotImageExtensionException.class)
-            .when(sectorService).searchAvailableSector(any(), any());
+            .when(sectorService).searchAvailableSectors(any(), any());
 
         this.mockMvc.perform(get("/sectors")
             .accept(MediaType.APPLICATION_JSON))
@@ -94,7 +94,7 @@ class GlobalExceptionHandlerTest {
     @Test
     void handleBadRequest_MultipartFileConvertException_BadRequest() throws Exception {
         doThrow(MultipartFileConvertException.class)
-            .when(sectorService).searchAvailableSector(any(), any());
+            .when(sectorService).searchAvailableSectors(any(), any());
 
         this.mockMvc.perform(get("/sectors")
             .accept(MediaType.APPLICATION_JSON))
@@ -106,7 +106,7 @@ class GlobalExceptionHandlerTest {
     @Test
     void handleBadRequest_FileIOException_BadRequest() throws Exception {
         doThrow(FileIOException.class)
-            .when(sectorService).searchAvailableSector(any(), any());
+            .when(sectorService).searchAvailableSectors(any(), any());
 
         this.mockMvc.perform(get("/sectors")
             .accept(MediaType.APPLICATION_JSON))
@@ -118,7 +118,7 @@ class GlobalExceptionHandlerTest {
     @Test
     void handleBadRequest_NotUniqueException_BadRequest() throws Exception {
         doThrow(NotUniqueException.class)
-            .when(sectorService).searchAvailableSector(any(), any());
+            .when(sectorService).searchAvailableSectors(any(), any());
 
         this.mockMvc.perform(get("/sectors/")
             .accept(MediaType.APPLICATION_JSON))
@@ -130,7 +130,7 @@ class GlobalExceptionHandlerTest {
     @Test
     void handleForbidden_NotAuthorizedException_Forbidden() throws Exception {
         doThrow(NotAuthorizedException.class)
-            .when(sectorService).searchAvailableSector(any(), any());
+            .when(sectorService).searchAvailableSectors(any(), any());
 
         this.mockMvc.perform(get("/sectors")
             .accept(MediaType.APPLICATION_JSON))
@@ -143,7 +143,7 @@ class GlobalExceptionHandlerTest {
     void handleInternalServerError_NotFoundAlgorithmException_InternalServerError()
         throws Exception {
         doThrow(NotFoundAlgorithmException.class)
-            .when(sectorService).searchAvailableSector(any(), any());
+            .when(sectorService).searchAvailableSectors(any(), any());
 
         this.mockMvc.perform(get("/sectors/")
             .accept(MediaType.APPLICATION_JSON))
@@ -155,7 +155,7 @@ class GlobalExceptionHandlerTest {
     @Test
     void handleInternalServerError_RuntimeException_InternalServerError() throws Exception {
         doThrow(RuntimeException.class)
-            .when(sectorService).searchAvailableSector(any(), any());
+            .when(sectorService).searchAvailableSectors(any(), any());
 
         this.mockMvc.perform(get("/sectors/")
             .accept(MediaType.APPLICATION_JSON))

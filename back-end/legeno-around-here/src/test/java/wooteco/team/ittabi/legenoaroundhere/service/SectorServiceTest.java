@@ -135,14 +135,14 @@ class SectorServiceTest {
 
     @DisplayName("사용중인 Sector 키워드 조회 - 성공")
     @Test
-    void findAllAvailableSector_SearchKeyword_Success() {
+    void searchAvailableSectors_SearchKeyword_Success() {
         SectorResponse sector = sectorService
             .createSector(new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION));
         SectorResponse anotherSector = sectorService.createSector(
             new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION));
 
         Page<SectorResponse> sectors = sectorService
-            .searchAvailableSector(Pageable.unpaged(), TEST_SECTOR_ANOTHER_NAME.substring(3));
+            .searchAvailableSectors(Pageable.unpaged(), TEST_SECTOR_ANOTHER_NAME.substring(3));
 
         assertThat(sectors.getContent()).doesNotContain(sector);
         assertThat(sectors.getContent()).contains(anotherSector);
@@ -150,7 +150,7 @@ class SectorServiceTest {
 
     @DisplayName("사용중인 Sector 전체 조회 - 성공")
     @Test
-    void findAllAvailableSector_Success() {
+    void searchAvailableSectors_Success() {
         SectorResponse sector
             = sectorService
             .createSector(new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION));
@@ -158,7 +158,7 @@ class SectorServiceTest {
             new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION));
         sectorService.deleteSector(sector.getId());
 
-        Page<SectorResponse> sectors = sectorService.searchAvailableSector(Pageable.unpaged(), "");
+        Page<SectorResponse> sectors = sectorService.searchAvailableSectors(Pageable.unpaged(), "");
         assertThat(sectors.getContent()).doesNotContain(sector);
         assertThat(sectors.getContent()).contains(anotherSector);
     }

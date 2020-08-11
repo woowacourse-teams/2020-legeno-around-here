@@ -75,7 +75,7 @@ public class SectorService {
     }
 
     @Transactional(readOnly = true)
-    public Page<SectorResponse> searchAvailableSector(Pageable pageable, String keyword) {
+    public Page<SectorResponse> searchAvailableSectors(Pageable pageable, String keyword) {
         String likeKeyword = String.format(DB_LIKE_FORMAT, keyword);
         Page<Sector> sectorsPage = sectorRepository.findAllByStateInAndNameIsLike(pageable,
             SectorState.getAllAvailable(), Name.getKeywordName(likeKeyword));

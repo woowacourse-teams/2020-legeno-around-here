@@ -35,7 +35,7 @@ public class SectorController {
     public ResponseEntity<Page<SectorResponse>> searchAvailableSectors(PageRequest pageRequest,
         @RequestParam(defaultValue = "") String keyword) {
         Page<SectorResponse> sectors
-            = sectorService.searchAvailableSector(pageRequest.getPageable(), keyword);
+            = sectorService.searchAvailableSectors(pageRequest.getPageable(), keyword);
         return ResponseEntity
             .ok(sectors);
     }
