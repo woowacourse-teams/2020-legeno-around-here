@@ -2,9 +2,6 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.EMPTY_MULTIPART_FILES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.TEST_IMAGE_CONTENT_TYPE;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostTestConstants.TEST_WRITING;
@@ -15,57 +12,32 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConst
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
-import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
-import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
-import wooteco.team.ittabi.legenoaroundhere.repository.CommentRepository;
-import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.FileConverter;
 
-@ExtendWith(MockitoExtension.class)
-public class PostServiceTest extends AuthServiceTest {
-
-    private PostService postService;
-    private CommentService commentService;
-    private ImageService imageService;
-
-    @Mock
-    private S3Uploader s3Uploader;
-
-    @Autowired
-    private PostRepository postRepository;
-
-    @Autowired
-    private CommentRepository commentRepository;
-
-    @Autowired
-    private IAuthenticationFacade authenticationFacade;
+public class PostServiceTest extends ServiceTest {
 
     private User user;
     private User another;
 
+    @Autowired
+    private PostService postService;
+
     @BeforeEach
     void setUp() {
-        commentService = new CommentService(postRepository, commentRepository,
-            authenticationFacade);
-        imageService = new ImageService(s3Uploader, authenticationFacade);
-        postService = new PostService(postRepository, commentService, imageService,
-            authenticationFacade);
-
         user = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         another = createUser(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         setAuthentication(user);
@@ -80,7 +52,7 @@ public class PostServiceTest extends AuthServiceTest {
 
         assertThat(postResponse.getId()).isNotNull();
         assertThat(postResponse.getWriting()).isEqualTo(TEST_WRITING);
-        assertThat(postResponse.getUser()).isEqualTo(UserResponse.from(user));
+        assertThat(postResponse.getCreator()).isEqualTo(UserResponse.from(user));
     }
 
     @DisplayName("이미지를 포함한 포스트 생성 - 성공")
@@ -90,13 +62,12 @@ public class PostServiceTest extends AuthServiceTest {
             .convert("right_image1.jpg", TEST_IMAGE_CONTENT_TYPE);
         PostRequest postRequest = new PostRequest(TEST_WRITING,
             Collections.singletonList(multipartFile));
-        when(s3Uploader.upload(any(MultipartFile.class), anyString())).thenReturn("imageUrl");
 
         PostResponse postResponse = postService.createPost(postRequest);
 
         assertThat(postResponse.getWriting()).isEqualTo(TEST_WRITING);
         assertThat(postResponse.getImages()).hasSize(1);
-        assertThat(postResponse.getUser()).isEqualTo(UserResponse.from(user));
+        assertThat(postResponse.getCreator()).isEqualTo(UserResponse.from(user));
     }
 
     @DisplayName("ID로 포스트 조회 - 성공")
@@ -109,7 +80,7 @@ public class PostServiceTest extends AuthServiceTest {
 
         assertThat(postResponse.getId()).isEqualTo(createdPostResponse.getId());
         assertThat(postResponse.getWriting()).isEqualTo(createdPostResponse.getWriting());
-        assertThat(postResponse.getUser()).isEqualTo(UserResponse.from(user));
+        assertThat(postResponse.getCreator()).isEqualTo(UserResponse.from(user));
     }
 
     @DisplayName("ID로 포스트 조회 - 실패, 이미 지워진 포스트")
@@ -139,7 +110,7 @@ public class PostServiceTest extends AuthServiceTest {
         postService.createPost(postRequest);
         postService.createPost(postRequest);
 
-        List<PostResponse> posts = postService.findAllPost();
+        Page<PostWithCommentsCountResponse> posts = postService.findAllPost(Pageable.unpaged());
 
         assertThat(posts).hasSize(2);
     }
@@ -157,7 +128,7 @@ public class PostServiceTest extends AuthServiceTest {
             .findPost(createdPostResponse.getId());
 
         assertThat(updatedPostResponse.getWriting()).isEqualTo(updatedPostWriting);
-        assertThat(updatedPostResponse.getUser()).isEqualTo(UserResponse.from(user));
+        assertThat(updatedPostResponse.getCreator()).isEqualTo(UserResponse.from(user));
     }
 
     @DisplayName("ID로 포스트 수정 - 실패")
@@ -172,7 +143,7 @@ public class PostServiceTest extends AuthServiceTest {
 
     @DisplayName("ID로 포스트 수정 - 예외 발생, 작성자가 아님")
     @Test
-    void updatePost_IfNotOwner_ThrowException() {
+    void updatePost_IfNotCreator_ThrowException() {
         String updatedPostWriting = "Jamie and BingBong";
         PostRequest createdPostRequest = new PostRequest(TEST_WRITING, EMPTY_MULTIPART_FILES);
         PostResponse createdPostResponse = postService.createPost(createdPostRequest);
@@ -219,7 +190,7 @@ public class PostServiceTest extends AuthServiceTest {
 
     @DisplayName("ID로 포스트 삭제 - 예외 발생, 작성자가 아님")
     @Test
-    void deletePost_IfNotOwner_ThrowException() {
+    void deletePost_IfNotCreator_ThrowException() {
         PostRequest createdPostRequest = new PostRequest(TEST_WRITING, EMPTY_MULTIPART_FILES);
         PostResponse createdPostResponse = postService.createPost(createdPostRequest);
 

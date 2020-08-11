@@ -37,7 +37,6 @@ public class ImageService {
         validateImage(multipartFile);
         String imageUrl = s3Uploader
             .upload(multipartFile, IMAGE_DIR + calculateUserHashCode(user));
-        System.out.println(IMAGE_DIR + calculateUserHashCode(user));
         return Image.builder()
             .name(multipartFile.getName())
             .url(imageUrl)
@@ -81,5 +80,4 @@ public class ImageService {
         return !tika.detect(multipartFile.getBytes())
             .startsWith(IMAGE_TYPE);
     }
-
 }

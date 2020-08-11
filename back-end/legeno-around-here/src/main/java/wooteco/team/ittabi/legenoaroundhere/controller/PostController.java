@@ -1,7 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
 import java.net.URI;
-import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import wooteco.team.ittabi.legenoaroundhere.dto.PageRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.service.PostService;
 
 @RestController
@@ -51,8 +53,10 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PostResponse>> findAllPost() {
-        List<PostResponse> posts = postService.findAllPost();
+    public ResponseEntity<Page<PostWithCommentsCountResponse>> findAllPost(
+        PageRequest pageRequest) {
+        Page<PostWithCommentsCountResponse> posts = postService
+            .findAllPost(pageRequest.getPageable());
         return ResponseEntity
             .ok()
             .body(posts);
