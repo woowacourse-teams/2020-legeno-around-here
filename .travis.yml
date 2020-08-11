@@ -22,8 +22,8 @@ matrix:
              
 before_deploy:
   - export NOW_PATH=`pwd`
-  - if [[ $NOW_PATH =~ "back-end" ]];then zip -r back-end *;mkdir -p deploy;mv back-end.zip deploy/back-end.zip;export NOW_KEY="back-end.zip";export DEPLOY_GROUP="ittabi-back-group";fi
-  - if [[ $NOW_PATH =~ "front-end" ]];then zip -r front-end *;mkdir -p deploy;mv front-end.zip deploy/front-end.zip;export NOW_KEY="front-end.zip";export DEPLOY_GROUP="ittabi-front-group";fi
+  - if [[ $NOW_PATH =~ "back-end" ]];then zip -r back-end ./build/lib ./appspec.yml ./execute-deploy.sh;mkdir -p deploy;mv back-end.zip deploy/back-end.zip;export NOW_KEY="back-end.zip";export DEPLOY_GROUP="ittabi-back-group";fi
+  - if [[ $NOW_PATH =~ "front-end" ]];then zip -r front-end ./build ./appspec.yml ./execute-deploy.sh;mkdir -p deploy;mv front-end.zip deploy/front-end.zip;export NOW_KEY="front-end.zip";export DEPLOY_GROUP="ittabi-front-group";fi
 
 deploy:
   - provider: s3
