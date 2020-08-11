@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const ImageInput = styled.div`
+const ImageInput = styled.input`
   background-color: rgba(0, 0, 0, 0.1);
   width: 95%;
   height: 100px;

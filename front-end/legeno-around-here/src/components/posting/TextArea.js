@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const TextArea = styled.textarea`
+const TextInput = styled.textarea`
   width: 98%;
   height: 200px;
   padding: 10px;
@@ -15,9 +15,4 @@ const TextArea = styled.textarea`
   }
 `;
 
-const TextInput = () => {
-  return (
-    <TextArea placeholder="자랑거리를 입력해주세요"/>
-  );
-}
 export default TextInput;

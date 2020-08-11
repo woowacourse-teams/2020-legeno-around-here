@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import submit from '../../images/submit.png';
 
-const Submit = styled.button`
+const SubmitButton = styled.button`
   background: url(${submit}) no-repeat;
   background-size: 30px;
   width: 30px;
@@ -13,4 +13,4 @@ const Submit = styled.button`
   outline: 0;
 `;
 
-export default Submit;
+export default SubmitButton;
