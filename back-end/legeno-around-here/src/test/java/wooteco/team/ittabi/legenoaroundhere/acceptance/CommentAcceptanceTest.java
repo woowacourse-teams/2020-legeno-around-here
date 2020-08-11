@@ -3,6 +3,7 @@ package wooteco.team.ittabi.legenoaroundhere.acceptance;
 import static io.restassured.RestAssured.given;
 import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
@@ -27,7 +28,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -208,22 +208,11 @@ public class CommentAcceptanceTest {
         return Long.valueOf(location.substring(lastIndex + 1));
     }
 
-    private PostResponse findPost(Long id, String accessToken) {
-        return given()
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header("X-AUTH-TOKEN", accessToken)
-            .when()
-            .get("/posts/" + id)
-            .then()
-            .statusCode(HttpStatus.OK.value())
-            .extract()
-            .as(PostResponse.class);
-    }
-
     private String createPostWithoutImage(String accessToken, Long sectorId) {
         return given()
             .log().all()
             .formParam("writing", TEST_WRITING)
+            .formParam("areaId", TEST_AREA_ID)
             .formParam("sectorId", sectorId)
             .header("X-AUTH-TOKEN", accessToken)
             .config(RestAssuredConfig.config()

@@ -13,6 +13,7 @@ import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.Image;
 import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.State;
+import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
@@ -23,6 +24,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
+import wooteco.team.ittabi.legenoaroundhere.repository.AreaRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
 
@@ -35,6 +37,7 @@ public class PostService {
     private static final State Deleted = State.DELETED;
 
     private final PostRepository postRepository;
+    private final AreaRepository areaRepository;
     private final SectorRepository sectorRepository;
     private final CommentService commentService;
     private final ImageService imageService;
@@ -44,11 +47,15 @@ public class PostService {
     public PostResponse createPost(PostCreateRequest postCreateRequest) {
         User user = (User) authenticationFacade.getPrincipal();
 
+        Area area = areaRepository.findById(postCreateRequest.getAreaId())
+            .filter(Area::isUsed)
+            .orElseThrow(() -> new WrongUserInputException("입력하신 지역이 존재하지 않습니다."));
+
         Sector sector = sectorRepository.findById(postCreateRequest.getSectorId())
             .filter(Sector::isUsed)
             .orElseThrow(() -> new WrongUserInputException("입력하신 부문이 존재하지 않습니다."));
 
-        Post post = postCreateRequest.toPost(user, sector);
+        Post post = postCreateRequest.toPost(area, sector, user);
 
         List<Image> images = uploadImages(postCreateRequest);
         images.forEach(image -> image.setPost(post));
