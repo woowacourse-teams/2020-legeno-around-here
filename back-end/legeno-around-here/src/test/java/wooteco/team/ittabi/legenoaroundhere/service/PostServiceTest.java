@@ -129,7 +129,7 @@ public class PostServiceTest extends ServiceTest {
 
         Page<PostWithCommentsCountResponse> posts = postService.findAllPost(Pageable.unpaged());
 
-        assertThat(posts).hasSize(2);
+        assertThat(posts.getContent()).hasSize(2);
     }
 
     @DisplayName("ID로 포스트 수정 - 성공")
