@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.like.LikeState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.LikeResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
@@ -46,7 +46,7 @@ public class LikeServiceTest extends ServiceTest {
         LikeResponse activateLikeResponse = likeService.pressLike(postResponse.getId(), user);
 
         assertThat(activateLikeResponse.getLikeCount()).isEqualTo(1L);
-        assertThat(activateLikeResponse.getState()).isEqualTo(State.ACTIVATED);
+        assertThat(activateLikeResponse.getState()).isEqualTo(LikeState.ACTIVATED);
     }
 
     @DisplayName("활성화된 좋아요를 비활성화")
@@ -56,6 +56,6 @@ public class LikeServiceTest extends ServiceTest {
         LikeResponse inactivatedLikeResponse = likeService.pressLike(postResponse.getId(), user);
 
         assertThat(inactivatedLikeResponse.getLikeCount()).isEqualTo(0L);
-        assertThat(inactivatedLikeResponse.getState()).isEqualTo(State.INACTIVATED);
+        assertThat(inactivatedLikeResponse.getState()).isEqualTo(LikeState.INACTIVATED);
     }
 }

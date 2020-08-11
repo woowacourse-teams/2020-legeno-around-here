@@ -13,6 +13,7 @@ import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.Image;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.like.LikeState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.LikeResponse;
@@ -45,7 +46,7 @@ public class PostService {
         Post savedPost = postRepository.save(post);
         List<CommentResponse> commentResponses = commentService.findAllComment(savedPost.getId());
         LikeResponse likeResponse = LikeResponse
-            .of(savedPost.getLikeCount().getLikeCount(), State.INACTIVATED);
+            .of(savedPost.getLikeCount().getLikeCount(), LikeState.INACTIVATED);
 
         return PostResponse.of(savedPost, commentResponses, likeResponse);
     }

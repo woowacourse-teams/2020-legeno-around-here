@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.like.LikeState;
 import wooteco.team.ittabi.legenoaroundhere.dto.LikeResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
@@ -49,13 +49,13 @@ public class LikeAcceptanceTest extends AcceptanceTest {
         LikeResponse activatedLikeResponse = pressLike(postResponse.getId(), accessToken);
 
         assertThat(activatedLikeResponse.getLikeCount()).isEqualTo(1L);
-        assertThat(activatedLikeResponse.getState()).isEqualTo(State.ACTIVATED);
+        assertThat(activatedLikeResponse.getState()).isEqualTo(LikeState.ACTIVATED);
 
         // 활성화된 좋아요를 비활성화
         LikeResponse inactivatedLikeResponse = pressLike(postResponse.getId(), accessToken);
 
         assertThat(inactivatedLikeResponse.getLikeCount()).isEqualTo(0L);
-        assertThat(inactivatedLikeResponse.getState()).isEqualTo(State.INACTIVATED);
+        assertThat(inactivatedLikeResponse.getState()).isEqualTo(LikeState.INACTIVATED);
     }
 
     private LikeResponse pressLike(Long postId, String accessToken) {

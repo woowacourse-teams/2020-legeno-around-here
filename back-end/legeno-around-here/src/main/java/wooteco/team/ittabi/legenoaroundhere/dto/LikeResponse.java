@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.like.LikeState;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
@@ -16,9 +16,9 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
 public class LikeResponse {
 
     private Long likeCount;
-    private State state;
+    private LikeState state;
 
-    public static LikeResponse of(Long likeCount, State state) {
+    public static LikeResponse of(Long likeCount, LikeState state) {
         return new LikeResponse(likeCount, state);
     }
 }

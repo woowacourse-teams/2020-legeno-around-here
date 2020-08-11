@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.like.Like;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.like.LikeState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.LikeResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
@@ -37,22 +38,22 @@ public class LikeService {
     private LikeResponse inactivateLike(Post post, User user) {
         likeRepository.deleteByPostIdAndUserId(post.getId(), user.getId());
         post.minusLikeCount();
-        return LikeResponse.of(post.getLikeCount().getLikeCount(), State.INACTIVATED);
+        return LikeResponse.of(post.getLikeCount().getLikeCount(), LikeState.INACTIVATED);
     }
 
     private LikeResponse activateLike(Post post, User user) {
         likeRepository.save(new Like(post, user));
         post.plusLikeCount();
-        return LikeResponse.of(post.getLikeCount().getLikeCount(), State.ACTIVATED);
+        return LikeResponse.of(post.getLikeCount().getLikeCount(), LikeState.ACTIVATED);
     }
 
     @Transactional(readOnly = true)
     public LikeResponse findByPostId(Long postId, User user) {
         Post post = findPost(postId);
         if (isLikeExists(post, user)) {
-            return LikeResponse.of(post.getLikeCount().getLikeCount(), State.ACTIVATED);
+            return LikeResponse.of(post.getLikeCount().getLikeCount(), LikeState.ACTIVATED);
         }
-        return LikeResponse.of(post.getLikeCount().getLikeCount(), State.INACTIVATED);
+        return LikeResponse.of(post.getLikeCount().getLikeCount(), LikeState.INACTIVATED);
     }
 
     private Post findPost(Long postId) {
