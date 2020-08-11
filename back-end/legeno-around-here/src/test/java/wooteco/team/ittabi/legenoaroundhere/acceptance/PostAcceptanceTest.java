@@ -39,6 +39,7 @@ import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -53,6 +54,7 @@ public class PostAcceptanceTest {
 
     private String accessToken;
     private Long sectorId;
+    private SectorResponse sector;
 
     @BeforeEach
     void setUp() {
@@ -63,6 +65,7 @@ public class PostAcceptanceTest {
         accessToken = tokenResponse.getAccessToken();
 
         sectorId = createSector();
+        sector = findAvailableSector(accessToken, sectorId);
     }
 
     /**
@@ -91,6 +94,7 @@ public class PostAcceptanceTest {
 
         assertThat(postWithoutImageResponse.getId()).isEqualTo(postWithoutImageId);
         assertThat(postWithoutImageResponse.getWriting()).isEqualTo(TEST_WRITING);
+        assertThat(postWithoutImageResponse.getSector()).isEqualTo(sector);
 
         // 이미지가 포함된 글 등록
         String postWithImageLocation = createPostWithImage(accessToken);
@@ -101,6 +105,7 @@ public class PostAcceptanceTest {
         assertThat(postWithImageResponse.getId()).isEqualTo(postWithImageId);
         assertThat(postWithImageResponse.getWriting()).isEqualTo(TEST_WRITING);
         assertThat(postWithImageResponse.getImages()).hasSize(2);
+        assertThat(postWithoutImageResponse.getSector()).isEqualTo(sector);
 
         // 목록 조회
         List<PostWithCommentsCountResponse> postResponses = findAllPost(accessToken);
@@ -148,9 +153,9 @@ public class PostAcceptanceTest {
      * <p>
      * When 글 1Page 20Size를 정렬(기준:test-id 방향:오름차순) 조회한다. Then BadRequest가 발생한다.
      */
-    @DisplayName("부문 페이징 조회")
+    @DisplayName("글 페이징 조회")
     @Test
-    void pagingFindSector() {
+    void pagingFindPost() {
         List<Long> ids = new ArrayList<>();
         // 글 100개 등록
         for (int i = 0; i < 100; i++) {
@@ -302,6 +307,18 @@ public class PostAcceptanceTest {
             .post("/joinAdmin")
             .then()
             .statusCode(HttpStatus.CREATED.value());
+    }
+
+    private SectorResponse findAvailableSector(String accessToken, Long id) {
+        return given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .get("/sectors/" + id)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .as(SectorResponse.class);
     }
 
     private void findNotExistsPost(Long id, String accessToken) {

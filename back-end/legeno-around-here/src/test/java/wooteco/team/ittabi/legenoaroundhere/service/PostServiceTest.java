@@ -26,6 +26,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
@@ -41,6 +42,7 @@ public class PostServiceTest extends ServiceTest {
 
     private User user;
     private User another;
+    private SectorResponse sector;
     private Long sectorId;
 
     @BeforeEach
@@ -49,7 +51,8 @@ public class PostServiceTest extends ServiceTest {
         another = createUser(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         setAuthentication(user);
 
-        sectorId = sectorService.createSector(TEST_SECTOR_REQUEST).getId();
+        sector = sectorService.createSector(TEST_SECTOR_REQUEST);
+        sectorId = sector.getId();
     }
 
     @DisplayName("이미지를 포함하지 않는 포스트 생성 - 성공")
@@ -63,6 +66,7 @@ public class PostServiceTest extends ServiceTest {
         assertThat(postResponse.getId()).isNotNull();
         assertThat(postResponse.getWriting()).isEqualTo(TEST_WRITING);
         assertThat(postResponse.getCreator()).isEqualTo(UserResponse.from(user));
+        assertThat(postResponse.getSector()).isEqualTo(sector);
     }
 
     @DisplayName("이미지를 포함한 포스트 생성 - 성공")
@@ -78,6 +82,7 @@ public class PostServiceTest extends ServiceTest {
         assertThat(postResponse.getWriting()).isEqualTo(TEST_WRITING);
         assertThat(postResponse.getImages()).hasSize(1);
         assertThat(postResponse.getCreator()).isEqualTo(UserResponse.from(user));
+        assertThat(postResponse.getSector()).isEqualTo(sector);
     }
 
     @DisplayName("ID로 포스트 조회 - 성공")
@@ -92,6 +97,7 @@ public class PostServiceTest extends ServiceTest {
         assertThat(postResponse.getId()).isEqualTo(createdPostResponse.getId());
         assertThat(postResponse.getWriting()).isEqualTo(createdPostResponse.getWriting());
         assertThat(postResponse.getCreator()).isEqualTo(UserResponse.from(user));
+        assertThat(postResponse.getSector()).isEqualTo(sector);
     }
 
     @DisplayName("ID로 포스트 조회 - 실패, 이미 지워진 포스트")
