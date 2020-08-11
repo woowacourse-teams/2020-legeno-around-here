@@ -6,6 +6,7 @@ import OutBox from "./OutBox"
 import Button from "./Button"
 import { getAccessTokenFromCookie } from "../util/TokenUtils";
 import { ProfilePhoto, Nickname, Email, TopSection, PrivacyBox, PrivacyEditBox } from "./mypage/TopSection";
+import { AwardsSection, AwardSummary } from './mypage/AwardSection';
 
 function MyPage() {
   const [accessToken] = useState(getAccessTokenFromCookie());
@@ -42,6 +43,11 @@ function MyPage() {
         </PrivacyBox>
         <PrivacyEditBox>수정</PrivacyEditBox>
       </TopSection>
+      <AwardsSection>
+        <AwardSummary awardName="TOP3" awardCount={1}></AwardSummary>
+        <AwardSummary awardName="TOP10" awardCount={0}></AwardSummary>
+        <AwardSummary awardName="TOP50" awardCount={12}></AwardSummary>
+      </AwardsSection>
       <Link to="/">
         <Button type="button">홈으로</Button>
       </Link>
