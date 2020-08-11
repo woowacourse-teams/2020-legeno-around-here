@@ -31,7 +31,8 @@ public class AreaAcceptanceTest {
     public int port;
 
     @Autowired
-    AreaRepository areaRepository;
+    private AreaRepository areaRepository;
+    
     private String accessToken;
 
     @BeforeEach

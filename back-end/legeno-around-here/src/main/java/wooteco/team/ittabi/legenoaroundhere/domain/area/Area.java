@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.area;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,10 +14,21 @@ import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 @ToString
 public class Area extends BaseEntity {
 
-    String fullName;
-    String firstDepthName;
-    String secondDepthName;
-    String thirdDepthName;
-    String fourthDepthName;
-    byte used;
+    @Column(nullable = false)
+    private String fullName;
+
+    @Column(nullable = false)
+    private String firstDepthName;
+
+    @Column(nullable = false)
+    private String secondDepthName;
+
+    @Column(nullable = false)
+    private String thirdDepthName;
+
+    @Column(nullable = false)
+    private String fourthDepthName;
+
+    @Column(nullable = false)
+    private byte used;
 }

@@ -17,11 +17,11 @@ import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 @ToString
 public class AreaResponse {
 
-    String fullName;
-    String firstDepthName;
-    String secondDepthName;
-    String thirdDepthName;
-    String fourthDepthName;
+    private String fullName;
+    private String firstDepthName;
+    private String secondDepthName;
+    private String thirdDepthName;
+    private String fourthDepthName;
 
     public static AreaResponse of(Area area) {
         return AreaResponse.builder()
