@@ -15,10 +15,10 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.like.LikeState;
 @ToString
 public class LikeResponse {
 
-    private Long likeCount;
-    private LikeState state;
+    private int likeCount;
+    private String likeState;
 
-    public static LikeResponse of(Long likeCount, LikeState state) {
-        return new LikeResponse(likeCount, state);
+    public static LikeResponse of(int likeCount, LikeState likeState) {
+        return new LikeResponse(likeCount, likeState.name());
     }
 }

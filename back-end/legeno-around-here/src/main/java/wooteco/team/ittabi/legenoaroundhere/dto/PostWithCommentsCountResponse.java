@@ -9,7 +9,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.like.LikeState;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
@@ -28,14 +30,14 @@ public class PostWithCommentsCountResponse {
     private LocalDateTime createdAt;
 
     public static PostWithCommentsCountResponse of(Post post,
-        List<CommentResponse> commentResponses, LikeResponse likeResponse) {
+        List<Comment> comments, LikeState likeState) {
         return PostWithCommentsCountResponse.builder()
             .id(post.getId())
             .writing(post.getWriting())
             .images(ImageResponse.listOf(post.getImages()))
-            .commentsCount(commentResponses.size())
+            .commentsCount(CommentResponse.listOf(comments).size())
             .creator(UserResponse.from(post.getCreator()))
-            .likeResponse(likeResponse)
+            .likeResponse(LikeResponse.of(post.getLikeCount(), likeState))
             .createdAt(post.getCreatedAt())
             .build();
     }
