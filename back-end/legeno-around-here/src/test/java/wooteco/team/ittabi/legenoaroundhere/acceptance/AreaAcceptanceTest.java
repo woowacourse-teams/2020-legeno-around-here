@@ -2,9 +2,9 @@ package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
 
 import io.restassured.RestAssured;
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public class AreaAcceptanceTest {
 
     @Autowired
     private AreaRepository areaRepository;
-    
+
     private String accessToken;
 
     @BeforeEach

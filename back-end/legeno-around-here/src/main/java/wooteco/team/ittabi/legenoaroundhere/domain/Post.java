@@ -12,20 +12,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 @Entity
-@Table(name = "post")
 @Getter
 @Setter
-@ToString(exclude = "creator")
+@ToString(exclude = {"comments", "images"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 
@@ -46,13 +45,18 @@ public class Post extends BaseEntity {
     private List<Image> images = new ArrayList<>();
 
     @ManyToOne
+    @JoinColumn(name = "sector_id")
+    private Sector sector;
+
+    @ManyToOne
     @JoinColumn(name = "creator_id")
     private User creator;
 
-    public Post(User creator, String writing) {
+    public Post(User creator, String writing, Sector sector) {
         validateLength(writing);
         this.writing = writing;
         this.state = State.PUBLISHED;
+        this.sector = sector;
         this.creator = creator;
     }
 
