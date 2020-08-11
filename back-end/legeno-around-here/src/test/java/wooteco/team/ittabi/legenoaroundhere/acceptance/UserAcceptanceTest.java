@@ -1,6 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
@@ -55,7 +56,6 @@ public class UserAcceptanceTest {
     @Test
     @DisplayName("회원 관리")
     void manageUser() {
-
         //회원 가입
         String location = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         assertThat(location).matches(USER_LOCATION_FORMAT);
@@ -98,6 +98,7 @@ public class UserAcceptanceTest {
         params.put("email", email);
         params.put("nickname", nickname);
         params.put("password", password);
+        params.put("areaId", String.valueOf(TEST_AREA_ID));
 
         return given()
             .body(params)

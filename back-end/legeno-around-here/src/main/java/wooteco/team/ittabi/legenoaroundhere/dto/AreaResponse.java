@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +25,9 @@ public class AreaResponse {
     private String fourthDepthName;
 
     public static AreaResponse of(Area area) {
+        if (Objects.isNull(area)) {
+            return null;
+        }
         return AreaResponse.builder()
             .fullName(area.getFullName())
             .firstDepthName(area.getFirstDepthName())

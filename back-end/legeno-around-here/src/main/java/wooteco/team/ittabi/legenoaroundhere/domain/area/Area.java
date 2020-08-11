@@ -30,5 +30,9 @@ public class Area extends BaseEntity {
     private String fourthDepthName;
 
     @Column(nullable = false)
-    private byte used;
+    private Boolean used;
+
+    public boolean isUsed() {
+        return used;
+    }
 }

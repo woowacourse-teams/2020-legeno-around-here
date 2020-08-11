@@ -49,6 +49,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({Exception.class, NotFoundAlgorithmException.class})
     public ResponseEntity<ErrorResponse> handleInternalServerError(Exception e) {
+        e.printStackTrace();
         log.info(e.getMessage());
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
