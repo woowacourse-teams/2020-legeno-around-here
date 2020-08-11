@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from "react-router-dom";
 
 import React from 'react';
 import OutBox from './OutBox';
@@ -9,7 +10,7 @@ import ImageInput from './ImageInput'
 const PostingTopBar = () => {
   return (
     <TopBarBackground>
-      <Cancle/>
+      <Cancle linkTo="/"></Cancle>
       <div>성북구</div>
       <Submit/>
     </TopBarBackground>

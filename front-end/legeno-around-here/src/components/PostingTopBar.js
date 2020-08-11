@@ -3,8 +3,9 @@ import styled from 'styled-components';
 
 import cancle from '../images/cancle.png';
 import submit from '../images/submit.png';
+import { Link } from 'react-router-dom';
 
-export const Cancle = styled.button`
+const CancleButton = styled.button`
   background: url(${cancle}) no-repeat;
   background-size: 30px;
   width: 30px;
@@ -14,6 +15,18 @@ export const Cancle = styled.button`
   border: 0;
   outline: 0;
 `;
+
+const CancleLink = styled(Link)`
+    margin-right: auto;
+`;
+
+export const Cancle = ({ linkTo }) => {
+  return (
+    <CancleLink to={ linkTo }>
+      <CancleButton></CancleButton>
+    </CancleLink>
+  );
+};
 
 export const Submit = styled.button`
   background: url(${submit}) no-repeat;
