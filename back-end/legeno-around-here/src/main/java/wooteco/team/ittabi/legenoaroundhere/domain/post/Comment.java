@@ -1,4 +1,4 @@
-package wooteco.team.ittabi.legenoaroundhere.domain;
+package wooteco.team.ittabi.legenoaroundhere.domain.post;
 
 import java.util.Objects;
 import javax.persistence.Column;
@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 

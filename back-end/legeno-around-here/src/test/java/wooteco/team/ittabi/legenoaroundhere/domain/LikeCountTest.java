@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.like.LikeCount;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 public class LikeCountTest {

@@ -1,4 +1,4 @@
-package wooteco.team.ittabi.legenoaroundhere.domain;
+package wooteco.team.ittabi.legenoaroundhere.domain.post.like;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +9,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 
 @Entity

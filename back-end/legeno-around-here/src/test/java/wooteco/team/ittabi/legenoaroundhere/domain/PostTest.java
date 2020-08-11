@@ -9,6 +9,8 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConst
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Nickname;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Password;

@@ -1,4 +1,4 @@
-package wooteco.team.ittabi.legenoaroundhere.domain;
+package wooteco.team.ittabi.legenoaroundhere.domain.post;
 
 public enum State {
     DELETED,

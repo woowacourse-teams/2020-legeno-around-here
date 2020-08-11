@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import wooteco.team.ittabi.legenoaroundhere.domain.State;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
 import wooteco.team.ittabi.legenoaroundhere.dto.LikeResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;

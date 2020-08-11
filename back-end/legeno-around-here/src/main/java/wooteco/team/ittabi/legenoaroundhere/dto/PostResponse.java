@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import wooteco.team.ittabi.legenoaroundhere.domain.Post;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor

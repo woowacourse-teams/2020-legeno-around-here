@@ -1,4 +1,4 @@
-package wooteco.team.ittabi.legenoaroundhere.domain;
+package wooteco.team.ittabi.legenoaroundhere.domain.post.like;
 
 import javax.persistence.Embeddable;
 import lombok.AccessLevel;

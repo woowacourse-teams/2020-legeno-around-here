@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import wooteco.team.ittabi.legenoaroundhere.domain.State;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor

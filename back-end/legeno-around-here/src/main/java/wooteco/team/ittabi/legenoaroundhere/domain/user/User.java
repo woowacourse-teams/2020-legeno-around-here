@@ -22,8 +22,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
-import wooteco.team.ittabi.legenoaroundhere.domain.Comment;
-import wooteco.team.ittabi.legenoaroundhere.domain.Post;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.Comment;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

@@ -13,7 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
-import wooteco.team.ittabi.legenoaroundhere.domain.Image;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.image.Image;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageMimeTypeException;
 import wooteco.team.ittabi.legenoaroundhere.utils.FileConverter;
