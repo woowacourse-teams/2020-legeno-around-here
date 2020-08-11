@@ -75,7 +75,6 @@ public abstract class AcceptanceTest {
     }
 
     protected String createPostWithoutImage(String accessToken) {
-
         return given()
             .log().all()
             .formParam("writing", TEST_WRITING)

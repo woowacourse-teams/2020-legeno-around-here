@@ -64,12 +64,4 @@ public class Comment extends BaseEntity {
         this.post = post;
         post.getComments().add(this);
     }
-
-    public boolean isSameState(State state) {
-        return Objects.equals(this.state, state);
-    }
-
-    public boolean isNotSameState(State state) {
-        return !Objects.equals(this.state, state);
-    }
 }

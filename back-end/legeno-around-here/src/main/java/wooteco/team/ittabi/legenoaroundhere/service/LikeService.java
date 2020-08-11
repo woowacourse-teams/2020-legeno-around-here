@@ -42,7 +42,7 @@ public class LikeService {
 
     private LikeResponse activateLike(Post post, User user) {
         likeRepository.save(new Like(post, user));
-        post.addLikeCount();
+        post.plusLikeCount();
         return LikeResponse.of(post.getLikeCount().getLikeCount(), State.ACTIVATED);
     }
 

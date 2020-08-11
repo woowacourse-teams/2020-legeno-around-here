@@ -30,7 +30,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 
-    public static final long DEFAULT_LIKE_COUNT = 0L;
+    private static final long DEFAULT_LIKE_COUNT = 0L;
     private static final int MAX_LENGTH = 20;
 
     @Lob
@@ -75,11 +75,11 @@ public class Post extends BaseEntity {
         return !Objects.equals(this.state, state);
     }
 
-    public void minusLikeCount() {
-        likeCount = likeCount.minusLikeCount();
+    public void plusLikeCount() {
+        likeCount = likeCount.plusLikeCount();
     }
 
-    public void addLikeCount() {
-        likeCount = likeCount.addLikeCount();
+    public void minusLikeCount() {
+        likeCount = likeCount.minusLikeCount();
     }
 }

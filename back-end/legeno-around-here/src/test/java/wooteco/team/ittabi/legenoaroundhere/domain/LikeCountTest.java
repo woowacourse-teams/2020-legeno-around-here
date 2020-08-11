@@ -15,7 +15,7 @@ public class LikeCountTest {
     @Test
     void addLikeCount() {
         LikeCount likeCount = new LikeCount(DEFAULT_LIKE_COUNT);
-        LikeCount expectedLikeCount = likeCount.addLikeCount();
+        LikeCount expectedLikeCount = likeCount.plusLikeCount();
 
         assertThat(expectedLikeCount.getLikeCount()).isEqualTo(DEFAULT_LIKE_COUNT + 1);
     }

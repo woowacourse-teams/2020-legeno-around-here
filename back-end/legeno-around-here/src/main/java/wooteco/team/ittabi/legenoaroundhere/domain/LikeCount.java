@@ -15,8 +15,8 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @ToString
 public class LikeCount {
 
-    public static final int MIN_LIKE_COUNT = 0;
-    public static final int LIKE_COUNT_VALUE = 1;
+    private static final int MIN_LIKE_COUNT = 0;
+    private static final int LIKE_COUNT_VALUE = 1;
 
     private long likeCount;
 
@@ -31,7 +31,7 @@ public class LikeCount {
         }
     }
 
-    public LikeCount addLikeCount() {
+    public LikeCount plusLikeCount() {
         return new LikeCount(this.likeCount + LIKE_COUNT_VALUE);
     }
 
