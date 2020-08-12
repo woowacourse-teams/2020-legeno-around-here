@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import OutBox from './OutBox'
+import OutBox from "./OutBox";
 
 function Home() {
   return (
@@ -14,6 +14,8 @@ function Home() {
         <Link to="/mypage">마이페이지</Link>
         <br />
         <Link to="/posting">자랑글 남기기</Link>
+        <br />
+        <Link to="/sector">부문</Link>
       </div>
     </OutBox>
   );
