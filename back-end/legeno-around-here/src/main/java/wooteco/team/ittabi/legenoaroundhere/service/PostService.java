@@ -18,6 +18,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostFilterRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
@@ -87,11 +88,50 @@ public class PostService {
             .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
     }
 
-    public Page<PostWithCommentsCountResponse> findAllPost(Pageable pageable) {
-        Page<Post> posts = postRepository.findByStateNot(pageable, Deleted);
+    public Page<PostWithCommentsCountResponse> SearchAllPost(Pageable pageable,
+        PostFilterRequest postFilterRequest) {
+        Page<Post> posts = getPostByFilter(pageable, postFilterRequest);
+
         return posts
             .map(post -> PostWithCommentsCountResponse
                 .of(post, commentService.findAllComment(post.getId())));
+    }
+
+    private Page<Post> getPostByFilter(Pageable pageable, PostFilterRequest postFilterRequest) {
+        if (postFilterRequest.isFilterNothing()) {
+            return postRepository.findByStateNot(pageable, Deleted);
+        }
+
+        if (postFilterRequest.isAreaFilter()) {
+            List<Area> areas = findAllAreas(postFilterRequest.getAreaIds());
+            return postRepository.findAllByStateNotAndAreaIn(pageable, Deleted, areas);
+        }
+
+        if (postFilterRequest.isSectorFilter()) {
+            List<Sector> sectors = findAllSectors(postFilterRequest.getSectorIds());
+            return postRepository.findAllByStateNotAndSectorIn(pageable, Deleted, sectors);
+        }
+
+        List<Area> areas = findAllAreas(postFilterRequest.getAreaIds());
+        List<Sector> sectors = findAllSectors(postFilterRequest.getSectorIds());
+        return postRepository
+            .findAllByStateNotAndAreaInAndSectorIn(pageable, Deleted, areas, sectors);
+    }
+
+    private List<Area> findAllAreas(List<Long> areaIds) {
+        List<Area> areas = areaRepository.findAllById(areaIds);
+        if (areas.size() != areaIds.size()) {
+            throw new WrongUserInputException("유효하지 않은 Area ID를 사용하셨습니다.");
+        }
+        return areas;
+    }
+
+    private List<Sector> findAllSectors(List<Long> sectorIds) {
+        List<Sector> sectors = sectorRepository.findAllById(sectorIds);
+        if (sectors.size() != sectorIds.size()) {
+            throw new WrongUserInputException("유효하지 않은 Sector ID를 사용하셨습니다.");
+        }
+        return sectors;
     }
 
     @Transactional

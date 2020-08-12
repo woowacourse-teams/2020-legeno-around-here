@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wooteco.team.ittabi.legenoaroundhere.dto.PageRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostFilterRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
@@ -55,9 +56,9 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<Page<PostWithCommentsCountResponse>> findAllPost(
-        PageRequest pageRequest) {
+        PageRequest pageRequest, PostFilterRequest postFilterRequest) {
         Page<PostWithCommentsCountResponse> posts = postService
-            .findAllPost(pageRequest.getPageable());
+            .SearchAllPost(pageRequest.getPageable(), postFilterRequest);
         return ResponseEntity
             .ok()
             .body(posts);
