@@ -1,11 +1,13 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.EMPTY_MULTIPART_FILES;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostTestConstants.TEST_WRITING;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.EMPTY_MULTIPART_FILES;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_WRITING;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_REQUEST;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.like.LikeState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.LikeResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 
 public class LikeServiceTest extends ServiceTest {
@@ -28,13 +30,18 @@ public class LikeServiceTest extends ServiceTest {
     @Autowired
     private LikeService likeService;
 
+    @Autowired
+    private SectorService sectorService;
+
     @BeforeEach
     void setUp() {
         user = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         setAuthentication(user);
 
-        PostRequest postRequest = new PostRequest(TEST_WRITING, EMPTY_MULTIPART_FILES);
-        postResponse = postService.createPost(postRequest);
+        Long sectorId = sectorService.createSector(TEST_SECTOR_REQUEST).getId();
+        PostCreateRequest postCreateRequest
+            = new PostCreateRequest(TEST_WRITING, EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+        postResponse = postService.createPost(postCreateRequest);
     }
 
     @DisplayName("비활성화된 좋아요를 활성화")

@@ -1,6 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.utils;
 
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.TEST_IMAGE_DIR;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_DIR;
 
 import io.restassured.internal.util.IOUtils;
 import java.io.File;

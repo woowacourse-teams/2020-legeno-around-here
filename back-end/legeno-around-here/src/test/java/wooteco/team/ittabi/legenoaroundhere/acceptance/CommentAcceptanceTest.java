@@ -1,23 +1,48 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
+import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostTestConstants.TEST_WRITING;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_WRITING;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
 
+import io.restassured.RestAssured;
+import io.restassured.config.RestAssuredConfig;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
 public class CommentAcceptanceTest extends AcceptanceTest {
+
+    private String accessToken;
+    private Long postId;
+
+    @BeforeEach
+    void setUp() {
+        RestAssured.port = port;
+        // 로그인
+        createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
+        accessToken = tokenResponse.getAccessToken();
+
+        Long sectorId = createSector();
+        String postLocation = createPostWithoutImage(accessToken, sectorId);
+        postId = getIdFromUrl(postLocation);
+    }
 
     /**
      * Feature: 댓글 관리
@@ -35,38 +60,70 @@ public class CommentAcceptanceTest extends AcceptanceTest {
     @DisplayName("댓글 관리")
     @Test
     void manageComment() {
-
-        // 로그인
-        createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
-        TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
-        String accessToken = tokenResponse.getAccessToken();
-
-        // 이미지가 포함되지 않은 글 등록
-        String postLocation = createPostWithoutImage(accessToken);
-        Long postId = getIdFromUrl(postLocation);
-        PostResponse postResponse = findPost(postId, accessToken);
-
         // 댓글 등록 및 조회
-        String commentLocation = createComment(postResponse.getId(), accessToken);
+        String commentLocation = createComment(postId, accessToken);
         Long commentId = getIdFromUrl(commentLocation);
 
-        CommentResponse commentResponse = findComment(postResponse.getId(), commentId, accessToken);
+        CommentResponse commentResponse = findComment(postId, commentId, accessToken);
 
         assertThat(commentResponse.getId()).isEqualTo(commentId);
         assertThat(commentResponse.getWriting()).isEqualTo(TEST_WRITING);
 
         // 댓글 목록 조회
-        List<CommentResponse> commentResponses = findAllComment(postResponse.getId(), accessToken);
+        List<CommentResponse> commentResponses = findAllComment(postId, accessToken);
         assertThat(commentResponses).hasSize(1);
 
         // 삭제
-        deleteComment(postResponse.getId(), commentId, accessToken);
-        findNotExistsComment(postResponse.getId(), commentId, accessToken);
+        deleteComment(postId, commentId, accessToken);
+        findNotExistsComment(postId, commentId, accessToken);
 
-        List<CommentResponse> reFoundPostResponses = findAllComment(postResponse.getId(),
-            accessToken);
+        List<CommentResponse> reFoundPostResponses = findAllComment(postId, accessToken);
 
         assertThat(reFoundPostResponses).hasSize(0);
+    }
+
+    private Long createSector() {
+        String accessToken = getCreateAdminToken();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("name", TEST_SECTOR_NAME);
+        params.put("description", TEST_SECTOR_DESCRIPTION);
+
+        String location = given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/admin/sectors")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract()
+            .header("Location");
+
+        return getIdFromUrl(location);
+    }
+
+    private String getCreateAdminToken() {
+        createAdmin();
+        TokenResponse tokenResponse = login(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD);
+        return tokenResponse.getAccessToken();
+    }
+
+    private void createAdmin() {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", TEST_ADMIN_EMAIL);
+        params.put("nickname", TEST_ADMIN_NICKNAME);
+        params.put("password", TEST_ADMIN_PASSWORD);
+
+        given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/joinAdmin")
+            .then()
+            .statusCode(HttpStatus.CREATED.value());
     }
 
     private List<CommentResponse> findAllComment(Long postId, String accessToken) {
@@ -99,6 +156,24 @@ public class CommentAcceptanceTest extends AcceptanceTest {
             .delete("/posts/" + postId + "/comments/" + commentId)
             .then()
             .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+
+    private String createPostWithoutImage(String accessToken, Long sectorId) {
+        return given()
+            .log().all()
+            .formParam("writing", TEST_WRITING)
+            .formParam("areaId", TEST_AREA_ID)
+            .formParam("sectorId", sectorId)
+            .header("X-AUTH-TOKEN", accessToken)
+            .config(RestAssuredConfig.config()
+                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+            .when()
+            .post("/posts")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract()
+            .header("Location");
     }
 
     private String createComment(Long postId, String accessToken) {

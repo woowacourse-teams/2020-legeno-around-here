@@ -1,7 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.domain;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.TEST_TEXT_CONTENT_TYPE;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_TEXT_CONTENT_TYPE;
 
 import java.io.IOException;
 import org.junit.jupiter.api.DisplayName;

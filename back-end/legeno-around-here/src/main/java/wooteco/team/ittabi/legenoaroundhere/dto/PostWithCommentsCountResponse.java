@@ -24,6 +24,8 @@ public class PostWithCommentsCountResponse {
     private Long id;
     private String writing;
     private List<ImageResponse> images;
+    private AreaResponse area;
+    private SectorResponse sector;
     private int commentsCount;
     private LikeResponse likeResponse;
     private UserResponse creator;
@@ -35,6 +37,8 @@ public class PostWithCommentsCountResponse {
             .id(post.getId())
             .writing(post.getWriting())
             .images(ImageResponse.listOf(post.getImages()))
+            .area(AreaResponse.of(post.getArea()))
+            .sector(SectorResponse.of(post.getSector()))
             .commentsCount(CommentResponse.listOf(comments).size())
             .creator(UserResponse.from(post.getCreator()))
             .likeResponse(LikeResponse.of(post.getLikeCount(), likeState))

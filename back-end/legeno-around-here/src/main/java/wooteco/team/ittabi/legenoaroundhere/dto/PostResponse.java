@@ -14,10 +14,10 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.like.LikeState;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode
-@Builder
 @ToString
 public class PostResponse {
 
@@ -25,6 +25,8 @@ public class PostResponse {
     private String writing;
     private List<ImageResponse> images;
     private List<CommentResponse> comments;
+    private AreaResponse area;
+    private SectorResponse sector;
     private LikeResponse likeResponse;
     private UserResponse creator;
     private LocalDateTime createdAt;
@@ -36,6 +38,8 @@ public class PostResponse {
             .writing(post.getWriting())
             .images(ImageResponse.listOf(post.getImages()))
             .comments(CommentResponse.listOf(comments))
+            .area(AreaResponse.of(post.getArea()))
+            .sector(SectorResponse.of(post.getSector()))
             .creator(UserResponse.from(post.getCreator()))
             .likeResponse(LikeResponse.of(post.getLikeCount(), likeState))
             .createdAt(post.getCreatedAt())

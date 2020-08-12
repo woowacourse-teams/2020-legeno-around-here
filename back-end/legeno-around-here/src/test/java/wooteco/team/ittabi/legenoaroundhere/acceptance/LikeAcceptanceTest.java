@@ -1,10 +1,23 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
+import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_WRITING;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
 
+import io.restassured.RestAssured;
+import io.restassured.config.RestAssuredConfig;
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -15,6 +28,18 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
 public class LikeAcceptanceTest extends AcceptanceTest {
+
+    private String accessToken;
+    private Long postId;
+
+    @BeforeEach
+    void setUp() {
+        RestAssured.port = port;
+        // 로그인
+        createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
+        accessToken = tokenResponse.getAccessToken();
+    }
 
     /**
      * Feature: 글의 좋아요 기능
@@ -33,14 +58,11 @@ public class LikeAcceptanceTest extends AcceptanceTest {
     @DisplayName("글의 좋아요 관리")
     @Test
     void manageLike() {
-        createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
-        TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
-        String accessToken = tokenResponse.getAccessToken();
-
         // 이미지가 포함되지 않은 글 등록
-        String postLocation = createPostWithoutImage(accessToken);
-        Long postLocationId = getIdFromUrl(postLocation);
-        PostResponse postResponse = findPost(postLocationId, accessToken);
+        Long sectorId = createSector();
+        String postLocation = createPostWithoutImage(accessToken, sectorId);
+        postId = getIdFromUrl(postLocation);
+        PostResponse postResponse = findPost(postId, accessToken);
 
         // 글 생성 시 초기 글 좋아요 수
         assertThat(postResponse.getLikeResponse().getLikeCount()).isEqualTo(0L);
@@ -74,6 +96,79 @@ public class LikeAcceptanceTest extends AcceptanceTest {
             .statusCode(HttpStatus.OK.value())
             .extract()
             .as(LikeResponse.class);
+    }
 
+    private PostResponse findPost(Long id, String accessToken) {
+        return given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .get("/posts/" + id)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .as(PostResponse.class);
+    }
+
+    private String createPostWithoutImage(String accessToken, Long sectorId) {
+        return given()
+            .log().all()
+            .formParam("writing", TEST_WRITING)
+            .formParam("areaId", TEST_AREA_ID)
+            .formParam("sectorId", sectorId)
+            .header("X-AUTH-TOKEN", accessToken)
+            .config(RestAssuredConfig.config()
+                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+            .when()
+            .post("/posts")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract()
+            .header("Location");
+    }
+
+    private Long createSector() {
+        String accessToken = getCreateAdminToken();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("name", TEST_SECTOR_NAME);
+        params.put("description", TEST_SECTOR_DESCRIPTION);
+
+        String location = given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/admin/sectors")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract()
+            .header("Location");
+
+        return getIdFromUrl(location);
+    }
+
+    private String getCreateAdminToken() {
+        createAdmin();
+        TokenResponse tokenResponse = login(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD);
+        return tokenResponse.getAccessToken();
+    }
+
+    private void createAdmin() {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", TEST_ADMIN_EMAIL);
+        params.put("nickname", TEST_ADMIN_NICKNAME);
+        params.put("password", TEST_ADMIN_PASSWORD);
+
+        given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/joinAdmin")
+            .then()
+            .statusCode(HttpStatus.CREATED.value());
     }
 }
+

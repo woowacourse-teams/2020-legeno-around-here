@@ -14,13 +14,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
+import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.Image;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.like.Like;
+import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
@@ -29,37 +32,47 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @Table(name = "post")
 @Getter
 @Setter
-@ToString(exclude = "creator")
+@ToString(exclude = {"comments", "images", "likes"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 
-    private static final long DEFAULT_LIKE_COUNT = 0L;
     private static final int MAX_LENGTH = 20;
 
     @Lob
     @Column(nullable = false)
     private String writing;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private State state;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> images = new ArrayList<>();
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Like> likes = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "area_id", nullable = false)
+    private Area area;
+
+    @ManyToOne
+    @JoinColumn(name = "sector_id", nullable = false)
+    private Sector sector;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private State state;
 
     @ManyToOne
     @JoinColumn(name = "creator_id")
     private User creator;
 
-    public Post(User creator, String writing) {
+    @Builder
+    public Post(String writing, Area area, Sector sector, User creator) {
         validateLength(writing);
         this.writing = writing;
+        this.area = area;
+        this.sector = sector;
         this.state = State.PUBLISHED;
         this.creator = creator;
     }
