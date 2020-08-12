@@ -108,7 +108,7 @@ public class PostAcceptanceTest {
         assertThat(postWithoutImageResponse.getSector()).isEqualTo(sector);
 
         // 목록 조회
-        List<PostWithCommentsCountResponse> postResponses = findAllPost(accessToken);
+        List<PostWithCommentsCountResponse> postResponses = searchAllPost(accessToken);
         assertThat(postResponses).hasSize(2);
 
         // 수정
@@ -130,7 +130,7 @@ public class PostAcceptanceTest {
         deletePost(postWithoutImageId, accessToken);
         findNotExistsPost(postWithoutImageId, accessToken);
 
-        List<PostWithCommentsCountResponse> foundPostResponses = findAllPost(accessToken);
+        List<PostWithCommentsCountResponse> foundPostResponses = searchAllPost(accessToken);
 
         assertThat(foundPostResponses).hasSize(1);
     }
@@ -277,7 +277,7 @@ public class PostAcceptanceTest {
             .statusCode(HttpStatus.OK.value());
     }
 
-    private List<PostWithCommentsCountResponse> findAllPost(String accessToken) {
+    private List<PostWithCommentsCountResponse> searchAllPost(String accessToken) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)

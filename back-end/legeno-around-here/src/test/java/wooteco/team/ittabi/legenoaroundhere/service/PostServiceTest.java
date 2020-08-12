@@ -123,7 +123,7 @@ public class PostServiceTest extends ServiceTest {
 
     @DisplayName("포스트 전체 목록 조회 - 성공")
     @Test
-    void findAllPost_SuccessToFind() {
+    void searchAllPost_SuccessToFind() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_WRITING,
             EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
         PostSearchFilterRequest postSearchFilterRequest = new PostSearchFilterRequest(null, null);
