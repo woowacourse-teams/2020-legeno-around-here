@@ -3,8 +3,8 @@ import { BACKGROUND_DEFAULT_COLOR } from '../constants/Color';
 
 const OutBox = styled.div`
   @media (max-width: 2000px) {
-    width: 450px;
-    height: 600px;
+    width: 360px;
+    height: 640px;
     margin-left: auto;
     margin-right: auto;
     border-radius: 4px;
