@@ -11,12 +11,6 @@ import Input from "./login/Input";
 import Label from "./login/Label";
 import Button from "./login/Button";
 
-const WrapperStyle = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
 const ButtonSection = styled.div`
   margin-top: 50px;
 `;
