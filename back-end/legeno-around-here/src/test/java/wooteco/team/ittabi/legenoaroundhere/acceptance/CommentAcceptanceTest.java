@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
-import static io.restassured.RestAssured.given;
 import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
@@ -22,20 +21,12 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql("/init-table.sql")
-public class CommentAcceptanceTest {
-
-    @LocalServerPort
-    public int port;
+public class CommentAcceptanceTest extends AcceptanceTest {
 
     private String accessToken;
     private Long postId;
@@ -43,7 +34,6 @@ public class CommentAcceptanceTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-
         // 로그인
         createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
@@ -90,40 +80,6 @@ public class CommentAcceptanceTest {
         List<CommentResponse> reFoundPostResponses = findAllComment(postId, accessToken);
 
         assertThat(reFoundPostResponses).hasSize(0);
-    }
-
-    private String createUser(String email, String nickname, String password) {
-        Map<String, String> params = new HashMap<>();
-        params.put("email", email);
-        params.put("nickname", nickname);
-        params.put("password", password);
-
-        return given()
-            .body(params)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/join")
-            .then()
-            .statusCode(HttpStatus.CREATED.value())
-            .extract()
-            .header("Location");
-    }
-
-    private TokenResponse login(String email, String password) {
-        Map<String, String> params = new HashMap<>();
-        params.put("email", email);
-        params.put("password", password);
-
-        return given()
-            .body(params)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/login")
-            .then()
-            .statusCode(HttpStatus.OK.value())
-            .extract().as(TokenResponse.class);
     }
 
     private Long createSector() {
@@ -202,11 +158,6 @@ public class CommentAcceptanceTest {
             .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-
-    private Long getIdFromUrl(String location) {
-        int lastIndex = location.lastIndexOf("/");
-        return Long.valueOf(location.substring(lastIndex + 1));
-    }
 
     private String createPostWithoutImage(String accessToken, Long sectorId) {
         return given()
