@@ -24,8 +24,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
-import wooteco.team.ittabi.legenoaroundhere.dto.PostFilterRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchFilterRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
@@ -126,12 +126,12 @@ public class PostServiceTest extends ServiceTest {
     void findAllPost_SuccessToFind() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_WRITING,
             EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
-        PostFilterRequest postFilterRequest = new PostFilterRequest(null, null);
+        PostSearchFilterRequest postSearchFilterRequest = new PostSearchFilterRequest(null, null);
         postService.createPost(postCreateRequest);
         postService.createPost(postCreateRequest);
 
-        Page<PostWithCommentsCountResponse> posts
-            = postService.SearchAllPost(Pageable.unpaged(), postFilterRequest);
+        Page<PostWithCommentsCountResponse> posts = postService
+            .SearchAllPost(Pageable.unpaged(), postSearchFilterRequest.toPostSearchFilter());
 
         assertThat(posts.getContent()).hasSize(2);
     }

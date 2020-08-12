@@ -135,6 +135,25 @@ public class PostAcceptanceTest {
         assertThat(foundPostResponses).hasSize(1);
     }
 
+    /**
+     * Feature: 글 필터 조회
+     * <p>
+     * Scenario: 글을 필터 조회 한다.
+     *
+     * <p>
+     * When 글을 필터 없이 조회한다. Then 글이 전체 조회되었다.
+     * <p>
+     * When 글을 필터에 값 없이 조회한다. Then 글이 전체 조회되었다.
+     * <p>
+     * When 글을 필터
+     */
+    @DisplayName("글 필터 조회")
+    @Test
+    void searchPostWithFilter() {
+
+    }
+
+
     private String createUser(String email, String nickname, String password) {
         Map<String, String> params = new HashMap<>();
         params.put("email", email);
