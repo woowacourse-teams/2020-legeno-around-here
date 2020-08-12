@@ -40,16 +40,6 @@ const HeaderStyle = styled.div`
   color: #222222;
 `;
 
-const CheckStyle = styled.p`
-  width: 320px;
-  height: 18px;
-  font-size: 10px;
-  color: red;
-  line-height: 18px;
-  margin: 0px 0px;
-  margin: 0 auto;
-`;
-
 const ButtonStyle = styled.button`
   width: 320px;
   height: 40px;
