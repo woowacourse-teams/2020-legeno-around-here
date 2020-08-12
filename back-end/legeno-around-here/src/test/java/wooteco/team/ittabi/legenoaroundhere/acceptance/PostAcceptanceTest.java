@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_OTHER_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_DIR;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
@@ -50,6 +51,7 @@ public class PostAcceptanceTest {
     @MockBean
     private S3Uploader s3Uploader;
 
+    private String adminToken;
     private String accessToken;
     private Long sectorId;
     private SectorResponse sector;
@@ -57,12 +59,12 @@ public class PostAcceptanceTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-
         createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
         accessToken = tokenResponse.getAccessToken();
 
-        sectorId = createSector();
+        adminToken = getCreateAdminToken();
+        sectorId = createSector(adminToken, TEST_SECTOR_NAME);
         sector = findAvailableSector(accessToken, sectorId);
     }
 
@@ -139,20 +141,63 @@ public class PostAcceptanceTest {
      * Feature: 글 필터 조회
      * <p>
      * Scenario: 글을 필터 조회 한다.
-     *
      * <p>
-     * When 글을 필터 없이 조회한다. Then 글이 전체 조회되었다.
+     * Given 글들이 등록되어 있다.
      * <p>
-     * When 글을 필터에 값 없이 조회한다. Then 글이 전체 조회되었다.
+     * When 글을 areaIds / sectorIds 없이 조회한다. Then 글이 전체 조회되었다.
      * <p>
-     * When 글을 필터
+     * When 글을 areaIds / sectorIds 값 없이 조회한다. Then 글이 전체 조회되었다.
+     * <p>
+     * When 글을 areaIds만 포함하여 조회한다. Then areaIds에 해당하는 글들만 조회되었다.
+     * <p>
+     * When 글을 sectorIds만 포함하여 조회한다. Then sectorIds에 해당하는 글들만 조회되었다.
+     * <p>
+     * When 글을 areaIds, sectorIds를 포함하여 조회한다. Then areaIds, sectorIds에 해당하는 글들만 조회되었다.
      */
     @DisplayName("글 필터 조회")
     @Test
-    void searchPostWithFilter() {
+    void searchPost() {
+        Long sectorAId = createSector(adminToken, "TEST_A");
+        Long sectorBId = createSector(adminToken, "TEST_B");
+        Long sectorCId = createSector(adminToken, "TEST_C");
 
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_ID, sectorAId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_ID, sectorBId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_ID, sectorBId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_ID, sectorCId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_ID, sectorCId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_ID, sectorCId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorAId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorAId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorBId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorBId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorBId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorCId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorCId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorCId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorCId);
+
+        // 글을 areaIds / sectorIds 없이 조회 - 전체
+        List<PostWithCommentsCountResponse> posts = searchAllPost(accessToken);
+        assertThat(posts).hasSize(15);
+
+        // 글을 areaIds / sectorIds 값 없이 조회 - 전체
+        posts = searchAllPostWithFilter(accessToken, "areaIds=&sectorIds=");
+        assertThat(posts).hasSize(15);
+
+        // 글을 areaIds만 포함하여 조회
+        posts = searchAllPostWithFilter(accessToken, "areaIds=" + TEST_AREA_ID);
+        assertThat(posts).hasSize(6);
+
+        // 글을 sectorIds만 포함하여 조회
+        posts = searchAllPostWithFilter(accessToken, "sectorIds=" + sectorAId + "," + sectorBId);
+        assertThat(posts).hasSize(8);
+
+        // 글을 areaIds, sectorIds를 포함하여 조회
+        posts = searchAllPostWithFilter(accessToken,
+            "areaIds=" + TEST_AREA_ID + "&sectorIds=" + sectorAId + "," + sectorBId);
+        assertThat(posts).hasSize(3);
     }
-
 
     private String createUser(String email, String nickname, String password) {
         Map<String, String> params = new HashMap<>();
@@ -188,11 +233,9 @@ public class PostAcceptanceTest {
             .extract().as(TokenResponse.class);
     }
 
-    private Long createSector() {
-        String accessToken = getCreateAdminToken();
-
+    private Long createSector(String accessToken, String name) {
         Map<String, String> params = new HashMap<>();
-        params.put("name", TEST_SECTOR_NAME);
+        params.put("name", name);
         params.put("description", TEST_SECTOR_DESCRIPTION);
 
         String location = given()
@@ -290,6 +333,21 @@ public class PostAcceptanceTest {
             .getList("content", PostWithCommentsCountResponse.class);
     }
 
+    private List<PostWithCommentsCountResponse> searchAllPostWithFilter(String accessToken,
+        String filter) {
+        return given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .get("/posts?page=1&size=50&sortedBy=id&direction=asc&" + filter)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .jsonPath()
+            .getList("content", PostWithCommentsCountResponse.class);
+    }
+
+
     private Long getIdFromUrl(String location) {
         int lastIndex = location.lastIndexOf("/");
         return Long.valueOf(location.substring(lastIndex + 1));
@@ -312,6 +370,24 @@ public class PostAcceptanceTest {
             .log().all()
             .formParam("writing", TEST_WRITING)
             .formParam("areaId", TEST_AREA_ID)
+            .formParam("sectorId", sectorId)
+            .header("X-AUTH-TOKEN", accessToken)
+            .config(RestAssuredConfig.config()
+                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+            .when()
+            .post("/posts")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract()
+            .header("Location");
+    }
+
+    private String createPostWithoutImageWithAreaAndSector(String accessToken, Long areaId,
+        Long sectorId) {
+        return given()
+            .log().all()
+            .formParam("writing", TEST_WRITING)
+            .formParam("areaId", areaId)
             .formParam("sectorId", sectorId)
             .header("X-AUTH-TOKEN", accessToken)
             .config(RestAssuredConfig.config()

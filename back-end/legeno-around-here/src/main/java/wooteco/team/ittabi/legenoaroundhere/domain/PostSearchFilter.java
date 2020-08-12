@@ -41,14 +41,14 @@ public class PostSearchFilter {
     }
 
     public boolean isAreaFilter() {
-        return areaIds.size() != 0 && sectorIds.size() == 0;
+        return !areaIds.isEmpty() && sectorIds.isEmpty();
     }
 
     public boolean isSectorFilter() {
-        return areaIds.size() == 0 && sectorIds.size() != 0;
+        return areaIds.isEmpty() && !sectorIds.isEmpty();
     }
 
     public boolean isNoFilter() {
-        return areaIds.size() == 0 && sectorIds.size() == 0;
+        return areaIds.isEmpty() && sectorIds.isEmpty();
     }
 }
