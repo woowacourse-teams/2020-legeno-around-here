@@ -6,7 +6,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.EMPTY_MULTIPART_FILES;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.EMPTY_MULTIPART_FILES;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +20,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.service.PostService;
 
@@ -45,8 +48,8 @@ public class PostControllerTest {
     void updatePost_IfNotAuthor_Forbidden() throws Exception {
         doThrow(NotAuthorizedException.class).when(postService).updatePost(any(), any());
 
-        String inputJson = objectMapper
-            .writeValueAsString(new PostRequest(EXPECTED_WRITING, EMPTY_MULTIPART_FILES));
+        String inputJson = objectMapper.writeValueAsString(
+            new PostUpdateRequest(EXPECTED_WRITING, EMPTY_MULTIPART_FILES));
 
         this.mockMvc.perform(put("/posts/" + ANY_ID)
             .content(inputJson)
@@ -60,8 +63,9 @@ public class PostControllerTest {
     void deletePost_IfNotAuthor_Forbidden() throws Exception {
         doThrow(NotAuthorizedException.class).when(postService).deletePost(any());
 
-        String inputJson = objectMapper
-            .writeValueAsString(new PostRequest(EXPECTED_WRITING, EMPTY_MULTIPART_FILES));
+        String inputJson = objectMapper.writeValueAsString(
+            new PostCreateRequest(EXPECTED_WRITING, EMPTY_MULTIPART_FILES, TEST_AREA_ID,
+                TEST_SECTOR_ID));
 
         this.mockMvc.perform(delete("/posts/" + ANY_ID)
             .content(inputJson)

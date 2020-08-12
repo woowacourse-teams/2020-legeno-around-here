@@ -22,6 +22,8 @@ public class PostWithCommentsCountResponse {
     private Long id;
     private String writing;
     private List<ImageResponse> images;
+    private AreaResponse area;
+    private SectorResponse sector;
     private int commentsCount;
     private UserResponse creator;
     private LocalDateTime createdAt;
@@ -32,6 +34,8 @@ public class PostWithCommentsCountResponse {
             .id(post.getId())
             .writing(post.getWriting())
             .images(ImageResponse.listOf(post.getImages()))
+            .area(AreaResponse.of(post.getArea()))
+            .sector(SectorResponse.of(post.getSector()))
             .commentsCount(commentResponses.size())
             .creator(UserResponse.from(post.getCreator()))
             .createdAt(post.getCreatedAt())

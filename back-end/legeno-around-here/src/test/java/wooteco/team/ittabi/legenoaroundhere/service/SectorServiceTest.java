@@ -2,12 +2,14 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_ANOTHER_DESCRIPTION;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_ANOTHER_NAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_DESCRIPTION;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_SECTOR_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_INVALID_SECTOR_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ANOTHER_DESCRIPTION;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ANOTHER_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_NICKNAME;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +46,6 @@ import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
     AuthenticationFacade.class})
 class SectorServiceTest {
 
-    private static final long INVALID_ID = -1L;
     @Autowired
     SectorService sectorService;
 
@@ -67,7 +68,8 @@ class SectorServiceTest {
 
     private User createAdmin() {
         UserRequest userRequest
-            = new UserRequest(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_EMAIL);
+            = new UserRequest(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_EMAIL,
+            TEST_AREA_ID);
         Long userId = userService.createAdmin(userRequest);
 
         return userRepository.findById(userId)
@@ -117,7 +119,7 @@ class SectorServiceTest {
     @DisplayName("사용중인 Sector 조회 - 예외 발생, ID가 없는 경우")
     @Test
     void findUsedSector_HasNotId_ThrowException() {
-        assertThatThrownBy(() -> sectorService.findAvailableSector(INVALID_ID))
+        assertThatThrownBy(() -> sectorService.findAvailableSector(TEST_INVALID_SECTOR_ID))
             .isInstanceOf(NotExistsException.class);
     }
 
@@ -133,9 +135,24 @@ class SectorServiceTest {
             .isInstanceOf(NotExistsException.class);
     }
 
+    @DisplayName("사용중인 Sector 키워드 조회 - 성공")
+    @Test
+    void searchAvailableSectors_SearchKeyword_Success() {
+        SectorResponse sector = sectorService
+            .createSector(new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION));
+        SectorResponse anotherSector = sectorService.createSector(
+            new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION));
+
+        Page<SectorResponse> sectors = sectorService
+            .searchAvailableSectors(Pageable.unpaged(), TEST_SECTOR_ANOTHER_NAME.substring(3));
+
+        assertThat(sectors.getContent()).doesNotContain(sector);
+        assertThat(sectors.getContent()).contains(anotherSector);
+    }
+
     @DisplayName("사용중인 Sector 전체 조회 - 성공")
     @Test
-    void findAllUsedSector_Success() {
+    void searchAvailableSectors_Success() {
         SectorResponse sector
             = sectorService
             .createSector(new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION));
@@ -143,9 +160,9 @@ class SectorServiceTest {
             new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION));
         sectorService.deleteSector(sector.getId());
 
-        Page<SectorResponse> sectors = sectorService.findAllAvailableSector(Pageable.unpaged());
-        assertThat(sectors).doesNotContain(sector);
-        assertThat(sectors).contains(anotherSector);
+        Page<SectorResponse> sectors = sectorService.searchAvailableSectors(Pageable.unpaged(), "");
+        assertThat(sectors.getContent()).doesNotContain(sector);
+        assertThat(sectors.getContent()).contains(anotherSector);
     }
 
     @DisplayName("Sector 수정 - 성공, ID가 있는 경우")
@@ -171,7 +188,7 @@ class SectorServiceTest {
     void updateSector_HasNotId_ThrownException() {
         SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
 
-        assertThatThrownBy(() -> sectorService.updateSector(INVALID_ID, sectorRequest))
+        assertThatThrownBy(() -> sectorService.updateSector(TEST_INVALID_SECTOR_ID, sectorRequest))
             .isInstanceOf(NotExistsException.class);
     }
 
@@ -221,14 +238,14 @@ class SectorServiceTest {
     @DisplayName("Sector 삭제 - 예외 발생, ID가 없는 경우")
     @Test
     void deleteSector_HasNotId_ThrownException() {
-        assertThatThrownBy(() -> sectorService.deleteSector(INVALID_ID))
+        assertThatThrownBy(() -> sectorService.deleteSector(TEST_INVALID_SECTOR_ID))
             .isInstanceOf(NotExistsException.class);
     }
 
     @DisplayName("Sector 조회 - 예외 발생, ID가 없는 경우")
     @Test
     void findSector_HasNotId_ThrowException() {
-        assertThatThrownBy(() -> sectorService.findSector(INVALID_ID))
+        assertThatThrownBy(() -> sectorService.findSector(TEST_INVALID_SECTOR_ID))
             .isInstanceOf(NotExistsException.class);
     }
 
@@ -247,8 +264,8 @@ class SectorServiceTest {
             = sectorService.findSector(anotherSector.getId());
 
         Page<AdminSectorResponse> sectors = sectorService.findAllSector(Pageable.unpaged());
-        assertThat(sectors).contains(expectedSector);
-        assertThat(sectors).contains(expectedAnotherSector);
+        assertThat(sectors.getContent()).contains(expectedSector);
+        assertThat(sectors.getContent()).contains(expectedAnotherSector);
     }
 
     @DisplayName("승인 신청 상태의 Sector 생성 - 성공")
@@ -284,7 +301,7 @@ class SectorServiceTest {
         sectorIds.add(sectorService.createPendingSector(sectorAnotherRequest).getId());
 
         Page<SectorDetailResponse> sectors = sectorService.findAllMySector(Pageable.unpaged());
-        assertThat(sectors.stream()
+        assertThat(sectors.getContent().stream()
             .filter(sector -> sectorIds.contains(sector.getId()))
             .collect(Collectors.toList())).hasSize(2);
     }

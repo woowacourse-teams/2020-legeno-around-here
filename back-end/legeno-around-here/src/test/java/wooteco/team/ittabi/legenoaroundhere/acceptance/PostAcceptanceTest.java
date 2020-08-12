@@ -6,11 +6,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageTestConstants.TEST_IMAGE_DIR;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostTestConstants.TEST_WRITING;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_DIR;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_WRITING;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
 
 import io.restassured.RestAssured;
 import io.restassured.config.RestAssuredConfig;
@@ -34,6 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -47,6 +54,8 @@ public class PostAcceptanceTest {
     private S3Uploader s3Uploader;
 
     private String accessToken;
+    private Long sectorId;
+    private SectorResponse sector;
 
     @BeforeEach
     void setUp() {
@@ -55,6 +64,9 @@ public class PostAcceptanceTest {
         createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
         accessToken = tokenResponse.getAccessToken();
+
+        sectorId = createSector();
+        sector = findAvailableSector(accessToken, sectorId);
     }
 
     /**
@@ -83,6 +95,8 @@ public class PostAcceptanceTest {
 
         assertThat(postWithoutImageResponse.getId()).isEqualTo(postWithoutImageId);
         assertThat(postWithoutImageResponse.getWriting()).isEqualTo(TEST_WRITING);
+        assertThat(postWithoutImageResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
+        assertThat(postWithoutImageResponse.getSector()).isEqualTo(sector);
 
         // 이미지가 포함된 글 등록
         String postWithImageLocation = createPostWithImage(accessToken);
@@ -93,6 +107,8 @@ public class PostAcceptanceTest {
         assertThat(postWithImageResponse.getId()).isEqualTo(postWithImageId);
         assertThat(postWithImageResponse.getWriting()).isEqualTo(TEST_WRITING);
         assertThat(postWithImageResponse.getImages()).hasSize(2);
+        assertThat(postWithoutImageResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
+        assertThat(postWithoutImageResponse.getSector()).isEqualTo(sector);
 
         // 목록 조회
         List<PostWithCommentsCountResponse> postResponses = findAllPost(accessToken);
@@ -140,9 +156,9 @@ public class PostAcceptanceTest {
      * <p>
      * When 글 1Page 20Size를 정렬(기준:test-id 방향:오름차순) 조회한다. Then BadRequest가 발생한다.
      */
-    @DisplayName("부문 페이징 조회")
+    @DisplayName("글 페이징 조회")
     @Test
-    void pagingFindSector() {
+    void pagingFindPost() {
         List<Long> ids = new ArrayList<>();
         // 글 100개 등록
         for (int i = 0; i < 100; i++) {
@@ -169,47 +185,6 @@ public class PostAcceptanceTest {
         assertThat(posts).hasSize(20);
         expectedIds = ids.subList(20, 40);
         assertThat(getPostIds(posts)).isEqualTo(expectedIds);
-
-        // Page, Size, Direction 오기입 조회 (자동 값 : 1Page, 1Size, 방향:오름차순)
-        posts = findAllPost(accessToken, "page=-1&size=1&sortedBy=id&direction=asc");
-        assertThat(posts).hasSize(1);
-        expectedIds = ids.subList(0, 1);
-        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
-
-        posts = findAllPost(accessToken, "page=1&size=-1&sortedBy=id&direction=asc");
-        assertThat(posts).hasSize(1);
-        expectedIds = ids.subList(0, 1);
-        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
-
-        posts = findAllPost(accessToken, "page=1&size=51&sortedBy=id&direction=asc");
-        assertThat(posts).hasSize(50);
-        expectedIds = ids.subList(0, 50);
-        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
-
-        posts = findAllPost(accessToken, "page=1&size=1&sortedBy=id&direction=abc");
-        assertThat(posts).hasSize(1);
-        expectedIds = ids.subList(0, 1);
-        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
-
-        posts = findAllPost(accessToken, "size=1&sortedBy=id&direction=abc");
-        assertThat(posts).hasSize(1);
-        expectedIds = ids.subList(0, 1);
-        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
-
-        posts = findAllPost(accessToken, "page=1&sortedBy=id&direction=abc");
-        assertThat(posts).hasSize(10);
-        expectedIds = ids.subList(0, 10);
-        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
-
-        posts = findAllPost(accessToken, "page=1&size=1&sortedBy=id");
-        assertThat(posts).hasSize(1);
-        expectedIds = ids.subList(0, 1);
-        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
-
-        // 유효하지 않은 필드로 정렬
-        findAllPostWithWrongParameter(accessToken, "page=ㄱ&size=1&sortedBy=id");
-        findAllPostWithWrongParameter(accessToken, "page=1&size=ㄴ&sortedBy=id");
-        findAllPostWithWrongParameter(accessToken, "page=1&size=20&sortedBy=ㄷ&direction=asc");
     }
 
     private List<Long> getPostIds(List<PostWithCommentsCountResponse> posts) {
@@ -250,6 +225,62 @@ public class PostAcceptanceTest {
             .then()
             .statusCode(HttpStatus.OK.value())
             .extract().as(TokenResponse.class);
+    }
+
+    private Long createSector() {
+        String accessToken = getCreateAdminToken();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("name", TEST_SECTOR_NAME);
+        params.put("description", TEST_SECTOR_DESCRIPTION);
+
+        String location = given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/admin/sectors")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract()
+            .header("Location");
+
+        return getIdFromUrl(location);
+    }
+
+    private String getCreateAdminToken() {
+        createAdmin();
+        TokenResponse tokenResponse = login(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD);
+        return tokenResponse.getAccessToken();
+    }
+
+    private void createAdmin() {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", TEST_ADMIN_EMAIL);
+        params.put("nickname", TEST_ADMIN_NICKNAME);
+        params.put("password", TEST_ADMIN_PASSWORD);
+
+        given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/joinAdmin")
+            .then()
+            .statusCode(HttpStatus.CREATED.value());
+    }
+
+    private SectorResponse findAvailableSector(String accessToken, Long id) {
+        return given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .get("/sectors/" + id)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .as(SectorResponse.class);
     }
 
     private void findNotExistsPost(Long id, String accessToken) {
@@ -311,16 +342,6 @@ public class PostAcceptanceTest {
             .getList("content", PostWithCommentsCountResponse.class);
     }
 
-    private void findAllPostWithWrongParameter(String accessToken, String parameter) {
-        given()
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header("X-AUTH-TOKEN", accessToken)
-            .when()
-            .get("/posts?" + parameter)
-            .then()
-            .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
     private Long getIdFromUrl(String location) {
         int lastIndex = location.lastIndexOf("/");
         return Long.valueOf(location.substring(lastIndex + 1));
@@ -343,6 +364,8 @@ public class PostAcceptanceTest {
         return given()
             .log().all()
             .formParam("writing", TEST_WRITING)
+            .formParam("areaId", TEST_AREA_ID)
+            .formParam("sectorId", sectorId)
             .header("X-AUTH-TOKEN", accessToken)
             .config(RestAssuredConfig.config()
                 .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
@@ -361,6 +384,8 @@ public class PostAcceptanceTest {
         return given()
             .log().all()
             .formParam("writing", TEST_WRITING)
+            .formParam("areaId", TEST_AREA_ID)
+            .formParam("sectorId", sectorId)
             .header("X-AUTH-TOKEN", accessToken)
             .config(RestAssuredConfig.config()
                 .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))

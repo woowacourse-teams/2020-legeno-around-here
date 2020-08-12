@@ -1,13 +1,49 @@
 import React, { useState, useCallback } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
+
 import { setAccessTokenCookie } from "../util/TokenUtils";
-
-import OutBox from "./OutBox"
+import OutBox from "./OutBox";
 import Input from "./Input";
-import Button from "./Button"
+import Label from "./login/Label";
 
-function Login() {
+const HeaderStyle = styled.div`
+  width: 340px;
+  height: 36px;
+  font-family: NotoSansCJKkr;
+  font-size: 24px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #222222;
+`;
+
+const ButtonStyle = styled.button`
+  width: 320px;
+  height: 40px;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 40px;
+  background-color: #bcbcbc;
+  border: 0;
+  outline: 0;
+  margin: 5px auto;
+`;
+
+const WrapperStyle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ButtonSection = styled.div`
+  margin-top: 50px;
+`;
+
+function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -52,26 +88,46 @@ function Login() {
 
   return (
     <OutBox>
+      <WrapperStyle>
+        <HeaderStyle>우리동네 캡짱</HeaderStyle>
+      </WrapperStyle>
       <form onSubmit={handleSubmit}>
-      <Input
-        type="email"
-        placeholder="이메일"
-        value={email}
-        onChange={handleChangeEmail}
-      />
-      <Input
-        type="password"
-        placeholder="비밀번호"
-        value={password}
-        onChange={handleChangePassword}
-      />
-      <Button type="submit">로그인</Button>
-      <Link to="/">
-        <Button type="button">홈으로</Button>
-      </Link>
-    </form>
-  </OutBox>
+        <WrapperStyle>
+          <Label>아이디 (E-mail)</Label>
+        </WrapperStyle>
+        <Input
+          type="email"
+          placeholder="이메일"
+          value={email}
+          onChange={handleChangeEmail}
+        />
+        <WrapperStyle>
+          <Label>비밀번호</Label>
+        </WrapperStyle>
+        <Input
+          type="password"
+          placeholder="비밀번호"
+          value={password}
+          onChange={handleChangePassword}
+        />
+        <ButtonSection>
+          <WrapperStyle>
+            <ButtonStyle type="submit">로그인</ButtonStyle>
+          </WrapperStyle>
+          <Link to="/join" style={{ textDecoration: "none" }}>
+            <WrapperStyle>
+              <ButtonStyle type="button">회원가입</ButtonStyle>
+            </WrapperStyle>
+          </Link>
+          <Link to="/" style={{ textDecoration: "none" }}>
+            <WrapperStyle>
+              <ButtonStyle type="button">홈으로</ButtonStyle>
+            </WrapperStyle>
+          </Link>
+        </ButtonSection>
+      </form>
+    </OutBox>
   );
 }
 
-export default Login;
+export default LoginForm;

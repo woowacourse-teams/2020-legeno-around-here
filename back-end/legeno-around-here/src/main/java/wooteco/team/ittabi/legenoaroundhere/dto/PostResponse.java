@@ -23,6 +23,8 @@ public class PostResponse {
     private String writing;
     private List<ImageResponse> images;
     private List<CommentResponse> comments;
+    private AreaResponse area;
+    private SectorResponse sector;
     private UserResponse creator;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
@@ -33,6 +35,8 @@ public class PostResponse {
             .writing(post.getWriting())
             .images(ImageResponse.listOf(post.getImages()))
             .comments(commentResponses)
+            .area(AreaResponse.of(post.getArea()))
+            .sector(SectorResponse.of(post.getSector()))
             .creator(UserResponse.from(post.getCreator()))
             .createdAt(post.getCreatedAt())
             .modifiedAt(post.getModifiedAt())

@@ -1,6 +1,10 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.sector;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -8,12 +12,14 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
+import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 
 @Entity
@@ -36,6 +42,9 @@ public class Sector extends BaseEntity {
     @Column(nullable = false)
     private String reason = DEFAULT_REASON;
 
+    @OneToMany(mappedBy = "sector", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
+
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)
     private User creator;
@@ -48,7 +57,7 @@ public class Sector extends BaseEntity {
     public Sector(String name, String description, User creator, User lastModifier,
         SectorState state) {
         validate(creator, lastModifier, state);
-        this.name = new Name(name);
+        this.name = Name.of(name);
         this.description = new Description(description);
         this.creator = creator;
         this.lastModifier = lastModifier;
@@ -85,15 +94,19 @@ public class Sector extends BaseEntity {
         this.lastModifier = lastModifier;
     }
 
-    public String getStringName() {
+    public boolean isUniqueState() {
+        return state.isUnique();
+    }
+
+    public String getName() {
         return this.name.getName();
     }
 
-    public String getStringDescription() {
+    public String getDescription() {
         return this.description.getDescription();
     }
 
-    public String getStateName() {
+    public String getState() {
         return state.getName();
     }
 
@@ -101,7 +114,7 @@ public class Sector extends BaseEntity {
         return state.getExceptionName();
     }
 
-    public boolean isUniqueState() {
-        return state.isUnique();
+    public List<Post> getPosts() {
+        return Collections.unmodifiableList(posts);
     }
 }
