@@ -8,7 +8,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    List<Comment> findAllByPostIdAndStateNot(Long post_id, State state);
+    List<Comment> findAllByPostIdAndStateNot(Long postId, State state);
 
     Optional<Comment> findByIdAndStateNot(Long id, State state);
 }

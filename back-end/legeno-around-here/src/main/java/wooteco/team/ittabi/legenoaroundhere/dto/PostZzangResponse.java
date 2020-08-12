@@ -6,19 +6,19 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.like.LikeState;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.ZzangState;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode
 @ToString
-public class LikeResponse {
+public class PostZzangResponse {
 
-    private int likeCount;
-    private String likeState;
+    private int postZzangCount;
+    private String zzangState;
 
-    public static LikeResponse of(int likeCount, LikeState likeState) {
-        return new LikeResponse(likeCount, likeState.name());
+    public static PostZzangResponse of(int likeCount, ZzangState zzangState) {
+        return new PostZzangResponse(likeCount, zzangState.name());
     }
 }

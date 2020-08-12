@@ -22,12 +22,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.like.LikeState;
-import wooteco.team.ittabi.legenoaroundhere.dto.LikeResponse;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.ZzangState;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostZzangResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
-public class LikeAcceptanceTest extends AcceptanceTest {
+public class PostZzangAcceptanceTest extends AcceptanceTest {
 
     private String accessToken;
     private Long postId;
@@ -57,7 +57,7 @@ public class LikeAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("글의 좋아요 관리")
     @Test
-    void manageLike() {
+    void managePostZzang() {
         // 이미지가 포함되지 않은 글 등록
         Long sectorId = createSector();
         String postLocation = createPostWithoutImage(accessToken, sectorId);
@@ -65,28 +65,34 @@ public class LikeAcceptanceTest extends AcceptanceTest {
         PostResponse postResponse = findPost(postId, accessToken);
 
         // 글 생성 시 초기 글 좋아요 수
-        assertThat(postResponse.getLikeResponse().getLikeCount()).isEqualTo(0L);
+        assertThat(postResponse.getPostZzangResponse().getPostZzangCount()).isEqualTo(0L);
 
         // 비활성화된 좋아요를 활성화
-        LikeResponse activatedLikeResponse = pressLike(postResponse.getId(), accessToken);
+        PostZzangResponse activatedPostZzangResponse = pressPostZzang(postResponse.getId(),
+            accessToken);
 
-        assertThat(activatedLikeResponse.getLikeCount()).isEqualTo(1L);
-        assertThat(activatedLikeResponse.getLikeState()).isEqualTo(LikeState.ACTIVATED.name());
+        assertThat(activatedPostZzangResponse.getPostZzangCount()).isEqualTo(1L);
+        assertThat(activatedPostZzangResponse.getZzangState())
+            .isEqualTo(ZzangState.ACTIVATED.name());
 
         // 활성화된 좋아요를 비활성화
-        LikeResponse inactivatedLikeResponse = pressLike(postResponse.getId(), accessToken);
+        PostZzangResponse inactivatedPostZzangResponse = pressPostZzang(postResponse.getId(),
+            accessToken);
 
-        assertThat(inactivatedLikeResponse.getLikeCount()).isEqualTo(0L);
-        assertThat(inactivatedLikeResponse.getLikeState()).isEqualTo(LikeState.INACTIVATED.name());
+        assertThat(inactivatedPostZzangResponse.getPostZzangCount()).isEqualTo(0L);
+        assertThat(inactivatedPostZzangResponse.getZzangState())
+            .isEqualTo(ZzangState.INACTIVATED.name());
 
         // 비활성화된 좋아요를 다시 활성화
-        LikeResponse againActivatedLikeResponse = pressLike(postResponse.getId(), accessToken);
+        PostZzangResponse againActivatedPostZzangResponse = pressPostZzang(postResponse.getId(),
+            accessToken);
 
-        assertThat(againActivatedLikeResponse.getLikeCount()).isEqualTo(1L);
-        assertThat(againActivatedLikeResponse.getLikeState()).isEqualTo(LikeState.ACTIVATED.name());
+        assertThat(againActivatedPostZzangResponse.getPostZzangCount()).isEqualTo(1L);
+        assertThat(againActivatedPostZzangResponse.getZzangState())
+            .isEqualTo(ZzangState.ACTIVATED.name());
     }
 
-    private LikeResponse pressLike(Long postId, String accessToken) {
+    private PostZzangResponse pressPostZzang(Long postId, String accessToken) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
@@ -95,7 +101,7 @@ public class LikeAcceptanceTest extends AcceptanceTest {
             .then()
             .statusCode(HttpStatus.OK.value())
             .extract()
-            .as(LikeResponse.class);
+            .as(PostZzangResponse.class);
     }
 
     private PostResponse findPost(Long id, String accessToken) {

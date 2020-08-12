@@ -40,6 +40,7 @@ import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 class UserControllerTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+
     @MockBean
     private UserService userService;
     private MockMvc mockMvc;

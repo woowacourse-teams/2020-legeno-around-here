@@ -6,44 +6,44 @@ import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.like.Like;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.PostZzang;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
-import wooteco.team.ittabi.legenoaroundhere.dto.LikeResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostZzangResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 
 @Service
 @AllArgsConstructor
-public class LikeService {
+public class PostZzangService {
 
     private final PostRepository postRepository;
     private final IAuthenticationFacade authenticationFacade;
 
     @Transactional
-    public LikeResponse pressLike(Long postId) {
+    public PostZzangResponse pressPostZzang(Long postId) {
         User user = (User) authenticationFacade.getPrincipal();
         Post post = findNotDeletedPost(postId);
-        Like like = executeLike(post, user);
-        return LikeResponse.of(post.getLikeCount(), like.getLikeState());
+        PostZzang postZzang = executePostZzang(post, user);
+        return PostZzangResponse.of(post.getPostZzangCount(), postZzang.getZzangState());
     }
 
-    private Like executeLike(Post post, User user) {
-        if (post.existLikeBy(user)) {
-            return inactivateLike(post, user);
+    private PostZzang executePostZzang(Post post, User user) {
+        if (post.existPostZzangBy(user)) {
+            return inactivatePostZzang(post, user);
         }
-        return activateLike(post, user);
+        return activatePostZzang(post, user);
     }
 
-    private Like inactivateLike(Post post, User user) {
-        Like like = post.findLikeBySameUser(user);
-        like.inactivate(post);
-        return like;
+    private PostZzang inactivatePostZzang(Post post, User user) {
+        PostZzang postZzang = post.findPostZzangBy(user);
+        postZzang.inactivate(post);
+        return postZzang;
     }
 
-    private Like activateLike(Post post, User user) {
-        Like like = new Like(post, user);
-        like.activate(post);
-        return like;
+    private PostZzang activatePostZzang(Post post, User user) {
+        PostZzang postZzang = new PostZzang(post, user);
+        postZzang.activate(post);
+        return postZzang;
     }
 
     private Post findNotDeletedPost(Long postId) {

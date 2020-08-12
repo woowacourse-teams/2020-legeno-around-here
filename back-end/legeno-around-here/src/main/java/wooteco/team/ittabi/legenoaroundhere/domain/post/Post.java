@@ -22,17 +22,16 @@ import lombok.ToString;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.Image;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.like.Like;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.PostZzang;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
-import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 @Entity
 @Table(name = "post")
 @Getter
 @Setter
-@ToString(exclude = {"comments", "images", "likes"})
+@ToString(exclude = {"comments", "images", "postZzangs"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 
@@ -49,7 +48,7 @@ public class Post extends BaseEntity {
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> likes = new ArrayList<>();
+    private List<PostZzang> postZzangs = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "area_id", nullable = false)
@@ -91,27 +90,27 @@ public class Post extends BaseEntity {
         return !Objects.equals(this.state, state);
     }
 
-    public int getLikeCount() {
-        return likes.size();
+    public int getPostZzangCount() {
+        return postZzangs.size();
     }
 
-    public boolean existLikeBy(User user) {
-        return likes.stream()
-            .anyMatch(like -> like.isSameUser(user));
+    public boolean existPostZzangBy(User user) {
+        return postZzangs.stream()
+            .anyMatch(postZzang -> postZzang.isSameCreator(user));
     }
 
-    public Like findLikeBySameUser(User user) {
-        return likes.stream()
-            .filter(like -> like.isSameUser(user))
+    public PostZzang findPostZzangBy(User user) {
+        return postZzangs.stream()
+            .filter(postZzang -> postZzang.isSameCreator(user))
             .findFirst()
-            .orElseThrow(() -> new NotExistsException("해당하는 user의 Like가 없습니다!"));
+            .orElseGet(() -> new PostZzang(this, user));
     }
 
-    public void addLike(Like like) {
-        likes.add(like);
+    public void addPostZzang(PostZzang postZzang) {
+        postZzangs.add(postZzang);
     }
 
-    public void removeLike(Like like) {
-        likes.remove(like);
+    public void removePostZzang(PostZzang postZzang) {
+        postZzangs.remove(postZzang);
     }
 }

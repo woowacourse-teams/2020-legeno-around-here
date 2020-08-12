@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,8 +15,8 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.Image;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.like.Like;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.like.LikeState;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.PostZzang;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.ZzangState;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
@@ -29,7 +28,6 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.repository.AreaRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.CommentRepository;
-import wooteco.team.ittabi.legenoaroundhere.repository.LikeRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.ImageUploader;
@@ -42,7 +40,6 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-    private final LikeRepository likeRepository;
     private final AreaRepository areaRepository;
     private final SectorRepository sectorRepository;
     private final ImageUploader imageUploader;
@@ -65,8 +62,8 @@ public class PostService {
 
         Post savedPost = postRepository.save(post);
         List<Comment> comments = findAllComment(post.getId());
-        LikeState likeState = findLike(post).getLikeState();
-        return PostResponse.of(savedPost, comments, likeState);
+        ZzangState zzangState = findPostZzang(post).getZzangState();
+        return PostResponse.of(savedPost, comments, zzangState);
     }
 
     private List<Image> uploadImages(PostCreateRequest postCreateRequest) {
@@ -81,8 +78,8 @@ public class PostService {
     public PostResponse findPost(Long id) {
         Post post = findNotDeletedPost(id);
         List<Comment> comments = findAllComment(post.getId());
-        LikeState likeState = findLike(post).getLikeState();
-        return PostResponse.of(post, comments, likeState);
+        ZzangState zzangState = findPostZzang(post).getZzangState();
+        return PostResponse.of(post, comments, zzangState);
     }
 
     private Post findNotDeletedPost(Long id) {
@@ -95,8 +92,8 @@ public class PostService {
         return posts
             .map(post -> {
                 List<Comment> comments = findAllComment(post.getId());
-                LikeState likeState = findLike(post).getLikeState();
-                return PostWithCommentsCountResponse.of(post, comments, likeState);
+                ZzangState zzangState = findPostZzang(post).getZzangState();
+                return PostWithCommentsCountResponse.of(post, comments, zzangState);
             });
     }
 
@@ -116,13 +113,12 @@ public class PostService {
     }
 
     private List<Comment> findAllComment(Long postId) {
-        return new ArrayList<>(commentRepository.findAllByPostIdAndStateNot(postId, State.DELETED));
+        return commentRepository.findAllByPostIdAndStateNot(postId, State.DELETED);
     }
 
-    private Like findLike(Post post) {
+    private PostZzang findPostZzang(Post post) {
         User user = (User) authenticationFacade.getPrincipal();
-        return likeRepository.findByPostIdAndCreatorId(post.getId(), user.getId())
-            .orElseGet(() -> new Like(post, user));
+        return post.findPostZzangBy(user);
     }
 
     private void validateIsCreator(Post post) {

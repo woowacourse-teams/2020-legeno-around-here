@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.like.LikeState;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.ZzangState;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
@@ -27,12 +27,12 @@ public class PostWithCommentsCountResponse {
     private AreaResponse area;
     private SectorResponse sector;
     private int commentsCount;
-    private LikeResponse likeResponse;
+    private PostZzangResponse postZzangResponse;
     private UserResponse creator;
     private LocalDateTime createdAt;
 
     public static PostWithCommentsCountResponse of(Post post,
-        List<Comment> comments, LikeState likeState) {
+        List<Comment> comments, ZzangState zzangState) {
         return PostWithCommentsCountResponse.builder()
             .id(post.getId())
             .writing(post.getWriting())
@@ -41,7 +41,7 @@ public class PostWithCommentsCountResponse {
             .sector(SectorResponse.of(post.getSector()))
             .commentsCount(CommentResponse.listOf(comments).size())
             .creator(UserResponse.from(post.getCreator()))
-            .likeResponse(LikeResponse.of(post.getLikeCount(), likeState))
+            .postZzangResponse(PostZzangResponse.of(post.getPostZzangCount(), zzangState))
             .createdAt(post.getCreatedAt())
             .build();
     }

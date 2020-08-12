@@ -13,13 +13,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.like.LikeState;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.ZzangState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
-import wooteco.team.ittabi.legenoaroundhere.dto.LikeResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostZzangResponse;
 
-public class LikeServiceTest extends ServiceTest {
+public class PostZzangServiceTest extends ServiceTest {
 
     private User user;
     private PostResponse postResponse;
@@ -28,7 +28,7 @@ public class LikeServiceTest extends ServiceTest {
     private PostService postService;
 
     @Autowired
-    private LikeService likeService;
+    private PostZzangService postZzangService;
 
     @Autowired
     private SectorService sectorService;
@@ -46,20 +46,24 @@ public class LikeServiceTest extends ServiceTest {
 
     @DisplayName("비활성화된 좋아요를 활성화")
     @Test
-    void pressLike_activeLike_SuccessToActiveLike() {
-        LikeResponse activateLikeResponse = likeService.pressLike(postResponse.getId());
+    void pressPostZzang_activePostZzang_SuccessToActivePostZzang() {
+        PostZzangResponse activatePostZzangResponse = postZzangService
+            .pressPostZzang(postResponse.getId());
 
-        assertThat(activateLikeResponse.getLikeCount()).isEqualTo(1L);
-        assertThat(activateLikeResponse.getLikeState()).isEqualTo(LikeState.ACTIVATED.name());
+        assertThat(activatePostZzangResponse.getPostZzangCount()).isEqualTo(1L);
+        assertThat(activatePostZzangResponse.getZzangState())
+            .isEqualTo(ZzangState.ACTIVATED.name());
     }
 
     @DisplayName("활성화된 좋아요를 비활성화")
     @Test
-    void pressLike_inactiveLike_SuccessToInactiveLike() {
-        likeService.pressLike(postResponse.getId());
-        LikeResponse inactivatedLikeResponse = likeService.pressLike(postResponse.getId());
+    void pressPostZzang_inactivePostZzang_SuccessToInactivePostZzang() {
+        postZzangService.pressPostZzang(postResponse.getId());
+        PostZzangResponse inactivatedPostZzangResponse = postZzangService
+            .pressPostZzang(postResponse.getId());
 
-        assertThat(inactivatedLikeResponse.getLikeCount()).isEqualTo(0L);
-        assertThat(inactivatedLikeResponse.getLikeState()).isEqualTo(LikeState.INACTIVATED.name());
+        assertThat(inactivatedPostZzangResponse.getPostZzangCount()).isEqualTo(0L);
+        assertThat(inactivatedPostZzangResponse.getZzangState())
+            .isEqualTo(ZzangState.INACTIVATED.name());
     }
 }

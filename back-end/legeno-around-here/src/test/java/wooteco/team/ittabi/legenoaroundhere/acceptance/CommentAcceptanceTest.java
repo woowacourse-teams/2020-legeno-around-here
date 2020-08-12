@@ -177,7 +177,6 @@ public class CommentAcceptanceTest extends AcceptanceTest {
     }
 
     private String createComment(Long postId, String accessToken) {
-
         Map<String, String> params = new HashMap<>();
         params.put("writing", TEST_WRITING);
 
