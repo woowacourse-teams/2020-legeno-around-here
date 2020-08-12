@@ -1,31 +1,13 @@
 import React, { useState, useCallback } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { setAccessTokenCookie } from "../../util/TokenUtils";
 import styled from "styled-components";
 
-import Input from "./Input";
-
-const FrameStyle = styled.div`
-  width: 360px;
-  height: 640px;
-  margin: 0 auto;
-  border: 1px solid #bcbcbc;
-`;
-
-const FontStyle = styled.div`
-  width: 340px;
-  height: 18px;
-  font-family: NotoSansCJKkr;
-  font-size: 12px;
-  font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  color: #3f3f3f;
-  font-weight: bold;
-`;
+import { setAccessTokenCookie } from "../util/TokenUtils";
+import OutBox from "./OutBox";
+import Input from "./login/Input";
+import Label from "./login/Label";
+import Button from "./login/Button";
 
 const HeaderStyle = styled.div`
   width: 340px;
@@ -40,22 +22,14 @@ const HeaderStyle = styled.div`
   color: #222222;
 `;
 
-const ButtonStyle = styled.button`
-  width: 320px;
-  height: 40px;
-  font-size: 16px;
-  font-weight: bold;
-  line-height: 40px;
-  background-color: #bcbcbc;
-  border: 0;
-  outline: 0;
-  margin: 5px auto;
-`;
-
 const WrapperStyle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+const ButtonSection = styled.div`
+  margin-top: 50px;
 `;
 
 function LoginForm() {
@@ -102,13 +76,13 @@ function LoginForm() {
   );
 
   return (
-    <FrameStyle>
+    <OutBox>
       <WrapperStyle>
         <HeaderStyle>우리동네 캡짱</HeaderStyle>
       </WrapperStyle>
       <form onSubmit={handleSubmit}>
         <WrapperStyle>
-          <FontStyle>아이디 (E-mail)</FontStyle>
+          <Label>아이디 (E-mail)</Label>
         </WrapperStyle>
         <Input
           type="email"
@@ -117,7 +91,7 @@ function LoginForm() {
           onChange={handleChangeEmail}
         />
         <WrapperStyle>
-          <FontStyle>비밀번호</FontStyle>
+          <Label>비밀번호</Label>
         </WrapperStyle>
         <Input
           type="password"
@@ -125,36 +99,23 @@ function LoginForm() {
           value={password}
           onChange={handleChangePassword}
         />
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <WrapperStyle>
-          <ButtonStyle type="submit">로그인</ButtonStyle>
-        </WrapperStyle>
-        <Link to="/join" style={{ textDecoration: "none" }}>
+        <ButtonSection>
           <WrapperStyle>
-            <ButtonStyle type="button">회원가입</ButtonStyle>
+            <Button type="submit">로그인</Button>
           </WrapperStyle>
-        </Link>
-        <Link to="/" style={{ textDecoration: "none" }}>
-          <WrapperStyle>
-            <ButtonStyle type="button">홈으로</ButtonStyle>
-          </WrapperStyle>
-        </Link>
+          <Link to="/join" style={{ textDecoration: "none" }}>
+            <WrapperStyle>
+              <Button type="button">회원가입</Button>
+            </WrapperStyle>
+          </Link>
+          <Link to="/" style={{ textDecoration: "none" }}>
+            <WrapperStyle>
+              <Button type="button">홈으로</Button>
+            </WrapperStyle>
+          </Link>
+        </ButtonSection>
       </form>
-    </FrameStyle>
+    </OutBox>
   );
 }
 

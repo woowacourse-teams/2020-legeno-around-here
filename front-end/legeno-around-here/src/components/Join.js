@@ -3,31 +3,13 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-import Input from "./Input";
+import OutBox from "./OutBox";
+import Input from "./join/Input";
+import Label from "./join/Label";
+import Button from "./join/Button";
 
-const FrameStyle = styled.div`
-  width: 360px;
-  height: 640px;
-  margin: 0 auto;
-  border: 1px solid #bcbcbc;
-`;
-
-const FontStyle = styled.div`
-  width: 340px;
-  height: 18px;
-  font-family: NotoSansCJKkr;
-  font-size: 12px;
-  font-weight: 500;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  color: #3f3f3f;
-  font-weight: bold;
-`;
-
-const HeaderStyle = styled.div`
-  width: 340px;
+const Title = styled.div`
+  width: 90%;
   height: 36px;
   font-family: NotoSansCJKkr;
   font-size: 24px;
@@ -37,9 +19,10 @@ const HeaderStyle = styled.div`
   line-height: normal;
   letter-spacing: normal;
   color: #222222;
+  margin: 15px auto;
 `;
 
-const CheckStyle = styled.p`
+const InputCheck = styled.p`
   width: 320px;
   height: 18px;
   font-size: 10px;
@@ -48,20 +31,9 @@ const CheckStyle = styled.p`
   margin: 0px 0px;
 `;
 
-const ButtonStyle = styled.button`
-  width: 320px;
-  height: 40px;
-  font-size: 16px;
-  font-weight: bold;
-  line-height: 40px;
-  background-color: #bcbcbc;
-  border: 0;
-  outline: 0;
-  margin: 5px auto;
-`;
-
-const WrapperStyle = styled.div`
+const Item = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 `;
@@ -105,43 +77,43 @@ function JoinForm() {
   const emailCheck = useMemo(() => {
     if (validateEmail) {
       return (
-        <CheckStyle className="alert">
+        <InputCheck className="alert">
           올바른 이메일 형식을 입력해주세요.
-        </CheckStyle>
+        </InputCheck>
       );
     }
-    return <CheckStyle className="alert"></CheckStyle>;
+    return <InputCheck className="alert"></InputCheck>;
   }, [validateEmail]);
 
   const nicknameCheck = useMemo(() => {
     if (validateNickname) {
       return (
-        <CheckStyle className="alert">
+        <InputCheck className="alert">
           닉네임 길이는 10 자 이하로 해주세요.
-        </CheckStyle>
+        </InputCheck>
       );
     }
-    return <CheckStyle className="alert"></CheckStyle>;
+    return <InputCheck className="alert"></InputCheck>;
   }, [validateNickname]);
 
   const passwordCheck = useMemo(() => {
     if (validatePassword) {
       return (
-        <CheckStyle className="alert">
+        <InputCheck className="alert">
           비밀번호 길이는 8 ~ 16 자로 해주세요.
-        </CheckStyle>
+        </InputCheck>
       );
     }
-    return <CheckStyle className="alert"></CheckStyle>;
+    return <InputCheck className="alert"></InputCheck>;
   }, [validatePassword]);
 
   const passwordRepeatCheck = useMemo(() => {
     if (validatePasswordRepeat) {
       return (
-        <CheckStyle className="alert">비밀번호가 일치하지 않습니다.</CheckStyle>
+        <InputCheck className="alert">비밀번호가 일치하지 않습니다.</InputCheck>
       );
     }
-    return <CheckStyle className="alert"></CheckStyle>;
+    return <InputCheck className="alert"></InputCheck>;
   }, [validatePasswordRepeat]);
 
   const handleChangeEmail = useCallback(({ target: { value } }) => {
@@ -208,67 +180,56 @@ function JoinForm() {
   );
 
   return (
-    <FrameStyle>
-      <WrapperStyle>
-        <HeaderStyle>우리동네 캡짱</HeaderStyle>
-      </WrapperStyle>
+    <OutBox>
+      <Title>우리동네 캡짱</Title>
       <form onSubmit={handleSubmit}>
-        <WrapperStyle>
-          <FontStyle>아이디 (E-mail)</FontStyle>
-        </WrapperStyle>
-        <Input
-          type="email"
-          placeholder="이메일"
-          value={email}
-          onChange={handleChangeEmail}
-        />
-        {emailCheck}
-        <WrapperStyle>
-          <FontStyle>닉네임</FontStyle>
-        </WrapperStyle>
-        <Input
-          type="text"
-          placeholder="닉네임"
-          value={nickname}
-          onChange={handleChangeNickname}
-        />
-        {nicknameCheck}
-        <WrapperStyle>
-          <FontStyle>비밀번호</FontStyle>
-        </WrapperStyle>
-        <Input
-          type="password"
-          placeholder="비밀번호"
-          value={password}
-          onChange={handleChangePassword}
-        />
-        {passwordCheck}
-        <Input
-          type="password"
-          placeholder="비밀번호 확인"
-          value={passwordRepeat}
-          onChange={handleChangePasswordRepeat}
-        />
-        {passwordRepeatCheck}
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <WrapperStyle>
-          <ButtonStyle type="submit">회원가입</ButtonStyle>
-        </WrapperStyle>
+        <Item>
+          <Label>아이디 (E-mail)</Label>
+          <Input
+            type="email"
+            placeholder="이메일"
+            value={email}
+            onChange={handleChangeEmail}
+          />
+          {emailCheck}
+        </Item>
+        <Item>
+          <Label>닉네임</Label>
+          <Input
+            type="text"
+            placeholder="닉네임"
+            value={nickname}
+            onChange={handleChangeNickname}
+          />
+          {nicknameCheck}
+        </Item>
+        <Item>
+          <Label>비밀번호</Label>
+          <Input
+            type="password"
+            placeholder="비밀번호"
+            value={password}
+            onChange={handleChangePassword}
+          />
+          {passwordCheck}
+          <Input
+            type="password"
+            placeholder="비밀번호 확인"
+            value={passwordRepeat}
+            onChange={handleChangePasswordRepeat}
+          />
+          {passwordRepeatCheck}
+        </Item>
+        <Item>
+          <Button type="submit">회원가입</Button>
+        </Item>
         <Link to="/" style={{ textDecoration: "none" }}>
-          <WrapperStyle>
-            <ButtonStyle type="button">홈으로</ButtonStyle>
-          </WrapperStyle>
+          <Item>
+            <Button type="button">홈으로</Button>
+          </Item>
         </Link>
       </form>
-    </FrameStyle>
+    </OutBox>
   );
 }
 
