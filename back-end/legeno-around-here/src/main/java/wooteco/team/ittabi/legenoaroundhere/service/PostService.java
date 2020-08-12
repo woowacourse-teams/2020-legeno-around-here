@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.Image;
 import wooteco.team.ittabi.legenoaroundhere.domain.Post;
-import wooteco.team.ittabi.legenoaroundhere.domain.PostSearchFilter;
+import wooteco.team.ittabi.legenoaroundhere.domain.PostSearch;
 import wooteco.team.ittabi.legenoaroundhere.domain.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
@@ -20,7 +20,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchFilterRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
@@ -90,30 +90,30 @@ public class PostService {
     }
 
     public Page<PostWithCommentsCountResponse> searchAllPost(Pageable pageable,
-        PostSearchFilterRequest postSearchFilter) {
-        Page<Post> posts = getPostByFilter(pageable, postSearchFilter.toPostSearchFilter());
+        PostSearchRequest postSearchFilter) {
+        Page<Post> posts = getPostByFilter(pageable, postSearchFilter.toPostSearch());
 
         return posts.map(post -> PostWithCommentsCountResponse
             .of(post, commentService.findAllComment(post.getId())));
     }
 
-    private Page<Post> getPostByFilter(Pageable pageable, PostSearchFilter postSearchFilter) {
-        if (postSearchFilter.isNoFilter()) {
+    private Page<Post> getPostByFilter(Pageable pageable, PostSearch postSearch) {
+        if (postSearch.isNoFilter()) {
             return postRepository.findByStateNot(pageable, Deleted);
         }
 
-        if (postSearchFilter.isAreaFilter()) {
-            List<Area> areas = findAllAreas(postSearchFilter.getAreaIds());
+        if (postSearch.isAreaFilter()) {
+            List<Area> areas = findAllAreas(postSearch.getAreaIds());
             return postRepository.findAllByStateNotAndAreaIn(pageable, Deleted, areas);
         }
 
-        if (postSearchFilter.isSectorFilter()) {
-            List<Sector> sectors = findAllSectors(postSearchFilter.getSectorIds());
+        if (postSearch.isSectorFilter()) {
+            List<Sector> sectors = findAllSectors(postSearch.getSectorIds());
             return postRepository.findAllByStateNotAndSectorIn(pageable, Deleted, sectors);
         }
 
-        List<Area> areas = findAllAreas(postSearchFilter.getAreaIds());
-        List<Sector> sectors = findAllSectors(postSearchFilter.getSectorIds());
+        List<Area> areas = findAllAreas(postSearch.getAreaIds());
+        List<Sector> sectors = findAllSectors(postSearch.getSectorIds());
         return postRepository
             .findAllByStateNotAndAreaInAndSectorIn(pageable, Deleted, areas, sectors);
     }

@@ -4,19 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.ToString;
-import wooteco.team.ittabi.legenoaroundhere.domain.PostSearchFilter;
+import wooteco.team.ittabi.legenoaroundhere.domain.PostSearch;
 
 @AllArgsConstructor
 @Setter
 @EqualsAndHashCode
 @ToString
-public class PostSearchFilterRequest {
+public class PostSearchRequest {
 
     private String areaIds;
     private String sectorIds;
 
-    public PostSearchFilter toPostSearchFilter() {
-        return PostSearchFilter.builder()
+    public PostSearch toPostSearch() {
+        return PostSearch.builder()
             .areaIds(areaIds)
             .sectorIds(sectorIds)
             .build();

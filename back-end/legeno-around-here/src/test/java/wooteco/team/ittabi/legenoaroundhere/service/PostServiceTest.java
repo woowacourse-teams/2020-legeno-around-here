@@ -27,7 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchFilterRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
@@ -133,9 +133,9 @@ public class PostServiceTest extends ServiceTest {
         postService.createPost(postCreateRequest);
         postService.createPost(postCreateRequest);
 
-        PostSearchFilterRequest postSearchFilterRequest = new PostSearchFilterRequest(null, null);
+        PostSearchRequest postSearchRequest = new PostSearchRequest(null, null);
         Page<PostWithCommentsCountResponse> posts
-            = postService.searchAllPost(Pageable.unpaged(), postSearchFilterRequest);
+            = postService.searchAllPost(Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
     }
@@ -152,10 +152,10 @@ public class PostServiceTest extends ServiceTest {
             TEST_AREA_OTHER_ID, sectorOtherId);
         postService.createPost(postCreateRequest);
 
-        PostSearchFilterRequest postSearchFilterRequest = new PostSearchFilterRequest(
+        PostSearchRequest postSearchRequest = new PostSearchRequest(
             String.valueOf(TEST_AREA_OTHER_ID), null);
         Page<PostWithCommentsCountResponse> posts
-            = postService.searchAllPost(Pageable.unpaged(), postSearchFilterRequest);
+            = postService.searchAllPost(Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(1);
     }
@@ -182,10 +182,10 @@ public class PostServiceTest extends ServiceTest {
             TEST_AREA_OTHER_ID, sectorOtherId);
         postService.createPost(postCreateRequest);
 
-        PostSearchFilterRequest postSearchFilterRequest = new PostSearchFilterRequest(
+        PostSearchRequest postSearchRequest = new PostSearchRequest(
             String.valueOf(TEST_AREA_OTHER_ID), String.valueOf(sectorOtherId));
         Page<PostWithCommentsCountResponse> posts
-            = postService.searchAllPost(Pageable.unpaged(), postSearchFilterRequest);
+            = postService.searchAllPost(Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(1);
     }
@@ -202,10 +202,10 @@ public class PostServiceTest extends ServiceTest {
             TEST_AREA_OTHER_ID, sectorOtherId);
         postService.createPost(postCreateRequest);
 
-        PostSearchFilterRequest postSearchFilterRequest = new PostSearchFilterRequest(
+        PostSearchRequest postSearchRequest = new PostSearchRequest(
             null, String.valueOf(sectorOtherId));
         Page<PostWithCommentsCountResponse> posts
-            = postService.searchAllPost(Pageable.unpaged(), postSearchFilterRequest);
+            = postService.searchAllPost(Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(1);
     }

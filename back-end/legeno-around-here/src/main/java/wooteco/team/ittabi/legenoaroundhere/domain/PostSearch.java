@@ -14,14 +14,14 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class PostSearchFilter {
+public class PostSearch {
 
     protected static final String DELIMITER = ",";
     private List<Long> areaIds;
     private List<Long> sectorIds;
 
     @Builder
-    public PostSearchFilter(String areaIds, String sectorIds) {
+    public PostSearch(String areaIds, String sectorIds) {
         this.areaIds = makeUniqueIds("areaID", areaIds);
         this.sectorIds = makeUniqueIds("sectorId", sectorIds);
     }
