@@ -4,23 +4,10 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import OutBox from "./OutBox";
+import Title from "./join/Title";
 import Input from "./join/Input";
 import Label from "./join/Label";
 import Button from "./join/Button";
-
-const Title = styled.div`
-  width: 90%;
-  height: 36px;
-  font-family: NotoSansCJKkr;
-  font-size: 24px;
-  font-weight: bold;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  color: #222222;
-  margin: 15px auto;
-`;
 
 const InputCheck = styled.p`
   width: 320px;
@@ -31,7 +18,7 @@ const InputCheck = styled.p`
   margin: 0px 0px;
 `;
 
-const Item = styled.div`
+const InputSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -183,7 +170,7 @@ function JoinForm() {
     <OutBox>
       <Title>우리동네 캡짱</Title>
       <form onSubmit={handleSubmit}>
-        <Item>
+        <InputSection>
           <Label>아이디 (E-mail)</Label>
           <Input
             type="email"
@@ -192,8 +179,8 @@ function JoinForm() {
             onChange={handleChangeEmail}
           />
           {emailCheck}
-        </Item>
-        <Item>
+        </InputSection>
+        <InputSection>
           <Label>닉네임</Label>
           <Input
             type="text"
@@ -202,8 +189,8 @@ function JoinForm() {
             onChange={handleChangeNickname}
           />
           {nicknameCheck}
-        </Item>
-        <Item>
+        </InputSection>
+        <InputSection>
           <Label>비밀번호</Label>
           <Input
             type="password"
@@ -219,14 +206,14 @@ function JoinForm() {
             onChange={handleChangePasswordRepeat}
           />
           {passwordRepeatCheck}
-        </Item>
-        <Item>
+        </InputSection>
+        <InputSection>
           <Button type="submit">회원가입</Button>
-        </Item>
+        </InputSection>
         <Link to="/" style={{ textDecoration: "none" }}>
-          <Item>
+          <InputSection>
             <Button type="button">홈으로</Button>
-          </Item>
+          </InputSection>
         </Link>
       </form>
     </OutBox>

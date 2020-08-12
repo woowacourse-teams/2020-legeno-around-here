@@ -5,28 +5,11 @@ import styled from "styled-components";
 
 import { setAccessTokenCookie } from "../util/TokenUtils";
 import OutBox from "./OutBox";
+import Title from "./login/Title";
+import InputSection from "./login/InputSection";
 import Input from "./login/Input";
 import Label from "./login/Label";
 import Button from "./login/Button";
-
-const HeaderStyle = styled.div`
-  width: 340px;
-  height: 36px;
-  font-family: NotoSansCJKkr;
-  font-size: 24px;
-  font-weight: bold;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  color: #222222;
-`;
-
-const WrapperStyle = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
 
 const ButtonSection = styled.div`
   margin-top: 50px;
@@ -77,41 +60,33 @@ function LoginForm() {
 
   return (
     <OutBox>
-      <WrapperStyle>
-        <HeaderStyle>우리동네 캡짱</HeaderStyle>
-      </WrapperStyle>
+      <Title>우리동네 캡짱</Title>
       <form onSubmit={handleSubmit}>
-        <WrapperStyle>
+        <InputSection>
           <Label>아이디 (E-mail)</Label>
-        </WrapperStyle>
-        <Input
-          type="email"
-          placeholder="이메일"
-          value={email}
-          onChange={handleChangeEmail}
-        />
-        <WrapperStyle>
+          <Input
+            type="email"
+            placeholder="이메일"
+            value={email}
+            onChange={handleChangeEmail}
+          />
+        </InputSection>
+        <InputSection>
           <Label>비밀번호</Label>
-        </WrapperStyle>
-        <Input
-          type="password"
-          placeholder="비밀번호"
-          value={password}
-          onChange={handleChangePassword}
-        />
+          <Input
+            type="password"
+            placeholder="비밀번호"
+            value={password}
+            onChange={handleChangePassword}
+          />
+        </InputSection>
         <ButtonSection>
-          <WrapperStyle>
-            <Button type="submit">로그인</Button>
-          </WrapperStyle>
+          <Button type="submit">로그인</Button>
           <Link to="/join" style={{ textDecoration: "none" }}>
-            <WrapperStyle>
-              <Button type="button">회원가입</Button>
-            </WrapperStyle>
+            <Button type="button">회원가입</Button>
           </Link>
           <Link to="/" style={{ textDecoration: "none" }}>
-            <WrapperStyle>
-              <Button type="button">홈으로</Button>
-            </WrapperStyle>
+            <Button type="button">홈으로</Button>
           </Link>
         </ButtonSection>
       </form>

@@ -6,7 +6,7 @@ const TopBarBackground = styled.div`
   background: ${ MAIN_COLOR };
   color: black;
   height: ${ TOP_BAR_HEIGHT };
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;

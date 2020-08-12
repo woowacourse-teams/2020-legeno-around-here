@@ -3,6 +3,7 @@ package wooteco.team.ittabi.legenoaroundhere.acceptance;
 import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_OTHER_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_DIR;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
@@ -17,12 +18,9 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import io.restassured.RestAssured;
 import io.restassured.config.RestAssuredConfig;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,6 +33,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
 public class PostAcceptanceTest extends AcceptanceTest {
 
+    private String adminToken;
     private String accessToken;
     private Long sectorId;
     private SectorResponse sector;
@@ -46,7 +45,8 @@ public class PostAcceptanceTest extends AcceptanceTest {
         TokenResponse tokenResponse = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
         accessToken = tokenResponse.getAccessToken();
 
-        sectorId = createSector();
+        adminToken = getCreateAdminToken();
+        sectorId = createSector(adminToken, TEST_SECTOR_NAME);
         sector = findAvailableSector(accessToken, sectorId);
     }
 
@@ -92,7 +92,7 @@ public class PostAcceptanceTest extends AcceptanceTest {
         assertThat(postWithoutImageResponse.getSector()).isEqualTo(sector);
 
         // 목록 조회
-        List<PostWithCommentsCountResponse> postResponses = findAllPost(accessToken);
+        List<PostWithCommentsCountResponse> postResponses = searchAllPost(accessToken);
         assertThat(postResponses).hasSize(2);
 
         // 수정
@@ -114,71 +114,76 @@ public class PostAcceptanceTest extends AcceptanceTest {
         deletePost(postWithoutImageId, accessToken);
         findNotExistsPost(postWithoutImageId, accessToken);
 
-        List<PostWithCommentsCountResponse> foundPostResponses = findAllPost(accessToken);
+        List<PostWithCommentsCountResponse> foundPostResponses = searchAllPost(accessToken);
 
         assertThat(foundPostResponses).hasSize(1);
     }
 
     /**
-     * Feature: 글 조회
+     * Feature: 글 필터 조회
      * <p>
-     * Scenario: 글 페이징 조회한다.
+     * Scenario: 글을 필터 조회 한다.
      * <p>
-     * Given 관리자가 로그인 되어있다. 글 100개가 등록되어 있다.
+     * Given 글들이 등록되어 있다.
      * <p>
-     * When 글 1Page 20Size를 정렬(기준:id 방향:오름차순) 조회한다. Then 1~20까지의 Post가 조회된다.
+     * When 글을 areaIds / sectorIds 없이 조회한다. Then 글이 전체 조회되었다.
      * <p>
-     * When 글 1Page 20Size를 정렬(기준:id 방향:내림차순) 조회한다. Then 100~81까지의 Post가 조회된다.
+     * When 글을 areaIds / sectorIds 값 없이 조회한다. Then 글이 전체 조회되었다.
      * <p>
-     * When 글 2Page 40Size를 정렬(기준:id 방향:오름차순) 조회한다. Then 21~40까지의 Post가 조회된다.
+     * When 글을 areaIds만 포함하여 조회한다. Then areaIds에 해당하는 글들만 조회되었다.
      * <p>
-     * When 글 -1Page -1Size를 정렬(기준:id 방향:abc) 조회한다. Then 1의 Post가 조회된다. (기본 값 : 1Page, 1Size,
-     * 방향:오름차순)
+     * When 글을 sectorIds만 포함하여 조회한다. Then sectorIds에 해당하는 글들만 조회되었다.
      * <p>
-     * When 글 1Page 20Size를 정렬(기준:test-id 방향:오름차순) 조회한다. Then BadRequest가 발생한다.
+     * When 글을 areaIds, sectorIds를 포함하여 조회한다. Then areaIds, sectorIds에 해당하는 글들만 조회되었다.
      */
-    @DisplayName("글 페이징 조회")
+    @DisplayName("글 필터 조회")
     @Test
-    void pagingFindPost() {
-        List<Long> ids = new ArrayList<>();
-        // 글 100개 등록
-        for (int i = 0; i < 100; i++) {
-            String postWithoutImageLocation = createPostWithoutImage(accessToken);
-            ids.add(getIdFromUrl(postWithoutImageLocation));
-        }
+    void searchPost() {
+        Long sectorAId = createSector(adminToken, "TEST_A");
+        Long sectorBId = createSector(adminToken, "TEST_B");
+        Long sectorCId = createSector(adminToken, "TEST_C");
 
-        // 글 1Page 20Size를 정렬(기준:id 방향:오름차순) 조회
-        List<PostWithCommentsCountResponse> posts
-            = findAllPost(accessToken, "page=1&size=20&sortedBy=id&direction=asc");
-        assertThat(posts).hasSize(20);
-        List<Long> expectedIds = ids.subList(0, 20);
-        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_ID, sectorAId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_ID, sectorBId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_ID, sectorBId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_ID, sectorCId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_ID, sectorCId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_ID, sectorCId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorAId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorAId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorBId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorBId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorBId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorCId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorCId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorCId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorCId);
 
-        // 글 1Page 20Size를 정렬(기준:id 방향:내림차순) 조회
-        posts = findAllPost(accessToken, "page=1&size=20&sortedBy=id&direction=desc");
-        assertThat(posts).hasSize(20);
-        expectedIds = ids.subList(80, 100);
-        Collections.reverse(expectedIds);
-        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
+        // 글을 areaIds / sectorIds 없이 조회 - 전체
+        List<PostWithCommentsCountResponse> posts = searchAllPost(accessToken);
+        assertThat(posts).hasSize(15);
 
-        // 글 2Page 20Size를 정렬(기준:id 방향:오름차순) 조회
-        posts = findAllPost(accessToken, "page=2&size=20&sortedBy=id&direction=asc");
-        assertThat(posts).hasSize(20);
-        expectedIds = ids.subList(20, 40);
-        assertThat(getPostIds(posts)).isEqualTo(expectedIds);
+        // 글을 areaIds / sectorIds 값 없이 조회 - 전체
+        posts = searchAllPostWithFilter(accessToken, "areaIds=&sectorIds=");
+        assertThat(posts).hasSize(15);
+
+        // 글을 areaIds만 포함하여 조회
+        posts = searchAllPostWithFilter(accessToken, "areaIds=" + TEST_AREA_ID);
+        assertThat(posts).hasSize(6);
+
+        // 글을 sectorIds만 포함하여 조회
+        posts = searchAllPostWithFilter(accessToken, "sectorIds=" + sectorAId + "," + sectorBId);
+        assertThat(posts).hasSize(8);
+
+        // 글을 areaIds, sectorIds를 포함하여 조회
+        posts = searchAllPostWithFilter(accessToken,
+            "areaIds=" + TEST_AREA_ID + "&sectorIds=" + sectorAId + "," + sectorBId);
+        assertThat(posts).hasSize(3);
     }
 
-    private List<Long> getPostIds(List<PostWithCommentsCountResponse> posts) {
-        return posts.stream()
-            .map(PostWithCommentsCountResponse::getId)
-            .collect(Collectors.toList());
-    }
-
-    private Long createSector() {
-        String accessToken = getCreateAdminToken();
-
+    private Long createSector(String accessToken, String name) {
         Map<String, String> params = new HashMap<>();
-        params.put("name", TEST_SECTOR_NAME);
+        params.put("name", name);
         params.put("description", TEST_SECTOR_DESCRIPTION);
 
         String location = given()
@@ -263,7 +268,7 @@ public class PostAcceptanceTest extends AcceptanceTest {
             .statusCode(HttpStatus.OK.value());
     }
 
-    private List<PostWithCommentsCountResponse> findAllPost(String accessToken) {
+    private List<PostWithCommentsCountResponse> searchAllPost(String accessToken) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
@@ -276,12 +281,13 @@ public class PostAcceptanceTest extends AcceptanceTest {
             .getList("content", PostWithCommentsCountResponse.class);
     }
 
-    private List<PostWithCommentsCountResponse> findAllPost(String accessToken, String parameter) {
+    private List<PostWithCommentsCountResponse> searchAllPostWithFilter(String accessToken,
+        String filter) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
             .when()
-            .get("/posts?" + parameter)
+            .get("/posts?page=1&size=50&sortedBy=id&direction=asc&" + filter)
             .then()
             .statusCode(HttpStatus.OK.value())
             .extract()
@@ -302,11 +308,28 @@ public class PostAcceptanceTest extends AcceptanceTest {
     }
 
     private String createPostWithoutImage(String accessToken) {
-
         return given()
             .log().all()
             .formParam("writing", TEST_POST_WRITING)
             .formParam("areaId", TEST_AREA_ID)
+            .formParam("sectorId", sectorId)
+            .header("X-AUTH-TOKEN", accessToken)
+            .config(RestAssuredConfig.config()
+                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+            .when()
+            .post("/posts")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract()
+            .header("Location");
+    }
+
+    private String createPostWithoutImageWithAreaAndSector(String accessToken, Long areaId,
+        Long sectorId) {
+        return given()
+            .log().all()
+            .formParam("writing", TEST_POST_WRITING)
+            .formParam("areaId", areaId)
             .formParam("sectorId", sectorId)
             .header("X-AUTH-TOKEN", accessToken)
             .config(RestAssuredConfig.config()

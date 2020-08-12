@@ -1,10 +1,13 @@
 import React, { useState, useMemo } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
 
+import TopBarBackground from "./mypage/TopBarBackground";
 import OutBox from "./OutBox"
-import Button from "./login/Button"
 import { getAccessTokenFromCookie } from "../util/TokenUtils";
+import { ProfilePhoto, Nickname, Email, TopSection, PrivacyBox, PrivacyEditBox } from "./mypage/PrivacySection";
+import { AwardsSection, AwardSummary } from './mypage/AwardSection';
+import GoBack from './mypage/GoBack';
+import { NavSection, NavElement } from './mypage/LinksSection';
 
 function MyPage() {
   const [accessToken] = useState(getAccessTokenFromCookie());
@@ -27,19 +30,33 @@ function MyPage() {
       })
       .catch((error) => {
         alert(`회원정보를 가져올 수 없습니다.${error}`);
+        document.location.href = "/";
       });
   }, [accessToken]);
 
   return (
     <OutBox>
-      <div>
-        <p>메일: {email}</p>
-        <p>닉네임: {nickname}</p>
-        <Button type="submit">정보 수정</Button>
-        <Link to="/">
-          <Button type="button">홈으로</Button>
-        </Link>
-      </div>
+      <TopBarBackground>
+        <GoBack linkTo="/">홈으로</GoBack>
+      </TopBarBackground>
+      <TopSection>
+        <ProfilePhoto></ProfilePhoto>
+        <PrivacyBox>
+          <Nickname>{ nickname }</Nickname>
+          <Email>{ email }</Email>
+        </PrivacyBox>
+        <PrivacyEditBox>수정</PrivacyEditBox>
+      </TopSection>
+      <AwardsSection>
+        <AwardSummary awardName="TOP3" awardCount={1}></AwardSummary>
+        <AwardSummary awardName="TOP10" awardCount={0}></AwardSummary>
+        <AwardSummary awardName="TOP50" awardCount={12}></AwardSummary>
+      </AwardsSection>
+      <NavSection>
+        <NavElement linkTo="/">수상내역</NavElement>
+        <NavElement linkTo="/">작성글</NavElement>
+        <NavElement linkTo="/">작성 댓글</NavElement>
+      </NavSection>
     </OutBox>
   );
 }
