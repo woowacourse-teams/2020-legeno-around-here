@@ -2,10 +2,10 @@ package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ANOTHER_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_OTHER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,17 +38,18 @@ public class UserAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원 관리")
     void manageUser() {
         //회원 가입
-        String location = createUserWithoutArea(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        String location = createUserWithoutArea(TEST_USER_EMAIL, TEST_USER_NICKNAME,
+            TEST_USER_PASSWORD);
         assertThat(location).matches(USER_LOCATION_FORMAT);
-        TokenResponse joinedTokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
+        TokenResponse joinedTokenResponse = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
         UserResponse joinedUserResponse = findUser(joinedTokenResponse.getAccessToken());
         assertThat(joinedUserResponse).isNotNull();
         assertThat(joinedUserResponse.getId()).isNotNull();
-        assertThat(joinedUserResponse.getEmail()).isEqualTo(TEST_EMAIL);
-        assertThat(joinedUserResponse.getNickname()).isEqualTo(TEST_NICKNAME);
+        assertThat(joinedUserResponse.getEmail()).isEqualTo(TEST_USER_EMAIL);
+        assertThat(joinedUserResponse.getNickname()).isEqualTo(TEST_USER_NICKNAME);
 
         // 로그인
-        TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
+        TokenResponse tokenResponse = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
         assertThat(tokenResponse).isNotNull();
         assertThat(tokenResponse.getAccessToken())
             .hasSizeGreaterThanOrEqualTo(TOKEN_MIN_SIZE);
@@ -57,14 +58,14 @@ public class UserAcceptanceTest extends AcceptanceTest {
         UserResponse userResponse = findUser(tokenResponse.getAccessToken());
         assertThat(userResponse).isNotNull();
         assertThat(userResponse.getId()).isNotNull();
-        assertThat(userResponse.getEmail()).isEqualTo(TEST_EMAIL);
-        assertThat(userResponse.getNickname()).isEqualTo(TEST_NICKNAME);
+        assertThat(userResponse.getEmail()).isEqualTo(TEST_USER_EMAIL);
+        assertThat(userResponse.getNickname()).isEqualTo(TEST_USER_NICKNAME);
 
         // 내 정보 수정
         updateUserWithoutArea(tokenResponse.getAccessToken(), "newname", "newpassword");
         UserResponse updatedUserResponse = findUser(tokenResponse.getAccessToken());
         assertThat(updatedUserResponse.getNickname()).isEqualTo("newname");
-        TokenResponse updatedTokenResponse = login(TEST_EMAIL, "newpassword");
+        TokenResponse updatedTokenResponse = login(TEST_USER_EMAIL, "newpassword");
         assertThat(updatedTokenResponse).isNotNull();
         assertThat(updatedTokenResponse.getAccessToken())
             .hasSizeGreaterThanOrEqualTo(TOKEN_MIN_SIZE);
@@ -88,23 +89,23 @@ public class UserAcceptanceTest extends AcceptanceTest {
     @Test
     @DisplayName("회원 지역 관리")
     void joinUserWithArea() {
-        createUserWithoutArea(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
-        TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
+        createUserWithoutArea(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        TokenResponse tokenResponse = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
         UserResponse userResponse = findUser(tokenResponse.getAccessToken());
         assertThat(userResponse.getArea()).isNull();
 
-        createUserWithArea(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
-        tokenResponse = login(TEST_ANOTHER_EMAIL, TEST_PASSWORD);
+        createUserWithArea(TEST_USER_OTHER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        tokenResponse = login(TEST_USER_OTHER_EMAIL, TEST_USER_PASSWORD);
         String accessToken = tokenResponse.getAccessToken();
         userResponse = findUser(accessToken);
         assertThat(userResponse.getArea()).isNotNull();
         assertThat(userResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
 
-        updateUserWithoutArea(accessToken, TEST_NICKNAME, TEST_PASSWORD);
+        updateUserWithoutArea(accessToken, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         userResponse = findUser(accessToken);
         assertThat(userResponse.getArea()).isNull();
 
-        updateUserWithArea(accessToken, TEST_NICKNAME, TEST_PASSWORD);
+        updateUserWithArea(accessToken, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         userResponse = findUser(accessToken);
         assertThat(userResponse.getArea()).isNotNull();
         assertThat(userResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);

@@ -2,7 +2,7 @@ package wooteco.team.ittabi.legenoaroundhere.domain.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ class EmailTest {
     @Test
     @DisplayName("생성자 테스트")
     void constructor() {
-        assertThat(new Email(TEST_EMAIL)).isInstanceOf(Email.class);
+        assertThat(new Email(TEST_USER_EMAIL)).isInstanceOf(Email.class);
     }
 
     @Test

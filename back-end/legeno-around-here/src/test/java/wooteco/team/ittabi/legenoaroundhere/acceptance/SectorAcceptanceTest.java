@@ -9,10 +9,10 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstan
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_PASSWORD;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ANOTHER_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_OTHER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import io.restassured.RestAssured;
 import java.util.ArrayList;
@@ -166,8 +166,10 @@ public class SectorAcceptanceTest extends AcceptanceTest {
     void manageSector_User() {
         // 관리자, 사용자 A, 사용자 B 로그인
         String adminToken = getCreateAdminToken();
-        String userAToken = getCreateUserToken(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
-        String userBToken = getCreateUserToken(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        String userAToken = getCreateUserToken(TEST_USER_EMAIL, TEST_USER_NICKNAME,
+            TEST_USER_PASSWORD);
+        String userBToken = getCreateUserToken(TEST_USER_OTHER_EMAIL, TEST_USER_NICKNAME,
+            TEST_USER_PASSWORD);
 
         // 사용자 A - 부문 승인 신청
         Long sectorAId = createPendingSector(userAToken, "A", TEST_SECTOR_DESCRIPTION);

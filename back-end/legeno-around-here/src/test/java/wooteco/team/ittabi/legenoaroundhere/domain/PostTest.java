@@ -8,12 +8,12 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_SECOND_DEPTH_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_THIRD_DEPTH_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_USED;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_WRITING;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,9 +31,9 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 public class PostTest {
 
     private final User user = User.builder()
-        .email(new Email(TEST_EMAIL))
-        .nickname(new Nickname(TEST_NICKNAME))
-        .password(new Password(TEST_PASSWORD))
+        .email(new Email(TEST_USER_EMAIL))
+        .nickname(new Nickname(TEST_USER_NICKNAME))
+        .password(new Password(TEST_USER_PASSWORD))
         .build();
 
     private final Sector sector = Sector.builder()
@@ -64,7 +64,7 @@ public class PostTest {
     @DisplayName("같은 상태인지 확인")
     @Test
     void isSameState_SameState_True() {
-        Post post = new Post(TEST_WRITING, area, sector, user);
+        Post post = new Post(TEST_POST_WRITING, area, sector, user);
         post.setState(State.DELETED);
 
         assertThat(post.isSameState(State.DELETED)).isTrue();
@@ -73,7 +73,7 @@ public class PostTest {
     @DisplayName("다른 상태인지 확인")
     @Test
     void isNotSameState_DifferentState_True() {
-        Post post = new Post(TEST_WRITING, area, sector, user);
+        Post post = new Post(TEST_POST_WRITING, area, sector, user);
         post.setState(State.DELETED);
 
         assertThat(post.isNotSameState(State.PUBLISHED)).isTrue();

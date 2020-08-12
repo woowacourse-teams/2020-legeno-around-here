@@ -1,9 +1,9 @@
 package wooteco.team.ittabi.legenoaroundhere.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,9 +24,9 @@ public class UserRepositoryTest {
     @Test
     void save() {
         User notSavedUser = User.builder()
-            .email(new Email(TEST_EMAIL))
-            .nickname(new Nickname(TEST_NICKNAME))
-            .password(new Password(TEST_PASSWORD))
+            .email(new Email(TEST_USER_EMAIL))
+            .nickname(new Nickname(TEST_USER_NICKNAME))
+            .password(new Password(TEST_USER_PASSWORD))
             .build();
         assertThat(notSavedUser.getId()).isNull();
         assertThat(notSavedUser.getCreatedAt()).isNull();

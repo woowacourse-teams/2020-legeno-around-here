@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.EMPTY_MULTIPART_FILES;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_EMPTY_MULTIPART_FILES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,7 +50,7 @@ public class PostControllerTest {
         doThrow(NotAuthorizedException.class).when(postService).updatePost(any(), any());
 
         String inputJson = objectMapper.writeValueAsString(
-            new PostUpdateRequest(EXPECTED_WRITING, EMPTY_MULTIPART_FILES));
+            new PostUpdateRequest(EXPECTED_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES));
 
         this.mockMvc.perform(put("/posts/" + ANY_ID)
             .content(inputJson)
@@ -65,7 +65,7 @@ public class PostControllerTest {
         doThrow(NotAuthorizedException.class).when(postService).deletePost(any());
 
         String inputJson = objectMapper.writeValueAsString(
-            new PostCreateRequest(EXPECTED_WRITING, EMPTY_MULTIPART_FILES, TEST_AREA_ID,
+            new PostCreateRequest(EXPECTED_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID,
                 TEST_SECTOR_ID));
 
         this.mockMvc.perform(delete("/posts/" + ANY_ID)

@@ -1,9 +1,9 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import io.restassured.RestAssured;
 import java.util.HashMap;
@@ -31,9 +31,9 @@ public class AreaAcceptanceTest extends AcceptanceTest {
 
     private void createUser() {
         Map<String, String> params = new HashMap<>();
-        params.put("email", TEST_EMAIL);
-        params.put("nickname", TEST_NICKNAME);
-        params.put("password", TEST_PASSWORD);
+        params.put("email", TEST_USER_EMAIL);
+        params.put("nickname", TEST_USER_NICKNAME);
+        params.put("password", TEST_USER_PASSWORD);
 
         given()
             .body(params)
@@ -47,8 +47,8 @@ public class AreaAcceptanceTest extends AcceptanceTest {
 
     private TokenResponse login() {
         Map<String, String> params = new HashMap<>();
-        params.put("email", TEST_EMAIL);
-        params.put("password", TEST_PASSWORD);
+        params.put("email", TEST_USER_EMAIL);
+        params.put("password", TEST_USER_PASSWORD);
 
         return given()
             .body(params)
