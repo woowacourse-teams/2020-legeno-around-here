@@ -28,7 +28,7 @@ const Posting = () => {
   // const [images, setImages] = useState(null);
 
   // const onImagesChanged = e => {
-  //   setImages(e.target.files[0]);
+  //   setImages(e.target.files);
   // };
 
   const onWritingChanged = e => {
@@ -43,6 +43,8 @@ const Posting = () => {
     const formData = new FormData();
     // formData.append('images', images);
     formData.append('writing', writing);
+    formData.append('areaId', 1);
+    formData.append('sectorId', 1);
     
     const config = {
       headers: {
@@ -69,7 +71,7 @@ const Posting = () => {
         <PostingBox>
           <TextInput placeholder="자랑거리를 입력해주세요" 
             onChange={ onWritingChanged } value={ writing } />
-          <ImageInput type="file" /*onChange={ onImagesChanged }*/></ImageInput>
+          <ImageInput type="file" /* multiple onChange={ onImagesChanged }*/></ImageInput>
           <button>부문을 추가해주세요</button>
         </PostingBox>
       </Form>
