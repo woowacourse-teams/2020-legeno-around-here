@@ -2,12 +2,12 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.EMPTY_MULTIPART_FILES;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_WRITING;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_EMPTY_MULTIPART_FILES;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_REQUEST;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,12 +35,13 @@ public class PostZzangServiceTest extends ServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        user = createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         setAuthentication(user);
 
         Long sectorId = sectorService.createSector(TEST_SECTOR_REQUEST).getId();
         PostCreateRequest postCreateRequest
-            = new PostCreateRequest(TEST_WRITING, EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            = new PostCreateRequest(TEST_POST_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            TEST_AREA_ID, sectorId);
         postResponse = postService.createPost(postCreateRequest);
     }
 

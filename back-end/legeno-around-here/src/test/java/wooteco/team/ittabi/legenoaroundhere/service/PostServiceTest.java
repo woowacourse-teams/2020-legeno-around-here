@@ -3,15 +3,15 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.EMPTY_MULTIPART_FILES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_CONTENT_TYPE;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_INVALID_POST_ID;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_WRITING;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_EMPTY_MULTIPART_FILES;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_INVALID_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_REQUEST;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ANOTHER_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_OTHER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -48,8 +48,8 @@ public class PostServiceTest extends ServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
-        another = createUser(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        user = createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        another = createUser(TEST_USER_OTHER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         setAuthentication(user);
 
         sector = sectorService.createSector(TEST_SECTOR_REQUEST);
@@ -59,13 +59,13 @@ public class PostServiceTest extends ServiceTest {
     @DisplayName("이미지를 포함하지 않는 포스트 생성 - 성공")
     @Test
     void createPostWithoutImage_SuccessToCreate() {
-        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_WRITING,
-            EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
 
         PostResponse postResponse = postService.createPost(postCreateRequest);
 
         assertThat(postResponse.getId()).isNotNull();
-        assertThat(postResponse.getWriting()).isEqualTo(TEST_WRITING);
+        assertThat(postResponse.getWriting()).isEqualTo(TEST_POST_WRITING);
         assertThat(postResponse.getCreator()).isEqualTo(UserResponse.from(user));
         assertThat(postResponse.getSector()).isEqualTo(sector);
     }
@@ -75,12 +75,12 @@ public class PostServiceTest extends ServiceTest {
     void createPostWithImage_SuccessToCreate() throws IOException {
         MultipartFile multipartFile = FileConverter
             .convert("right_image1.jpg", TEST_IMAGE_CONTENT_TYPE);
-        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_WRITING,
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
             Collections.singletonList(multipartFile), TEST_AREA_ID, sectorId);
 
         PostResponse postResponse = postService.createPost(postCreateRequest);
 
-        assertThat(postResponse.getWriting()).isEqualTo(TEST_WRITING);
+        assertThat(postResponse.getWriting()).isEqualTo(TEST_POST_WRITING);
         assertThat(postResponse.getImages()).hasSize(1);
         assertThat(postResponse.getCreator()).isEqualTo(UserResponse.from(user));
         assertThat(postResponse.getSector()).isEqualTo(sector);
@@ -89,8 +89,8 @@ public class PostServiceTest extends ServiceTest {
     @DisplayName("ID로 포스트 조회 - 성공")
     @Test
     void findPost_HasId_SuccessToFind() {
-        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_WRITING,
-            EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(postCreateRequest);
 
         PostResponse postResponse = postService.findPost(createdPostResponse.getId());
@@ -104,8 +104,8 @@ public class PostServiceTest extends ServiceTest {
     @DisplayName("ID로 포스트 조회 - 실패, 이미 지워진 포스트")
     @Test
     void findPost_AlreadyDeletedPost_ThrownException() {
-        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_WRITING,
-            EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(postCreateRequest);
         postService.deletePost(createdPostResponse.getId());
 
@@ -116,15 +116,15 @@ public class PostServiceTest extends ServiceTest {
     @DisplayName("ID로 포스트 조회 - 실패, 유효하지 않은 포스트 ID")
     @Test
     void findPost_HasNotId_ThrownException() {
-        assertThatThrownBy(() -> postService.findPost(TEST_INVALID_POST_ID))
+        assertThatThrownBy(() -> postService.findPost(TEST_POST_INVALID_ID))
             .isInstanceOf(NotExistsException.class);
     }
 
     @DisplayName("포스트 전체 목록 조회 - 성공")
     @Test
     void findAllPost_SuccessToFind() {
-        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_WRITING,
-            EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
         postService.createPost(postCreateRequest);
         postService.createPost(postCreateRequest);
 
@@ -138,10 +138,11 @@ public class PostServiceTest extends ServiceTest {
     void updatePost_HasId_SuccessToUpdate() {
         String updatedPostWriting = "Jamie and BingBong";
         PostCreateRequest createdPostCreateRequest
-            = new PostCreateRequest(TEST_WRITING, EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            = new PostCreateRequest(TEST_POST_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(createdPostCreateRequest);
         PostUpdateRequest postUpdateRequest
-            = new PostUpdateRequest(updatedPostWriting, EMPTY_MULTIPART_FILES);
+            = new PostUpdateRequest(updatedPostWriting, TEST_IMAGE_EMPTY_MULTIPART_FILES);
 
         postService.updatePost(createdPostResponse.getId(), postUpdateRequest);
         PostResponse updatedPostResponse = postService
@@ -155,9 +156,9 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void updatePost_HasNotId_ThrownException() {
         PostUpdateRequest postUpdateRequest
-            = new PostUpdateRequest(TEST_WRITING, EMPTY_MULTIPART_FILES);
+            = new PostUpdateRequest(TEST_POST_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES);
 
-        assertThatThrownBy(() -> postService.updatePost(TEST_INVALID_POST_ID, postUpdateRequest))
+        assertThatThrownBy(() -> postService.updatePost(TEST_POST_INVALID_ID, postUpdateRequest))
             .isInstanceOf(NotExistsException.class);
     }
 
@@ -166,10 +167,11 @@ public class PostServiceTest extends ServiceTest {
     void updatePost_IfNotCreator_ThrowException() {
         String updatedPostWriting = "Jamie and BingBong";
         PostCreateRequest createdPostCreateRequest
-            = new PostCreateRequest(TEST_WRITING, EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            = new PostCreateRequest(TEST_POST_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(createdPostCreateRequest);
         PostUpdateRequest postUpdateRequest
-            = new PostUpdateRequest(updatedPostWriting, EMPTY_MULTIPART_FILES);
+            = new PostUpdateRequest(updatedPostWriting, TEST_IMAGE_EMPTY_MULTIPART_FILES);
 
         setAuthentication(another);
         assertThatThrownBy(() -> postService
@@ -181,7 +183,8 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void deletePost_HasId_SuccessToDelete() {
         PostCreateRequest createdPostCreateRequest
-            = new PostCreateRequest(TEST_WRITING, EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            = new PostCreateRequest(TEST_POST_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(createdPostCreateRequest);
 
         postService.deletePost(createdPostResponse.getId());
@@ -193,7 +196,7 @@ public class PostServiceTest extends ServiceTest {
     @DisplayName("ID로 포스트 삭제 - 실패")
     @Test
     void deletePost_HasNotId_ThrownException() {
-        assertThatThrownBy(() -> postService.deletePost(TEST_INVALID_POST_ID))
+        assertThatThrownBy(() -> postService.deletePost(TEST_POST_INVALID_ID))
             .isInstanceOf(NotExistsException.class);
     }
 
@@ -201,7 +204,8 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void deletePost_AlreadyDeletedId_ThrownException() {
         PostCreateRequest createdPostCreateRequest
-            = new PostCreateRequest(TEST_WRITING, EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            = new PostCreateRequest(TEST_POST_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(createdPostCreateRequest);
 
         postService.deletePost(createdPostResponse.getId());
@@ -214,7 +218,8 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void deletePost_IfNotCreator_ThrowException() {
         PostCreateRequest createdPostCreateRequest
-            = new PostCreateRequest(TEST_WRITING, EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            = new PostCreateRequest(TEST_POST_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(createdPostCreateRequest);
 
         setAuthentication(another);

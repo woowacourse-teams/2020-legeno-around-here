@@ -12,10 +12,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ID;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,10 +55,10 @@ class UserControllerTest {
     @Test
     @DisplayName("회원 가입 요청/응답 테스트")
     void join() throws Exception {
-        given(userService.createUser(any())).willReturn(TEST_ID);
+        given(userService.createUser(any())).willReturn(TEST_USER_ID);
 
         String inputJson = objectMapper.writeValueAsString(
-            new UserRequest(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD, TEST_AREA_ID));
+            new UserRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD, TEST_AREA_ID));
 
         this.mockMvc.perform(post("/join")
             .content(inputJson)
@@ -75,7 +75,7 @@ class UserControllerTest {
         given(userService.login(any())).willReturn(expected);
 
         String inputJson = objectMapper.writeValueAsString(
-            new LoginRequest(TEST_EMAIL, TEST_PASSWORD));
+            new LoginRequest(TEST_USER_EMAIL, TEST_USER_PASSWORD));
 
         this.mockMvc.perform(post("/login")
             .content(inputJson)
@@ -95,7 +95,7 @@ class UserControllerTest {
         given(userService.login(any())).willThrow(expected);
 
         String inputJson = objectMapper.writeValueAsString(
-            new LoginRequest(TEST_EMAIL, TEST_PASSWORD));
+            new LoginRequest(TEST_USER_EMAIL, TEST_USER_PASSWORD));
 
         this.mockMvc.perform(post("/login")
             .content(inputJson)
@@ -112,7 +112,7 @@ class UserControllerTest {
         given(userService.login(any())).willThrow(expected);
 
         String inputJson = objectMapper.writeValueAsString(
-            new LoginRequest("@@@.@@", TEST_PASSWORD));
+            new LoginRequest("@@@.@@", TEST_USER_PASSWORD));
 
         this.mockMvc.perform(post("/login")
             .content(inputJson)
@@ -129,7 +129,7 @@ class UserControllerTest {
         given(userService.login(any())).willThrow(expected);
 
         String inputJson = objectMapper.writeValueAsString(
-            new LoginRequest(TEST_EMAIL, "aa"));
+            new LoginRequest(TEST_USER_EMAIL, "aa"));
 
         this.mockMvc.perform(post("/login")
             .content(inputJson)
@@ -142,7 +142,8 @@ class UserControllerTest {
     @Test
     @DisplayName("내 정보 얻기")
     void findUser() throws Exception {
-        UserResponse expected = new UserResponse(TEST_ID, TEST_EMAIL, TEST_NICKNAME, null);
+        UserResponse expected = new UserResponse(TEST_USER_ID, TEST_USER_EMAIL, TEST_USER_NICKNAME,
+            null);
         given(userService.findUser()).willReturn(expected);
 
         String expectedJson = objectMapper.writeValueAsString(expected);
@@ -161,7 +162,8 @@ class UserControllerTest {
     @Test
     @DisplayName("내 정보 수정")
     void updateUser() throws Exception {
-        UserResponse expected = new UserResponse(TEST_ID, TEST_EMAIL, TEST_NICKNAME, null);
+        UserResponse expected = new UserResponse(TEST_USER_ID, TEST_USER_EMAIL, TEST_USER_NICKNAME,
+            null);
         given(userService.updateUser(any())).willReturn(expected);
 
         String expectedJson = objectMapper.writeValueAsString(expected);

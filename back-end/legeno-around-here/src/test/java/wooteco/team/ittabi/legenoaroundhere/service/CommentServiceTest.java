@@ -3,14 +3,14 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.EMPTY_MULTIPART_FILES;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_INVALID_POST_ID;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_WRITING;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_EMPTY_MULTIPART_FILES;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_INVALID_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_REQUEST;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ANOTHER_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_OTHER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,33 +43,34 @@ public class CommentServiceTest extends ServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
-        another = createUser(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        user = createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        another = createUser(TEST_USER_OTHER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         setAuthentication(user);
 
         Long sectorId = sectorService.createSector(TEST_SECTOR_REQUEST).getId();
         PostCreateRequest postCreateRequest
-            = new PostCreateRequest(TEST_WRITING, EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            = new PostCreateRequest(TEST_POST_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            TEST_AREA_ID, sectorId);
         postResponse = postService.createPost(postCreateRequest);
     }
 
     @DisplayName("댓글 생성 - 성공")
     @Test
     void createComment_SuccessToCreate() {
-        CommentRequest commentRequest = new CommentRequest(TEST_WRITING);
+        CommentRequest commentRequest = new CommentRequest(TEST_POST_WRITING);
 
         CommentResponse createdCommentResponse = commentService
             .createComment(postResponse.getId(), commentRequest);
 
         assertThat(createdCommentResponse.getId()).isNotNull();
-        assertThat(createdCommentResponse.getWriting()).isEqualTo(TEST_WRITING);
+        assertThat(createdCommentResponse.getWriting()).isEqualTo(TEST_POST_WRITING);
         assertThat(createdCommentResponse.getCreator()).isEqualTo(UserResponse.from(user));
     }
 
     @DisplayName("댓글 조회 - 성공")
     @Test
     void findComment_SuccessToFind() {
-        CommentRequest commentRequest = new CommentRequest(TEST_WRITING);
+        CommentRequest commentRequest = new CommentRequest(TEST_POST_WRITING);
         CommentResponse createdCommentResponse = commentService
             .createComment(postResponse.getId(), commentRequest);
 
@@ -87,7 +88,7 @@ public class CommentServiceTest extends ServiceTest {
     @DisplayName("댓글 조회 - 성공, POST ID로 조회 후 댓글 개수 확인")
     @Test
     void findPost_FindByPostID_SuccessToFind() {
-        CommentRequest commentRequest = new CommentRequest(TEST_WRITING);
+        CommentRequest commentRequest = new CommentRequest(TEST_POST_WRITING);
 
         CommentResponse commentResponse = commentService
             .createComment(postResponse.getId(), commentRequest);
@@ -102,7 +103,7 @@ public class CommentServiceTest extends ServiceTest {
     @DisplayName("댓글 조회 - 실패, 찾는 Comment가 이미 삭제 됐을 경우")
     @Test
     void findComment_AlreadyDeletedComment_ThrownException() {
-        CommentRequest commentRequest = new CommentRequest(TEST_WRITING);
+        CommentRequest commentRequest = new CommentRequest(TEST_POST_WRITING);
         CommentResponse commentResponse = commentService
             .createComment(postResponse.getId(), commentRequest);
         commentService.deleteComment(commentResponse.getId());
@@ -114,14 +115,14 @@ public class CommentServiceTest extends ServiceTest {
     @DisplayName("댓글 조회 - 실패, 찾는 Comment ID가 없을 경우")
     @Test
     void findComment_HasNotCommentId_ThrownException() {
-        assertThatThrownBy(() -> commentService.findComment(TEST_INVALID_POST_ID))
+        assertThatThrownBy(() -> commentService.findComment(TEST_POST_INVALID_ID))
             .isInstanceOf(NotExistsException.class);
     }
 
     @DisplayName("댓글 조회 - 성공")
     @Test
     void findAllComment_SuccessToFind() {
-        CommentRequest commentRequest = new CommentRequest(TEST_WRITING);
+        CommentRequest commentRequest = new CommentRequest(TEST_POST_WRITING);
         commentService.createComment(postResponse.getId(), commentRequest);
 
         List<CommentResponse> commentResponses = commentService
@@ -133,7 +134,7 @@ public class CommentServiceTest extends ServiceTest {
     @DisplayName("댓글 삭제 - 성공")
     @Test
     void deleteComment_SuccessToDelete() {
-        CommentRequest commentRequest = new CommentRequest(TEST_WRITING);
+        CommentRequest commentRequest = new CommentRequest(TEST_POST_WRITING);
         CommentResponse commentResponse = commentService
             .createComment(postResponse.getId(), commentRequest);
 
@@ -147,7 +148,7 @@ public class CommentServiceTest extends ServiceTest {
     @DisplayName("댓글 삭제 - 실패, 댓글 작성자가 아님")
     @Test
     void deleteComment_IfNotCreator_ThrowException() {
-        CommentRequest commentRequest = new CommentRequest(TEST_WRITING);
+        CommentRequest commentRequest = new CommentRequest(TEST_POST_WRITING);
         CommentResponse commentResponse = commentService
             .createComment(postResponse.getId(), commentRequest);
 

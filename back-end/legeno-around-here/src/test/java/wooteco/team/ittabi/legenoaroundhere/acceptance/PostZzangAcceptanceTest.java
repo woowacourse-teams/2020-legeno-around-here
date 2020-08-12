@@ -3,15 +3,15 @@ package wooteco.team.ittabi.legenoaroundhere.acceptance;
 import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_WRITING;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_PASSWORD;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import io.restassured.RestAssured;
 import io.restassured.config.RestAssuredConfig;
@@ -36,8 +36,8 @@ public class PostZzangAcceptanceTest extends AcceptanceTest {
     void setUp() {
         RestAssured.port = port;
         // 로그인
-        createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
-        TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
+        createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        TokenResponse tokenResponse = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
         accessToken = tokenResponse.getAccessToken();
     }
 
@@ -119,7 +119,7 @@ public class PostZzangAcceptanceTest extends AcceptanceTest {
     private String createPostWithoutImage(String accessToken, Long sectorId) {
         return given()
             .log().all()
-            .formParam("writing", TEST_WRITING)
+            .formParam("writing", TEST_POST_WRITING)
             .formParam("areaId", TEST_AREA_ID)
             .formParam("sectorId", sectorId)
             .header("X-AUTH-TOKEN", accessToken)

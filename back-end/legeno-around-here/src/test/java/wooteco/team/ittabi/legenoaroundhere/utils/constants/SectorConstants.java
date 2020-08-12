@@ -3,7 +3,7 @@ package wooteco.team.ittabi.legenoaroundhere.utils.constants;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 
 public class SectorConstants {
-    public static final Long TEST_INVALID_SECTOR_ID = -1L;
+    public static final Long TEST_SECTOR_INVALID_ID = -1L;
 
     public static final Long TEST_SECTOR_ID = 1L;
     public static final String TEST_SECTOR_NAME = "SectorName";

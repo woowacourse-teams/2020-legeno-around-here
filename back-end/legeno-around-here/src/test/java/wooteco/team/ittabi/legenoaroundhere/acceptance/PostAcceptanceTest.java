@@ -4,15 +4,15 @@ import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_DIR;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_WRITING;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_PASSWORD;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import io.restassured.RestAssured;
 import io.restassured.config.RestAssuredConfig;
@@ -42,8 +42,8 @@ public class PostAcceptanceTest extends AcceptanceTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
-        TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
+        createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        TokenResponse tokenResponse = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
         accessToken = tokenResponse.getAccessToken();
 
         sectorId = createSector();
@@ -75,7 +75,7 @@ public class PostAcceptanceTest extends AcceptanceTest {
         PostResponse postWithoutImageResponse = findPost(postWithoutImageId, accessToken);
 
         assertThat(postWithoutImageResponse.getId()).isEqualTo(postWithoutImageId);
-        assertThat(postWithoutImageResponse.getWriting()).isEqualTo(TEST_WRITING);
+        assertThat(postWithoutImageResponse.getWriting()).isEqualTo(TEST_POST_WRITING);
         assertThat(postWithoutImageResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
         assertThat(postWithoutImageResponse.getSector()).isEqualTo(sector);
 
@@ -86,7 +86,7 @@ public class PostAcceptanceTest extends AcceptanceTest {
         PostResponse postWithImageResponse = findPost(postWithImageId, accessToken);
 
         assertThat(postWithImageResponse.getId()).isEqualTo(postWithImageId);
-        assertThat(postWithImageResponse.getWriting()).isEqualTo(TEST_WRITING);
+        assertThat(postWithImageResponse.getWriting()).isEqualTo(TEST_POST_WRITING);
         assertThat(postWithImageResponse.getImages()).hasSize(2);
         assertThat(postWithoutImageResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
         assertThat(postWithoutImageResponse.getSector()).isEqualTo(sector);
@@ -305,7 +305,7 @@ public class PostAcceptanceTest extends AcceptanceTest {
 
         return given()
             .log().all()
-            .formParam("writing", TEST_WRITING)
+            .formParam("writing", TEST_POST_WRITING)
             .formParam("areaId", TEST_AREA_ID)
             .formParam("sectorId", sectorId)
             .header("X-AUTH-TOKEN", accessToken)
@@ -324,7 +324,7 @@ public class PostAcceptanceTest extends AcceptanceTest {
 
         return given()
             .log().all()
-            .formParam("writing", TEST_WRITING)
+            .formParam("writing", TEST_POST_WRITING)
             .multiPart("images", new File(TEST_IMAGE_DIR + "right_image1.jpg"))
             .multiPart("images", new File(TEST_IMAGE_DIR + "right_image2.jpg"))
             .formParam("areaId", TEST_AREA_ID)
