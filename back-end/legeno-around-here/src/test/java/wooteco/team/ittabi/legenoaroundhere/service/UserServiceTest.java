@@ -2,12 +2,13 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_ADMIN_PASSWORD;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,7 +52,7 @@ class UserServiceTest {
     @DisplayName("User 생성")
     void createUser() {
         UserRequest userRequest =
-            new UserRequest(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+            new UserRequest(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD, TEST_AREA_ID);
         Long userId = userService.createUser(userRequest);
 
         assertThat(userId).isNotNull();
@@ -61,7 +62,8 @@ class UserServiceTest {
     @DisplayName("Admin 생성")
     void createAdmin() {
         UserRequest adminCreateRequest =
-            new UserRequest(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_PASSWORD);
+            new UserRequest(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_PASSWORD,
+                TEST_AREA_ID);
         Long userId = userService.createAdmin(adminCreateRequest);
 
         assertThat(userId).isNotNull();
@@ -71,7 +73,7 @@ class UserServiceTest {
     @DisplayName("로그인")
     void login() {
         UserRequest userRequest =
-            new UserRequest(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+            new UserRequest(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD, TEST_AREA_ID);
         userService.createUser(userRequest);
 
         TokenResponse response = userService.login(new LoginRequest(TEST_EMAIL, TEST_PASSWORD));
@@ -89,7 +91,7 @@ class UserServiceTest {
     @DisplayName("로그인 - 비밀번호가 틀렸을 때")
     void login_IfPasswordIsWrong_ThrowException() {
         UserRequest userRequest =
-            new UserRequest(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+            new UserRequest(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD, TEST_AREA_ID);
         userService.createUser(userRequest);
 
         assertThatThrownBy(() -> userService.login(new LoginRequest(TEST_EMAIL, "wrong")))
@@ -100,7 +102,7 @@ class UserServiceTest {
     @DisplayName("email로 User 찾기 (UserDetails 오버라이딩 메서드)")
     void loadUserByUsername() {
         UserRequest userRequest =
-            new UserRequest(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+            new UserRequest(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD, TEST_AREA_ID);
         userService.createUser(userRequest);
 
         User user = (User) userService.loadUserByUsername(TEST_EMAIL);
@@ -119,7 +121,7 @@ class UserServiceTest {
     }
 
     private User createUser(String email, String nickname, String password) {
-        UserRequest userRequest = new UserRequest(email, nickname, password);
+        UserRequest userRequest = new UserRequest(email, nickname, password, TEST_AREA_ID);
         Long userId = userService.createUser(userRequest);
 
         return userRepository.findById(userId)
@@ -138,7 +140,8 @@ class UserServiceTest {
     void updateUser() {
         User createdUser = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         setAuthentication(createdUser);
-        UserRequest userUpdateRequest = new UserRequest(null, "newname", "newpassword");
+        UserRequest userUpdateRequest
+            = new UserRequest(null, "newname", "newpassword", TEST_AREA_ID);
 
         UserResponse updatedUserResponse = userService.updateUser(userUpdateRequest);
 

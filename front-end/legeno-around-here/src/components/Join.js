@@ -1,24 +1,31 @@
 import React, { useState, useCallback, useMemo } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import styled from 'styled-components';
+import styled from "styled-components";
 
 import OutBox from "./OutBox";
-import Input from "./Input";
-import Button from "./Button"
+import Title from "./join/Title";
+import Input from "./join/Input";
+import Label from "./join/Label";
+import Button from "./join/Button";
 
-const InputInvalidMessage = styled.p`
-  height: 50px;
-  line-height: 50px;
-
-  padding: 0 10px;
-  margin-bottom: 7px;
-
-  color: red;
+const InputCheck = styled.p`
+  width: 320px;
+  height: 18px;
   font-size: 10px;
+  color: red;
+  line-height: 18px;
+  margin: 0px 0px;
 `;
 
-function Join() {
+const InputSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+function JoinForm() {
   const NICKNAME_MIN_LENGTH = 1;
   const NICKNAME_MAX_LENGTH = 10;
   const PASSWORD_MIN_LENGTH = 8;
@@ -31,53 +38,69 @@ function Join() {
   const [passwordRepeat, setPasswordRepeat] = useState("");
 
   const validateEmail = useMemo(() => {
-    return !EMAIL_REGEX.test(String(email).toLowerCase());
+    return email && !EMAIL_REGEX.test(String(email).toLowerCase());
   }, [EMAIL_REGEX, email]);
 
   const validateNickname = useMemo(() => {
     return (
+      nickname && (
       nickname.length < NICKNAME_MIN_LENGTH ||
-      nickname.length > NICKNAME_MAX_LENGTH
+      nickname.length > NICKNAME_MAX_LENGTH)  
     );
   }, [nickname]);
 
   const validatePassword = useMemo(() => {
     return (
+      password && (
       password.length < PASSWORD_MIN_LENGTH ||
-      password.length > PASSWORD_MAX_LENGTH
+      password.length > PASSWORD_MAX_LENGTH)
     );
   }, [password]);
 
   const validatePasswordRepeat = useMemo(() => {
-    return passwordRepeat.length === 0 || password !== passwordRepeat;
+    return passwordRepeat && (passwordRepeat.length === 0 || password !== passwordRepeat);
   }, [password, passwordRepeat]);
 
   const emailCheck = useMemo(() => {
-    return (
-      validateEmail && 
-        <InputInvalidMessage>올바른 이메일 형식을 입력해주세요.</InputInvalidMessage>
-    );
+    if (validateEmail) {
+      return (
+        <InputCheck className="alert">
+          올바른 이메일 형식을 입력해주세요.
+        </InputCheck>
+      );
+    }
+    return <InputCheck className="alert"></InputCheck>;
   }, [validateEmail]);
 
   const nicknameCheck = useMemo(() => {
-    return (
-      validateNickname && 
-        <InputInvalidMessage>닉네임 길이는 1 ~ 10 자로 해주세요.</InputInvalidMessage>
-    );
+    if (validateNickname) {
+      return (
+        <InputCheck className="alert">
+          닉네임 길이는 10 자 이하로 해주세요.
+        </InputCheck>
+      );
+    }
+    return <InputCheck className="alert"></InputCheck>;
   }, [validateNickname]);
 
   const passwordCheck = useMemo(() => {
-    return (
-      validatePassword &&
-        <InputInvalidMessage>비밀번호 길이는 8 ~ 16 자로 해주세요.</InputInvalidMessage>
-    );
+    if (validatePassword) {
+      return (
+        <InputCheck className="alert">
+          비밀번호 길이는 8 ~ 16 자로 해주세요.
+        </InputCheck>
+      );
+    }
+    return <InputCheck className="alert"></InputCheck>;
   }, [validatePassword]);
 
   const passwordRepeatCheck = useMemo(() => {
-    return (
-      validatePasswordRepeat &&
-        <InputInvalidMessage>비밀번호가 일치하지 않습니다.</InputInvalidMessage>
-    );
+    if (validatePasswordRepeat) {
+      return (
+        <InputCheck className="alert">비밀번호가 일치하지 않습니다.</InputCheck>
+      );
+    }
+    return <InputCheck className="alert"></InputCheck>;
   }, [validatePasswordRepeat]);
 
   const handleChangeEmail = useCallback(({ target: { value } }) => {
@@ -145,42 +168,56 @@ function Join() {
 
   return (
     <OutBox>
+      <Title>우리동네 캡짱</Title>
       <form onSubmit={handleSubmit}>
-        <Input
-          type="email"
-          placeholder="이메일"
-          value={email}
-          onChange={handleChangeEmail}
-          check={emailCheck}
-        />
-        <Input
-          type="text"
-          placeholder="닉네임"
-          value={nickname}
-          onChange={handleChangeNickname}
-          check={nicknameCheck}
-        />
-        <Input
-          type="password"
-          placeholder="비밀번호"
-          value={password}
-          onChange={handleChangePassword}
-          check={passwordCheck}
-        />
-        <Input
-          type="password"
-          placeholder="비밀번호 확인"
-          value={passwordRepeat}
-          onChange={handleChangePasswordRepeat}
-          check={passwordRepeatCheck}
-        />
-        <Button type="submit">회원가입</Button>
-        <Link to="/">
-          <Button type="button">홈으로</Button>
+        <InputSection>
+          <Label>아이디 (E-mail)</Label>
+          <Input
+            type="email"
+            placeholder="이메일"
+            value={email}
+            onChange={handleChangeEmail}
+          />
+          {emailCheck}
+        </InputSection>
+        <InputSection>
+          <Label>닉네임</Label>
+          <Input
+            type="text"
+            placeholder="닉네임"
+            value={nickname}
+            onChange={handleChangeNickname}
+          />
+          {nicknameCheck}
+        </InputSection>
+        <InputSection>
+          <Label>비밀번호</Label>
+          <Input
+            type="password"
+            placeholder="비밀번호"
+            value={password}
+            onChange={handleChangePassword}
+          />
+          {passwordCheck}
+          <Input
+            type="password"
+            placeholder="비밀번호 확인"
+            value={passwordRepeat}
+            onChange={handleChangePasswordRepeat}
+          />
+          {passwordRepeatCheck}
+        </InputSection>
+        <InputSection>
+          <Button type="submit">회원가입</Button>
+        </InputSection>
+        <Link to="/" style={{ textDecoration: "none" }}>
+          <InputSection>
+            <Button type="button">홈으로</Button>
+          </InputSection>
         </Link>
       </form>
     </OutBox>
   );
 }
 
-export default Join;
+export default JoinForm;

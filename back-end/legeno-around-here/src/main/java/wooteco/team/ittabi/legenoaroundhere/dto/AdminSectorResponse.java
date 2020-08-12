@@ -30,11 +30,11 @@ public class AdminSectorResponse {
     public static AdminSectorResponse of(Sector sector) {
         return AdminSectorResponse.builder()
             .id(sector.getId())
-            .name(sector.getStringName())
-            .description(sector.getStringDescription())
+            .name(sector.getName())
+            .description(sector.getDescription())
             .creator(UserResponse.from(sector.getCreator()))
             .lastModifier(UserResponse.from(sector.getLastModifier()))
-            .state(sector.getStateName())
+            .state(sector.getState())
             .reason(sector.getReason())
             .build();
     }

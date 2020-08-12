@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
+import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 @AllArgsConstructor
 @Setter
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Sort.Direction;
 public class PageRequest {
 
     protected static final int MINIMUM_PAGE = 1;
+    protected static final int INDEX_AUDIT = 1;
     protected static final int MINIMUM_SIZE = 1;
     protected static final int DEFAULT_SIZE = 10;
     protected static final int MAXIMUM_SIZE = 50;
@@ -31,21 +33,21 @@ public class PageRequest {
     }
 
     public int calculatePage() {
-        if (Objects.isNull(page) || page < MINIMUM_PAGE) {
-            return MINIMUM_PAGE - 1;
+        if (Objects.isNull(page)) {
+            return MINIMUM_PAGE - INDEX_AUDIT;
         }
-        return page - 1;
+        if (page < MINIMUM_PAGE) {
+            throw new WrongUserInputException("Page를 잘못 [" + page + "] 입력하셨습니다.");
+        }
+        return page - INDEX_AUDIT;
     }
 
     public int calculateSize() {
         if (Objects.isNull(size)) {
             return DEFAULT_SIZE;
         }
-        if (size > MAXIMUM_SIZE) {
-            return MAXIMUM_SIZE;
-        }
-        if (size < MINIMUM_SIZE) {
-            return MINIMUM_SIZE;
+        if (size < MINIMUM_SIZE || size > MAXIMUM_SIZE) {
+            throw new WrongUserInputException("Page를 잘못 [" + size + "] 입력하셨습니다.");
         }
         return size;
     }
@@ -58,10 +60,11 @@ public class PageRequest {
     }
 
     public Direction makeDirection() {
-        if (Objects.isNull(direction)) {
+        if (Objects.isNull(direction) || direction.isEmpty()) {
             return Direction.ASC;
         }
         return Direction.fromOptionalString(direction)
-            .orElse(Direction.ASC);
+            .orElseThrow(() -> new WrongUserInputException(
+                "Direction를 잘못 [" + direction + "] 입력하셨습니다.(asc/desc)"));
     }
 }

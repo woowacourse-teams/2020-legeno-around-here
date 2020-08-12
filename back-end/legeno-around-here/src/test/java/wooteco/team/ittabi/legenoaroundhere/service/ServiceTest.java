@@ -1,5 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,7 +27,7 @@ public abstract class ServiceTest {
     protected IAuthenticationFacade authenticationFacade;
 
     protected User createUser(String email, String nickname, String password) {
-        UserRequest userRequest = new UserRequest(email, nickname, password);
+        UserRequest userRequest = new UserRequest(email, nickname, password, TEST_AREA_ID);
         Long userId = userService.createUser(userRequest);
 
         return userRepository.findById(userId)

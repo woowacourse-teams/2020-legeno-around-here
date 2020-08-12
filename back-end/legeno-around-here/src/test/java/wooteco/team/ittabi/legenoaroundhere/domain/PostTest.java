@@ -2,13 +2,26 @@ package wooteco.team.ittabi.legenoaroundhere.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostTestConstants.TEST_WRITING;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_FIRST_DEPTH_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_FOURTH_DEPTH_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_FULL_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_SECOND_DEPTH_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_THIRD_DEPTH_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_USED;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_WRITING;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
+import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
+import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Nickname;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Password;
@@ -23,18 +36,35 @@ public class PostTest {
         .password(new Password(TEST_PASSWORD))
         .build();
 
+    private final Sector sector = Sector.builder()
+        .name(TEST_SECTOR_NAME)
+        .description(TEST_SECTOR_DESCRIPTION)
+        .creator(user)
+        .lastModifier(user)
+        .state(SectorState.PUBLISHED)
+        .build();
+
+    private final Area area = Area.builder()
+        .fullName(TEST_AREA_FULL_NAME)
+        .firstDepthName(TEST_AREA_FIRST_DEPTH_NAME)
+        .secondDepthName(TEST_AREA_SECOND_DEPTH_NAME)
+        .thirdDepthName(TEST_AREA_THIRD_DEPTH_NAME)
+        .fourthDepthName(TEST_AREA_FOURTH_DEPTH_NAME)
+        .used(TEST_AREA_USED)
+        .build();
+
     @DisplayName("길이 검증 - 예외 발생")
     @Test
     void validateLength_OverLength_ThrownException() {
         String overLengthInput = "aaaaaaaaaaaaaaaaaaaaa";
-        assertThatThrownBy(() -> new Post(user, overLengthInput))
+        assertThatThrownBy(() -> new Post(overLengthInput, area, sector, user))
             .isInstanceOf(WrongUserInputException.class);
     }
 
     @DisplayName("같은 상태인지 확인")
     @Test
     void isSameState_SameState_True() {
-        Post post = new Post(user, TEST_WRITING);
+        Post post = new Post(TEST_WRITING, area, sector, user);
         post.setState(State.DELETED);
 
         assertThat(post.isSameState(State.DELETED)).isTrue();
@@ -43,7 +73,7 @@ public class PostTest {
     @DisplayName("다른 상태인지 확인")
     @Test
     void isNotSameState_DifferentState_True() {
-        Post post = new Post(user, TEST_WRITING);
+        Post post = new Post(TEST_WRITING, area, sector, user);
         post.setState(State.DELETED);
 
         assertThat(post.isNotSameState(State.PUBLISHED)).isTrue();

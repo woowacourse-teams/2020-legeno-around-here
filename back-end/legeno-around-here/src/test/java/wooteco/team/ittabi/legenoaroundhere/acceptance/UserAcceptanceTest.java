@@ -1,43 +1,25 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserTestConstants.TEST_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ANOTHER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_PASSWORD;
 
-import io.restassured.RestAssured;
-import io.restassured.specification.RequestSpecification;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql("/init-table.sql")
-public class UserAcceptanceTest {
+public class UserAcceptanceTest extends AcceptanceTest {
 
     private static final String USER_LOCATION_FORMAT = "^/users/[1-9][0-9]*$";
     private static final int TOKEN_MIN_SIZE = 1;
-
-    @LocalServerPort
-    public int port;
-
-    static RequestSpecification given() {
-        return RestAssured.given().log().all();
-    }
-
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-    }
 
     /**
      * Feature: 회원관리 Scenario: 회원을 관리한다.
@@ -55,9 +37,8 @@ public class UserAcceptanceTest {
     @Test
     @DisplayName("회원 관리")
     void manageUser() {
-
         //회원 가입
-        String location = createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        String location = createUserWithoutArea(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         assertThat(location).matches(USER_LOCATION_FORMAT);
         TokenResponse joinedTokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
         UserResponse joinedUserResponse = findUser(joinedTokenResponse.getAccessToken());
@@ -80,7 +61,7 @@ public class UserAcceptanceTest {
         assertThat(userResponse.getNickname()).isEqualTo(TEST_NICKNAME);
 
         // 내 정보 수정
-        updateUser(tokenResponse.getAccessToken(), "newname", "newpassword");
+        updateUserWithoutArea(tokenResponse.getAccessToken(), "newname", "newpassword");
         UserResponse updatedUserResponse = findUser(tokenResponse.getAccessToken());
         assertThat(updatedUserResponse.getNickname()).isEqualTo("newname");
         TokenResponse updatedTokenResponse = login(TEST_EMAIL, "newpassword");
@@ -93,12 +74,62 @@ public class UserAcceptanceTest {
         findNotExistUser(updatedTokenResponse.getAccessToken());
     }
 
-    private String createUser(String email, String nickname, String password) {
+    /**
+     * Feature: 회원 지역 관리 Scenario: 회원의 지역을 관리한다.
+     * <p>
+     * When 회원 가입 요청을 한다. Then 가입된 회원 정보에 지역이 NUll로 조회된다.
+     * <p>
+     * When 지역을 포함하여 회원 가입 요청을 한다. Then 가입된 회원 정보에 지역이 조회된다.
+     * <p>
+     * When 지역을 포함한 회원의 지역을 null로 수정한다. Then 가입된 회원 정보에 지역이 NUll로 조회된다.
+     * <p>
+     * When 지역을 포함하지 않은 회원의 지역을 포함하여 수정한다. Then 가입된 회원 정보에 지역이 조회된다.
+     */
+    @Test
+    @DisplayName("회원 지역 관리")
+    void joinUserWithArea() {
+        createUserWithoutArea(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
+        UserResponse userResponse = findUser(tokenResponse.getAccessToken());
+        assertThat(userResponse.getArea()).isNull();
+
+        createUserWithArea(TEST_ANOTHER_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
+        tokenResponse = login(TEST_ANOTHER_EMAIL, TEST_PASSWORD);
+        String accessToken = tokenResponse.getAccessToken();
+        userResponse = findUser(accessToken);
+        assertThat(userResponse.getArea()).isNotNull();
+        assertThat(userResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
+
+        updateUserWithoutArea(accessToken, TEST_NICKNAME, TEST_PASSWORD);
+        userResponse = findUser(accessToken);
+        assertThat(userResponse.getArea()).isNull();
+
+        updateUserWithArea(accessToken, TEST_NICKNAME, TEST_PASSWORD);
+        userResponse = findUser(accessToken);
+        assertThat(userResponse.getArea()).isNotNull();
+        assertThat(userResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
+    }
+
+    private String createUserWithoutArea(String email, String nickname, String password) {
         Map<String, String> params = new HashMap<>();
         params.put("email", email);
         params.put("nickname", nickname);
         params.put("password", password);
 
+        return createUserBy(params);
+    }
+
+    private String createUserWithArea(String email, String nickname, String password) {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("nickname", nickname);
+        params.put("password", password);
+        params.put("areaId", String.valueOf(TEST_AREA_ID));
+
+        return createUserBy(params);
+    }
+
+    private String createUserBy(Map<String, String> params) {
         return given()
             .body(params)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -109,22 +140,6 @@ public class UserAcceptanceTest {
             .statusCode(HttpStatus.CREATED.value())
             .extract()
             .header("Location");
-    }
-
-    private TokenResponse login(String email, String password) {
-        Map<String, String> params = new HashMap<>();
-        params.put("email", email);
-        params.put("password", password);
-
-        return given()
-            .body(params)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/login")
-            .then()
-            .statusCode(HttpStatus.OK.value())
-            .extract().as(TokenResponse.class);
     }
 
     private UserResponse findUser(String accessToken) {
@@ -148,11 +163,26 @@ public class UserAcceptanceTest {
             .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 
-    private UserResponse updateUser(String accessToken, String nickname, String password) {
+    private UserResponse updateUserWithoutArea(String accessToken, String nickname,
+        String password) {
         Map<String, String> params = new HashMap<>();
         params.put("nickname", nickname);
         params.put("password", password);
 
+        return updateUserBy(accessToken, params);
+    }
+
+    private UserResponse updateUserWithArea(String accessToken, String nickname,
+        String password) {
+        Map<String, String> params = new HashMap<>();
+        params.put("nickname", nickname);
+        params.put("password", password);
+        params.put("areaId", String.valueOf(TEST_AREA_ID));
+
+        return updateUserBy(accessToken, params);
+    }
+
+    private UserResponse updateUserBy(String accessToken, Map<String, String> params) {
         return given()
             .header("X-AUTH-TOKEN", accessToken)
             .body(params)

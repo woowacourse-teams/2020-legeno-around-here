@@ -1,13 +1,27 @@
 import React, { useState, useCallback } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
+
 import { setAccessTokenCookie } from "../util/TokenUtils";
+import OutBox from "./OutBox";
+import Title from "./login/Title";
+import InputSection from "./login/InputSection";
+import Input from "./login/Input";
+import Label from "./login/Label";
+import Button from "./login/Button";
 
-import OutBox from "./OutBox"
-import Input from "./Input";
-import Button from "./Button"
+const WrapperStyle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
-function Login() {
+const ButtonSection = styled.div`
+  margin-top: 50px;
+`;
+
+function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -52,26 +66,38 @@ function Login() {
 
   return (
     <OutBox>
+      <Title>우리동네 캡짱</Title>
       <form onSubmit={handleSubmit}>
-      <Input
-        type="email"
-        placeholder="이메일"
-        value={email}
-        onChange={handleChangeEmail}
-      />
-      <Input
-        type="password"
-        placeholder="비밀번호"
-        value={password}
-        onChange={handleChangePassword}
-      />
-      <Button type="submit">로그인</Button>
-      <Link to="/">
-        <Button type="button">홈으로</Button>
-      </Link>
-    </form>
-  </OutBox>
+        <InputSection>
+          <Label>아이디 (E-mail)</Label>
+          <Input
+            type="email"
+            placeholder="이메일"
+            value={email}
+            onChange={handleChangeEmail}
+          />
+        </InputSection>
+        <InputSection>
+          <Label>비밀번호</Label>
+          <Input
+            type="password"
+            placeholder="비밀번호"
+            value={password}
+            onChange={handleChangePassword}
+          />
+        </InputSection>
+        <ButtonSection>
+          <Button type="submit">로그인</Button>
+          <Link to="/join" style={{ textDecoration: "none" }}>
+            <Button type="button">회원가입</Button>
+          </Link>
+          <Link to="/" style={{ textDecoration: "none" }}>
+            <Button type="button">홈으로</Button>
+          </Link>
+        </ButtonSection>
+      </form>
+    </OutBox>
   );
 }
 
-export default Login;
+export default LoginForm;

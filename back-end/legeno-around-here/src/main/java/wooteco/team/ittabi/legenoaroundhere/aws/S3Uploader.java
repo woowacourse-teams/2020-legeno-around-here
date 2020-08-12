@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.exception.FileIOException;
+import wooteco.team.ittabi.legenoaroundhere.exception.MultipartFileConvertException;
 
 @Slf4j
 @Component
@@ -63,14 +65,18 @@ public class S3Uploader {
 
     private File convert(MultipartFile multipartFile) {
         String originalFileName = Objects.requireNonNull(multipartFile.getOriginalFilename());
-        File file = new File(originalFileName);
+        File convertFile = new File(originalFileName);
         try {
-            multipartFile.transferTo(file);
-            return file;
+            if (convertFile.createNewFile()) {
+                FileOutputStream fileOutputStream = new FileOutputStream(convertFile);
+                fileOutputStream.write(multipartFile.getBytes());
+                return convertFile;
+            }
         } catch (IOException e) {
             log.error("File 읽기 실패, originalFileName = {}", originalFileName);
             throw new FileIOException("File을 읽고 쓰는데 실패했습니다!");
         }
-
+        log.debug("File 전환 실패, originalFileName = {}", originalFileName);
+        throw new MultipartFileConvertException("MultipartFile -> File로 전환이 실패했습니다.");
     }
 }

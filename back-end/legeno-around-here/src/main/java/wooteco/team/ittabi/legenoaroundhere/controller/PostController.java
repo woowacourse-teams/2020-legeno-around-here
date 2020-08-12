@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wooteco.team.ittabi.legenoaroundhere.dto.PageRequest;
-import wooteco.team.ittabi.legenoaroundhere.dto.PostRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.service.PostService;
 
@@ -28,8 +29,8 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createPost(PostRequest postRequest) {
-        Long postId = postService.createPost(postRequest).getId();
+    public ResponseEntity<Void> createPost(PostCreateRequest postCreateRequest) {
+        Long postId = postService.createPost(postCreateRequest).getId();
         return ResponseEntity
             .created(URI.create("/posts/" + postId))
             .build();
@@ -45,8 +46,8 @@ public class PostController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updatePost(@PathVariable Long id,
-        @RequestBody PostRequest postRequest) {
-        postService.updatePost(id, postRequest);
+        @RequestBody PostUpdateRequest postUpdateRequest) {
+        postService.updatePost(id, postUpdateRequest);
         return ResponseEntity
             .ok()
             .build();

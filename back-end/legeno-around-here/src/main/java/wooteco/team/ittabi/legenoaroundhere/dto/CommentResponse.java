@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import wooteco.team.ittabi.legenoaroundhere.domain.Comment;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.Comment;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
