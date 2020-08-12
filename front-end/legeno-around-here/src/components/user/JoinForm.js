@@ -1,8 +1,70 @@
 import React, { useState, useCallback, useMemo } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
 
 import Input from "./Input";
+
+const FrameStyle = styled.div`
+  width: 360px;
+  height: 640px;
+  margin: 0 auto;
+  border: 1px solid #bcbcbc;
+`;
+
+const FontStyle = styled.div`
+  width: 340px;
+  height: 18px;
+  font-family: NotoSansCJKkr;
+  font-size: 12px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #3f3f3f;
+  font-weight: bold;
+`;
+
+const HeaderStyle = styled.div`
+  width: 340px;
+  height: 36px;
+  font-family: NotoSansCJKkr;
+  font-size: 24px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #222222;
+`;
+
+const CheckStyle = styled.p`
+  width: 320px;
+  height: 18px;
+  font-size: 10px;
+  color: red;
+  line-height: 18px;
+  margin: 0px 0px;
+`;
+
+const ButtonStyle = styled.button`
+  width: 320px;
+  height: 40px;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 40px;
+  background-color: #bcbcbc;
+  border: 0;
+  outline: 0;
+  margin: 5px auto;
+`;
+
+const WrapperStyle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 function JoinForm() {
   const NICKNAME_MIN_LENGTH = 1;
@@ -17,57 +79,69 @@ function JoinForm() {
   const [passwordRepeat, setPasswordRepeat] = useState("");
 
   const validateEmail = useMemo(() => {
-    return !EMAIL_REGEX.test(String(email).toLowerCase());
+    return email && !EMAIL_REGEX.test(String(email).toLowerCase());
   }, [EMAIL_REGEX, email]);
 
   const validateNickname = useMemo(() => {
     return (
+      nickname && (
       nickname.length < NICKNAME_MIN_LENGTH ||
-      nickname.length > NICKNAME_MAX_LENGTH
+      nickname.length > NICKNAME_MAX_LENGTH)  
     );
   }, [nickname]);
 
   const validatePassword = useMemo(() => {
     return (
+      password && (
       password.length < PASSWORD_MIN_LENGTH ||
-      password.length > PASSWORD_MAX_LENGTH
+      password.length > PASSWORD_MAX_LENGTH)
     );
   }, [password]);
 
   const validatePasswordRepeat = useMemo(() => {
-    return passwordRepeat.length === 0 || password !== passwordRepeat;
+    return passwordRepeat && (passwordRepeat.length === 0 || password !== passwordRepeat);
   }, [password, passwordRepeat]);
 
   const emailCheck = useMemo(() => {
-    return (
-      validateEmail && (
-        <p className="alert">올바른 이메일 형식을 입력해주세요.</p>
-      )
-    );
+    if (validateEmail) {
+      return (
+        <CheckStyle className="alert">
+          올바른 이메일 형식을 입력해주세요.
+        </CheckStyle>
+      );
+    }
+    return <CheckStyle className="alert"></CheckStyle>;
   }, [validateEmail]);
 
   const nicknameCheck = useMemo(() => {
-    return (
-      validateNickname && (
-        <p className="alert">닉네임 길이는 1 ~ 10 자로 해주세요.</p>
-      )
-    );
+    if (validateNickname) {
+      return (
+        <CheckStyle className="alert">
+          닉네임 길이는 10 자 이하로 해주세요.
+        </CheckStyle>
+      );
+    }
+    return <CheckStyle className="alert"></CheckStyle>;
   }, [validateNickname]);
 
   const passwordCheck = useMemo(() => {
-    return (
-      validatePassword && (
-        <p className="alert">비밀번호 길이는 8 ~ 16 자로 해주세요.</p>
-      )
-    );
+    if (validatePassword) {
+      return (
+        <CheckStyle className="alert">
+          비밀번호 길이는 8 ~ 16 자로 해주세요.
+        </CheckStyle>
+      );
+    }
+    return <CheckStyle className="alert"></CheckStyle>;
   }, [validatePassword]);
 
   const passwordRepeatCheck = useMemo(() => {
-    return (
-      validatePasswordRepeat && (
-        <p className="alert">비밀번호가 일치하지 않습니다.</p>
-      )
-    );
+    if (validatePasswordRepeat) {
+      return (
+        <CheckStyle className="alert">비밀번호가 일치하지 않습니다.</CheckStyle>
+      );
+    }
+    return <CheckStyle className="alert"></CheckStyle>;
   }, [validatePasswordRepeat]);
 
   const handleChangeEmail = useCallback(({ target: { value } }) => {
@@ -134,40 +208,67 @@ function JoinForm() {
   );
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Input
-        type="email"
-        placeholder="이메일"
-        value={email}
-        onChange={handleChangeEmail}
-        check={emailCheck}
-      />
-      <Input
-        type="text"
-        placeholder="닉네임"
-        value={nickname}
-        onChange={handleChangeNickname}
-        check={nicknameCheck}
-      />
-      <Input
-        type="password"
-        placeholder="비밀번호"
-        value={password}
-        onChange={handleChangePassword}
-        check={passwordCheck}
-      />
-      <Input
-        type="password"
-        placeholder="비밀번호 확인"
-        value={passwordRepeat}
-        onChange={handleChangePasswordRepeat}
-        check={passwordRepeatCheck}
-      />
-      <button type="submit">회원가입</button>
-      <Link to="/">
-        <button type="button">홈으로</button>
-      </Link>
-    </form>
+    <FrameStyle>
+      <WrapperStyle>
+        <HeaderStyle>우리동네 캡짱</HeaderStyle>
+      </WrapperStyle>
+      <form onSubmit={handleSubmit}>
+        <WrapperStyle>
+          <FontStyle>아이디 (E-mail)</FontStyle>
+        </WrapperStyle>
+        <Input
+          type="email"
+          placeholder="이메일"
+          value={email}
+          onChange={handleChangeEmail}
+        />
+        {emailCheck}
+        <WrapperStyle>
+          <FontStyle>닉네임</FontStyle>
+        </WrapperStyle>
+        <Input
+          type="text"
+          placeholder="닉네임"
+          value={nickname}
+          onChange={handleChangeNickname}
+        />
+        {nicknameCheck}
+        <WrapperStyle>
+          <FontStyle>비밀번호</FontStyle>
+        </WrapperStyle>
+        <Input
+          type="password"
+          placeholder="비밀번호"
+          value={password}
+          onChange={handleChangePassword}
+        />
+        {passwordCheck}
+        <Input
+          type="password"
+          placeholder="비밀번호 확인"
+          value={passwordRepeat}
+          onChange={handleChangePasswordRepeat}
+        />
+        {passwordRepeatCheck}
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <WrapperStyle>
+          <ButtonStyle type="submit">회원가입</ButtonStyle>
+        </WrapperStyle>
+        <Link to="/" style={{ textDecoration: "none" }}>
+          <WrapperStyle>
+            <ButtonStyle type="button">홈으로</ButtonStyle>
+          </WrapperStyle>
+        </Link>
+      </form>
+    </FrameStyle>
   );
 }
 
