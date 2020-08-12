@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 import OutBox from "./OutBox"
-import Button from "./Button"
+import Button from "./login/Button"
 import { getAccessTokenFromCookie } from "../util/TokenUtils";
 
 function MyPage() {

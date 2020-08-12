@@ -1,8 +1,9 @@
 import styled from "styled-components";
 
 const Label = styled.div`
-  width: 340px;
+  width: 90%;
   height: 18px;
+  text-align: left;
   font-family: NotoSansCJKkr;
   font-size: 12px;
   font-weight: 500;

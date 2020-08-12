@@ -1,19 +1,18 @@
-import React from "react";
 import styled from 'styled-components';
 
 const ButtonStyle = styled.button`
-  margin-left: 4px;
-  padding: 0px 20px;
-  height: 50px;
-  line-height: 50px;
-
+  width: 320px;
+  height: 40px;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 40px;
+  background-color: #bcbcbc;
   border: 1px solid black;
   background-color: white;
-
   color: black;
+  margin: 5px auto;
   font-size: 15px;
   border-radius: 5px;
-
   transition: background-color 0.2s ease;
 
   &:hover {
@@ -25,8 +24,4 @@ const ButtonStyle = styled.button`
   }
 `;
 
-const Button = ({ type, children }) => {
-  return <ButtonStyle type={type}>{children}</ButtonStyle>;
-}
-
-export default Button;
+export default ButtonStyle;

@@ -5,8 +5,9 @@ import styled from "styled-components";
 
 import { setAccessTokenCookie } from "../util/TokenUtils";
 import OutBox from "./OutBox";
-import Input from "./Input";
+import Input from "./login/Input";
 import Label from "./login/Label";
+import Button from "./login/Button";
 
 const HeaderStyle = styled.div`
   width: 340px;
@@ -19,18 +20,6 @@ const HeaderStyle = styled.div`
   line-height: normal;
   letter-spacing: normal;
   color: #222222;
-`;
-
-const ButtonStyle = styled.button`
-  width: 320px;
-  height: 40px;
-  font-size: 16px;
-  font-weight: bold;
-  line-height: 40px;
-  background-color: #bcbcbc;
-  border: 0;
-  outline: 0;
-  margin: 5px auto;
 `;
 
 const WrapperStyle = styled.div`
@@ -112,16 +101,16 @@ function LoginForm() {
         />
         <ButtonSection>
           <WrapperStyle>
-            <ButtonStyle type="submit">로그인</ButtonStyle>
+            <Button type="submit">로그인</Button>
           </WrapperStyle>
           <Link to="/join" style={{ textDecoration: "none" }}>
             <WrapperStyle>
-              <ButtonStyle type="button">회원가입</ButtonStyle>
+              <Button type="button">회원가입</Button>
             </WrapperStyle>
           </Link>
           <Link to="/" style={{ textDecoration: "none" }}>
             <WrapperStyle>
-              <ButtonStyle type="button">홈으로</ButtonStyle>
+              <Button type="button">홈으로</Button>
             </WrapperStyle>
           </Link>
         </ButtonSection>
