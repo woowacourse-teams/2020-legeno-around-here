@@ -102,7 +102,7 @@ public class PostService {
     }
 
     private Page<Post> getPostByFilter(Pageable pageable, PostSearch postSearch) {
-        if (postSearch.isNoFilter()) {
+        if (postSearch.isNotExistsFilter()) {
             return postRepository.findByStateNot(pageable, State.DELETED);
         }
 

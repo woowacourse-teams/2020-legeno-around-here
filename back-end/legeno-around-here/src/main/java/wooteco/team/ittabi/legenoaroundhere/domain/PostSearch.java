@@ -17,6 +17,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 public class PostSearch {
 
     protected static final String DELIMITER = ",";
+
     private List<Long> areaIds;
     private List<Long> sectorIds;
 
@@ -48,7 +49,7 @@ public class PostSearch {
         return areaIds.isEmpty() && !sectorIds.isEmpty();
     }
 
-    public boolean isNoFilter() {
+    public boolean isNotExistsFilter() {
         return areaIds.isEmpty() && sectorIds.isEmpty();
     }
 }

@@ -115,7 +115,7 @@ class PostSearchTest {
     void isSectorFilter_HasNoIds_True() {
         PostSearch noFilter = new PostSearch("", "");
 
-        assertThat(noFilter.isNoFilter()).isTrue();
+        assertThat(noFilter.isNotExistsFilter()).isTrue();
     }
 
     @Test
@@ -124,8 +124,8 @@ class PostSearchTest {
         PostSearch sectorFilter = new PostSearch("", "1");
         PostSearch areaAndSectorFilter = new PostSearch("1", "1");
 
-        assertThat(areaFilter.isNoFilter()).isFalse();
-        assertThat(sectorFilter.isNoFilter()).isFalse();
-        assertThat(areaAndSectorFilter.isNoFilter()).isFalse();
+        assertThat(areaFilter.isNotExistsFilter()).isFalse();
+        assertThat(sectorFilter.isNotExistsFilter()).isFalse();
+        assertThat(areaAndSectorFilter.isNotExistsFilter()).isFalse();
     }
 }
