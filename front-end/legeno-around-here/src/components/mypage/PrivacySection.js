@@ -12,7 +12,7 @@ export const ProfilePhoto = styled.div`
 
 export const Nickname = styled.div`
   display: inline;
-  font-size: 28px;
+  font-size: 24px;
 `;
 
 export const Email = styled.div`
@@ -38,4 +38,5 @@ export const PrivacyBox = styled.div`
 export const PrivacyEditBox = styled.div`
   margin-left: auto;
   padding-right: 10px;
+  font-size: 15px;
 `;
