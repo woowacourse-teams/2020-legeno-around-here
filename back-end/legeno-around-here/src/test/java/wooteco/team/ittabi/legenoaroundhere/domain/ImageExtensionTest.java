@@ -7,6 +7,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.multipart.MultipartFile;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.image.ImageExtension;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageExtensionException;
 import wooteco.team.ittabi.legenoaroundhere.utils.FileConverter;
 

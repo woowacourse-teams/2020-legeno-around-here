@@ -1,4 +1,4 @@
-package wooteco.team.ittabi.legenoaroundhere.service;
+package wooteco.team.ittabi.legenoaroundhere.utils;
 
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -8,22 +8,22 @@ import javax.xml.bind.DatatypeConverter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.Tika;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
-import wooteco.team.ittabi.legenoaroundhere.domain.Image;
-import wooteco.team.ittabi.legenoaroundhere.domain.ImageExtension;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.image.Image;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.image.ImageExtension;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotFoundAlgorithmException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageMimeTypeException;
 
 @Slf4j
 @Transactional
-@Service
+@Component
 @AllArgsConstructor
-public class ImageService {
+public class ImageUploader {
 
     public static final String IMAGE_TYPE = "image";
     public static final String IMAGE_DIR = "posts/images/";
@@ -32,7 +32,7 @@ public class ImageService {
     private final S3Uploader s3Uploader;
     private final IAuthenticationFacade authenticationFacade;
 
-    public Image upload(MultipartFile multipartFile) {
+    public Image uploadImage(MultipartFile multipartFile) {
         User user = (User) authenticationFacade.getPrincipal();
         validateImage(multipartFile);
         String imageUrl = s3Uploader

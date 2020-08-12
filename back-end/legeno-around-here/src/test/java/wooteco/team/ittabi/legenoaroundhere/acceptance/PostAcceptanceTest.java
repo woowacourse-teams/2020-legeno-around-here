@@ -1,11 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
-import static io.restassured.RestAssured.given;
 import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_DIR;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_WRITING;
@@ -30,28 +26,14 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.web.multipart.MultipartFile;
-import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql("/init-table.sql")
-public class PostAcceptanceTest {
-
-    @LocalServerPort
-    public int port;
-
-    @MockBean
-    private S3Uploader s3Uploader;
+public class PostAcceptanceTest extends AcceptanceTest {
 
     private String accessToken;
     private Long sectorId;
@@ -60,7 +42,6 @@ public class PostAcceptanceTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-
         createUser(TEST_EMAIL, TEST_NICKNAME, TEST_PASSWORD);
         TokenResponse tokenResponse = login(TEST_EMAIL, TEST_PASSWORD);
         accessToken = tokenResponse.getAccessToken();
@@ -193,40 +174,6 @@ public class PostAcceptanceTest {
             .collect(Collectors.toList());
     }
 
-    private String createUser(String email, String nickname, String password) {
-        Map<String, String> params = new HashMap<>();
-        params.put("email", email);
-        params.put("nickname", nickname);
-        params.put("password", password);
-
-        return given()
-            .body(params)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/join")
-            .then()
-            .statusCode(HttpStatus.CREATED.value())
-            .extract()
-            .header("Location");
-    }
-
-    private TokenResponse login(String email, String password) {
-        Map<String, String> params = new HashMap<>();
-        params.put("email", email);
-        params.put("password", password);
-
-        return given()
-            .body(params)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/login")
-            .then()
-            .statusCode(HttpStatus.OK.value())
-            .extract().as(TokenResponse.class);
-    }
-
     private Long createSector() {
         String accessToken = getCreateAdminToken();
 
@@ -342,11 +289,6 @@ public class PostAcceptanceTest {
             .getList("content", PostWithCommentsCountResponse.class);
     }
 
-    private Long getIdFromUrl(String location) {
-        int lastIndex = location.lastIndexOf("/");
-        return Long.valueOf(location.substring(lastIndex + 1));
-    }
-
     private PostResponse findPost(Long id, String accessToken) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -378,19 +320,18 @@ public class PostAcceptanceTest {
     }
 
     private String createPostWithImage(String accessToken) {
-        when(s3Uploader.upload(any(MultipartFile.class), anyString())).thenReturn("imageUrl");
-
         // TODO: 2020/07/28 이미지를 포함했을 때 한글이 안 나오는 문제
+
         return given()
             .log().all()
             .formParam("writing", TEST_WRITING)
+            .multiPart("images", new File(TEST_IMAGE_DIR + "right_image1.jpg"))
+            .multiPart("images", new File(TEST_IMAGE_DIR + "right_image2.jpg"))
             .formParam("areaId", TEST_AREA_ID)
             .formParam("sectorId", sectorId)
             .header("X-AUTH-TOKEN", accessToken)
             .config(RestAssuredConfig.config()
                 .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
-            .multiPart("images", new File(TEST_IMAGE_DIR + "right_image1.jpg"))
-            .multiPart("images", new File(TEST_IMAGE_DIR + "right_image2.jpg"))
             .when()
             .post("/posts")
             .then()

@@ -1,4 +1,4 @@
-package wooteco.team.ittabi.legenoaroundhere.service;
+package wooteco.team.ittabi.legenoaroundhere.utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -13,15 +13,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
-import wooteco.team.ittabi.legenoaroundhere.domain.Image;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.image.Image;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageMimeTypeException;
-import wooteco.team.ittabi.legenoaroundhere.utils.FileConverter;
+import wooteco.team.ittabi.legenoaroundhere.service.ServiceTest;
 
-public class ImageServiceTest extends ServiceTest {
+public class ImageUploaderTest extends ServiceTest {
 
     @Autowired
-    private ImageService imageService;
+    private ImageUploader imageUploader;
 
     @BeforeEach
     void setUp() {
@@ -35,7 +35,7 @@ public class ImageServiceTest extends ServiceTest {
         MultipartFile multipartFile = FileConverter
             .convert("right_image1.jpg", TEST_IMAGE_CONTENT_TYPE);
 
-        Image image = imageService.upload(multipartFile);
+        Image image = imageUploader.uploadImage(multipartFile);
 
         assertThat(image.getName()).isEqualTo(multipartFile.getName());
     }
@@ -46,7 +46,7 @@ public class ImageServiceTest extends ServiceTest {
         MultipartFile multipartFile = FileConverter
             .convert("not_image_mime_type.jpg", TEST_IMAGE_CONTENT_TYPE);
 
-        assertThatThrownBy(() -> imageService.upload(multipartFile))
+        assertThatThrownBy(() -> imageUploader.uploadImage(multipartFile))
             .isInstanceOf(NotImageMimeTypeException.class);
     }
 }
