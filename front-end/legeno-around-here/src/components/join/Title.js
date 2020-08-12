@@ -1,18 +1,17 @@
 import styled from "styled-components";
 
-const Label = styled.div`
+const Title = styled.div`
   width: 90%;
-  height: 18px;
-  text-align: left;
+  height: 36px;
   font-family: NotoSansCJKkr;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 24px;
+  font-weight: bold;
   font-stretch: normal;
   font-style: normal;
   line-height: normal;
   letter-spacing: normal;
-  color: #3f3f3f;
-  font-weight: bold;
+  color: #222222;
+  margin: 15px auto;
 `;
 
-export default Label;
+export default Title;
