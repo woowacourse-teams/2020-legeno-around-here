@@ -1,4 +1,4 @@
-package wooteco.team.ittabi.legenoaroundhere.domain;
+package wooteco.team.ittabi.legenoaroundhere.domain.post;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,21 +12,26 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.image.Image;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.PostZzang;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 @Entity
+@Table(name = "post")
 @Getter
 @Setter
-@ToString(exclude = {"comments", "images"})
+@ToString(exclude = {"comments", "images", "postZzangs"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 
@@ -38,6 +43,12 @@ public class Post extends BaseEntity {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostZzang> postZzangs = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "area_id", nullable = false)
@@ -54,9 +65,6 @@ public class Post extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "creator_id")
     private User creator;
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
 
     @Builder
     public Post(String writing, Area area, Sector sector, User creator) {
@@ -82,4 +90,27 @@ public class Post extends BaseEntity {
         return !Objects.equals(this.state, state);
     }
 
+    public int getPostZzangCount() {
+        return postZzangs.size();
+    }
+
+    public boolean existPostZzangBy(User user) {
+        return postZzangs.stream()
+            .anyMatch(postZzang -> postZzang.isSameCreator(user));
+    }
+
+    public PostZzang findPostZzangBy(User user) {
+        return postZzangs.stream()
+            .filter(postZzang -> postZzang.isSameCreator(user))
+            .findFirst()
+            .orElseGet(() -> new PostZzang(this, user));
+    }
+
+    public void addPostZzang(PostZzang postZzang) {
+        postZzangs.add(postZzang);
+    }
+
+    public void removePostZzang(PostZzang postZzang) {
+        postZzangs.remove(postZzang);
+    }
 }

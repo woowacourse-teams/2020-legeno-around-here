@@ -47,10 +47,10 @@ import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 class SectorServiceTest {
 
     @Autowired
-    SectorService sectorService;
+    private SectorService sectorService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
     private UserRepository userRepository;

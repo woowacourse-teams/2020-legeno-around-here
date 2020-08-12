@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
-import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ANOTHER_DESCRIPTION;
@@ -25,11 +24,8 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.ErrorResponse;
@@ -37,12 +33,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql("/init-table.sql")
-public class SectorAcceptanceTest {
-
-    @LocalServerPort
-    public int port;
+public class SectorAcceptanceTest extends AcceptanceTest {
 
     @BeforeEach
     void setUp() {
@@ -423,40 +414,6 @@ public class SectorAcceptanceTest {
             .header("Location");
     }
 
-    private String createUser(String email, String nickname, String password) {
-        Map<String, String> params = new HashMap<>();
-        params.put("email", email);
-        params.put("nickname", nickname);
-        params.put("password", password);
-
-        return given()
-            .body(params)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/join")
-            .then()
-            .statusCode(HttpStatus.CREATED.value())
-            .extract()
-            .header("Location");
-    }
-
-    private TokenResponse login(String email, String password) {
-        Map<String, String> params = new HashMap<>();
-        params.put("email", email);
-        params.put("password", password);
-
-        return given()
-            .body(params)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/login")
-            .then()
-            .statusCode(HttpStatus.OK.value())
-            .extract().as(TokenResponse.class);
-    }
-
     private Long createSector(String accessToken, String sectorName, String sectorDescription) {
         Map<String, String> params = new HashMap<>();
         params.put("name", sectorName);
@@ -516,11 +473,6 @@ public class SectorAcceptanceTest {
             .extract()
             .as(ErrorResponse.class)
             .getErrorMessage();
-    }
-
-    private Long getIdFromUrl(String location) {
-        int lastIndex = location.lastIndexOf("/");
-        return Long.valueOf(location.substring(lastIndex + 1));
     }
 
     private AdminSectorResponse findSector(String accessToken, Long id) {

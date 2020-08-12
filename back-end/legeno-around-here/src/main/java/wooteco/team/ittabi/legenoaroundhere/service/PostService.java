@@ -10,14 +10,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
-import wooteco.team.ittabi.legenoaroundhere.domain.Image;
-import wooteco.team.ittabi.legenoaroundhere.domain.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.PostSearch;
-import wooteco.team.ittabi.legenoaroundhere.domain.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.Comment;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.image.Image;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.PostZzang;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.ZzangState;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
-import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchRequest;
@@ -27,8 +29,10 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.repository.AreaRepository;
+import wooteco.team.ittabi.legenoaroundhere.repository.CommentRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
+import wooteco.team.ittabi.legenoaroundhere.utils.ImageUploader;
 
 @Slf4j
 @Transactional
@@ -36,13 +40,11 @@ import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
 @AllArgsConstructor
 public class PostService {
 
-    private static final State Deleted = State.DELETED;
-
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
     private final AreaRepository areaRepository;
     private final SectorRepository sectorRepository;
-    private final CommentService commentService;
-    private final ImageService imageService;
+    private final ImageUploader imageUploader;
     private final IAuthenticationFacade authenticationFacade;
 
     @Transactional
@@ -58,34 +60,32 @@ public class PostService {
             .orElseThrow(() -> new WrongUserInputException("입력하신 부문이 존재하지 않습니다."));
 
         Post post = postCreateRequest.toPost(area, sector, user);
-
-        List<Image> images = uploadImages(postCreateRequest);
-        images.forEach(image -> image.setPost(post));
+        uploadImages(postCreateRequest).forEach(image -> image.setPost(post));
 
         Post savedPost = postRepository.save(post);
-        List<CommentResponse> commentResponses = commentService.findAllComment(savedPost.getId());
-
-        return PostResponse.of(savedPost, commentResponses);
+        List<Comment> comments = findAllComment(post.getId());
+        ZzangState zzangState = findPostZzang(post).getZzangState();
+        return PostResponse.of(savedPost, comments, zzangState);
     }
 
     private List<Image> uploadImages(PostCreateRequest postCreateRequest) {
         if (postCreateRequest.isImagesNull()) {
             return Collections.emptyList();
         }
-
         return postCreateRequest.getImages().stream()
-            .map(imageService::upload)
+            .map(imageUploader::uploadImage)
             .collect(Collectors.toList());
     }
 
     public PostResponse findPost(Long id) {
         Post post = findNotDeletedPost(id);
-        List<CommentResponse> commentResponses = commentService.findAllComment(post.getId());
-        return PostResponse.of(post, commentResponses);
+        List<Comment> comments = findAllComment(post.getId());
+        ZzangState zzangState = findPostZzang(post).getZzangState();
+        return PostResponse.of(post, comments, zzangState);
     }
 
-    public Post findNotDeletedPost(Long id) {
-        return postRepository.findByIdAndStateNot(id, Deleted)
+    private Post findNotDeletedPost(Long id) {
+        return postRepository.findByIdAndStateNot(id, State.DELETED)
             .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
     }
 
@@ -93,29 +93,33 @@ public class PostService {
         PostSearchRequest postSearchFilter) {
         Page<Post> posts = getPostByFilter(pageable, postSearchFilter.toPostSearch());
 
-        return posts.map(post -> PostWithCommentsCountResponse
-            .of(post, commentService.findAllComment(post.getId())));
+        return posts
+            .map(post -> {
+                List<Comment> comments = findAllComment(post.getId());
+                ZzangState zzangState = findPostZzang(post).getZzangState();
+                return PostWithCommentsCountResponse.of(post, comments, zzangState);
+            });
     }
 
     private Page<Post> getPostByFilter(Pageable pageable, PostSearch postSearch) {
         if (postSearch.isNoFilter()) {
-            return postRepository.findByStateNot(pageable, Deleted);
+            return postRepository.findByStateNot(pageable, State.DELETED);
         }
 
         if (postSearch.isAreaFilter()) {
             List<Area> areas = findAllAreas(postSearch.getAreaIds());
-            return postRepository.findAllByStateNotAndAreaIn(pageable, Deleted, areas);
+            return postRepository.findAllByStateNotAndAreaIn(pageable, State.DELETED, areas);
         }
 
         if (postSearch.isSectorFilter()) {
             List<Sector> sectors = findAllSectors(postSearch.getSectorIds());
-            return postRepository.findAllByStateNotAndSectorIn(pageable, Deleted, sectors);
+            return postRepository.findAllByStateNotAndSectorIn(pageable, State.DELETED, sectors);
         }
 
         List<Area> areas = findAllAreas(postSearch.getAreaIds());
         List<Sector> sectors = findAllSectors(postSearch.getSectorIds());
         return postRepository
-            .findAllByStateNotAndAreaInAndSectorIn(pageable, Deleted, areas, sectors);
+            .findAllByStateNotAndAreaInAndSectorIn(pageable, State.DELETED, areas, sectors);
     }
 
     private List<Area> findAllAreas(List<Long> areaIds) {
@@ -147,6 +151,15 @@ public class PostService {
         Post post = findNotDeletedPost(id);
         validateIsCreator(post);
         post.setState(State.DELETED);
+    }
+
+    private List<Comment> findAllComment(Long postId) {
+        return commentRepository.findAllByPostIdAndStateNot(postId, State.DELETED);
+    }
+
+    private PostZzang findPostZzang(Post post) {
+        User user = (User) authenticationFacade.getPrincipal();
+        return post.findPostZzangBy(user);
     }
 
     private void validateIsCreator(Post post) {

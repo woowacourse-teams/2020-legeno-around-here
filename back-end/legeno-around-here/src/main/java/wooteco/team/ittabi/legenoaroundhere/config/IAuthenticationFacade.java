@@ -6,7 +6,7 @@ public interface IAuthenticationFacade {
 
     Authentication getAuthentication();
 
-    Object getPrincipal();
-
     void setAuthentication(Authentication authentication);
+
+    Object getPrincipal();
 }

@@ -15,17 +15,17 @@ public class AuthenticationFacade implements IAuthenticationFacade {
     }
 
     @Override
+    public void setAuthentication(Authentication authToken) {
+        SecurityContextHolder
+            .getContext()
+            .setAuthentication(authToken);
+    }
+
+    @Override
     public Object getPrincipal() {
         return SecurityContextHolder
             .getContext()
             .getAuthentication()
             .getPrincipal();
-    }
-
-    @Override
-    public void setAuthentication(Authentication authToken) {
-        SecurityContextHolder
-            .getContext()
-            .setAuthentication(authToken);
     }
 }
