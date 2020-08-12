@@ -57,8 +57,8 @@ public class PostController {
     @GetMapping
     public ResponseEntity<Page<PostWithCommentsCountResponse>> searchAllPost(
         PageRequest pageRequest, PostSearchFilterRequest postSearchFilterRequest) {
-        Page<PostWithCommentsCountResponse> posts = postService
-            .SearchAllPost(pageRequest.getPageable(), postSearchFilterRequest.toPostSearchFilter());
+        Page<PostWithCommentsCountResponse> posts
+            = postService.searchAllPost(pageRequest.getPageable(), postSearchFilterRequest);
         return ResponseEntity
             .ok()
             .body(posts);

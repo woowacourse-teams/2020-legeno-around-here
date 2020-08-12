@@ -20,6 +20,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchFilterRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
@@ -88,9 +89,9 @@ public class PostService {
             .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
     }
 
-    public Page<PostWithCommentsCountResponse> SearchAllPost(Pageable pageable,
-        PostSearchFilter postSearchFilter) {
-        Page<Post> posts = getPostByFilter(pageable, postSearchFilter);
+    public Page<PostWithCommentsCountResponse> searchAllPost(Pageable pageable,
+        PostSearchFilterRequest postSearchFilter) {
+        Page<Post> posts = getPostByFilter(pageable, postSearchFilter.toPostSearchFilter());
 
         return posts.map(post -> PostWithCommentsCountResponse
             .of(post, commentService.findAllComment(post.getId())));
