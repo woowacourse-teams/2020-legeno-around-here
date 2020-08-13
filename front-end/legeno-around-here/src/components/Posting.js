@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { post } from 'axios';
-
-import { getAccessTokenFromCookie } from "../util/TokenUtils";
+import axios from 'axios';
+import { getAccessTokenFromCookie } from '../util/TokenUtils';
 import OutBox from './OutBox';
 import TopBarBackground from './posting/TopBarBackground';
 import Cancle from './posting/Cancle';
@@ -24,59 +23,86 @@ const PostingBox = styled.div`
 
 const Posting = () => {
   const [accessToken] = useState(getAccessTokenFromCookie());
-  const [writing, setWriting] = useState("");
-  // const [images, setImages] = useState(null);
+  const [writing, setWriting] = useState('');
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // const onImagesChanged = e => {
-  //   setImages(e.target.files);
-  // };
+  const onImagesChanged = (e) => {
+    setImages(e.target.files);
+  };
 
-  const onWritingChanged = e => {
+  const onWritingChanged = (e) => {
     setWriting(e.target.value);
   };
 
-  const submitPost = e => {
+  const submitPost = (e) => {
     e.preventDefault();
 
     const url = 'http://localhost:8080/posts';
 
     const formData = new FormData();
-    // formData.append('images', images);
+    if (images.length > 0) {
+      Array.from(images).forEach((image) => {
+        formData.append('images', image);
+      });
+    }
     formData.append('writing', writing);
     formData.append('areaId', 1);
     formData.append('sectorId', 1);
-    
+
     const config = {
       headers: {
-          'content-type': 'multipart/form-data',
-          "X-Auth-Token": accessToken
-      }
+        'X-Auth-Token': accessToken,
+      },
     };
 
-    post(url, formData, config).then(response => {
-      alert(response.status);
-      document.location.href = "/";
-    });
+    const sendPost = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.post(url, formData, config);
+        if (response.status === 201) {
+          alert('전송에 성공했습니다!');
+          document.location.href = '/';
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      setLoading(false);
+    };
+    sendPost();
   };
 
-  return (<>
-    <OutBox>
-      <Form onSubmit={ submitPost }>
-        <TopBarBackground>
-          <Cancle linkTo="/"></Cancle>
-          <div>성북구</div>
-          <SubmitButton/>
-        </TopBarBackground>
+  if (loading) {
+    return <div>현재 전송중입니다 :) 조금만 기다려주세요!</div>;
+  }
 
-        <PostingBox>
-          <TextInput placeholder="자랑거리를 입력해주세요" 
-            onChange={ onWritingChanged } value={ writing } />
-          <ImageInput type="file" /* multiple onChange={ onImagesChanged }*/></ImageInput>
-          <button>부문을 추가해주세요</button>
-        </PostingBox>
-      </Form>
-    </OutBox>
-  </>);
+  return (
+    <>
+      <OutBox>
+        <Form onSubmit={submitPost}>
+          <TopBarBackground>
+            <Cancle linkTo="/"></Cancle>
+            <div>성북구</div>
+            <SubmitButton />
+          </TopBarBackground>
+
+          <PostingBox>
+            <TextInput
+              placeholder="자랑거리를 입력해주세요"
+              onChange={onWritingChanged}
+              value={writing}
+            />
+            <ImageInput
+              type="file"
+              multiple
+              onChange={onImagesChanged}
+            ></ImageInput>
+            <button>부문을 추가해주세요</button>
+          </PostingBox>
+        </Form>
+      </OutBox>
+    </>
+  );
 };
 
 export default Posting;
