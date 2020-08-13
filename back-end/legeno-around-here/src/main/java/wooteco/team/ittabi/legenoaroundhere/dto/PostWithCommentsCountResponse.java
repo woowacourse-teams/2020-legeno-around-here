@@ -9,8 +9,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.comment.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.ZzangState;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
