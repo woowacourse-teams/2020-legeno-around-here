@@ -6,6 +6,7 @@ import { getAllCurrentPosts } from '../api/API';
 import { getAccessTokenFromCookie } from '../../util/TokenUtils';
 import { HOME } from '../../constants/BottomItems';
 import PostItem from '../post/PostItem';
+import Loading from '../Loading';
 
 const HomePage = () => {
   const [page] = useState(0);
@@ -30,7 +31,7 @@ const HomePage = () => {
       <AppBar />
       {posts && posts.map((post) => <PostItem key={post.id} post={post} />)}
       <Bottom selected={HOME} />
-      {loading && <div>Loading ...</div>}
+      {loading && <Loading />}
     </>
   );
 };

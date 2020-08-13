@@ -17,6 +17,7 @@ import { getAllAreas } from './api/API';
 import { getAccessTokenFromCookie } from '../util/TokenUtils';
 import List from '@material-ui/core/List';
 import AreaItem from './AreaItem';
+import Loading from './Loading';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -91,7 +92,7 @@ export default function PrimarySearchAppBar() {
 
   return (
     <>
-      {loading && <div>Loading ...</div>}
+      {loading && <Loading />}
       <AppBar position="sticky">
         <Toolbar>
           <IconButton
