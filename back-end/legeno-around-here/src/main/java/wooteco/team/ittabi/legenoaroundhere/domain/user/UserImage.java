@@ -1,11 +1,10 @@
-package wooteco.team.ittabi.legenoaroundhere.domain.post.image;
+package wooteco.team.ittabi.legenoaroundhere.domain.user;
 
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,16 +14,15 @@ import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-@ToString(exclude = "post")
-@SQLDelete(sql = "UPDATE post_image SET deleted_at = NOW() WHERE id = ?")
+@ToString(exclude = "user")
+@SQLDelete(sql = "UPDATE user_image SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class PostImage extends BaseEntity {
+public class UserImage extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
@@ -32,21 +30,13 @@ public class PostImage extends BaseEntity {
     @Column(nullable = false)
     private String url;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    private Post post;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Builder
-    public PostImage(String name, String url) {
+    public UserImage(String name, String url) {
         this.name = name;
         this.url = url;
-    }
-
-    public void setPost(Post post) {
-        if (Objects.nonNull(this.post)) {
-            this.post.getPostImages().remove(this);
-        }
-        this.post = post;
-        post.getPostImages().add(this);
     }
 }
