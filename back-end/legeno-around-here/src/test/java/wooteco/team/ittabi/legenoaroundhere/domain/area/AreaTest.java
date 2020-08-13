@@ -58,7 +58,7 @@ class AreaTest {
     }
 
 
-    @DisplayName("4번째 이름까지 있다면, 4번째 이름을 반환")
+    @DisplayName("1번째 이름까지 있다면, 1번째 이름을 반환")
     @Test
     void getLastDepthName_ExistsFirstDepthName_FirstDepthName() {
         Area fourDepthArea = Area.builder()
