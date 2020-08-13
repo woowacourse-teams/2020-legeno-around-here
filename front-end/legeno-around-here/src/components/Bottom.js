@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
@@ -8,17 +9,20 @@ import CategoryIcon from '@material-ui/icons/Category';
 import PersonIcon from '@material-ui/icons/Person';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
 
+import { HOME, PROFILE, WRITING, SECTOR, RANK } from '../constants/BottomItems';
+
 const useStyles = makeStyles({
-  root: {
+  bottomBarStyle: {
     width: '100%',
     position: 'fixed',
     bottom: 0,
+    borderTop: '1px solid #dddddd',
   },
 });
 
-export default function LabelBottomNavigation() {
+const Bottom = ({ selected }) => {
   const classes = useStyles();
-  const [value, setValue] = React.useState('home');
+  const [value, setValue] = React.useState(selected);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -28,31 +32,47 @@ export default function LabelBottomNavigation() {
     <BottomNavigation
       value={value}
       onChange={handleChange}
-      className={classes.root}
+      className={classes.bottomBarStyle}
       showLabels
       position="fixed"
     >
-      <BottomNavigationAction label="홈" value="home" icon={<HomeIcon />} />
       <BottomNavigationAction
+        component={Link}
+        to="/"
+        label="홈"
+        value={HOME}
+        icon={<HomeIcon />}
+      />
+      <BottomNavigationAction
+        component={Link}
+        to="/"
         label="랭킹"
-        value="rank"
+        value={RANK}
         icon={<EqualizerIcon />}
       />
       <BottomNavigationAction
+        component={Link}
+        to="/posting"
         label="글쓰기"
-        value="writing"
+        value={WRITING}
         icon={<CreateIcon />}
       />
       <BottomNavigationAction
+        component={Link}
+        to="/sector"
         label="부문"
-        value="sector"
+        value={SECTOR}
         icon={<CategoryIcon />}
       />
       <BottomNavigationAction
+        component={Link}
+        to="/mypage"
         label="프로필"
-        value="profile"
+        value={PROFILE}
         icon={<PersonIcon />}
       />
     </BottomNavigation>
   );
-}
+};
+
+export default Bottom;

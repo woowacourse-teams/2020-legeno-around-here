@@ -1,13 +1,12 @@
-import React, { useState, useCallback, useMemo } from "react";
-import axios from "axios";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
+import React, { useState, useCallback, useMemo } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
-import OutBox from "./OutBox";
-import Title from "./join/Title";
-import Input from "./join/Input";
-import Label from "./join/Label";
-import Button from "./join/Button";
+import Title from '../join/Title';
+import Input from '../join/Input';
+import Label from '../join/Label';
+import Button from '../join/Button';
 
 const InputCheck = styled.p`
   width: 320px;
@@ -32,10 +31,10 @@ function JoinForm() {
   const PASSWORD_MAX_LENGTH = 16;
   const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-  const [email, setEmail] = useState("");
-  const [nickname, setNickname] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordRepeat, setPasswordRepeat] = useState("");
+  const [email, setEmail] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordRepeat, setPasswordRepeat] = useState('');
 
   const validateEmail = useMemo(() => {
     return email && !EMAIL_REGEX.test(String(email).toLowerCase());
@@ -43,22 +42,25 @@ function JoinForm() {
 
   const validateNickname = useMemo(() => {
     return (
-      nickname && (
-      nickname.length < NICKNAME_MIN_LENGTH ||
-      nickname.length > NICKNAME_MAX_LENGTH)  
+      nickname &&
+      (nickname.length < NICKNAME_MIN_LENGTH ||
+        nickname.length > NICKNAME_MAX_LENGTH)
     );
   }, [nickname]);
 
   const validatePassword = useMemo(() => {
     return (
-      password && (
-      password.length < PASSWORD_MIN_LENGTH ||
-      password.length > PASSWORD_MAX_LENGTH)
+      password &&
+      (password.length < PASSWORD_MIN_LENGTH ||
+        password.length > PASSWORD_MAX_LENGTH)
     );
   }, [password]);
 
   const validatePasswordRepeat = useMemo(() => {
-    return passwordRepeat && (passwordRepeat.length === 0 || password !== passwordRepeat);
+    return (
+      passwordRepeat &&
+      (passwordRepeat.length === 0 || password !== passwordRepeat)
+    );
   }, [password, passwordRepeat]);
 
   const emailCheck = useMemo(() => {
@@ -120,25 +122,25 @@ function JoinForm() {
   }, []);
 
   const handleReset = useCallback(() => {
-    setEmail("");
-    setNickname("");
-    setPassword("");
-    setPasswordRepeat("");
+    setEmail('');
+    setNickname('');
+    setPassword('');
+    setPasswordRepeat('');
   }, []);
 
   const join = useCallback(() => {
     axios
-      .post("http://localhost:8080/join", {
+      .post('http://localhost:8080/join', {
         email,
         nickname,
         password,
       })
       .then((response) => {
-        alert("회원가입을 축하드립니다.");
-        document.location.href = "/login";
+        alert('회원가입을 축하드립니다.');
+        document.location.href = '/login';
       })
       .catch(() => {
-        alert("회원가입에 실패하였습니다.");
+        alert('회원가입에 실패하였습니다.');
         handleReset();
       });
   }, [email, nickname, password, handleReset]);
@@ -152,7 +154,7 @@ function JoinForm() {
         validatePassword ||
         validatePasswordRepeat
       ) {
-        alert("입력값을 확인해 주세요.");
+        alert('입력값을 확인해 주세요.');
         return;
       }
       join();
@@ -163,11 +165,10 @@ function JoinForm() {
       validatePassword,
       validatePasswordRepeat,
       join,
-    ]
+    ],
   );
 
-  return (
-    <OutBox>
+  return (<>
       <Title>우리동네 캡짱</Title>
       <form onSubmit={handleSubmit}>
         <InputSection>
@@ -178,7 +179,7 @@ function JoinForm() {
             value={email}
             onChange={handleChangeEmail}
           />
-          {emailCheck}
+          <Label>{emailCheck}</Label>
         </InputSection>
         <InputSection>
           <Label>닉네임</Label>
@@ -188,7 +189,7 @@ function JoinForm() {
             value={nickname}
             onChange={handleChangeNickname}
           />
-          {nicknameCheck}
+          <Label>{nicknameCheck}</Label>
         </InputSection>
         <InputSection>
           <Label>비밀번호</Label>
@@ -198,26 +199,25 @@ function JoinForm() {
             value={password}
             onChange={handleChangePassword}
           />
-          {passwordCheck}
+          <Label>{passwordCheck}</Label>
           <Input
             type="password"
             placeholder="비밀번호 확인"
             value={passwordRepeat}
             onChange={handleChangePasswordRepeat}
           />
-          {passwordRepeatCheck}
+          <Label>{passwordRepeatCheck}</Label>
         </InputSection>
         <InputSection>
           <Button type="submit">회원가입</Button>
         </InputSection>
-        <Link to="/" style={{ textDecoration: "none" }}>
+        <Link to="/" style={{ textDecoration: 'none' }}>
           <InputSection>
             <Button type="button">홈으로</Button>
           </InputSection>
         </Link>
       </form>
-    </OutBox>
-  );
+  </>);
 }
 
 export default JoinForm;

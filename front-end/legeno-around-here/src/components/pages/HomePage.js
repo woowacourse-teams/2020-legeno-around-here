@@ -4,6 +4,7 @@ import Bottom from '../Bottom';
 
 import { getAllCurrentPosts } from '../api/API';
 import { getAccessTokenFromCookie } from '../../util/TokenUtils';
+import { HOME } from '../../constants/BottomItems';
 import PostItem from '../post/PostItem';
 
 const HomePage = () => {
@@ -26,7 +27,7 @@ const HomePage = () => {
     <>
       <AppBar />
       {posts && posts.map((post) => <PostItem key={post.id} post={post} />)}
-      <Bottom />
+      <Bottom selected={HOME} />
       {loading && <div>Loading ...</div>}
     </>
   );

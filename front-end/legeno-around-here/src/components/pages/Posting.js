@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { getAccessTokenFromCookie } from '../util/TokenUtils';
-import OutBox from './OutBox';
-import TopBarBackground from './posting/TopBarBackground';
-import Cancle from './posting/Cancle';
-import TextInput from './posting/TextInput';
-import ImageInput from './posting/ImageInput';
-import SubmitButton from './posting/SubmitButton';
+
+import TopBar from '../posting/TopBar';
+import { getAccessTokenFromCookie } from '../../util/TokenUtils';
+import TextInput from '../posting/TextInput';
+import ImageInput from '../posting/ImageInput';
+import Bottom from '../Bottom';
+import { WRITING } from '../../constants/BottomItems';
 
 const Form = styled.form`
   width: 100%;
@@ -17,7 +17,7 @@ const Form = styled.form`
 const PostingBox = styled.div`
   width: 100%;
   height: 100%;
-  background-color: rgba(240, 240, 240, 1);
+  background-color: white;
   text-align: center;
 `;
 
@@ -62,7 +62,7 @@ const Posting = () => {
         const response = await axios.post(url, formData, config);
         if (response.status === 201) {
           alert('전송에 성공했습니다!');
-          document.location.href = '/';
+          document.location.href = response.headers.location;
         }
       } catch (e) {
         console.log(e);
@@ -78,29 +78,25 @@ const Posting = () => {
 
   return (
     <>
-      <OutBox>
-        <Form onSubmit={submitPost}>
-          <TopBarBackground>
-            <Cancle linkTo="/"></Cancle>
-            <div>성북구</div>
-            <SubmitButton />
-          </TopBarBackground>
-
-          <PostingBox>
-            <TextInput
-              placeholder="자랑거리를 입력해주세요"
-              onChange={onWritingChanged}
-              value={writing}
-            />
-            <ImageInput
-              type="file"
-              multiple
-              onChange={onImagesChanged}
-            ></ImageInput>
-            <button>부문을 추가해주세요</button>
-          </PostingBox>
-        </Form>
-      </OutBox>
+      <Form onSubmit={submitPost}>
+        <TopBar cancelButtonLink="/" />
+        <PostingBox>
+          <TextInput
+            placeholder="자랑거리를 입력해주세요"
+            onChange={onWritingChanged}
+            value={writing}
+          />
+          <ImageInput
+            type="file"
+            multiple
+            onChange={onImagesChanged}
+          ></ImageInput>
+          <button onClick={(e) => e.preventDefault()}>
+            부문을 추가해주세요
+          </button>
+        </PostingBox>
+      </Form>
+      <Bottom selected={WRITING} />
     </>
   );
 };
