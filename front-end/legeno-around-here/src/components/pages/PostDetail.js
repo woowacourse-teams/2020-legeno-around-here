@@ -42,7 +42,6 @@ const ToRight = styled.div`
   margin-left: auto;
 `;
 
-const AreaNamePlacing = styled.div``;
 const PostDetail = ({ match }) => {
   const [accessToken] = useState(getAccessTokenFromCookie());
   const { postId } = match.params;
@@ -68,22 +67,22 @@ const PostDetail = ({ match }) => {
 
   return (
     <>
-        <TopBar backButtonLink="/"></TopBar>
-        <PostSpace>
-          <PostMetaData>
-            <Typography color="textSecondary">{post.areaName}</Typography>
-            <ToRight>
-              <Typography color="textSecondary">{post.creatorName}</Typography>
-            </ToRight>
-          </PostMetaData>
-          <SectionName>{post.sectorName}</SectionName>
-          <Typography>{post.writing}</Typography>
-          <Image src="/logo512.png"></Image>
-          <Typography color="textSecondary">
-            짱이야 {post.zzangCount} &nbsp; 댓글 {post.comments.length}
-          </Typography>
-          <Line></Line>
-        </PostSpace>
+      <TopBar backButtonLink="/"></TopBar>
+      <PostSpace>
+        <PostMetaData>
+          <Typography color="textSecondary">{post.areaName}</Typography>
+          <ToRight>
+            <Typography color="textSecondary">{post.creatorName}</Typography>
+          </ToRight>
+        </PostMetaData>
+        <SectionName>{post.sectorName}</SectionName>
+        <Typography>{post.writing}</Typography>
+        <Image src="/logo512.png"></Image>
+        <Typography color="textSecondary">
+          짱이야 {post.zzangCount} &nbsp; 댓글 {post.comments.length}
+        </Typography>
+        <Line></Line>
+      </PostSpace>
       <Bottom></Bottom>
     </>
   );

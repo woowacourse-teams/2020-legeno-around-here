@@ -25,10 +25,6 @@ const ActualItemSpace = styled.div`
   flex-direction: row;
 `;
 
-const Center = styled.div`
-  margin: auto;
-`;
-
 const TopBar = ({ backButtonLink }) => {
   const classes = useStyles();
 
