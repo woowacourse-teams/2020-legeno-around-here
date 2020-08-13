@@ -65,7 +65,7 @@ const PostBox = ({ writing }) => {
         subheader="September 14, 2016"
       />
       <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">
+        <Typography variant="body2" component="p">
           {writing}
         </Typography>
       </CardContent>
