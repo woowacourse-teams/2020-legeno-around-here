@@ -5,7 +5,6 @@ const DEFAULT_SORTEDBY = 'id';
 const DEFAULT_DIRECTION = 'desc';
 
 export const getAllCurrentPosts = async (page, accessToken) => {
-  console.log('page :' + page, 'accessToken :' + accessToken);
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -24,6 +23,28 @@ export const getAllCurrentPosts = async (page, accessToken) => {
     )
     .catch((error) => {
       alert(`최근 글을 가져올 수 없습니다! error : ${error}`);
+    });
+  return response.data.content;
+};
+
+export const getAllAreas = async (page, accessToken, keyword) => {
+  const config = {
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
+  };
+  const response = await axios
+    .get(
+      `http://localhost:8080/areas?` +
+        `page=${page}&` +
+        `size=${DEFAULT_SIZE}&` +
+        `sortedBy=${DEFAULT_SORTEDBY}&` +
+        `direction=${DEFAULT_DIRECTION}&` +
+        `keyword=${keyword}`,
+      config,
+    )
+    .catch(() => {
+      alert(`해당하는 지역이 없습니다!`);
     });
   return response.data.content;
 };
