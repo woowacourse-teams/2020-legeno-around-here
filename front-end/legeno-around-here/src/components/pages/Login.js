@@ -37,7 +37,7 @@ function LoginForm() {
 
   const login = useCallback(() => {
     axios
-      .post('https://capzzang.co.kr/login', {
+      .post('http://capzzang.co.kr:8080/login', {
         email,
         password,
       })
