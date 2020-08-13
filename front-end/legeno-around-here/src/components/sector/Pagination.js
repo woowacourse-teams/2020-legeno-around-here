@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 const PageNumbersStyle = styled.div`
   margin: 5px auto;
@@ -15,10 +15,10 @@ const PageNumberStyle = styled.div`
   text-align: center;
 `;
 
-const Pagination = ({ postsPerPage, totalPosts, paginate }) => {
+const Pagination = ({ sectorsPerPage, totalSectors, paginate }) => {
   const pageNumber = [];
 
-  for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(totalSectors / sectorsPerPage); i++) {
     pageNumber.push(i);
   }
 
