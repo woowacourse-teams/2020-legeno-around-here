@@ -62,8 +62,7 @@ const PostDetail = ({ match }) => {
       postId: postId,
       setPostState: setPost,
     });
-    console.log(post);
-  }, []);
+  }, [accessToken, postId]);
 
   return (
     <>
