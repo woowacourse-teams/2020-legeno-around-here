@@ -1,6 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
 import java.net.URI;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -56,5 +57,15 @@ public class SectorController {
 
         return ResponseEntity
             .ok(sectorDetailResponses);
+    }
+
+    @GetMapping("/best")
+    public ResponseEntity<List<SectorResponse>> findBestSectors(
+        @RequestParam(defaultValue = "4") int count) {
+        List<SectorResponse> sectorResponses
+            = sectorService.findBestSectors(count);
+
+        return ResponseEntity
+            .ok(sectorResponses);
     }
 }

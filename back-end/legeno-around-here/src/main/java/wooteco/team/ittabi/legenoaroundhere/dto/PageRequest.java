@@ -18,7 +18,7 @@ public class PageRequest {
     protected static final int MINIMUM_PAGE = 0;
     protected static final int MINIMUM_SIZE = 1;
     protected static final int DEFAULT_SIZE = 10;
-    protected static final int MAXIMUM_SIZE = 50;
+    protected static final int MAXIMUM_SIZE = 500;
     protected static final String DEFAULT_SORTED_BY = "id";
 
     private Integer page;
