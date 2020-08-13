@@ -7,7 +7,7 @@ import { getAccessTokenFromCookie } from '../../util/TokenUtils';
 import PostItem from '../post/PostItem';
 
 const HomePage = () => {
-  const [page, setPages] = useState(1);
+  const [page] = useState(1);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -16,7 +16,6 @@ const HomePage = () => {
     const loadPosts = async () => {
       setLoading(true);
       const allPosts = await getAllCurrentPosts(page, accessToken);
-      console.log(allPosts);
       setPosts(allPosts);
       setLoading(false);
     };
