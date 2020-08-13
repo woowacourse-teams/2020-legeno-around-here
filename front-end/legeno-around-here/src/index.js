@@ -1,8 +1,21 @@
 import React from "react";
-import { render } from "react-dom";
+import ReactDOM from "react-dom";
+import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
-render(<App />, document.getElementById("root"));
+const theme = createMuiTheme({
+  typography: {
+    fontFamily: '"DoHyeon", "Noto Sans KR", serif',
+  },
+});
+
+ReactDOM.render(
+  <MuiThemeProvider theme={theme}>
+    <App />
+  </MuiThemeProvider>,
+  document.getElementById("root")
+);
 
 serviceWorker.unregister();
