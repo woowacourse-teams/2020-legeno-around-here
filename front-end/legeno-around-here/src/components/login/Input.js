@@ -3,7 +3,7 @@ import React from "react";
 import styled from "styled-components";
 
 const InputStyle = styled.input`
-  width: 320px;
+  width: 90%;
   height: 40px;
   border: solid 1px #979797;
   background-color: #eeeeee;
@@ -18,7 +18,7 @@ const WrapperStyle = styled.div`
 
 function Input({ type, placeholder, value, onChange, check }) {
   return (
-    <WrapperStyle>
+    <>
       <InputStyle
         type={type}
         placeholder={placeholder}
@@ -26,7 +26,7 @@ function Input({ type, placeholder, value, onChange, check }) {
         onChange={onChange}
       />
       {check}
-    </WrapperStyle>
+    </>
   );
 }
 
