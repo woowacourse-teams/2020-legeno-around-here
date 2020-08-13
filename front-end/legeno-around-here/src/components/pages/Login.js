@@ -3,13 +3,13 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { setAccessTokenCookie } from '../util/TokenUtils';
-import OutBox from './OutBox';
-import Title from './login/Title';
-import InputSection from './login/InputSection';
-import Input from './login/Input';
-import Label from './login/Label';
-import Button from './login/Button';
+import { setAccessTokenCookie } from '../../util/TokenUtils';
+import OutBox from '../OutBox';
+import Title from '../login/Title';
+import InputSection from '../login/InputSection';
+import Input from '../login/Input';
+import Label from '../login/Label';
+import Button from '../login/Button';
 
 const ButtonSection = styled.div`
   width: 100%;

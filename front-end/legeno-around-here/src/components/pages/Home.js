@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import OutBox from './OutBox';
+import OutBox from '../OutBox';
 
 function Home() {
   return (

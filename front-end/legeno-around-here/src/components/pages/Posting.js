@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 
-import TopBar from './posting/TopBar';
-import { getAccessTokenFromCookie } from '../util/TokenUtils';
-import OutBox from './OutBox';
-import TextInput from './posting/TextInput';
-import ImageInput from './posting/ImageInput';
-import SubmitButton from './posting/SubmitButton';
-import Bottom from './Bottom';
-import { WRITING } from '../constants/BottomItems';
+import TopBar from '../posting/TopBar';
+import { getAccessTokenFromCookie } from '../../util/TokenUtils';
+import OutBox from '../OutBox';
+import TextInput from '../posting/TextInput';
+import ImageInput from '../posting/ImageInput';
+import Bottom from '../Bottom';
+import { WRITING } from '../../constants/BottomItems';
 
 const Form = styled.form`
   width: 100%;

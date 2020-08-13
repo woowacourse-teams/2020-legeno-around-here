@@ -1,12 +1,12 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
-import Home from './components/Home';
-import Join from './components/Join';
-import Login from './components/Login';
-import Posting from './components/Posting';
-import MyPage from './components/MyPage';
-import SectorPage from './components/SectorPage';
-import PostDetail from './components/PostDetail';
+import Home from './components/pages/Home';
+import Join from './components/pages/Join';
+import Login from './components/pages/Login';
+import Posting from './components/pages/Posting';
+import MyPage from './components/pages/MyPage';
+import SectorPage from './components/pages/SectorPage';
+import PostDetail from './components/pages/PostDetail';
 import HomePage from './components/pages/HomePage';
 
 import './style.css';

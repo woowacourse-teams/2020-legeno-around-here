@@ -1,11 +1,11 @@
 import React, { useState, useMemo } from 'react';
 
-import TopBar from './mypage/TopBar';
-import Bottom from './Bottom';
-import { PROFILE } from '../constants/BottomItems';
-import { findMyInto } from './mypage/MyInfoFinder';
-import OutBox from './OutBox';
-import { getAccessTokenFromCookie } from '../util/TokenUtils';
+import TopBar from '../mypage/TopBar';
+import Bottom from '../Bottom';
+import { PROFILE } from '../../constants/BottomItems';
+import { findMyInto } from '../mypage/MyInfoFinder';
+import OutBox from '../OutBox';
+import { getAccessTokenFromCookie } from '../../util/TokenUtils';
 import {
   ProfilePhoto,
   Nickname,
@@ -13,9 +13,9 @@ import {
   TopSection,
   PrivacyBox,
   PrivacyEditBox,
-} from './mypage/PrivacySection';
-import { AwardsSection, AwardSummary } from './mypage/AwardSection';
-import { NavSection, NavElement } from './mypage/LinksSection';
+} from '../mypage/PrivacySection';
+import { AwardsSection, AwardSummary } from '../mypage/AwardSection';
+import { NavSection, NavElement } from '../mypage/LinksSection';
 
 function MyPage() {
   const [accessToken] = useState(getAccessTokenFromCookie());

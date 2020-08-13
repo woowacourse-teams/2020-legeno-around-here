@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-import { getAccessTokenFromCookie } from '../util/TokenUtils';
-import Sectors from './sector/Sectors';
-import Pagination from './sector/Pagination';
-import OutBox from './OutBox';
-import Bottom from './Bottom';
+import { getAccessTokenFromCookie } from '../../util/TokenUtils';
+import Sectors from '../sector/Sectors';
+import Pagination from '../sector/Pagination';
+import OutBox from '../OutBox';
+import Bottom from '../Bottom';
 
 function SectorPage() {
   const [accessToken] = useState(getAccessTokenFromCookie());

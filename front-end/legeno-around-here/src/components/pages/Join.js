@@ -3,11 +3,11 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import OutBox from './OutBox';
-import Title from './join/Title';
-import Input from './join/Input';
-import Label from './join/Label';
-import Button from './join/Button';
+import OutBox from '../OutBox';
+import Title from '../join/Title';
+import Input from '../join/Input';
+import Label from '../join/Label';
+import Button from '../join/Button';
 
 const InputCheck = styled.p`
   width: 320px;
