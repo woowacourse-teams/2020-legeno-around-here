@@ -20,9 +20,13 @@ const useStyles = makeStyles(() => ({
 const ActualItemSpace = styled.div`
   width: ${ACTUAL_ITEM_SPACE_WIDTH};
   height: 80%;
-  margin: '0 auto';
+  margin: 0 auto;
   display: flex;
   flex-direction: row;
+`;
+
+const Center = styled.div`
+  margin: auto;
 `;
 
 const TopBar = ({ backButtonLink }) => {

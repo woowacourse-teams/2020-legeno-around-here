@@ -6,7 +6,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const StyledLink = styled(Link)`
   margin-right: auto;
-  margin-left: 8px;
+  margin-left: 0px;
 `;
 
 const BackButton = ({ linkTo }) => {
