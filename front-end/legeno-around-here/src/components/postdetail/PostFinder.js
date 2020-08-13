@@ -8,7 +8,7 @@ export const findPost = ({ accessToken, postId, setPostState }) => {
     },
   };
   axios
-    .get('http://capzzang.co.kr/posts/' + postId, config)
+    .get('http://capzzang.co.kr:8080/posts/' + postId, config)
     .then(async (response) => {
       const postResponse = await response.data;
       console.log(postResponse);
