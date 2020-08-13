@@ -19,7 +19,7 @@ export const findPost = ({ accessToken, postId, setPostState }) => {
         areaName: postResponse.area.fullName,
         sectorName: postResponse.sector.name,
         creatorName: postResponse.creator.nickname,
-        zzangCount: postResponse.postZzangResponse.postZzangCount,
+        zzangCount: postResponse.zzang.count,
         comments: postResponse.comments,
       });
     })
