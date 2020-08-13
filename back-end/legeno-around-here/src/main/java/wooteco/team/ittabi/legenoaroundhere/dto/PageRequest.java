@@ -15,8 +15,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @ToString
 public class PageRequest {
 
-    protected static final int MINIMUM_PAGE = 1;
-    protected static final int INDEX_CORRECTION = 1;
+    protected static final int MINIMUM_PAGE = 0;
     protected static final int MINIMUM_SIZE = 1;
     protected static final int DEFAULT_SIZE = 10;
     protected static final int MAXIMUM_SIZE = 50;
@@ -34,12 +33,12 @@ public class PageRequest {
 
     public int calculatePage() {
         if (Objects.isNull(page)) {
-            return MINIMUM_PAGE - INDEX_CORRECTION;
+            return MINIMUM_PAGE;
         }
         if (page < MINIMUM_PAGE) {
             throw new WrongUserInputException("Page를 잘못 [" + page + "] 입력하셨습니다.");
         }
-        return page - INDEX_CORRECTION;
+        return page;
     }
 
     public int calculateSize() {
