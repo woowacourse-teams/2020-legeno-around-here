@@ -1,6 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import OutBox from "./OutBox";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import OutBox from './OutBox';
 
 function Home() {
   return (
@@ -16,6 +16,8 @@ function Home() {
         <Link to="/posting">자랑글 남기기</Link>
         <br />
         <Link to="/sector">부문</Link>
+        <br />
+        <Link to="/home">홈페이지</Link>
       </div>
     </OutBox>
   );

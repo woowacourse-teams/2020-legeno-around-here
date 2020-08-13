@@ -1,13 +1,14 @@
-import React from "react";
-import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
-import Home from "./components/Home";
-import Join from "./components/Join";
-import Login from "./components/Login";
-import Posting from "./components/Posting";
-import MyPage from "./components/MyPage";
-import SectorPage from "./components/SectorPage";
+import React from 'react';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import Home from './components/Home';
+import Join from './components/Join';
+import Login from './components/Login';
+import Posting from './components/Posting';
+import MyPage from './components/MyPage';
+import SectorPage from './components/SectorPage';
+import HomePage from './components/pages/HomePage';
 
-import "./style.css";
+import './style.css';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/mypage" exact component={MyPage} />
         <Route path="/posting" exact component={Posting} />
         <Route path="/sector" exact component={SectorPage} />
+        <Route path="/home" exact component={HomePage} />
         <Redirect path="*" to="/" />
       </Switch>
     </BrowserRouter>
