@@ -6,7 +6,7 @@ import Sectors from '../sector/Sectors';
 import Pagination from '../sector/Pagination';
 import Bottom from '../Bottom';
 
-function SectorPage() {
+function Sector() {
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [sectors, setSectors] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -55,4 +55,4 @@ function SectorPage() {
   );
 }
 
-export default SectorPage;
+export default Sector;
