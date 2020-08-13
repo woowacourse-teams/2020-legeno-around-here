@@ -11,6 +11,13 @@ import HomePage from './components/pages/HomePage';
 import './style.css';
 
 function App() {
+  const mainArea = localStorage.getItem('mainAreaName');
+
+  if (!mainArea) {
+    localStorage.setItem('mainAreaName', '서울특별시');
+    localStorage.setItem('mainAreaId', 1);
+  }
+
   return (
     <BrowserRouter>
       <Switch>

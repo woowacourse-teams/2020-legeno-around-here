@@ -39,6 +39,7 @@ const Posting = () => {
     e.preventDefault();
 
     const url = 'http://localhost:8080/posts';
+    const mainAreaId = localStorage.getItem('mainAreaId');
 
     const formData = new FormData();
     if (images.length > 0) {
@@ -47,7 +48,7 @@ const Posting = () => {
       });
     }
     formData.append('writing', writing);
-    formData.append('areaId', 1);
+    formData.append('areaId', mainAreaId);
     formData.append('sectorId', 1);
 
     const config = {
