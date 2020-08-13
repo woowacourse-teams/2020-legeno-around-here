@@ -7,7 +7,6 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_FULL_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_SECOND_DEPTH_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_THIRD_DEPTH_NAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_USED;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
@@ -50,7 +49,6 @@ public class PostTest {
         .secondDepthName(TEST_AREA_SECOND_DEPTH_NAME)
         .thirdDepthName(TEST_AREA_THIRD_DEPTH_NAME)
         .fourthDepthName(TEST_AREA_FOURTH_DEPTH_NAME)
-        .used(TEST_AREA_USED)
         .build();
 
     @DisplayName("길이 검증 - 예외 발생")

@@ -36,7 +36,7 @@ public class PostWithCommentsCountResponse {
         return PostWithCommentsCountResponse.builder()
             .id(post.getId())
             .writing(post.getWriting())
-            .images(ImageResponse.listOf(post.getImages()))
+            .images(ImageResponse.listOf(post.getPostImages()))
             .area(AreaResponse.of(post.getArea()))
             .sector(SectorResponse.of(post.getSector()))
             .commentsCount(CommentResponse.listOf(comments).size())

@@ -15,7 +15,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.image.Image;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.PostZzang;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.ZzangState;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
@@ -52,7 +52,6 @@ public class PostService {
         User user = (User) authenticationFacade.getPrincipal();
 
         Area area = areaRepository.findById(postCreateRequest.getAreaId())
-            .filter(Area::isUsed)
             .orElseThrow(() -> new WrongUserInputException("입력하신 지역이 존재하지 않습니다."));
 
         Sector sector = sectorRepository.findById(postCreateRequest.getSectorId())
@@ -68,7 +67,7 @@ public class PostService {
         return PostResponse.of(savedPost, comments, zzangState);
     }
 
-    private List<Image> uploadImages(PostCreateRequest postCreateRequest) {
+    private List<PostImage> uploadImages(PostCreateRequest postCreateRequest) {
         if (postCreateRequest.isImagesNull()) {
             return Collections.emptyList();
         }

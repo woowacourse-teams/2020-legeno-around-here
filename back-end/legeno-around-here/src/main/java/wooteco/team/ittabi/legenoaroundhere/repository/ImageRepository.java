@@ -1,8 +1,8 @@
 package wooteco.team.ittabi.legenoaroundhere.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.image.Image;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
 
-public interface ImageRepository extends JpaRepository<Image, Long> {
+public interface ImageRepository extends JpaRepository<PostImage, Long> {
 
 }

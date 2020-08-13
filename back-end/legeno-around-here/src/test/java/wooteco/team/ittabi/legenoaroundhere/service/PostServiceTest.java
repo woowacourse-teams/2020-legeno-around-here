@@ -34,12 +34,16 @@ import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
+import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.FileConverter;
 
 public class PostServiceTest extends ServiceTest {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private PostRepository postRepository;
 
     @Autowired
     private SectorService sectorService;
@@ -275,7 +279,7 @@ public class PostServiceTest extends ServiceTest {
             TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(createdPostCreateRequest);
 
-        postService.deletePost(createdPostResponse.getId());
+        postRepository.deleteById(createdPostResponse.getId());
 
         assertThatThrownBy(() -> postService.findPost(createdPostResponse.getId()))
             .isInstanceOf(NotExistsException.class);

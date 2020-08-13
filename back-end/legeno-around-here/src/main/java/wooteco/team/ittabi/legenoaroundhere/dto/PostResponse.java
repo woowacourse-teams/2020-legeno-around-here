@@ -36,7 +36,7 @@ public class PostResponse {
         return PostResponse.builder()
             .id(post.getId())
             .writing(post.getWriting())
-            .images(ImageResponse.listOf(post.getImages()))
+            .images(ImageResponse.listOf(post.getPostImages()))
             .comments(CommentResponse.listOf(comments))
             .area(AreaResponse.of(post.getArea()))
             .sector(SectorResponse.of(post.getSector()))

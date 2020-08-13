@@ -13,12 +13,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.image.Image;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageMimeTypeException;
 import wooteco.team.ittabi.legenoaroundhere.service.ServiceTest;
 
-public class ImageUploaderTest extends ServiceTest {
+public class PostImageUploaderTest extends ServiceTest {
 
     @Autowired
     private ImageUploader imageUploader;
@@ -35,9 +35,9 @@ public class ImageUploaderTest extends ServiceTest {
         MultipartFile multipartFile = FileConverter
             .convert("right_image1.jpg", TEST_IMAGE_CONTENT_TYPE);
 
-        Image image = imageUploader.uploadImage(multipartFile);
+        PostImage postImage = imageUploader.uploadImage(multipartFile);
 
-        assertThat(image.getName()).isEqualTo(multipartFile.getName());
+        assertThat(postImage.getName()).isEqualTo(multipartFile.getName());
     }
 
     @DisplayName("이미지 업로드 - 실패, 이미지 파일 MIME Type 유효성 검사")
