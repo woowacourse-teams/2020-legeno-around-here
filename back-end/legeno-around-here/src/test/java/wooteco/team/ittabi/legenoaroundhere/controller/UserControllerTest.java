@@ -143,7 +143,7 @@ class UserControllerTest {
     @DisplayName("내 정보 얻기")
     void findUser() throws Exception {
         UserResponse expected = new UserResponse(TEST_USER_ID, TEST_USER_EMAIL, TEST_USER_NICKNAME,
-            null);
+            null, null);
         given(userService.findUser()).willReturn(expected);
 
         String expectedJson = objectMapper.writeValueAsString(expected);
@@ -163,7 +163,7 @@ class UserControllerTest {
     @DisplayName("내 정보 수정")
     void updateUser() throws Exception {
         UserResponse expected = new UserResponse(TEST_USER_ID, TEST_USER_EMAIL, TEST_USER_NICKNAME,
-            null);
+            null, null);
         given(userService.updateUser(any())).willReturn(expected);
 
         String expectedJson = objectMapper.writeValueAsString(expected);
