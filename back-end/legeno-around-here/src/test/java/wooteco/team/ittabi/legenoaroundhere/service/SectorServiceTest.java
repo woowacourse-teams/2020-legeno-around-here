@@ -22,14 +22,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import wooteco.team.ittabi.legenoaroundhere.config.AuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
@@ -43,13 +37,9 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotUniqueException;
-import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
 import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 
-@DataJpaTest
-@Import({SectorService.class, UserService.class, JwtTokenGenerator.class,
-    AuthenticationFacade.class})
-class SectorServiceTest {
+class SectorServiceTest extends ServiceTest {
 
     @Autowired
     private SectorService sectorService;
@@ -82,13 +72,6 @@ class SectorServiceTest {
 
         return userRepository.findById(userId)
             .orElseThrow(() -> new NotExistsException("해당하는 사용자가 존재하지 않습니다."));
-    }
-
-    private void setAuthentication(User user) {
-        UserDetails userDetails = userService.loadUserByUsername(user.getEmailByString());
-        Authentication authToken = new UsernamePasswordAuthenticationToken(
-            user, "TestCredentials", userDetails.getAuthorities());
-        authenticationFacade.setAuthentication(authToken);
     }
 
     @DisplayName("Sector 생성 - 성공")
@@ -379,6 +362,10 @@ class SectorServiceTest {
             }
         }
         Collections.reverse(sectorIds);
-        assertThat(sectorService.findBestSectors(count)).isEqualTo(sectorIds.subList(0, count));
+
+        List<Long> bestSectorIds = sectorService.findBestSectors(count).stream()
+            .map(SectorResponse::getId)
+            .collect(Collectors.toList());
+        assertThat(bestSectorIds).isEqualTo(sectorIds.subList(0, count));
     }
 }

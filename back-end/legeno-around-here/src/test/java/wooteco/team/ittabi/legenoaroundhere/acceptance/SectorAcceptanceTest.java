@@ -332,7 +332,7 @@ public class SectorAcceptanceTest extends AcceptanceTest {
         // 유효하지 않은 필드로 정렬
         findAllSectorWithWrongParameter(accessToken, "page=-1&size=1&sortedBy=id&direction=asc");
         findAllSectorWithWrongParameter(accessToken, "page=0&size=-1&sortedBy=id&direction=asc");
-        findAllSectorWithWrongParameter(accessToken, "page=0&size=51&sortedBy=id&direction=asc");
+        findAllSectorWithWrongParameter(accessToken, "page=0&size=501&sortedBy=id&direction=asc");
         findAllSectorWithWrongParameter(accessToken, "page=0&size=1&sortedBy=id&direction=abc");
         findAllSectorWithWrongParameter(accessToken, "page=ㄱ&size=1&sortedBy=id");
         findAllSectorWithWrongParameter(accessToken, "page=0&size=ㄴ&sortedBy=id");
