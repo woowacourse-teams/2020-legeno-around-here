@@ -19,7 +19,7 @@ const Form = styled.form`
 const PostingBox = styled.div`
   width: 100%;
   height: 100%;
-  background-color: rgba(240, 240, 240, 1);
+  background-color: white;
   text-align: center;
 `;
 
