@@ -179,7 +179,7 @@ function JoinForm() {
             value={email}
             onChange={handleChangeEmail}
           />
-          {emailCheck}
+          <Label>{emailCheck}</Label>
         </InputSection>
         <InputSection>
           <Label>닉네임</Label>
@@ -189,7 +189,7 @@ function JoinForm() {
             value={nickname}
             onChange={handleChangeNickname}
           />
-          {nicknameCheck}
+          <Label>{nicknameCheck}</Label>
         </InputSection>
         <InputSection>
           <Label>비밀번호</Label>
@@ -199,14 +199,14 @@ function JoinForm() {
             value={password}
             onChange={handleChangePassword}
           />
-          {passwordCheck}
+          <Label>{passwordCheck}</Label>
           <Input
             type="password"
             placeholder="비밀번호 확인"
             value={passwordRepeat}
             onChange={handleChangePasswordRepeat}
           />
-          {passwordRepeatCheck}
+          <Label>{passwordRepeatCheck}</Label>
         </InputSection>
         <InputSection>
           <Button type="submit">회원가입</Button>
