@@ -278,14 +278,14 @@ public class SectorAcceptanceTest extends AcceptanceTest {
 
         // 부문 1Page 20Size를 정렬(기준:id 방향:오름차순) 조회
         List<AdminSectorResponse> sectors
-            = findAllSectorWithParameter(accessToken, "page=1&size=20&sortedBy=id&direction=asc");
+            = findAllSectorWithParameter(accessToken, "page=0&size=20&sortedBy=id&direction=asc");
         assertThat(sectors).hasSize(20);
         List<Long> expectedIds = ids.subList(0, 20);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
         // 부문 1Page 20Size를 정렬(기준:id 방향:내림차순) 조회
         sectors = findAllSectorWithParameter(accessToken,
-            "page=1&size=20&sortedBy=id&direction=desc");
+            "page=0&size=20&sortedBy=id&direction=desc");
         assertThat(sectors).hasSize(20);
         expectedIds = ids.subList(80, 100);
         Collections.reverse(expectedIds);
@@ -293,7 +293,7 @@ public class SectorAcceptanceTest extends AcceptanceTest {
 
         // 부문 2Page 20Size를 정렬(기준:id 방향:오름차순) 조회
         sectors = findAllSectorWithParameter(accessToken,
-            "page=2&size=20&sortedBy=id&direction=asc");
+            "page=1&size=20&sortedBy=id&direction=asc");
         assertThat(sectors).hasSize(20);
         expectedIds = ids.subList(20, 40);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
@@ -309,34 +309,34 @@ public class SectorAcceptanceTest extends AcceptanceTest {
         expectedIds = ids.subList(0, 1);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
-        sectors = findAllSectorWithParameter(accessToken, "page=1&sortedBy=id&direction=asc");
+        sectors = findAllSectorWithParameter(accessToken, "page=0&sortedBy=id&direction=asc");
         assertThat(sectors).hasSize(10);
         expectedIds = ids.subList(0, 10);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
-        sectors = findAllSectorWithParameter(accessToken, "page=1&size=&sortedBy=id&direction=asc");
+        sectors = findAllSectorWithParameter(accessToken, "page=0&size=&sortedBy=id&direction=asc");
         assertThat(sectors).hasSize(10);
         expectedIds = ids.subList(0, 10);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
-        sectors = findAllSectorWithParameter(accessToken, "page=1&size=1&sortedBy=id");
+        sectors = findAllSectorWithParameter(accessToken, "page=0&size=1&sortedBy=id");
         assertThat(sectors).hasSize(1);
         expectedIds = ids.subList(0, 1);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
-        sectors = findAllSectorWithParameter(accessToken, "page=1&size=1&sortedBy=id&direction=");
+        sectors = findAllSectorWithParameter(accessToken, "page=0&size=1&sortedBy=id&direction=");
         assertThat(sectors).hasSize(1);
         expectedIds = ids.subList(0, 1);
         assertThat(getSectorIds(sectors)).isEqualTo(expectedIds);
 
         // 유효하지 않은 필드로 정렬
         findAllSectorWithWrongParameter(accessToken, "page=-1&size=1&sortedBy=id&direction=asc");
-        findAllSectorWithWrongParameter(accessToken, "page=1&size=-1&sortedBy=id&direction=asc");
-        findAllSectorWithWrongParameter(accessToken, "page=1&size=51&sortedBy=id&direction=asc");
-        findAllSectorWithWrongParameter(accessToken, "page=1&size=1&sortedBy=id&direction=abc");
+        findAllSectorWithWrongParameter(accessToken, "page=0&size=-1&sortedBy=id&direction=asc");
+        findAllSectorWithWrongParameter(accessToken, "page=0&size=51&sortedBy=id&direction=asc");
+        findAllSectorWithWrongParameter(accessToken, "page=0&size=1&sortedBy=id&direction=abc");
         findAllSectorWithWrongParameter(accessToken, "page=ㄱ&size=1&sortedBy=id");
-        findAllSectorWithWrongParameter(accessToken, "page=1&size=ㄴ&sortedBy=id");
-        findAllSectorWithWrongParameter(accessToken, "page=1&size=20&sortedBy=ㄷ&direction=asc");
+        findAllSectorWithWrongParameter(accessToken, "page=0&size=ㄴ&sortedBy=id");
+        findAllSectorWithWrongParameter(accessToken, "page=0&size=20&sortedBy=ㄷ&direction=asc");
     }
 
     /**
@@ -372,26 +372,26 @@ public class SectorAcceptanceTest extends AcceptanceTest {
         }
 
         List<SectorResponse> sectors
-            = searchAvailableSectorsWithParameter(accessToken, "page=10&size=11");
+            = searchAvailableSectorsWithParameter(accessToken, "page=9&size=11");
         assertThat(sectors).hasSize(1);
 
-        sectors = searchAvailableSectorsWithParameter(accessToken, "keyword=&page=10&size=11");
-        assertThat(sectors).hasSize(1);
-
-        sectors
-            = searchAvailableSectorsWithParameter(accessToken, "keyword=SECTOR&page=10&size=11");
+        sectors = searchAvailableSectorsWithParameter(accessToken, "keyword=&page=9&size=11");
         assertThat(sectors).hasSize(1);
 
         sectors
-            = searchAvailableSectorsWithParameter(accessToken, "keyword=sector&page=10&size=11");
+            = searchAvailableSectorsWithParameter(accessToken, "keyword=SECTOR&page=9&size=11");
         assertThat(sectors).hasSize(1);
 
         sectors
-            = searchAvailableSectorsWithParameter(accessToken, "keyword=Sector&page=10&size=11");
+            = searchAvailableSectorsWithParameter(accessToken, "keyword=sector&page=9&size=11");
         assertThat(sectors).hasSize(1);
 
         sectors
-            = searchAvailableSectorsWithParameter(accessToken, "keyword=9&page=1&size=20");
+            = searchAvailableSectorsWithParameter(accessToken, "keyword=Sector&page=9&size=11");
+        assertThat(sectors).hasSize(1);
+
+        sectors
+            = searchAvailableSectorsWithParameter(accessToken, "keyword=9&page=0&size=20");
         assertThat(sectors).hasSize(19);
     }
 
@@ -608,7 +608,7 @@ public class SectorAcceptanceTest extends AcceptanceTest {
     }
 
     private List<AdminSectorResponse> findAllSector(String accessToken) {
-        return findAllSectorWithParameter(accessToken, "page=1&size=10&sortedBy=id&direction=asc");
+        return findAllSectorWithParameter(accessToken, "page=0&size=10&sortedBy=id&direction=asc");
     }
 
     private List<AdminSectorResponse> findAllSectorWithParameter(String accessToken,
@@ -639,7 +639,7 @@ public class SectorAcceptanceTest extends AcceptanceTest {
 
     private List<SectorResponse> searchAvailableSectors(String accessToken) {
         return searchAvailableSectorsWithParameter(accessToken,
-            "page=1&size=10&sortedBy=id&direction=asc");
+            "page=0&size=10&sortedBy=id&direction=asc");
     }
 
     private List<SectorResponse> searchAvailableSectorsWithParameter(String accessToken,

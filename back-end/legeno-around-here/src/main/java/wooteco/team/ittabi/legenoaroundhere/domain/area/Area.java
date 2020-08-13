@@ -36,4 +36,17 @@ public class Area extends BaseEntity {
 
     @Column(nullable = false)
     private String fourthDepthName;
+
+    public String getLastDepthName() {
+        if (!fourthDepthName.isEmpty()) {
+            return fourthDepthName;
+        }
+        if (!thirdDepthName.isEmpty()) {
+            return thirdDepthName;
+        }
+        if (!secondDepthName.isEmpty()) {
+            return secondDepthName;
+        }
+        return firstDepthName;
+    }
 }

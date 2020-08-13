@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
-const PostsStyle = styled.div`
+const SectorsStyle = styled.div`
   font-size: 16px;
   height: 588px;
   font-weight: bold;
@@ -13,7 +13,7 @@ const PostsStyle = styled.div`
   border-radius: 1px;
 `;
 
-const PostStyle = styled.div`
+const SectorStyle = styled.div`
   width: 320px;
   height: 60px;
   font-size: 16px;
@@ -36,34 +36,34 @@ const PostStyle = styled.div`
   }
 `;
 
-const PostTitleStyle = styled.div`
+const SectorTitleStyle = styled.div`
   margin-left: 10px;
   height: 30px;
   line-height: 30px;
   text-align: left;
 `;
 
-const PostDescriptionStyle = styled.div`
+const SectorDescriptionStyle = styled.div`
   margin-left: 10px;
   height: 30px;
   line-height: 30px;
   text-align: left;
 `;
 
-const Posts = ({ posts, loading }) => {
+const Sectors = ({ sectors, loading }) => {
   if (loading) {
     return <h2>Loading...</h2>;
   }
   return (
-    <PostsStyle className="list">
-      {posts.map((post) => (
-        <PostStyle key={post.id}>
-          <PostTitleStyle>{post.name}</PostTitleStyle>
-          <PostDescriptionStyle>{post.description}</PostDescriptionStyle>
-        </PostStyle>
+    <SectorsStyle className="list">
+      {sectors.map((sector) => (
+        <SectorStyle key={sector.id}>
+          <SectorTitleStyle>{sector.name}</SectorTitleStyle>
+          <SectorDescriptionStyle>{sector.description}</SectorDescriptionStyle>
+        </SectorStyle>
       ))}
-    </PostsStyle>
+    </SectorsStyle>
   );
 };
 
-export default Posts;
+export default Sectors;

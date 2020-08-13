@@ -1,12 +1,12 @@
-import React from "react";
-import { fade, makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import Badge from "@material-ui/core/Badge";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import NotificationsIcon from "@material-ui/icons/Notifications";
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import Badge from '@material-ui/core/Badge';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import NotificationsIcon from '@material-ui/icons/Notifications';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -17,14 +17,14 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     // display: 'none',
-    [theme.breakpoints.up("sm")]: {
-      display: "block",
+    [theme.breakpoints.up('sm')]: {
+      display: 'block',
     },
   },
   sectionDesktop: {
     // display: 'none',
-    [theme.breakpoints.up("md")]: {
-      display: "flex",
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
     },
   },
 }));
@@ -53,7 +53,7 @@ export default function PrimarySearchAppBar() {
             aria-label="show 17 new notifications"
             color="inherit"
             onClick={() => {
-              alert("아직 신고기능이 완성되지 않았습니다!");
+              alert('아직 신고기능이 완성되지 않았습니다!');
             }}
           >
             <Badge badgeContent={0} color="secondary">
