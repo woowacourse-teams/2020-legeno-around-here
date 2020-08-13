@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const DEFAULT_SIZE = 50;
-const DEFAULT_SORTEDBY = 'id';
+const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
 
 export const getAllCurrentPosts = async (page, accessToken) => {
@@ -16,7 +16,7 @@ export const getAllCurrentPosts = async (page, accessToken) => {
       `http://localhost:8080/posts?` +
         `page=${page}&` +
         `size=${DEFAULT_SIZE}&` +
-        `sortedBy=${DEFAULT_SORTEDBY}&` +
+        `sortedBy=${DEFAULT_SORTED_BY}&` +
         `direction=${DEFAULT_DIRECTION}&` +
         `areaIds=&` +
         `sectorIds=`,
