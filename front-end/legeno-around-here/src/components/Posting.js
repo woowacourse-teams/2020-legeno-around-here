@@ -62,7 +62,7 @@ const Posting = () => {
         const response = await axios.post(url, formData, config);
         if (response.status === 201) {
           alert('전송에 성공했습니다!');
-          document.location.href = '/';
+          document.location.href = response.headers.location;
         }
       } catch (e) {
         console.log(e);

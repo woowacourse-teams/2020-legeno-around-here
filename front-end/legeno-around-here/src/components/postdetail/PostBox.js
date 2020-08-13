@@ -18,7 +18,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 345,
+    width: '95%',
     margin: '10px auto',
   },
   media: {
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PostBox = () => {
+const PostBox = ({ writing }) => {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -64,18 +64,16 @@ const PostBox = () => {
         title="Shrimp and Chorizo Paella"
         subheader="September 14, 2016"
       />
+      <CardContent>
+        <Typography variant="body2" color="textSecondary" component="p">
+          {writing}
+        </Typography>
+      </CardContent>
       <CardMedia
         className={classes.media}
         image="/static/images/cards/paella.jpg"
         title="Paella dish"
       />
-      <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the
-          mussels, if you like.
-        </Typography>
-      </CardContent>
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">
           <FavoriteIcon />
