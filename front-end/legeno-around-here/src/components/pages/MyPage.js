@@ -31,25 +31,25 @@ function MyPage() {
 
   return (
     <>
-        <TopBar backButtonLink="/"></TopBar>
-        <TopSection>
-          <ProfilePhoto></ProfilePhoto>
-          <PrivacyBox>
-            <Nickname>{nickname}</Nickname>
-            <Email>{email}</Email>
-          </PrivacyBox>
-          <PrivacyEditBox>수정</PrivacyEditBox>
-        </TopSection>
-        <AwardsSection>
-          <AwardSummary awardName="TOP3" awardCount={1}></AwardSummary>
-          <AwardSummary awardName="TOP10" awardCount={0}></AwardSummary>
-          <AwardSummary awardName="TOP50" awardCount={12}></AwardSummary>
-        </AwardsSection>
-        <NavSection>
-          <NavElement linkTo="/">수상내역</NavElement>
-          <NavElement linkTo="/">작성글</NavElement>
-          <NavElement linkTo="/">작성 댓글</NavElement>
-        </NavSection>
+      <TopBar backButtonLink="/"></TopBar>
+      <TopSection>
+        <ProfilePhoto></ProfilePhoto>
+        <PrivacyBox>
+          <Nickname>{nickname}</Nickname>
+          <Email>{email}</Email>
+        </PrivacyBox>
+        <PrivacyEditBox>수정</PrivacyEditBox>
+      </TopSection>
+      <AwardsSection>
+        <AwardSummary awardName="TOP3" awardCount={1}></AwardSummary>
+        <AwardSummary awardName="TOP10" awardCount={0}></AwardSummary>
+        <AwardSummary awardName="TOP50" awardCount={12}></AwardSummary>
+      </AwardsSection>
+      <NavSection>
+        <NavElement linkTo="/">수상내역</NavElement>
+        <NavElement linkTo="/">작성글</NavElement>
+        <NavElement linkTo="/">작성 댓글</NavElement>
+      </NavSection>
       <Bottom selected={PROFILE}></Bottom>
     </>
   );

@@ -19,10 +19,7 @@ import {
 
 const useStyles = makeStyles({
   bottomBarStyle: {
-    width: '100%',
-    position: 'fixed',
-    bottom: 0,
-    borderTop: '1px solid #dddddd',
+    width: 500,
   },
 });
 
