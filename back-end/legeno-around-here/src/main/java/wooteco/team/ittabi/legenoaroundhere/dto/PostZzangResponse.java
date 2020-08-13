@@ -15,8 +15,8 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.ZzangState;
 @ToString
 public class PostZzangResponse {
 
-    private int postZzangCount;
-    private String zzangState;
+    private int count;
+    private String state;
 
     public static PostZzangResponse of(int likeCount, ZzangState zzangState) {
         return new PostZzangResponse(likeCount, zzangState.name());

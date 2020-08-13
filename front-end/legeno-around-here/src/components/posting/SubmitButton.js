@@ -1,17 +1,20 @@
+import React from 'react';
 import styled from 'styled-components';
+import IconButton from '@material-ui/core/IconButton';
+import SendRoundedIcon from '@material-ui/icons/SendRounded';
 
-import submit from '../../images/submit.png';
-
-const SubmitButton = styled.button`
-  background: url(${submit}) no-repeat;
-  background-size: 30px;
-  width: 30px;
-  height: 30px;
-  margin-right: 8px;
+const MoveToRight = styled.div`
   margin-left: auto;
-  border: 0;
-  outline: 0;
-  cursor: pointer;
 `;
+
+const SubmitButton = () => {
+  return (
+    <MoveToRight>
+      <IconButton type="submit" edge="end">
+        <SendRoundedIcon />
+      </IconButton>
+    </MoveToRight>
+  );
+};
 
 export default SubmitButton;

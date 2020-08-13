@@ -1,4 +1,4 @@
-package wooteco.team.ittabi.legenoaroundhere.domain.post.image;
+package wooteco.team.ittabi.legenoaroundhere.domain.util;
 
 import java.util.Arrays;
 import java.util.Objects;

@@ -10,7 +10,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.Comment;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.comment.Comment;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.ZzangState;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
@@ -22,6 +23,7 @@ public class CommentResponse {
 
     private Long id;
     private String writing;
+    private CommentZzangResponse zzang;
     private UserResponse creator;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
@@ -30,6 +32,7 @@ public class CommentResponse {
         return CommentResponse.builder()
             .id(comment.getId())
             .writing(comment.getWriting())
+            .zzang(new CommentZzangResponse(23, ZzangState.ACTIVATED.name()))
             .creator(UserResponse.from(comment.getCreator()))
             .createdAt(comment.getCreatedAt())
             .modifiedAt(comment.getModifiedAt())

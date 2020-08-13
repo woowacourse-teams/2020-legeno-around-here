@@ -3,6 +3,7 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,7 @@ import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
 public class SectorService {
 
     private static final String DB_LIKE_FORMAT = "%%%s%%";
+    protected static final int DEFAULT_PAGING_NUMBER = 0;
     private final SectorRepository sectorRepository;
     private final IAuthenticationFacade authenticationFacade;
 
@@ -133,5 +135,12 @@ public class SectorService {
         validateSectorUnique(sector);
         sector.setState(sectorUpdateStateRequest.getSectorState(),
             sectorUpdateStateRequest.getReason(), user);
+    }
+
+    public List<SectorResponse> findBestSectors(int count) {
+        List<Sector> sectors = sectorRepository
+            .findAllByStateInAndOrderByPostsCountDesc(PageRequest.of(DEFAULT_PAGING_NUMBER, count),
+                SectorState.getAllAvailable());
+        return SectorResponse.listOf(sectors);
     }
 }

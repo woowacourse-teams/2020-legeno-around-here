@@ -51,8 +51,8 @@ public class PostZzangServiceTest extends ServiceTest {
         PostZzangResponse activatePostZzangResponse = postZzangService
             .pressPostZzang(postResponse.getId());
 
-        assertThat(activatePostZzangResponse.getPostZzangCount()).isEqualTo(1L);
-        assertThat(activatePostZzangResponse.getZzangState())
+        assertThat(activatePostZzangResponse.getCount()).isEqualTo(1L);
+        assertThat(activatePostZzangResponse.getState())
             .isEqualTo(ZzangState.ACTIVATED.name());
     }
 
@@ -63,8 +63,8 @@ public class PostZzangServiceTest extends ServiceTest {
         PostZzangResponse inactivatedPostZzangResponse = postZzangService
             .pressPostZzang(postResponse.getId());
 
-        assertThat(inactivatedPostZzangResponse.getPostZzangCount()).isEqualTo(0L);
-        assertThat(inactivatedPostZzangResponse.getZzangState())
+        assertThat(inactivatedPostZzangResponse.getCount()).isEqualTo(0L);
+        assertThat(inactivatedPostZzangResponse.getState())
             .isEqualTo(ZzangState.INACTIVATED.name());
     }
 }

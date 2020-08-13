@@ -65,6 +65,7 @@ public class CommentServiceTest extends ServiceTest {
         assertThat(createdCommentResponse.getId()).isNotNull();
         assertThat(createdCommentResponse.getWriting()).isEqualTo(TEST_POST_WRITING);
         assertThat(createdCommentResponse.getCreator()).isEqualTo(UserResponse.from(user));
+        assertThat(createdCommentResponse.getZzang()).isNotNull();
     }
 
     @DisplayName("댓글 조회 - 성공")
@@ -82,6 +83,7 @@ public class CommentServiceTest extends ServiceTest {
             .isEqualTo(createdCommentResponse.getWriting());
         assertThat(foundCommentResponse.getCreator())
             .isEqualTo(createdCommentResponse.getCreator());
+        assertThat(createdCommentResponse.getZzang()).isNotNull();
     }
 
 

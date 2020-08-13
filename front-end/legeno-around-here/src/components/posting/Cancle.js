@@ -22,7 +22,7 @@ const CancleLink = styled(Link)`
 
 const Cancle = ({ linkTo }) => {
   return (
-    <CancleLink to={ linkTo }>
+    <CancleLink to={linkTo}>
       <CancleButton></CancleButton>
     </CancleLink>
   );
