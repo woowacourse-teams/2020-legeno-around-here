@@ -5,8 +5,9 @@ import { getAccessTokenFromCookie } from '../../util/TokenUtils';
 import Sectors from '../sector/Sectors';
 import Pagination from '../sector/Pagination';
 import Bottom from '../Bottom';
+import {SECTOR} from "../../constants/BottomItems";
 
-function SectorPage() {
+function Sector() {
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [sectors, setSectors] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -50,9 +51,9 @@ function SectorPage() {
         <br />
         <br />
         <br />
-      <Bottom></Bottom>
+      <Bottom selected={SECTOR}></Bottom>
     </>
   );
 }
 
-export default SectorPage;
+export default Sector;

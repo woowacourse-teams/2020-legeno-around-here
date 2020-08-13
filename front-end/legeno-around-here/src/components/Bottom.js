@@ -9,7 +9,13 @@ import CategoryIcon from '@material-ui/icons/Category';
 import PersonIcon from '@material-ui/icons/Person';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
 
-import { HOME, PROFILE, WRITING, SECTOR, RANK } from '../constants/BottomItems';
+import {
+  HOME,
+  PROFILE,
+  WRITING,
+  SECTOR,
+  RANKING,
+} from '../constants/BottomItems';
 
 const useStyles = makeStyles({
   bottomBarStyle: {
@@ -36,41 +42,41 @@ const Bottom = ({ selected }) => {
       showLabels
       position="fixed"
     >
-      <BottomNavigationAction
-        component={Link}
-        to="/"
-        label="홈"
-        value={HOME}
-        icon={<HomeIcon />}
-      />
-      <BottomNavigationAction
-        component={Link}
-        to="/"
-        label="랭킹"
-        value={RANK}
-        icon={<EqualizerIcon />}
-      />
-      <BottomNavigationAction
-        component={Link}
-        to="/posting"
-        label="글쓰기"
-        value={WRITING}
-        icon={<CreateIcon />}
-      />
-      <BottomNavigationAction
-        component={Link}
-        to="/sector"
-        label="부문"
-        value={SECTOR}
-        icon={<CategoryIcon />}
-      />
-      <BottomNavigationAction
-        component={Link}
-        to="/mypage"
-        label="프로필"
-        value={PROFILE}
-        icon={<PersonIcon />}
-      />
+    <BottomNavigationAction
+      component={Link}
+      to="/"
+      label="홈"
+      value={HOME}
+      icon={<HomeIcon />}
+    />
+    <BottomNavigationAction
+      component={Link}
+      to="/ranking"
+      label="랭킹"
+      value={RANKING}
+      icon={<EqualizerIcon />}
+    />
+    <BottomNavigationAction
+      component={Link}
+      to="/posting"
+      label="글쓰기"
+      value={WRITING}
+      icon={<CreateIcon />}
+    />
+    <BottomNavigationAction
+      component={Link}
+      to="/sector"
+      label="부문"
+      value={SECTOR}
+      icon={<CategoryIcon />}
+    />
+    <BottomNavigationAction
+      component={Link}
+      to="/mypage"
+      label="프로필"
+      value={PROFILE}
+      icon={<PersonIcon />}
+    />
     </BottomNavigation>
   );
 };

@@ -8,7 +8,7 @@ import { HOME } from '../../constants/BottomItems';
 import PostItem from '../post/PostItem';
 import Loading from '../Loading';
 
-const HomePage = () => {
+const Home = () => {
   const [page] = useState(0);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -36,4 +36,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default Home;

@@ -43,7 +43,7 @@ const PostItem = ({ post }) => {
     creator,
     images,
     id,
-    postZzangResponse,
+    zzang,
     sector,
     writing,
   } = post;
@@ -80,12 +80,12 @@ const PostItem = ({ post }) => {
         </CardContent>
         <CardActions disableSpacing>
           <IconButton>
-            {postZzangResponse.zzangState === 'ACTIVATE' ? (
+            {zzang.state === 'ACTIVATE' ? (
               <FavoriteIcon />
             ) : (
               <FavoriteBorderIcon />
             )}
-            {postZzangResponse.postZzangCount}
+            {zzang.count}
           </IconButton>
           <IconButton>
             <CommentIcon />
@@ -129,12 +129,12 @@ const PostItem = ({ post }) => {
     //   </CardContent>
     //   <CardActions disableSpacing>
     //     <IconButton>
-    //       {postZzangResponse.zzangState === 'ACTIVATE' ? (
+    //       {zzang.state === 'ACTIVATE' ? (
     //         <FavoriteIcon />
     //       ) : (
     //         <FavoriteBorderIcon />
     //       )}
-    //       {postZzangResponse.postZzangCount}
+    //       {zzang.count}
     //     </IconButton>
     //     <IconButton>
     //       <CommentIcon />
