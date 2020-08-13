@@ -134,4 +134,10 @@ public class SectorService {
         sector.setState(sectorUpdateStateRequest.getSectorState(),
             sectorUpdateStateRequest.getReason(), user);
     }
+
+    public List<SectorResponse> findBestSectors(int count) {
+        List<Sector> topTwentySectors = sectorRepository
+            .findTop20ByStateInAndOrderByPosts(SectorState.getAllAvailable());
+        return SectorResponse.listOf(topTwentySectors.subList(0, count));
+    }
 }

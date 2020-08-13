@@ -17,4 +17,7 @@ public interface SectorRepository extends JpaRepository<Sector, Long> {
 
     Page<Sector> findAllByStateInAndNameIsLike(Pageable pageable, Iterable<SectorState> states,
         Name keyword);
+
+    List<Sector> findTop20ByStateInAndOrderByPosts(Iterable<SectorState> states);
+
 }

@@ -1,7 +1,10 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
+import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ANOTHER_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ANOTHER_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
@@ -15,6 +18,7 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import io.restassured.RestAssured;
+import io.restassured.config.RestAssuredConfig;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -391,9 +395,67 @@ public class SectorAcceptanceTest extends AcceptanceTest {
         assertThat(sectors).hasSize(19);
     }
 
+    /**
+     * Feature: 인기 부문 조회, Scenario: 인기 부문을 조회한다.
+     * <p>
+     * Given 부문을 10개 등록한다, 부문이 10개 등록된다.
+     * <p>
+     * 부문 1) 글 0건 + 삭제 글 8건 부문 2) 글 1건 + 삭제 글 6건 부문 3) 글 2건 + 삭제 글 4건 부문 4) 글 3건 + 삭제 글 2건 부문 5) 글
+     * 4건 + 삭제 글 0건
+     * <p>
+     * When 인기 부문 조회 Then 4개가 조회된다.
+     * <p>
+     * When 인기 부문 4개 조회 Then 4개가 조회된다.
+     * <p>
+     * When 인기 부문 2개 조회 Then 2개가 조회된다.
+     */
+    @DisplayName("인기 부문 조회")
+    @Test
+    void findBestSectorsWithCounts() {
+        createAdmin(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_PASSWORD);
+        TokenResponse tokenResponse = login(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD);
+        String accessToken = tokenResponse.getAccessToken();
+
+        List<Long> sectorIds = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            Long sectorId
+                = createSector(accessToken, TEST_SECTOR_NAME + i, TEST_SECTOR_DESCRIPTION);
+            sectorIds.add(sectorId);
+            for (int j = 0; j <= i; j++) {
+                createPostWithoutImageWithSector(accessToken, sectorId);
+            }
+            for (int k = 0; k < 8 - (2 * i); k++) {
+                Long postId = createPostWithoutImageWithSector(accessToken, sectorId);
+                deletePost(accessToken, postId);
+            }
+        }
+
+        List<SectorResponse> sectorResponses = findBestSectors(accessToken, "");
+        assertThat(sectorResponses).hasSize(4);
+        assertThat(getSectorIdsBy(sectorResponses)).isEqualTo(sectorIds.subList(1, 5));
+
+        sectorResponses = findBestSectors(accessToken, "count=");
+        assertThat(sectorResponses).hasSize(4);
+        assertThat(getSectorIdsBy(sectorResponses)).isEqualTo(sectorIds.subList(1, 5));
+
+        sectorResponses = findBestSectors(accessToken, "count=4");
+        assertThat(sectorResponses).hasSize(4);
+        assertThat(getSectorIdsBy(sectorResponses)).isEqualTo(sectorIds.subList(1, 5));
+
+        sectorResponses = findBestSectors(accessToken, "count=2");
+        assertThat(sectorResponses).hasSize(2);
+        assertThat(getSectorIdsBy(sectorResponses)).isEqualTo(sectorIds.subList(3, 5));
+    }
+
     private List<Long> getSectorIds(List<AdminSectorResponse> sectors) {
         return sectors.stream()
             .map(AdminSectorResponse::getId)
+            .collect(Collectors.toList());
+    }
+
+    private List<Long> getSectorIdsBy(List<SectorResponse> sectors) {
+        return sectors.stream()
+            .map(SectorResponse::getId)
             .collect(Collectors.toList());
     }
 
@@ -413,6 +475,33 @@ public class SectorAcceptanceTest extends AcceptanceTest {
             .statusCode(HttpStatus.CREATED.value())
             .extract()
             .header("Location");
+    }
+
+    private Long createPostWithoutImageWithSector(String accessToken, Long sectorId) {
+        String location = given()
+            .log().all()
+            .formParam("writing", TEST_POST_WRITING)
+            .formParam("areaId", TEST_AREA_ID)
+            .formParam("sectorId", sectorId)
+            .header("X-AUTH-TOKEN", accessToken)
+            .config(RestAssuredConfig.config()
+                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+            .when()
+            .post("/posts")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract()
+            .header("Location");
+        return getIdFromUrl(location);
+    }
+
+    private void deletePost(String accessToken, Long id) {
+        given()
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .delete("/posts/" + id)
+            .then()
+            .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     private Long createSector(String accessToken, String sectorName, String sectorDescription) {
@@ -577,6 +666,20 @@ public class SectorAcceptanceTest extends AcceptanceTest {
             .extract()
             .jsonPath()
             .getList("content", SectorDetailResponse.class);
+    }
+
+    private List<SectorResponse> findBestSectors(String accessToken, String parameter) {
+        return given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .get("/sectors/best?" + parameter)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .log().body()
+            .extract()
+            .jsonPath()
+            .getList(".", SectorResponse.class);
     }
 
     private void deleteSector(String accessToken, Long id) {
