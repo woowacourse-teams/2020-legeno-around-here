@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+
+import TopBar from './posting/TopBar';
 import { getAccessTokenFromCookie } from '../util/TokenUtils';
 import OutBox from './OutBox';
-import TopBarBackground from './posting/TopBarBackground';
 import Cancle from './posting/Cancle';
 import TextInput from './posting/TextInput';
 import ImageInput from './posting/ImageInput';
@@ -80,12 +81,7 @@ const Posting = () => {
     <>
       <OutBox>
         <Form onSubmit={submitPost}>
-          <TopBarBackground>
-            <Cancle linkTo="/"></Cancle>
-            <div>성북구</div>
-            <SubmitButton />
-          </TopBarBackground>
-
+          <TopBar cancelButtonLink="/" />
           <PostingBox>
             <TextInput
               placeholder="자랑거리를 입력해주세요"

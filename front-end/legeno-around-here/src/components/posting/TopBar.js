@@ -4,7 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 
 import { MAIN_COLOR } from '../../constants/Color';
-import BackButton from './BackButton';
+import CancelButton from './CancelButton';
+import Submit from './SubmitButton';
 import { HEIGHT, ACTUAL_ITEM_SPACE_WIDTH } from '../../constants/TopBar';
 
 const useStyles = makeStyles(() => ({
@@ -23,16 +24,16 @@ const ActualItemSpace = styled.div`
   margin: '0 auto';
   display: flex;
   flex-direction: row;
-  border: 1px solid red;
 `;
 
-const TopBar = ({ backButtonLink }) => {
+const TopBar = ({ cancelButtonLink }) => {
   const classes = useStyles();
 
   return (
     <AppBar position="sticky" className={classes.topBarBackground}>
       <ActualItemSpace>
-        <BackButton linkTo={backButtonLink} />
+        <CancelButton linkTo={cancelButtonLink} />
+        <Submit />
       </ActualItemSpace>
     </AppBar>
   );
