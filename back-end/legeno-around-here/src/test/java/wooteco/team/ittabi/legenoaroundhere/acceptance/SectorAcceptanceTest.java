@@ -430,21 +430,23 @@ public class SectorAcceptanceTest extends AcceptanceTest {
             }
         }
 
+        Collections.reverse(sectorIds);
+
         List<SectorResponse> sectorResponses = findBestSectors(accessToken, "");
         assertThat(sectorResponses).hasSize(4);
-        assertThat(getSectorIdsBy(sectorResponses)).isEqualTo(sectorIds.subList(1, 5));
+        assertThat(getSectorIdsBy(sectorResponses)).isEqualTo(sectorIds.subList(0, 4));
 
-        sectorResponses = findBestSectors(accessToken, "count=");
+        sectorResponses = findBestSectors(accessToken, "?count=");
         assertThat(sectorResponses).hasSize(4);
-        assertThat(getSectorIdsBy(sectorResponses)).isEqualTo(sectorIds.subList(1, 5));
+        assertThat(getSectorIdsBy(sectorResponses)).isEqualTo(sectorIds.subList(0, 4));
 
-        sectorResponses = findBestSectors(accessToken, "count=4");
+        sectorResponses = findBestSectors(accessToken, "?count=4");
         assertThat(sectorResponses).hasSize(4);
-        assertThat(getSectorIdsBy(sectorResponses)).isEqualTo(sectorIds.subList(1, 5));
+        assertThat(getSectorIdsBy(sectorResponses)).isEqualTo(sectorIds.subList(0, 4));
 
-        sectorResponses = findBestSectors(accessToken, "count=2");
+        sectorResponses = findBestSectors(accessToken, "?count=2");
         assertThat(sectorResponses).hasSize(2);
-        assertThat(getSectorIdsBy(sectorResponses)).isEqualTo(sectorIds.subList(3, 5));
+        assertThat(getSectorIdsBy(sectorResponses)).isEqualTo(sectorIds.subList(0, 2));
     }
 
     private List<Long> getSectorIds(List<AdminSectorResponse> sectors) {
@@ -673,7 +675,7 @@ public class SectorAcceptanceTest extends AcceptanceTest {
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
             .when()
-            .get("/sectors/best?" + parameter)
+            .get("/sectors/best" + parameter)
             .then()
             .statusCode(HttpStatus.OK.value())
             .log().body()

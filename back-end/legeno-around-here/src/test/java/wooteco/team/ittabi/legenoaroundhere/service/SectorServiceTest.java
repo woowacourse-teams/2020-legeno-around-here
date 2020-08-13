@@ -3,6 +3,7 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ANOTHER_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ANOTHER_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
@@ -12,11 +13,14 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_NICKNAME;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
@@ -30,6 +34,7 @@ import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
@@ -48,6 +53,9 @@ class SectorServiceTest {
 
     @Autowired
     private SectorService sectorService;
+
+    @Autowired
+    private PostService postService;
 
     @Autowired
     private UserService userService;
@@ -334,5 +342,43 @@ class SectorServiceTest {
         AdminSectorResponse sector = sectorService.findSector(sectorId);
         assertThat(sector.getState()).isEqualTo(state);
         assertThat(sector.getReason()).isEqualTo(reason);
+    }
+
+    @DisplayName("인기 부문 N개 조회 - 성공, 게시글 요청 개수만큼 조회되는지 확인")
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4, 5})
+    void findBestSectors_CheckCount_Success(int count) {
+        for (int i = 0; i < 10; i++) {
+            SectorRequest sectorRequest
+                = new SectorRequest(TEST_SECTOR_NAME + i, TEST_SECTOR_DESCRIPTION);
+            sectorService.createSector(sectorRequest);
+        }
+        assertThat(sectorService.findBestSectors(count)).hasSize(count);
+    }
+
+    @DisplayName("인기 부문 조회 - 성공, 활성화된 게시글 순으로 조회되는지 확인")
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4, 5})
+    void findBestSectors_CheckOrder_Success(int count) {
+        List<Long> sectorIds = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            SectorRequest sectorRequest
+                = new SectorRequest(TEST_SECTOR_NAME + i, TEST_SECTOR_DESCRIPTION);
+            long sectorId = sectorService.createSector(sectorRequest).getId();
+            sectorIds.add(sectorId);
+            for (int j = 0; j <= i; j++) {
+                PostCreateRequest postCreateRequest
+                    = new PostCreateRequest(TEST_POST_WRITING, null, TEST_AREA_ID, sectorId);
+                postService.createPost(postCreateRequest);
+            }
+            for (int k = 0; k < 8 - (2 * i); k++) {
+                PostCreateRequest postCreateRequest
+                    = new PostCreateRequest(TEST_POST_WRITING, null, TEST_AREA_ID, sectorId);
+                Long postId = postService.createPost(postCreateRequest).getId();
+                postService.deletePost(postId);
+            }
+        }
+        Collections.reverse(sectorIds);
+        assertThat(sectorService.findBestSectors(count)).isEqualTo(sectorIds.subList(0, count));
     }
 }
