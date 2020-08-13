@@ -130,7 +130,7 @@ function JoinForm() {
 
   const join = useCallback(() => {
     axios
-      .post('http://localhost:8080/join', {
+      .post('http://capzzang.co.kr/join', {
         email,
         nickname,
         password,
