@@ -28,7 +28,7 @@ function Sector() {
       },
     };
     axios
-      .get('http://capzzang.co.kr/sectors?size=50', config)
+      .get('https://capzzang.co.kr:8080/sectors?size=50', config)
       .then(async (response) => {
         const userResponse = await response.data;
         setSectors(userResponse.content);

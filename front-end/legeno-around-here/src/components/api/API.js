@@ -12,7 +12,7 @@ export const getAllCurrentPosts = async (mainAreaId, page, accessToken) => {
   };
   const response = await axios
     .get(
-      `http://capzzang.co.kr/posts?` +
+      `https://capzzang.co.kr:8080/posts?` +
         `page=${page}&` +
         `size=${DEFAULT_SIZE}&` +
         `sortedBy=${DEFAULT_SORTED_BY}&` +
@@ -36,7 +36,7 @@ export const getAllAreas = async (page, accessToken, keyword) => {
   };
   const response = await axios
     .get(
-      `http://capzzang.co.kr/areas?` +
+      `https://capzzang.co.kr:8080/areas?` +
         `page=${page}&` +
         `size=${DEFAULT_SIZE}&` +
         `sortedBy=${DEFAULT_SORTED_BY}&` +
