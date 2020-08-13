@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
 
 import TopBar from './mypage/TopBar';
-import BottomBar from '../BottomBar';
+import BottomBar from './BottomBar';
+import { PROFILE } from '../constants/BottomItems';
 import { findMyInto } from './mypage/MyInfoFinder';
 import OutBox from './OutBox';
 import { getAccessTokenFromCookie } from '../util/TokenUtils';
@@ -55,7 +56,7 @@ function MyPage() {
           <NavElement linkTo="/">뀨뀨?</NavElement>
         </NavSection>
       </OutBox>
-      <BottomBar></BottomBar>
+      <BottomBar selected={PROFILE}></BottomBar>
     </>
   );
 }
