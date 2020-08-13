@@ -5,6 +5,7 @@ import { getAccessTokenFromCookie } from '../../util/TokenUtils';
 import Sectors from '../sector/Sectors';
 import Pagination from '../sector/Pagination';
 import Bottom from '../Bottom';
+import {SECTOR} from "../../constants/BottomItems";
 
 function Sector() {
   const [accessToken] = useState(getAccessTokenFromCookie());
@@ -50,7 +51,7 @@ function Sector() {
         <br />
         <br />
         <br />
-      <Bottom></Bottom>
+      <Bottom selected={SECTOR}></Bottom>
     </>
   );
 }
