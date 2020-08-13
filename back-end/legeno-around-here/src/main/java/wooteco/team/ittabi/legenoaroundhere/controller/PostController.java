@@ -71,4 +71,15 @@ public class PostController {
             .noContent()
             .build();
     }
+
+    @GetMapping("/ranking")
+    public ResponseEntity<Page<PostWithCommentsCountResponse>> searchAllRanking(
+        PageRequest pageRequest, PostSearchRequest postSearchRequest) {
+        Page<PostWithCommentsCountResponse> posts
+            = postService.searchAllPost(pageRequest.getPageable(), postSearchRequest);
+
+        return ResponseEntity
+            .ok()
+            .body(posts);
+    }
 }
