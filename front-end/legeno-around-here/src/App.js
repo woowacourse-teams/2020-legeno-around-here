@@ -9,6 +9,7 @@ import PostDetail from './components/pages/PostDetail';
 import HomePage from './components/pages/HomePage';
 
 import './style.css';
+import Ranking from './components/pages/Ranking';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/sector" exact component={SectorPage} />
         <Route path="/posts/:postId" exact component={PostDetail} />
         <Route path="/home" exact component={HomePage} />
+        <Route path="/ranking" exact component={Ranking} />
         <Redirect path="*" to="/" />
       </Switch>
     </BrowserRouter>

@@ -9,7 +9,13 @@ import CategoryIcon from '@material-ui/icons/Category';
 import PersonIcon from '@material-ui/icons/Person';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
 
-import { HOME, PROFILE, WRITING, SECTOR, RANK } from '../constants/BottomItems';
+import {
+  HOME,
+  PROFILE,
+  WRITING,
+  SECTOR,
+  RANKING,
+} from '../constants/BottomItems';
 
 const useStyles = makeStyles({
   bottomBarStyle: {
@@ -45,9 +51,9 @@ const Bottom = ({ selected }) => {
       />
       <BottomNavigationAction
         component={Link}
-        to="/"
+        to="/ranking"
         label="랭킹"
-        value={RANK}
+        value={RANKING}
         icon={<EqualizerIcon />}
       />
       <BottomNavigationAction
