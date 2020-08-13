@@ -68,6 +68,7 @@ public class CommentAcceptanceTest extends AcceptanceTest {
 
         assertThat(commentResponse.getId()).isEqualTo(commentId);
         assertThat(commentResponse.getWriting()).isEqualTo(TEST_POST_WRITING);
+        assertThat(commentResponse.getZzang()).isNotNull();
 
         // 댓글 목록 조회
         List<CommentResponse> commentResponses = findAllComment(postId, accessToken);

@@ -16,7 +16,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class ImageResponse {
+public class PostImageResponse {
 
     private Long id;
     private String name;
@@ -24,14 +24,14 @@ public class ImageResponse {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    public static ImageResponse of(PostImage postImage) {
-        return new ImageResponse(postImage.getId(), postImage.getName(), postImage.getUrl(),
+    public static PostImageResponse of(PostImage postImage) {
+        return new PostImageResponse(postImage.getId(), postImage.getName(), postImage.getUrl(),
             postImage.getCreatedAt(), postImage.getModifiedAt());
     }
 
-    public static List<ImageResponse> listOf(List<PostImage> postImages) {
+    public static List<PostImageResponse> listOf(List<PostImage> postImages) {
         return postImages.stream()
-            .map(ImageResponse::of)
+            .map(PostImageResponse::of)
             .collect(Collectors.toList());
     }
 }

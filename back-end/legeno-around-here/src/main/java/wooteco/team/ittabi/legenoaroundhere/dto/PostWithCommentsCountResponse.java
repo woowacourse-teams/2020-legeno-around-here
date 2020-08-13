@@ -23,11 +23,11 @@ public class PostWithCommentsCountResponse {
 
     private Long id;
     private String writing;
-    private List<ImageResponse> images;
+    private List<PostImageResponse> images;
     private AreaResponse area;
     private SectorResponse sector;
     private int commentsCount;
-    private PostZzangResponse postZzangResponse;
+    private PostZzangResponse postZzang;
     private UserResponse creator;
     private LocalDateTime createdAt;
 
@@ -36,12 +36,12 @@ public class PostWithCommentsCountResponse {
         return PostWithCommentsCountResponse.builder()
             .id(post.getId())
             .writing(post.getWriting())
-            .images(ImageResponse.listOf(post.getPostImages()))
+            .images(PostImageResponse.listOf(post.getPostImages()))
             .area(AreaResponse.of(post.getArea()))
             .sector(SectorResponse.of(post.getSector()))
             .commentsCount(CommentResponse.listOf(comments).size())
             .creator(UserResponse.from(post.getCreator()))
-            .postZzangResponse(PostZzangResponse.of(post.getPostZzangCount(), zzangState))
+            .postZzang(PostZzangResponse.of(post.getPostZzangCount(), zzangState))
             .createdAt(post.getCreatedAt())
             .build();
     }
