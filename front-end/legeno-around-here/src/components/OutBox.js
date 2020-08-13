@@ -18,7 +18,7 @@ const OutBox = styled.div`
   }
   display: flex;
   flex-direction: column;
-  text-align: center;
+  /* text-align: center; */
   background-color: white;
   overflow-x: hidden;
   overflow-y: scroll;
