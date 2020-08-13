@@ -27,7 +27,7 @@ public class PostWithCommentsCountResponse {
     private AreaResponse area;
     private SectorResponse sector;
     private int commentsCount;
-    private PostZzangResponse postZzang;
+    private PostZzangResponse zzang;
     private UserResponse creator;
     private LocalDateTime createdAt;
 
@@ -41,7 +41,7 @@ public class PostWithCommentsCountResponse {
             .sector(SectorResponse.of(post.getSector()))
             .commentsCount(CommentResponse.listOf(comments).size())
             .creator(UserResponse.from(post.getCreator()))
-            .postZzang(PostZzangResponse.of(post.getPostZzangCount(), zzangState))
+            .zzang(PostZzangResponse.of(post.getPostZzangCount(), zzangState))
             .createdAt(post.getCreatedAt())
             .build();
     }
