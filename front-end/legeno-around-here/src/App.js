@@ -12,6 +12,13 @@ import './style.css';
 import Ranking from './components/pages/Ranking';
 
 function App() {
+  const mainArea = localStorage.getItem('mainAreaName');
+
+  if (!mainArea) {
+    localStorage.setItem('mainAreaName', '서울특별시');
+    localStorage.setItem('mainAreaId', 1);
+  }
+
   return (
     <BrowserRouter>
       <Switch>
