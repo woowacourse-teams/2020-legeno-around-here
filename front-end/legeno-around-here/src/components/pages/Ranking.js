@@ -33,17 +33,18 @@ const Rank = styled.div`
 `;
 
 const TopSection = styled.div`
-  width: 98%;
+  width: 95%;
   padding-top: 30px;
   padding-bottom: 30px;
+  margin: auto;
 `;
 
 const Ranking = () => {
   return (
     <>
       <TopSection>
-        <Typography>대한민국</Typography>
-        <Typography>캡짱은 누구?</Typography>
+        <Typography variant="h3">대한민국</Typography>
+        <Typography variant="h3">캡짱은 누구?</Typography>
       </TopSection>
       <Card>
         <Rank>1</Rank>
