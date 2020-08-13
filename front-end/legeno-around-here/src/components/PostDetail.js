@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import Typography from '@material-ui/core/Typography';
 
 import OutBox from './OutBox';
-import BottomBar from './BottomBar';
-import TopBar from './postdetail/TopBar';
-import PostBox from './postdetail/PostBox';
-
 import { getAccessTokenFromCookie } from '../util/TokenUtils';
 import { findPost } from './postdetail/PostFinder';
+import BottomBar from './BottomBar';
+import TopBar from './postdetail/TopBar';
+import Image from './postdetail/Image';
 
 const PostDetail = ({ match }) => {
   const [accessToken] = useState(getAccessTokenFromCookie());
@@ -30,8 +30,8 @@ const PostDetail = ({ match }) => {
     <>
       <OutBox>
         <TopBar backButtonLink="/"></TopBar>
-        {/* {postId} */}
-        <PostBox writing={post.writing}></PostBox>
+        <Image src="/logo512.png"></Image>
+        <Typography>{post.writing}</Typography>
       </OutBox>
       <BottomBar></BottomBar>
     </>

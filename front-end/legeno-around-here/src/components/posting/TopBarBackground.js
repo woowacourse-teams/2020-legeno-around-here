@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import { MAIN_COLOR } from '../../constants/Color';
-import { TOP_BAR_HEIGHT } from '../../constants/Size';
+import { HEIGHT } from '../../constants/TopBar';
 
 const TopBarBackground = styled.div`
-  background: ${ MAIN_COLOR };
+  background: ${MAIN_COLOR};
   color: black;
-  height: ${ TOP_BAR_HEIGHT };
+  height: ${HEIGHT};
   font-size: 1.2rem;
   display: flex;
   align-items: center;
