@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 
-import OutBox from '../OutBox';
 import { getAccessTokenFromCookie } from '../../util/TokenUtils';
 import { findPost } from '../postdetail/PostFinder';
 import Bottom from '../Bottom';
@@ -52,6 +51,7 @@ const PostDetail = ({ match }) => {
     writing: '',
     images: null,
     areaName: '',
+    sectionName: '',
     creatorName: '',
     zzangCount: 0,
     comments: [],
@@ -68,7 +68,6 @@ const PostDetail = ({ match }) => {
 
   return (
     <>
-      <OutBox>
         <TopBar backButtonLink="/"></TopBar>
         <PostSpace>
           <PostMetaData>
@@ -77,7 +76,7 @@ const PostDetail = ({ match }) => {
               <Typography color="textSecondary">{post.creatorName}</Typography>
             </ToRight>
           </PostMetaData>
-          <SectionName>ㅎㅎ</SectionName>
+          <SectionName>{post.sectorName}</SectionName>
           <Typography>{post.writing}</Typography>
           <Image src="/logo512.png"></Image>
           <Typography color="textSecondary">
@@ -85,7 +84,6 @@ const PostDetail = ({ match }) => {
           </Typography>
           <Line></Line>
         </PostSpace>
-      </OutBox>
       <Bottom></Bottom>
     </>
   );

@@ -4,7 +4,6 @@ import axios from 'axios';
 import { getAccessTokenFromCookie } from '../../util/TokenUtils';
 import Sectors from '../sector/Sectors';
 import Pagination from '../sector/Pagination';
-import OutBox from '../OutBox';
 import Bottom from '../Bottom';
 
 function SectorPage() {
@@ -42,7 +41,6 @@ function SectorPage() {
   if (loading) return <div>Loading...</div>;
   return (
     <>
-      <OutBox>
         <Sectors sectors={currentSectors} />
         <Pagination
           sectorsPerPage={sectorsPerPage}
@@ -52,7 +50,6 @@ function SectorPage() {
         <br />
         <br />
         <br />
-      </OutBox>
       <Bottom></Bottom>
     </>
   );

@@ -4,7 +4,6 @@ import axios from 'axios';
 
 import TopBar from '../posting/TopBar';
 import { getAccessTokenFromCookie } from '../../util/TokenUtils';
-import OutBox from '../OutBox';
 import TextInput from '../posting/TextInput';
 import ImageInput from '../posting/ImageInput';
 import Bottom from '../Bottom';
@@ -79,7 +78,6 @@ const Posting = () => {
 
   return (
     <>
-      <OutBox>
         <Form onSubmit={submitPost}>
           <TopBar cancelButtonLink="/" />
           <PostingBox>
@@ -96,7 +94,6 @@ const Posting = () => {
             <button>부문을 추가해주세요</button>
           </PostingBox>
         </Form>
-      </OutBox>
       <Bottom selected={WRITING} />
     </>
   );

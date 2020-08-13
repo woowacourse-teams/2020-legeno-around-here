@@ -4,7 +4,6 @@ import TopBar from '../mypage/TopBar';
 import Bottom from '../Bottom';
 import { PROFILE } from '../../constants/BottomItems';
 import { findMyInto } from '../mypage/MyInfoFinder';
-import OutBox from '../OutBox';
 import { getAccessTokenFromCookie } from '../../util/TokenUtils';
 import {
   ProfilePhoto,
@@ -32,7 +31,6 @@ function MyPage() {
 
   return (
     <>
-      <OutBox>
         <TopBar backButtonLink="/"></TopBar>
         <TopSection>
           <ProfilePhoto></ProfilePhoto>
@@ -51,11 +49,7 @@ function MyPage() {
           <NavElement linkTo="/">수상내역</NavElement>
           <NavElement linkTo="/">작성글</NavElement>
           <NavElement linkTo="/">작성 댓글</NavElement>
-          <NavElement linkTo="/">그외</NavElement>
-          <NavElement linkTo="/">뀨?</NavElement>
-          <NavElement linkTo="/">뀨뀨?</NavElement>
         </NavSection>
-      </OutBox>
       <Bottom selected={PROFILE}></Bottom>
     </>
   );

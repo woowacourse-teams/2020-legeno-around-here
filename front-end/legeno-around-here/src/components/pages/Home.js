@@ -1,10 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import OutBox from '../OutBox';
 
 function Home() {
   return (
-    <OutBox>
       <div>
         <h2>우리동네 캡짱</h2>
         <Link to="/join">회원가입</Link>
@@ -19,7 +17,6 @@ function Home() {
         <br />
         <Link to="/home">홈페이지</Link>
       </div>
-    </OutBox>
   );
 }
 

@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { setAccessTokenCookie } from '../../util/TokenUtils';
-import OutBox from '../OutBox';
 import Title from '../login/Title';
 import InputSection from '../login/InputSection';
 import Input from '../login/Input';
@@ -15,6 +14,8 @@ const ButtonSection = styled.div`
   width: 100%;
   margin-top: 50px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
 `;
 
 function LoginForm() {
@@ -61,7 +62,7 @@ function LoginForm() {
   );
 
   return (
-    <OutBox>
+    <>
       <Title>우리동네 캡짱</Title>
       <form onSubmit={handleSubmit}>
         <InputSection>
@@ -92,7 +93,7 @@ function LoginForm() {
           </Link>
         </ButtonSection>
       </form>
-    </OutBox>
+    </>
   );
 }
 

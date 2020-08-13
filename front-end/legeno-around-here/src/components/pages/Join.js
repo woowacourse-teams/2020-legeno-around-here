@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import OutBox from '../OutBox';
 import Title from '../join/Title';
 import Input from '../join/Input';
 import Label from '../join/Label';
@@ -169,8 +168,7 @@ function JoinForm() {
     ],
   );
 
-  return (
-    <OutBox>
+  return (<>
       <Title>우리동네 캡짱</Title>
       <form onSubmit={handleSubmit}>
         <InputSection>
@@ -219,8 +217,7 @@ function JoinForm() {
           </InputSection>
         </Link>
       </form>
-    </OutBox>
-  );
+  </>);
 }
 
 export default JoinForm;

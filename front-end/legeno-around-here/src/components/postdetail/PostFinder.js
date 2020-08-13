@@ -18,6 +18,7 @@ export const findPost = ({ accessToken, postId, setPostState }) => {
         writing: postResponse.writing,
         images: postResponse.images,
         areaName: postResponse.area.fullName,
+        sectorName: postResponse.sector.name,
         creatorName: postResponse.creator.nickname,
         zzangCount: postResponse.postZzangResponse.postZzangCount,
         comments: postResponse.comments,
