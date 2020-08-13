@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import axios from 'axios';
 
 import { findMyInto } from './mypage/MyInfoFinder';
-import TopBarBackground from './mypage/TopBarBackground';
 import OutBox from './OutBox';
 import { getAccessTokenFromCookie } from '../util/TokenUtils';
 import {
@@ -14,8 +13,9 @@ import {
   PrivacyEditBox,
 } from './mypage/PrivacySection';
 import { AwardsSection, AwardSummary } from './mypage/AwardSection';
-import GoBack from './mypage/GoBack';
 import { NavSection, NavElement } from './mypage/LinksSection';
+
+import TopBar from './mypage/TopBar';
 
 function MyPage() {
   const [accessToken] = useState(getAccessTokenFromCookie());
@@ -32,9 +32,7 @@ function MyPage() {
 
   return (
     <OutBox>
-      <TopBarBackground>
-        <GoBack linkTo="/">홈으로</GoBack>
-      </TopBarBackground>
+      <TopBar backButtonLink="/"></TopBar>
       <TopSection>
         <ProfilePhoto></ProfilePhoto>
         <PrivacyBox>
