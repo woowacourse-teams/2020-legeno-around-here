@@ -18,6 +18,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
@@ -25,10 +27,13 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString
+@ToString(exclude = {"posts"})
+@SQLDelete(sql = "UPDATE sector SET deleted_at = NOW() WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
 public class Sector extends BaseEntity {
 
     protected static final String DEFAULT_REASON = "";
+
     @Embedded
     private Name name;
 
@@ -42,7 +47,7 @@ public class Sector extends BaseEntity {
     @Column(nullable = false)
     private String reason = DEFAULT_REASON;
 
-    @OneToMany(mappedBy = "sector", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "sector", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
     @ManyToOne

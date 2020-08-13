@@ -25,6 +25,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotExistsException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(NotExistsException e) {
+        e.printStackTrace();
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
             .body(new ErrorResponse(e.getMessage()));
@@ -35,6 +36,8 @@ public class GlobalExceptionHandler {
         FileIOException.class, NotUniqueException.class, PropertyReferenceException.class,
         BindException.class})
     public ResponseEntity<ErrorResponse> handleBadRequest(Exception e) {
+        e.printStackTrace();
+
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(new ErrorResponse(e.getMessage()));
@@ -42,6 +45,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotAuthorizedException.class)
     public ResponseEntity<ErrorResponse> handleForbidden(NotAuthorizedException e) {
+        e.printStackTrace();
+
         return ResponseEntity
             .status(HttpStatus.FORBIDDEN)
             .body(new ErrorResponse(e.getMessage()));
@@ -49,6 +54,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({Exception.class, NotFoundAlgorithmException.class})
     public ResponseEntity<ErrorResponse> handleInternalServerError(Exception e) {
+        e.printStackTrace();
+
         log.info(e.getMessage());
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)

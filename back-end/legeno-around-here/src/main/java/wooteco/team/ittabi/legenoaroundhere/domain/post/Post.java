@@ -2,7 +2,6 @@ package wooteco.team.ittabi.legenoaroundhere.domain.post;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,27 +11,29 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.image.Image;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.PostZzang;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 @Entity
-@Table(name = "post")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-@ToString(exclude = {"comments", "images", "postZzangs"})
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(exclude = {"comments", "postImages", "postZzangs"})
+@SQLDelete(sql = "UPDATE post SET deleted_at = NOW() WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
 public class Post extends BaseEntity {
 
     private static final int MAX_LENGTH = 20;
@@ -41,13 +42,13 @@ public class Post extends BaseEntity {
     @Column(nullable = false)
     private String writing;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> images = new ArrayList<>();
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<PostImage> postImages = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<PostZzang> postZzangs = new ArrayList<>();
 
     @ManyToOne
@@ -80,14 +81,6 @@ public class Post extends BaseEntity {
         if (writing.length() > MAX_LENGTH) {
             throw new WrongUserInputException(MAX_LENGTH + "글자를 초과했습니다!");
         }
-    }
-
-    public boolean isSameState(State state) {
-        return Objects.equals(this.state, state);
-    }
-
-    public boolean isNotSameState(State state) {
-        return !Objects.equals(this.state, state);
     }
 
     public int getPostZzangCount() {

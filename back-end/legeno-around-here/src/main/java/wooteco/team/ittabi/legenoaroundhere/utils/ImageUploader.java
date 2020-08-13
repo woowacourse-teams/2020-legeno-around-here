@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.aws.S3Uploader;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.image.Image;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.ImageExtension;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotFoundAlgorithmException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageMimeTypeException;
@@ -32,12 +32,12 @@ public class ImageUploader {
     private final S3Uploader s3Uploader;
     private final IAuthenticationFacade authenticationFacade;
 
-    public Image uploadImage(MultipartFile multipartFile) {
+    public PostImage uploadImage(MultipartFile multipartFile) {
         User user = (User) authenticationFacade.getPrincipal();
         validateImage(multipartFile);
         String imageUrl = s3Uploader
             .upload(multipartFile, IMAGE_DIR + calculateUserHashCode(user));
-        return Image.builder()
+        return PostImage.builder()
             .name(multipartFile.getName())
             .url(imageUrl)
             .build();

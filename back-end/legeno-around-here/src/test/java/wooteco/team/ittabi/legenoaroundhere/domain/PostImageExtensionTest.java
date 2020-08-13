@@ -11,7 +11,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.image.ImageExtension;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageExtensionException;
 import wooteco.team.ittabi.legenoaroundhere.utils.FileConverter;
 
-public class ImageExtensionTest {
+public class PostImageExtensionTest {
 
     @DisplayName("이미지 확장자 유효성 검사 - 실패, 예외 처리")
     @Test

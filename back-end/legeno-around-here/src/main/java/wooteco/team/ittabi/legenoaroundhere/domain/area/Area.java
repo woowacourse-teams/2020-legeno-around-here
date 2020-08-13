@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 
 @Entity
@@ -16,6 +18,8 @@ import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 @AllArgsConstructor
 @Getter
 @ToString
+@SQLDelete(sql = "UPDATE area SET deleted_at = NOW() WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
 public class Area extends BaseEntity {
 
     @Column(nullable = false)
@@ -32,11 +36,4 @@ public class Area extends BaseEntity {
 
     @Column(nullable = false)
     private String fourthDepthName;
-
-    @Column(nullable = false)
-    private Boolean used;
-
-    public boolean isUsed() {
-        return used;
-    }
 }

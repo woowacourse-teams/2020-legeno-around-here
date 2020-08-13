@@ -20,9 +20,9 @@ const useStyles = makeStyles({
   },
 });
 
-const BottomBar = ({ selected }) => {
+export default function LabelBottomNavigation() {
   const classes = useStyles();
-  const [value, setValue] = React.useState(selected);
+  const [value, setValue] = React.useState('home');
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -32,7 +32,7 @@ const BottomBar = ({ selected }) => {
     <BottomNavigation
       value={value}
       onChange={handleChange}
-      className={classes.bottomBarStyle}
+      className={classes.root}
       showLabels
       position="fixed"
     >
@@ -47,21 +47,21 @@ const BottomBar = ({ selected }) => {
         component={Link}
         to="/"
         label="랭킹"
-        value={RANK}
+        value="rank"
         icon={<EqualizerIcon />}
       />
       <BottomNavigationAction
         component={Link}
         to="/posting"
         label="글쓰기"
-        value={WRITING}
+        value="writing"
         icon={<CreateIcon />}
       />
       <BottomNavigationAction
         component={Link}
         to="/sector"
         label="부문"
-        value={SECTOR}
+        value="sector"
         icon={<CategoryIcon />}
       />
       <BottomNavigationAction
@@ -73,6 +73,4 @@ const BottomBar = ({ selected }) => {
       />
     </BottomNavigation>
   );
-};
-
-export default BottomBar;
+}
