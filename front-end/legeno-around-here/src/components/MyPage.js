@@ -1,37 +1,33 @@
-import React, { useState, useMemo } from "react";
-import axios from "axios";
+import React, { useState, useMemo } from 'react';
+import axios from 'axios';
 
-import TopBarBackground from "./mypage/TopBarBackground";
-import OutBox from "./OutBox"
-import { getAccessTokenFromCookie } from "../util/TokenUtils";
-import { ProfilePhoto, Nickname, Email, TopSection, PrivacyBox, PrivacyEditBox } from "./mypage/PrivacySection";
+import { findMyInto } from './mypage/MyInfoFinder';
+import TopBarBackground from './mypage/TopBarBackground';
+import OutBox from './OutBox';
+import { getAccessTokenFromCookie } from '../util/TokenUtils';
+import {
+  ProfilePhoto,
+  Nickname,
+  Email,
+  TopSection,
+  PrivacyBox,
+  PrivacyEditBox,
+} from './mypage/PrivacySection';
 import { AwardsSection, AwardSummary } from './mypage/AwardSection';
 import GoBack from './mypage/GoBack';
 import { NavSection, NavElement } from './mypage/LinksSection';
 
 function MyPage() {
   const [accessToken] = useState(getAccessTokenFromCookie());
-  const [email, setEmail] = useState("");
-  const [nickname, setNickname] = useState("");
+  const [email, setEmail] = useState('');
+  const [nickname, setNickname] = useState('');
 
   useMemo(() => {
-    const config = {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "X-Auth-Token": accessToken,
-      },
-    };
-    axios
-      .get("http://localhost:8080/users/myinfo", config)
-      .then(async (response) => {
-        const userResponse = await response.data;
-        setEmail(userResponse.email);
-        setNickname(userResponse.nickname);
-      })
-      .catch((error) => {
-        alert(`회원정보를 가져올 수 없습니다.${error}`);
-        document.location.href = "/";
-      });
+    findMyInto({
+      accessToken: accessToken,
+      setEmailState: setEmail,
+      setNicknameState: setNickname,
+    });
   }, [accessToken]);
 
   return (
@@ -42,8 +38,8 @@ function MyPage() {
       <TopSection>
         <ProfilePhoto></ProfilePhoto>
         <PrivacyBox>
-          <Nickname>{ nickname }</Nickname>
-          <Email>{ email }</Email>
+          <Nickname>{nickname}</Nickname>
+          <Email>{email}</Email>
         </PrivacyBox>
         <PrivacyEditBox>수정</PrivacyEditBox>
       </TopSection>
