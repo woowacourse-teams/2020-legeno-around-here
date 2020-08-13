@@ -23,7 +23,8 @@ export const getAllCurrentPosts = async (page, accessToken) => {
       config,
     )
     .catch((error) => {
-      alert(`최근 글을 가져올 수 없습니다! error : ${error}`);
+      console.log(`최근 글을 가져올 수 없습니다! error : ${error}`);
+      document.location.href = '/login';
     });
   return response.data.content;
 };

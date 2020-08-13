@@ -5,10 +5,11 @@ import axios from 'axios';
 import TopBar from './posting/TopBar';
 import { getAccessTokenFromCookie } from '../util/TokenUtils';
 import OutBox from './OutBox';
-import Cancle from './posting/Cancle';
 import TextInput from './posting/TextInput';
 import ImageInput from './posting/ImageInput';
 import SubmitButton from './posting/SubmitButton';
+import Bottom from './Bottom';
+import { WRITING } from '../constants/BottomItems';
 
 const Form = styled.form`
   width: 100%;
@@ -97,6 +98,7 @@ const Posting = () => {
           </PostingBox>
         </Form>
       </OutBox>
+      <Bottom selected={WRITING} />
     </>
   );
 };
