@@ -14,7 +14,6 @@ import wooteco.team.ittabi.legenoaroundhere.domain.PostSearch;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.PostZzang;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.ZzangState;
@@ -77,14 +76,14 @@ public class PostService {
     }
 
     public PostResponse findPost(Long id) {
-        Post post = findNotDeletedPost(id);
+        Post post = findPostBy(id);
         List<Comment> comments = findAllComment(post.getId());
         ZzangState zzangState = findPostZzang(post).getZzangState();
         return PostResponse.of(post, comments, zzangState);
     }
 
-    private Post findNotDeletedPost(Long id) {
-        return postRepository.findByIdAndStateNot(id, State.DELETED)
+    private Post findPostBy(Long id) {
+        return postRepository.findById(id)
             .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
     }
 
@@ -102,23 +101,22 @@ public class PostService {
 
     private Page<Post> getPostByFilter(Pageable pageable, PostSearch postSearch) {
         if (postSearch.isNotExistsFilter()) {
-            return postRepository.findByStateNot(pageable, State.DELETED);
+            return postRepository.findAllBy(pageable);
         }
 
         if (postSearch.isAreaFilter()) {
             List<Area> areas = findAllAreas(postSearch.getAreaIds());
-            return postRepository.findAllByStateNotAndAreaIn(pageable, State.DELETED, areas);
+            return postRepository.findAllByAreaIn(pageable, areas);
         }
 
         if (postSearch.isSectorFilter()) {
             List<Sector> sectors = findAllSectors(postSearch.getSectorIds());
-            return postRepository.findAllByStateNotAndSectorIn(pageable, State.DELETED, sectors);
+            return postRepository.findAllBySectorIn(pageable, sectors);
         }
 
         List<Area> areas = findAllAreas(postSearch.getAreaIds());
         List<Sector> sectors = findAllSectors(postSearch.getSectorIds());
-        return postRepository
-            .findAllByStateNotAndAreaInAndSectorIn(pageable, State.DELETED, areas, sectors);
+        return postRepository.findAllByAreaInAndSectorIn(pageable, areas, sectors);
     }
 
     private List<Area> findAllAreas(List<Long> areaIds) {
@@ -147,13 +145,13 @@ public class PostService {
 
     @Transactional
     public void deletePost(Long id) {
-        Post post = findNotDeletedPost(id);
+        Post post = findPostBy(id);
         validateIsCreator(post);
         postRepository.delete(post);
     }
 
     private List<Comment> findAllComment(Long postId) {
-        return commentRepository.findAllByPostIdAndStateNot(postId, State.DELETED);
+        return commentRepository.findAllByPostId(postId);
     }
 
     private PostZzang findPostZzang(Post post) {

@@ -2,7 +2,6 @@ package wooteco.team.ittabi.legenoaroundhere.domain.post;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -82,14 +81,6 @@ public class Post extends BaseEntity {
         if (writing.length() > MAX_LENGTH) {
             throw new WrongUserInputException(MAX_LENGTH + "글자를 초과했습니다!");
         }
-    }
-
-    public boolean isSameState(State state) {
-        return Objects.equals(this.state, state);
-    }
-
-    public boolean isNotSameState(State state) {
-        return !Objects.equals(this.state, state);
     }
 
     public int getPostZzangCount() {
