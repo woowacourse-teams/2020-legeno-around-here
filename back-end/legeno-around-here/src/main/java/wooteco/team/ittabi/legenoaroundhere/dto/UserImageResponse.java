@@ -1,24 +1,23 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.ZzangState;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode
 @ToString
-public class PostZzangResponse {
+public class UserImageResponse {
 
-    private int count;
-    private String state;
-
-    public static PostZzangResponse of(int likeCount, ZzangState zzangState) {
-        return new PostZzangResponse(likeCount, zzangState.name());
-    }
+    private Long id;
+    private String name;
+    private String url;
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
 }

@@ -65,30 +65,30 @@ public class PostZzangAcceptanceTest extends AcceptanceTest {
         PostResponse postResponse = findPost(postId, accessToken);
 
         // 글 생성 시 초기 글 좋아요 수
-        assertThat(postResponse.getPostZzangResponse().getPostZzangCount()).isEqualTo(0L);
+        assertThat(postResponse.getZzang().getCount()).isEqualTo(0L);
 
         // 비활성화된 좋아요를 활성화
         PostZzangResponse activatedPostZzangResponse = pressPostZzang(postResponse.getId(),
             accessToken);
 
-        assertThat(activatedPostZzangResponse.getPostZzangCount()).isEqualTo(1L);
-        assertThat(activatedPostZzangResponse.getZzangState())
+        assertThat(activatedPostZzangResponse.getCount()).isEqualTo(1L);
+        assertThat(activatedPostZzangResponse.getState())
             .isEqualTo(ZzangState.ACTIVATED.name());
 
         // 활성화된 좋아요를 비활성화
         PostZzangResponse inactivatedPostZzangResponse = pressPostZzang(postResponse.getId(),
             accessToken);
 
-        assertThat(inactivatedPostZzangResponse.getPostZzangCount()).isEqualTo(0L);
-        assertThat(inactivatedPostZzangResponse.getZzangState())
+        assertThat(inactivatedPostZzangResponse.getCount()).isEqualTo(0L);
+        assertThat(inactivatedPostZzangResponse.getState())
             .isEqualTo(ZzangState.INACTIVATED.name());
 
         // 비활성화된 좋아요를 다시 활성화
         PostZzangResponse againActivatedPostZzangResponse = pressPostZzang(postResponse.getId(),
             accessToken);
 
-        assertThat(againActivatedPostZzangResponse.getPostZzangCount()).isEqualTo(1L);
-        assertThat(againActivatedPostZzangResponse.getZzangState())
+        assertThat(againActivatedPostZzangResponse.getCount()).isEqualTo(1L);
+        assertThat(againActivatedPostZzangResponse.getState())
             .isEqualTo(ZzangState.ACTIVATED.name());
     }
 
