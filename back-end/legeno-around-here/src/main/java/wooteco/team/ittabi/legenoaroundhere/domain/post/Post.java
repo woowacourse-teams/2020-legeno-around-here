@@ -12,13 +12,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.SQLDelete;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.Image;
@@ -28,11 +28,11 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 @Entity
-@Table(name = "post")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
 @ToString(exclude = {"comments", "images", "postZzangs"})
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE post SET state = 'DELETED' WHERE id = ?")
 public class Post extends BaseEntity {
 
     private static final int MAX_LENGTH = 20;

@@ -150,7 +150,7 @@ public class PostService {
     public void deletePost(Long id) {
         Post post = findNotDeletedPost(id);
         validateIsCreator(post);
-        post.setState(State.DELETED);
+        postRepository.delete(post);
     }
 
     private List<Comment> findAllComment(Long postId) {
