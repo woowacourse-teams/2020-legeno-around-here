@@ -50,6 +50,9 @@ function MyPage() {
         <NavElement linkTo="/">수상내역</NavElement>
         <NavElement linkTo="/">작성글</NavElement>
         <NavElement linkTo="/">작성 댓글</NavElement>
+        <NavElement linkTo="/">그외</NavElement>
+        <NavElement linkTo="/">뀨?</NavElement>
+        <NavElement linkTo="/">뀨뀨?</NavElement>
       </NavSection>
     </OutBox>
   );
