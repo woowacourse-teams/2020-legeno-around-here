@@ -78,22 +78,24 @@ const Posting = () => {
 
   return (
     <>
-        <Form onSubmit={submitPost}>
-          <TopBar cancelButtonLink="/" />
-          <PostingBox>
-            <TextInput
-              placeholder="자랑거리를 입력해주세요"
-              onChange={onWritingChanged}
-              value={writing}
-            />
-            <ImageInput
-              type="file"
-              multiple
-              onChange={onImagesChanged}
-            ></ImageInput>
-            <button>부문을 추가해주세요</button>
-          </PostingBox>
-        </Form>
+      <Form onSubmit={submitPost}>
+        <TopBar cancelButtonLink="/" />
+        <PostingBox>
+          <TextInput
+            placeholder="자랑거리를 입력해주세요"
+            onChange={onWritingChanged}
+            value={writing}
+          />
+          <ImageInput
+            type="file"
+            multiple
+            onChange={onImagesChanged}
+          ></ImageInput>
+          <button onClick={(e) => e.preventDefault()}>
+            부문을 추가해주세요
+          </button>
+        </PostingBox>
+      </Form>
       <Bottom selected={WRITING} />
     </>
   );
