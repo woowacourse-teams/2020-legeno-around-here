@@ -23,7 +23,6 @@ const ActualItemSpace = styled.div`
   margin: '0 auto';
   display: flex;
   flex-direction: row;
-  border: 1px solid red;
 `;
 
 const TopBar = ({ backButtonLink }) => {
