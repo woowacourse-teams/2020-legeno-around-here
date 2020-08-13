@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { BACKGROUND_DEFAULT_COLOR } from '../constants/Color';
+import styled from "styled-components";
+import { BACKGROUND_DEFAULT_COLOR } from "../constants/Color";
 
 const OutBox = styled.div`
   @media (max-width: 2000px) {
@@ -16,7 +16,7 @@ const OutBox = styled.div`
     width: 100%;
     box-shadow: none;
   }
-  
+
   overflow: hidden;
   display: flex;
   flex-direction: column;
