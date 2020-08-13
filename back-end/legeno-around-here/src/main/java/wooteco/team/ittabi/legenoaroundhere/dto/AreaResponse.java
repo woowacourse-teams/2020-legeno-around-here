@@ -24,6 +24,7 @@ public class AreaResponse {
     private String secondDepthName;
     private String thirdDepthName;
     private String fourthDepthName;
+    private String lastDepthName;
 
     public static AreaResponse of(Area area) {
         if (Objects.isNull(area)) {
@@ -36,6 +37,7 @@ public class AreaResponse {
             .secondDepthName(area.getSecondDepthName())
             .thirdDepthName(area.getThirdDepthName())
             .fourthDepthName(area.getFourthDepthName())
+            .lastDepthName(area.getLastDepthName())
             .build();
     }
 }
