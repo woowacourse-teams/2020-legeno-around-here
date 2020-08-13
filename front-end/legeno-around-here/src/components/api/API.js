@@ -39,7 +39,7 @@ export const getAllAreas = async (page, accessToken, keyword) => {
       `http://localhost:8080/areas?` +
         `page=${page}&` +
         `size=${DEFAULT_SIZE}&` +
-        `sortedBy=${DEFAULT_SORTEDBY}&` +
+        `sortedBy=${DEFAULT_SORTED_BY}&` +
         `direction=${DEFAULT_DIRECTION}&` +
         `keyword=${keyword}`,
       config,
