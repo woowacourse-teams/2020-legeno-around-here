@@ -23,7 +23,7 @@ const MoveToRight = styled.div`
 const SubmitButton = () => {
   return (
     <MoveToRight>
-      <IconButton edge="end">
+      <IconButton type="submit" edge="end">
         <SendRoundedIcon />
       </IconButton>
     </MoveToRight>

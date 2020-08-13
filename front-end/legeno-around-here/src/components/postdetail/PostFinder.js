@@ -17,7 +17,10 @@ export const findPost = ({ accessToken, postId, setPostState }) => {
         id: postResponse.id,
         writing: postResponse.writing,
         images: postResponse.images,
-        creator: postResponse.creator,
+        areaName: postResponse.area.fullName,
+        creatorName: postResponse.creator.nickname,
+        zzangCount: postResponse.postZzangResponse.postZzangCount,
+        comments: postResponse.comments,
       });
     })
     .catch((error) => {
