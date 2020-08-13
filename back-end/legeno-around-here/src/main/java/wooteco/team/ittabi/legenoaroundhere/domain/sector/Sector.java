@@ -25,10 +25,11 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString
+@ToString(exclude = {"posts"})
 public class Sector extends BaseEntity {
 
     protected static final String DEFAULT_REASON = "";
+
     @Embedded
     private Name name;
 
@@ -42,7 +43,7 @@ public class Sector extends BaseEntity {
     @Column(nullable = false)
     private String reason = DEFAULT_REASON;
 
-    @OneToMany(mappedBy = "sector", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "sector", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
     @ManyToOne
