@@ -7,15 +7,17 @@ import { getAccessTokenFromCookie } from '../../util/TokenUtils';
 import PostItem from '../post/PostItem';
 
 const HomePage = () => {
-  const [page] = useState(1);
+  const [page] = useState(0);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const accessToken = getAccessTokenFromCookie();
+    const mainAreaId = localStorage.getItem('mainAreaId');
+
     const loadPosts = async () => {
       setLoading(true);
-      const allPosts = await getAllCurrentPosts(page, accessToken);
+      const allPosts = await getAllCurrentPosts(mainAreaId, page, accessToken);
       setPosts(allPosts);
       setLoading(false);
     };

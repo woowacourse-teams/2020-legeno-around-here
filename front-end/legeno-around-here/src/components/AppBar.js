@@ -15,6 +15,8 @@ import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
 import { getAllAreas } from './api/API';
 import { getAccessTokenFromCookie } from '../util/TokenUtils';
+import List from '@material-ui/core/List';
+import AreaItem from './AreaItem';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -40,26 +42,33 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
+  list: {
+    height: 400,
+    overflow: 'auto',
+  },
 }));
 
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
-  const mainArea = localStorage.getItem('mainArea');
+  const mainArea = localStorage.getItem('mainAreaName');
 
-  const [page] = useState(1);
+  const [page] = useState(0);
   const [open, setOpen] = useState(false);
   const [areas, setAreas] = useState([]);
   const [loading, setLoading] = useState(false);
   const [areaKeyword, setAreaKeyword] = useState(mainArea);
 
   if (!mainArea) {
-    localStorage.setItem('mainArea', '서울특별시');
+    localStorage.setItem('mainAreaName', '서울특별시');
   }
 
-  const loadPosts = async () => {
+  const loadAreas = async () => {
     const accessToken = getAccessTokenFromCookie();
     setLoading(true);
     const allAreas = await getAllAreas(page, accessToken, areaKeyword);
+    if (allAreas.length === 0) {
+      alert('검색 결과가 없습니다! 다시 검색해주세요!');
+    }
     setAreas(allAreas);
     setLoading(false);
   };
@@ -69,9 +78,7 @@ export default function PrimarySearchAppBar() {
   };
 
   const findAllArea = () => {
-    loadPosts();
-    console.log(areaKeyword);
-    console.log(areas);
+    loadAreas();
   };
 
   const handleOpen = () => {
@@ -124,6 +131,13 @@ export default function PrimarySearchAppBar() {
                 <Button>
                   <SearchIcon onClick={() => findAllArea()} />
                 </Button>
+                {areas.length > 0 && (
+                  <List component="nav" className={classes.list}>
+                    {areas.map((area) => (
+                      <AreaItem key={area.id} area={area} />
+                    ))}
+                  </List>
+                )}
               </div>
             </Fade>
           </Modal>

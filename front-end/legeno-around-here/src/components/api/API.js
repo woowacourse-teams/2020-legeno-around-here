@@ -4,7 +4,7 @@ const DEFAULT_SIZE = 50;
 const DEFAULT_SORTEDBY = 'id';
 const DEFAULT_DIRECTION = 'desc';
 
-export const getAllCurrentPosts = async (page, accessToken) => {
+export const getAllCurrentPosts = async (mainAreaId, page, accessToken) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -17,7 +17,7 @@ export const getAllCurrentPosts = async (page, accessToken) => {
         `size=${DEFAULT_SIZE}&` +
         `sortedBy=${DEFAULT_SORTEDBY}&` +
         `direction=${DEFAULT_DIRECTION}&` +
-        `areaIds=&` +
+        `areaIds=${mainAreaId}&` +
         `sectorIds=`,
       config,
     )
