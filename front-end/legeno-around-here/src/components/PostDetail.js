@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import OutBox from './OutBox';
 import { getAccessTokenFromCookie } from '../util/TokenUtils';
 import { findPost } from './postdetail/PostFinder';
-import BottomBar from './BottomBar';
+import Bottom from './Bottom';
 import TopBar from './postdetail/TopBar';
 import Image from './postdetail/Image';
 
@@ -86,7 +86,7 @@ const PostDetail = ({ match }) => {
           <Line></Line>
         </PostSpace>
       </OutBox>
-      <BottomBar></BottomBar>
+      <Bottom></Bottom>
     </>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 
 import TopBar from './mypage/TopBar';
-import BottomBar from './BottomBar';
+import Bottom from './Bottom';
 import { PROFILE } from '../constants/BottomItems';
 import { findMyInto } from './mypage/MyInfoFinder';
 import OutBox from './OutBox';
@@ -56,7 +56,7 @@ function MyPage() {
           <NavElement linkTo="/">뀨뀨?</NavElement>
         </NavSection>
       </OutBox>
-      <BottomBar selected={PROFILE}></BottomBar>
+      <Bottom selected={PROFILE}></Bottom>
     </>
   );
 }

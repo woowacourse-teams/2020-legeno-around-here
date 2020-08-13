@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const Button = styled.button`
   width: 90%;
@@ -15,7 +15,7 @@ const Button = styled.button`
   font-size: 15px;
   border-radius: 5px;
   transition: background-color 0.2s ease;
-  
+
   &:hover {
     background-color: skyblue;
   }

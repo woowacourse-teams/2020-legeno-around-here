@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AppBar from '../AppBar';
-import BottomBar from '../BottomBar';
+import Bottom from '../Bottom';
 
 import { getAllCurrentPosts } from '../api/API';
 import { getAccessTokenFromCookie } from '../../util/TokenUtils';
@@ -27,7 +27,7 @@ const HomePage = () => {
     <>
       <AppBar />
       {posts && posts.map((post) => <PostItem key={post.id} post={post} />)}
-      <BottomBar selected={HOME} />
+      <Bottom selected={HOME} />
       {loading && <div>Loading ...</div>}
     </>
   );
