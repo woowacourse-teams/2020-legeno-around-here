@@ -226,13 +226,13 @@ class SectorServiceTest {
         SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
         SectorResponse createdSector = sectorService.createSector(sectorRequest);
         Long sectorId = createdSector.getId();
-        sectorService.deleteSector(sectorId);
+        sectorService.updateSectorState(sectorId, new SectorUpdateStateRequest("승인", "승인함"));
 
         AdminSectorResponse sector = sectorService.findSector(sectorId);
         assertThat(sector.getId()).isEqualTo(sectorId);
         assertThat(sector.getName()).isEqualToIgnoringCase(TEST_SECTOR_NAME);
         assertThat(sector.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
-        assertThat(sector.getState()).isEqualTo(SectorState.DELETED.getName());
+        assertThat(sector.getState()).isEqualTo(SectorState.APPROVED.getName());
     }
 
     @DisplayName("Sector 삭제 - 예외 발생, ID가 없는 경우")
@@ -249,22 +249,35 @@ class SectorServiceTest {
             .isInstanceOf(NotExistsException.class);
     }
 
+    @DisplayName("Sector 조회 - 예외 발생, 삭제한 ID인 경우")
+    @Test
+    void findSector_DeletedId_ThrowException() {
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        SectorResponse createdSector = sectorService.createSector(sectorRequest);
+        Long sectorId = createdSector.getId();
+        sectorService.deleteSector(sectorId);
+
+        assertThatThrownBy(() -> sectorService.findSector(sectorId))
+            .isInstanceOf(NotExistsException.class);
+    }
+
     @DisplayName("Sector 전체 조회 - 성공")
     @Test
     void findAllSector() {
-        SectorResponse sector
-            = sectorService
+        SectorResponse sector = sectorService
             .createSector(new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION));
         SectorResponse anotherSector = sectorService.createSector(
             new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION));
-        sectorService.deleteSector(sector.getId());
 
         AdminSectorResponse expectedSector = sectorService.findSector(sector.getId());
-        AdminSectorResponse expectedAnotherSector
-            = sectorService.findSector(anotherSector.getId());
+        AdminSectorResponse expectedAnotherSector = sectorService.findSector(anotherSector.getId());
+
+        sectorService.deleteSector(sector.getId());
+        assertThatThrownBy(() -> sectorService.findSector(sector.getId()))
+            .isInstanceOf(NotExistsException.class);
 
         Page<AdminSectorResponse> sectors = sectorService.findAllSector(Pageable.unpaged());
-        assertThat(sectors.getContent()).contains(expectedSector);
+        assertThat(sectors.getContent()).doesNotContain(expectedSector);
         assertThat(sectors.getContent()).contains(expectedAnotherSector);
     }
 

@@ -7,7 +7,6 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 public enum SectorState {
 
     PUBLISHED("등록", "사용", true, true),
-    DELETED("삭제", "삭제", false, false),
     PENDING("승인 신청", "승인 신청", false, true),
     APPROVED("승인", "사용", true, true),
     REJECTED("반려", "반려", false, false);

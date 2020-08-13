@@ -6,23 +6,25 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 
 @Entity
-@Table(name = "image")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
 @ToString(exclude = "post")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Image extends BaseEntity {
+@SQLDelete(sql = "UPDATE image SET deleted_at = NOW() WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
+public class PostImage extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
@@ -35,16 +37,16 @@ public class Image extends BaseEntity {
     private Post post;
 
     @Builder
-    public Image(String name, String url) {
+    public PostImage(String name, String url) {
         this.name = name;
         this.url = url;
     }
 
     public void setPost(Post post) {
         if (Objects.nonNull(this.post)) {
-            this.post.getImages().remove(this);
+            this.post.getPostImages().remove(this);
         }
         this.post = post;
-        post.getImages().add(this);
+        post.getPostImages().add(this);
     }
 }

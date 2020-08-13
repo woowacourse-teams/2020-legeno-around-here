@@ -113,18 +113,17 @@ public class SectorAcceptanceTest extends AcceptanceTest {
         // 부문 삭제
         deleteSector(accessToken, id);
         assertThatThrownBy(() -> findAvailableSector(accessToken, id));
-        adminSectorResponse = findSector(accessToken, id);
-        assertThat(adminSectorResponse.getState()).isEqualTo(SectorState.DELETED.getName());
+        assertThatThrownBy(() -> findSector(accessToken, id));
 
         adminSectorResponses = findAllSector(accessToken);
         sectorResponses = searchAvailableSectors(accessToken);
-        assertThat(adminSectorResponses).hasSize(2);
+        assertThat(adminSectorResponses).hasSize(1);
         assertThat(sectorResponses).hasSize(1);
 
         deleteSector(accessToken, anotherId);
         adminSectorResponses = findAllSector(accessToken);
         sectorResponses = searchAvailableSectors(accessToken);
-        assertThat(adminSectorResponses).hasSize(2);
+        assertThat(adminSectorResponses).hasSize(0);
         assertThat(sectorResponses).hasSize(0);
     }
 

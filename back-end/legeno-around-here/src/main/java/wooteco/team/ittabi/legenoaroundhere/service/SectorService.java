@@ -93,10 +93,8 @@ public class SectorService {
 
     @Transactional
     public void deleteSector(Long id) {
-        User user = (User) authenticationFacade.getPrincipal();
-
-        Sector sector = findUsedSectorBy(id);
-        sector.setState(SectorState.DELETED, "삭제", user);
+        Sector sector = findSectorBy(id);
+        sectorRepository.delete(sector);
     }
 
     @Transactional(readOnly = true)

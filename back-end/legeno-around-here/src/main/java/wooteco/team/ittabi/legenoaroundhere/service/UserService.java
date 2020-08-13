@@ -60,7 +60,6 @@ public class UserService implements UserDetailsService {
             return null;
         }
         return areaRepository.findById(areaId)
-            .filter(Area::isUsed)
             .orElseThrow(() -> new WrongUserInputException("입력하신 지역이 존재하지 않습니다."));
     }
 
