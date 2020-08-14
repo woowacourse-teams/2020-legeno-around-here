@@ -38,7 +38,7 @@ const Posting = () => {
   const submitPost = (e) => {
     e.preventDefault();
 
-    const url = 'https://capzzang.co.kr:8080/posts';
+    const url = 'http://capzzang.co.kr:8080/posts';
     const mainAreaId = localStorage.getItem('mainAreaId');
 
     const formData = new FormData();
