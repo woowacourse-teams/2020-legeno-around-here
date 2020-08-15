@@ -130,7 +130,7 @@ function JoinForm() {
 
   const join = useCallback(() => {
     axios
-      .post('http://capzzang.co.kr:8080/join', {
+      .post('http://localhost:8080/join', {
         email,
         nickname,
         password,
@@ -168,7 +168,8 @@ function JoinForm() {
     ],
   );
 
-  return (<>
+  return (
+    <>
       <Title>우리동네 캡짱</Title>
       <form onSubmit={handleSubmit}>
         <InputSection>
@@ -217,7 +218,8 @@ function JoinForm() {
           </InputSection>
         </Link>
       </form>
-  </>);
+    </>
+  );
 }
 
 export default JoinForm;
