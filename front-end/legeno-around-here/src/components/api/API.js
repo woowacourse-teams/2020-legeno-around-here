@@ -1,6 +1,7 @@
 import axios from 'axios';
+import {SERVER_ADDRESS} from "../../constants/BackendAddress";
 
-const DEFAULT_SIZE = 50;
+const DEFAULT_SIZE = 10;
 const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
 
@@ -12,7 +13,7 @@ export const getAllCurrentPosts = async (mainAreaId, page, accessToken) => {
   };
   const response = await axios
     .get(
-      `http://capzzang.co.kr:8080/posts?` +
+      SERVER_ADDRESS + `posts?` +
         `page=${page}&` +
         `size=${DEFAULT_SIZE}&` +
         `sortedBy=${DEFAULT_SORTED_BY}&` +
@@ -22,9 +23,9 @@ export const getAllCurrentPosts = async (mainAreaId, page, accessToken) => {
       config,
     )
     .catch((error) => {
+      console.log(error);
       console.log(`최근 글을 가져올 수 없습니다! error : ${error}`);
       document.location.href = '/login';
-      return;
     });
   return response.data.content;
 };
@@ -37,7 +38,7 @@ export const getAllAreas = async (page, accessToken, keyword) => {
   };
   const response = await axios
     .get(
-      `http://capzzang.co.kr:8080/areas?` +
+      SERVER_ADDRESS + `areas?` +
         `page=${page}&` +
         `size=${DEFAULT_SIZE}&` +
         `sortedBy=${DEFAULT_SORTED_BY}&` +

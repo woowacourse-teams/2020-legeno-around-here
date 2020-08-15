@@ -1,12 +1,13 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import styled from 'styled-components';
 
 import Title from '../join/Title';
 import Input from '../join/Input';
 import Label from '../join/Label';
 import Button from '../join/Button';
+import {SERVER_ADDRESS} from "../../constants/BackendAddress";
 
 const InputCheck = styled.p`
   width: 320px;
@@ -71,7 +72,7 @@ function JoinForm() {
         </InputCheck>
       );
     }
-    return <InputCheck className="alert"></InputCheck>;
+    return <InputCheck className="alert" />;
   }, [validateEmail]);
 
   const nicknameCheck = useMemo(() => {
@@ -82,7 +83,7 @@ function JoinForm() {
         </InputCheck>
       );
     }
-    return <InputCheck className="alert"></InputCheck>;
+    return <InputCheck className="alert" />;
   }, [validateNickname]);
 
   const passwordCheck = useMemo(() => {
@@ -93,7 +94,7 @@ function JoinForm() {
         </InputCheck>
       );
     }
-    return <InputCheck className="alert"></InputCheck>;
+    return <InputCheck className="alert" />;
   }, [validatePassword]);
 
   const passwordRepeatCheck = useMemo(() => {
@@ -102,7 +103,7 @@ function JoinForm() {
         <InputCheck className="alert">비밀번호가 일치하지 않습니다.</InputCheck>
       );
     }
-    return <InputCheck className="alert"></InputCheck>;
+    return <InputCheck className="alert" />;
   }, [validatePasswordRepeat]);
 
   const handleChangeEmail = useCallback(({ target: { value } }) => {
@@ -130,12 +131,12 @@ function JoinForm() {
 
   const join = useCallback(() => {
     axios
-      .post('http://capzzang.co.kr:8080/join', {
+      .post(SERVER_ADDRESS + 'join', {
         email,
         nickname,
         password,
       })
-      .then((response) => {
+      .then(() => {
         alert('회원가입을 축하드립니다.');
         document.location.href = '/login';
       })

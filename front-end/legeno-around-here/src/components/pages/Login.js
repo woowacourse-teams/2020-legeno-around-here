@@ -1,9 +1,9 @@
-import React, { useState, useCallback } from 'react';
+import React, {useCallback, useState} from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import styled from 'styled-components';
 
-import { setAccessTokenCookie } from '../../util/TokenUtils';
+import {setAccessTokenCookie} from '../../util/TokenUtils';
 import Title from '../login/Title';
 import InputSection from '../login/InputSection';
 import Input from '../login/Input';
@@ -37,7 +37,7 @@ function LoginForm() {
 
   const login = useCallback(() => {
     axios
-      .post('http://capzzang.co.kr:8080/login', {
+      .post('http://localhost:8080/login', {
         email,
         password,
       })

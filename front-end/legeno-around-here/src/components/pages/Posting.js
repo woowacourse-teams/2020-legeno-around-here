@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 
 import TopBar from '../posting/TopBar';
-import { getAccessTokenFromCookie } from '../../util/TokenUtils';
+import {getAccessTokenFromCookie} from '../../util/TokenUtils';
 import TextInput from '../posting/TextInput';
 import ImageInput from '../posting/ImageInput';
 import Bottom from '../Bottom';
-import { WRITING } from '../../constants/BottomItems';
+import {WRITING} from '../../constants/BottomItems';
+import {SERVER_ADDRESS} from '../../constants/BackendAddress';
 
 const Form = styled.form`
   width: 100%;
@@ -38,7 +39,7 @@ const Posting = () => {
   const submitPost = (e) => {
     e.preventDefault();
 
-    const url = 'http://capzzang.co.kr:8080/posts';
+    const url = SERVER_ADDRESS + "posts";
     const mainAreaId = localStorage.getItem('mainAreaId');
 
     const formData = new FormData();
@@ -91,7 +92,7 @@ const Posting = () => {
             type="file"
             multiple
             onChange={onImagesChanged}
-          ></ImageInput>
+          />
           <button onClick={(e) => e.preventDefault()}>
             부문을 추가해주세요
           </button>

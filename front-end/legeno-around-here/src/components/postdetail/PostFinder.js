@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {SERVER_ADDRESS} from "../../constants/BackendAddress";
 
 export const findPost = ({ accessToken, postId, setPostState }) => {
   const config = {
@@ -8,10 +9,9 @@ export const findPost = ({ accessToken, postId, setPostState }) => {
     },
   };
   axios
-    .get('http://capzzang.co.kr:8080/posts/' + postId, config)
+    .get(SERVER_ADDRESS + 'posts/' + postId, config)
     .then(async (response) => {
       const postResponse = await response.data;
-      console.log(postResponse);
       setPostState({
         id: postResponse.id,
         writing: postResponse.writing,

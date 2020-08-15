@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {SERVER_ADDRESS} from "../../constants/BackendAddress";
 
 export const findMyInto = ({
   accessToken,
@@ -12,7 +13,7 @@ export const findMyInto = ({
     },
   };
   axios
-    .get('http://capzzang.co.kr:8080/users/myinfo', config)
+    .get(SERVER_ADDRESS + 'users/myinfo', config)
     .then(async (response) => {
       const userResponse = await response.data;
       setEmailState(userResponse.email);

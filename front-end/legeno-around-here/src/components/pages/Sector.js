@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 
-import { getAccessTokenFromCookie } from '../../util/TokenUtils';
+import {getAccessTokenFromCookie} from '../../util/TokenUtils';
 import Sectors from '../sector/Sectors';
 import Pagination from '../sector/Pagination';
 import Bottom from '../Bottom';
 import {SECTOR} from "../../constants/BottomItems";
+import {SERVER_ADDRESS} from "../../constants/BackendAddress";
 
 function Sector() {
   const [accessToken] = useState(getAccessTokenFromCookie());
@@ -28,7 +29,7 @@ function Sector() {
       },
     };
     axios
-      .get('http://capzzang.co.kr:8080/sectors?size=50', config)
+      .get(SERVER_ADDRESS + 'sectors?size=50', config)
       .then(async (response) => {
         const userResponse = await response.data;
         setSectors(userResponse.content);
@@ -51,7 +52,7 @@ function Sector() {
         <br />
         <br />
         <br />
-      <Bottom selected={SECTOR}></Bottom>
+      <Bottom selected={SECTOR} />
     </>
   );
 }
