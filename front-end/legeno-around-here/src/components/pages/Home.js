@@ -16,7 +16,7 @@ const Home = () => {
   const accessToken = getAccessTokenFromCookie();
   const mainAreaId = localStorage.getItem('mainAreaId');
 
-  /* 처음부터 보여줄 최근글 목록을 가져옴 */
+  /* 처음에 보여줄 최근글 목록을 가져옴 */
   useEffect(() => {
     getAllCurrentPosts(mainAreaId, 0, accessToken)
       .then(firstPosts => {
@@ -28,6 +28,10 @@ const Home = () => {
   const fetchNextPosts = () => {
     getAllCurrentPosts(mainAreaId, page, accessToken)
       .then(nextPosts => {
+        if (nextPosts.length === 0) {
+          setHasMore(false);
+          return;
+        }
         setPosts(posts.concat(nextPosts));
         setPage(page + 1);
       })
@@ -46,12 +50,16 @@ const Home = () => {
       <InfiniteScroll
         next={fetchNextPosts}
         hasMore={hasMore}
-        loader={<div>Loading ...</div>}
+        loader={<h3>Loading ...</h3>}
         dataLength={posts.length}
+        endMessage={<h3>모두 읽으셨습니다!</h3>}
       >
         {posts.map((post) => <PostItem key={post.id} post={post} />)}
       </InfiniteScroll>
-      <br /><br /><br /><br />
+      <br />
+      <br />
+      <br />
+      <br />
       <Bottom selected={HOME} />
     </>
   );
