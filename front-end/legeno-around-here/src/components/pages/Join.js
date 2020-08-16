@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { createUser } from '../api/API';
 
 import Title from '../join/Title';
 import Input from '../join/Input';
@@ -129,20 +129,7 @@ function JoinForm() {
   }, []);
 
   const join = useCallback(() => {
-    axios
-      .post('http://capzzang.co.kr:8080/join', {
-        email,
-        nickname,
-        password,
-      })
-      .then((response) => {
-        alert('회원가입을 축하드립니다.');
-        document.location.href = '/login';
-      })
-      .catch(() => {
-        alert('회원가입에 실패하였습니다.');
-        handleReset();
-      });
+    createUser(email, nickname, password, handleReset);
   }, [email, nickname, password, handleReset]);
 
   const handleSubmit = useCallback(
@@ -168,7 +155,8 @@ function JoinForm() {
     ],
   );
 
-  return (<>
+  return (
+    <>
       <Title>우리동네 캡짱</Title>
       <form onSubmit={handleSubmit}>
         <InputSection>
@@ -217,7 +205,8 @@ function JoinForm() {
           </InputSection>
         </Link>
       </form>
-  </>);
+    </>
+  );
 }
 
 export default JoinForm;

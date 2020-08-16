@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 
 import { getAccessTokenFromCookie } from '../../util/TokenUtils';
 import Sectors from '../sector/Sectors';
 import Pagination from '../sector/Pagination';
 import Bottom from '../Bottom';
-import {SECTOR} from "../../constants/BottomItems";
+import { SECTOR } from '../../constants/BottomItems';
+import { findAllSectors } from '../api/API';
 
 function Sector() {
   const [accessToken] = useState(getAccessTokenFromCookie());
@@ -21,36 +21,21 @@ function Sector() {
 
   useEffect(() => {
     setLoading(true);
-    const config = {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-Auth-Token': accessToken,
-      },
-    };
-    axios
-      .get('http://capzzang.co.kr:8080/sectors?size=50', config)
-      .then(async (response) => {
-        const userResponse = await response.data;
-        setSectors(userResponse.content);
-        console.log(userResponse.content);
-      })
-      .catch((error) => {
-        alert(`부문정보를 가져올 수 없습니다.${error}`);
-      });
+    findAllSectors(setSectors, accessToken);
     setLoading(false);
   }, [accessToken]);
   if (loading) return <div>Loading...</div>;
   return (
     <>
-        <Sectors sectors={currentSectors} />
-        <Pagination
-          sectorsPerPage={sectorsPerPage}
-          totalSectors={sectors.length}
-          paginate={paginate}
-        />
-        <br />
-        <br />
-        <br />
+      <Sectors sectors={currentSectors} />
+      <Pagination
+        sectorsPerPage={sectorsPerPage}
+        totalSectors={sectors.length}
+        paginate={paginate}
+      />
+      <br />
+      <br />
+      <br />
       <Bottom selected={SECTOR}></Bottom>
     </>
   );

@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 
 import { getAccessTokenFromCookie } from '../../util/TokenUtils';
-import { findPost } from '../postdetail/PostFinder';
 import Bottom from '../Bottom';
 import TopBar from '../postdetail/TopBar';
 import Image from '../postdetail/Image';
+import { findPost } from '../api/API';
 
 const Line = styled.div`
   width: 100%;

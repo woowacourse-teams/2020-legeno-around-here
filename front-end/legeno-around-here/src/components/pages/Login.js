@@ -1,14 +1,13 @@
 import React, { useState, useCallback } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { setAccessTokenCookie } from '../../util/TokenUtils';
 import Title from '../login/Title';
 import InputSection from '../login/InputSection';
 import Input from '../login/Input';
 import Label from '../login/Label';
 import Button from '../login/Button';
+import { loginUser } from '../api/API';
 
 const ButtonSection = styled.div`
   width: 100%;
@@ -36,21 +35,7 @@ function LoginForm() {
   }, []);
 
   const login = useCallback(() => {
-    axios
-      .post('http://capzzang.co.kr:8080/login', {
-        email,
-        password,
-      })
-      .then(async (response) => {
-        const tokenResponse = await response.data;
-        setAccessTokenCookie(tokenResponse.accessToken);
-        alert('로그인되었습니다.');
-        document.location.href = '/mypage';
-      })
-      .catch(() => {
-        alert('로그인에 실패하였습니다.');
-        handleReset();
-      });
+    loginUser(email, password, handleReset);
   }, [email, password, handleReset]);
 
   const handleSubmit = useCallback(
