@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { setAccessTokenCookie } from '../../util/TokenUtils';
+import {setAccessTokenCookie} from '../../util/TokenUtils';
 
 const DEFAULT_SIZE = 10;
 const DEFAULT_SORTED_BY = 'id';
@@ -82,7 +82,11 @@ export const findMyInfo = ({
     });
 };
 
-export const findAllCurrentPosts = async (mainAreaId, page, accessToken) => {
+export const findCurrentPostsFromPage = async (
+  mainAreaId,
+  page,
+  accessToken,
+) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,

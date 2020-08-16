@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import AppBar from '../AppBar';
 import Bottom from '../Bottom';
 
-import { findAllCurrentPosts } from '../api/API';
-import { getAccessTokenFromCookie } from '../../util/TokenUtils';
-import { HOME } from '../../constants/BottomItems';
+import {findCurrentPostsFromPage} from '../api/API';
+import {getAccessTokenFromCookie} from '../../util/TokenUtils';
+import {HOME} from '../../constants/BottomItems';
 import PostItem from '../post/PostItem';
 
 const Home = () => {
@@ -19,7 +19,7 @@ const Home = () => {
 
   /* 처음에 보여줄 최근글 목록을 가져옴 */
   useEffect(() => {
-    findAllCurrentPosts(mainAreaId, 0, accessToken).then((firstPosts) => {
+    findCurrentPostsFromPage(mainAreaId, 0, accessToken).then((firstPosts) => {
       if (firstPosts.length === 0) {
         setHasMore(false);
         return;
@@ -30,7 +30,7 @@ const Home = () => {
   }, [mainAreaId, accessToken]);
 
   const fetchNextPosts = () => {
-    findAllCurrentPosts(mainAreaId, page, accessToken)
+    findCurrentPostsFromPage(mainAreaId, page, accessToken)
       .then((nextPosts) => {
         if (nextPosts.length === 0) {
           setHasMore(false);
