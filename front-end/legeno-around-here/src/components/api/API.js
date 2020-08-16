@@ -102,7 +102,7 @@ export const findAllCurrentPosts = async (mainAreaId, page, accessToken) => {
     )
     .catch((error) => {
       console.log(`최근 글을 가져올 수 없습니다! error : ${error}`);
-      // document.location.href = '/login';
+      document.location.href = '/login';
     });
   return response.data.content;
 };
