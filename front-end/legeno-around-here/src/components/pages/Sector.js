@@ -5,7 +5,7 @@ import { getAccessTokenFromCookie } from '../../util/TokenUtils';
 import Sectors from '../sector/Sectors';
 import Pagination from '../sector/Pagination';
 import Bottom from '../Bottom';
-import {SECTOR} from "../../constants/BottomItems";
+import { SECTOR } from '../../constants/BottomItems';
 
 function Sector() {
   const [accessToken] = useState(getAccessTokenFromCookie());
@@ -28,7 +28,7 @@ function Sector() {
       },
     };
     axios
-      .get('http://capzzang.co.kr:8080/sectors?size=50', config)
+      .get('http://localhost:8080/sectors?size=50', config)
       .then(async (response) => {
         const userResponse = await response.data;
         setSectors(userResponse.content);
@@ -42,15 +42,15 @@ function Sector() {
   if (loading) return <div>Loading...</div>;
   return (
     <>
-        <Sectors sectors={currentSectors} />
-        <Pagination
-          sectorsPerPage={sectorsPerPage}
-          totalSectors={sectors.length}
-          paginate={paginate}
-        />
-        <br />
-        <br />
-        <br />
+      <Sectors sectors={currentSectors} />
+      <Pagination
+        sectorsPerPage={sectorsPerPage}
+        totalSectors={sectors.length}
+        paginate={paginate}
+      />
+      <br />
+      <br />
+      <br />
       <Bottom selected={SECTOR}></Bottom>
     </>
   );

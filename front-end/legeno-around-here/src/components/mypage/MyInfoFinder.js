@@ -12,7 +12,7 @@ export const findMyInto = ({
     },
   };
   axios
-    .get('http://capzzang.co.kr:8080/users/myinfo', config)
+    .get('http://localhost:8080/users/myinfo', config)
     .then(async (response) => {
       const userResponse = await response.data;
       setEmailState(userResponse.email);

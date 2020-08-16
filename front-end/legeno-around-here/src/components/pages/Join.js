@@ -1,30 +1,58 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
 
-import Title from '../join/Title';
-import Input from '../join/Input';
-import Label from '../join/Label';
-import Button from '../join/Button';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
 
-const InputCheck = styled.p`
-  width: 320px;
-  height: 18px;
-  font-size: 10px;
-  color: red;
-  line-height: 18px;
-  margin: 0px 0px;
-`;
+const Copyright = () => {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Copyright © Ittabi 2020.'}
+    </Typography>
+  );
+};
 
-const InputSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
+const InputCheck = (input) => {
+  return (
+    <Grid item xs={12}>
+      <Typography variant="caption" color="error">
+        {input}
+      </Typography>
+    </Grid>
+  );
+};
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(3),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
 
 function JoinForm() {
+  const classes = useStyles();
   const NICKNAME_MIN_LENGTH = 1;
   const NICKNAME_MAX_LENGTH = 10;
   const PASSWORD_MIN_LENGTH = 8;
@@ -65,44 +93,26 @@ function JoinForm() {
 
   const emailCheck = useMemo(() => {
     if (validateEmail) {
-      return (
-        <InputCheck className="alert">
-          올바른 이메일 형식을 입력해주세요.
-        </InputCheck>
-      );
+      return InputCheck('올바른 이메일 형식을 입력해주세요.');
     }
-    return <InputCheck className="alert"></InputCheck>;
   }, [validateEmail]);
 
   const nicknameCheck = useMemo(() => {
     if (validateNickname) {
-      return (
-        <InputCheck className="alert">
-          닉네임 길이는 10 자 이하로 해주세요.
-        </InputCheck>
-      );
+      return InputCheck('닉네임 길이는 10 자 이하로 해주세요.');
     }
-    return <InputCheck className="alert"></InputCheck>;
   }, [validateNickname]);
 
   const passwordCheck = useMemo(() => {
     if (validatePassword) {
-      return (
-        <InputCheck className="alert">
-          비밀번호 길이는 8 ~ 16 자로 해주세요.
-        </InputCheck>
-      );
+      return InputCheck('비밀번호 길이는 8 ~ 16 자로 해주세요.');
     }
-    return <InputCheck className="alert"></InputCheck>;
   }, [validatePassword]);
 
   const passwordRepeatCheck = useMemo(() => {
     if (validatePasswordRepeat) {
-      return (
-        <InputCheck className="alert">비밀번호가 일치하지 않습니다.</InputCheck>
-      );
+      return InputCheck('비밀번호가 일치하지 않습니다.');
     }
-    return <InputCheck className="alert"></InputCheck>;
   }, [validatePasswordRepeat]);
 
   const handleChangeEmail = useCallback(({ target: { value } }) => {
@@ -130,7 +140,7 @@ function JoinForm() {
 
   const join = useCallback(() => {
     axios
-      .post('http://capzzang.co.kr:8080/join', {
+      .post('http://localhost:8080/join', {
         email,
         nickname,
         password,
@@ -168,56 +178,118 @@ function JoinForm() {
     ],
   );
 
-  return (<>
-      <Title>우리동네 캡짱</Title>
-      <form onSubmit={handleSubmit}>
-        <InputSection>
-          <Label>아이디 (E-mail)</Label>
-          <Input
-            type="email"
-            placeholder="이메일"
-            value={email}
-            onChange={handleChangeEmail}
-          />
-          <Label>{emailCheck}</Label>
-        </InputSection>
-        <InputSection>
-          <Label>닉네임</Label>
-          <Input
-            type="text"
-            placeholder="닉네임"
-            value={nickname}
-            onChange={handleChangeNickname}
-          />
-          <Label>{nicknameCheck}</Label>
-        </InputSection>
-        <InputSection>
-          <Label>비밀번호</Label>
-          <Input
-            type="password"
-            placeholder="비밀번호"
-            value={password}
-            onChange={handleChangePassword}
-          />
-          <Label>{passwordCheck}</Label>
-          <Input
-            type="password"
-            placeholder="비밀번호 확인"
-            value={passwordRepeat}
-            onChange={handleChangePasswordRepeat}
-          />
-          <Label>{passwordRepeatCheck}</Label>
-        </InputSection>
-        <InputSection>
-          <Button type="submit">회원가입</Button>
-        </InputSection>
-        <Link to="/" style={{ textDecoration: 'none' }}>
-          <InputSection>
-            <Button type="button">홈으로</Button>
-          </InputSection>
-        </Link>
-      </form>
-  </>);
+  return (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Avatar className={classes.avatar}>
+          <ThumbUpIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          우리동네캡짱 회원가입
+        </Typography>
+        <form onSubmit={handleSubmit} className={classes.form} noValidate>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="email"
+                label="이메일"
+                name="email"
+                autoComplete="email"
+                type="email"
+                value={email}
+                onChange={handleChangeEmail}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="caption" color="error">
+                {emailCheck}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="lastName"
+                label="닉네임"
+                name="lastName"
+                autoComplete="lname"
+                type="text"
+                value={nickname}
+                onChange={handleChangeNickname}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="caption" color="error">
+                {nicknameCheck}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="password"
+                label="비밀번호"
+                id="password"
+                autoComplete="current-password"
+                type="password"
+                value={password}
+                onChange={handleChangePassword}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="caption" color="error">
+                {passwordCheck}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="passwordRepeat"
+                label="비밀번호 확인"
+                id="passwordRepeat"
+                autoComplete="current-password"
+                type="password"
+                value={passwordRepeat}
+                onChange={handleChangePasswordRepeat}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="caption" color="error">
+                {passwordRepeatCheck}
+              </Typography>
+            </Grid>
+          </Grid>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            회원가입
+          </Button>
+          <Grid container justify="flex-end">
+            <Grid item>
+              <Link to="/login" variant="body2">
+                이미 계정이 있으신가요? 로그인을 해주세요!
+              </Link>
+            </Grid>
+          </Grid>
+        </form>
+      </div>
+      <Box mt={5}>
+        <Copyright />
+      </Box>
+    </Container>
+  );
 }
 
 export default JoinForm;
