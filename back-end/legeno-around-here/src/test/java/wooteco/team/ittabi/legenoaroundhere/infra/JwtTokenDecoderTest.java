@@ -42,10 +42,9 @@ class JwtTokenDecoderTest {
     @Test
     @DisplayName("토큰으로부터 Authentication 얻기")
     void getAuthentication() {
-        userService
-            .createUser(
-                new UserCreateRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD,
-                    TEST_AREA_ID));
+        userService.createUser(
+            new UserCreateRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD,
+                TEST_AREA_ID));
         userService.login(new LoginRequest(TEST_USER_EMAIL, TEST_USER_PASSWORD));
 
         assertThat(jwtTokenDecoder.getAuthentication(token))

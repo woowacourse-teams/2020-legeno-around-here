@@ -80,7 +80,7 @@ public class User extends BaseEntity implements UserDetails {
 
     private Email makeEmail(String email) {
         if (Objects.nonNull(email)) {
-            new Email(email);
+            return new Email(email);
         }
         return null;
     }
