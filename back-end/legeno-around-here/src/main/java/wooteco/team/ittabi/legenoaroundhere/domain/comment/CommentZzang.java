@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.comment;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -24,6 +25,9 @@ public class CommentZzang extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id", nullable = false)
     private User creator;
+
+    @Column(nullable = false)
+    private String zzang_state = "";
 
     public CommentZzang(Comment comment, User creator) {
         this.comment = comment;
