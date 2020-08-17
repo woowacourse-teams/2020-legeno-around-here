@@ -12,7 +12,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @EqualsAndHashCode
 @ToString

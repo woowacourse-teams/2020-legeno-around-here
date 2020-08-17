@@ -1,7 +1,9 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.post;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,23 +23,23 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.comment.Comment;
+import wooteco.team.ittabi.legenoaroundhere.domain.comment.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.PostZzang;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotAvailableException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-@ToString(exclude = {"comments", "postImages", "postZzangs"})
+@ToString(exclude = {"comments", "postImages", "zzangs"})
 @SQLDelete(sql = "UPDATE post SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class Post extends BaseEntity {
 
-    private static final int MAX_LENGTH = 20;
+    private static final int MAX_LENGTH = 2000;
 
     @Lob
     @Column(nullable = false)
@@ -50,7 +52,7 @@ public class Post extends BaseEntity {
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<PostZzang> postZzangs = new ArrayList<>();
+    private List<PostZzang> zzangs = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "area_id", nullable = false)
@@ -84,27 +86,67 @@ public class Post extends BaseEntity {
         }
     }
 
-    public int getPostZzangCount() {
-        return postZzangs.size();
+    public boolean isAvailable() {
+        return this.state.isAvailable();
     }
 
-    public boolean existPostZzangBy(User user) {
-        return postZzangs.stream()
-            .anyMatch(postZzang -> postZzang.isSameCreator(user));
+    public int getPostZzangCount() {
+        return zzangs.size();
     }
+
 
     public PostZzang findPostZzangBy(User user) {
-        return postZzangs.stream()
+        return zzangs.stream()
             .filter(postZzang -> postZzang.isSameCreator(user))
             .findFirst()
             .orElseGet(() -> new PostZzang(this, user));
     }
 
-    public void addPostZzang(PostZzang postZzang) {
-        postZzangs.add(postZzang);
+    public boolean hasZzangCreator(User user) {
+        return zzangs.stream()
+            .anyMatch(zzang -> zzang.isSameCreator(user));
     }
 
-    public void removePostZzang(PostZzang postZzang) {
-        postZzangs.remove(postZzang);
+    public void addComment(Comment comment) {
+        if (!comments.contains(comment)) {
+            comments.add(comment);
+        }
+        if (!comment.hasPost()) {
+            comment.setPost(this);
+        }
+    }
+
+    public void removeComments(Comment comment) {
+        comments.remove(comment);
+    }
+
+    public List<Comment> getComments() {
+        return Collections.unmodifiableList(comments);
+    }
+
+    public int getAvailableCommentsSize() {
+        return (int) comments.stream()
+            .filter(Comment::isAvailable)
+            .count();
+    }
+
+    public void pressZzang(User user) {
+        validateAvailable();
+        Optional<PostZzang> foundZzang = zzangs.stream()
+            .filter(PostZzang -> PostZzang.isSameCreator(user))
+            .findFirst();
+
+        if (foundZzang.isPresent()) {
+            this.zzangs.remove(foundZzang.get());
+            return;
+        }
+        zzangs.add(new PostZzang(this, user));
+    }
+
+    public void validateAvailable() {
+        if (!this.state.isAvailable()) {
+            throw new NotAvailableException(
+                "ID [" + this.getId() + "]에 해당하는 Post가 유효하지 않습니다.");
+        }
     }
 }
