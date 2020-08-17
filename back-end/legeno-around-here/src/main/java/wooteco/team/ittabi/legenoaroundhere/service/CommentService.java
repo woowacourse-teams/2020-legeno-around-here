@@ -35,19 +35,23 @@ public class CommentService {
         comment.setPost(post);
 
         Comment savedComment = commentRepository.save(comment);
-        return CommentResponse.of(savedComment);
+        return CommentResponse.of(user, savedComment);
     }
 
     @Transactional(readOnly = true)
     public CommentResponse findComment(Long commentId) {
+        User user = (User) authenticationFacade.getPrincipal();
+
         Comment comment = findCommentBy(commentId);
-        return CommentResponse.of(comment);
+        return CommentResponse.of(user, comment);
     }
 
     @Transactional(readOnly = true)
     public List<CommentResponse> findAllCommentBy(Long postId) {
+        User user = (User) authenticationFacade.getPrincipal();
+
         List<Comment> comments = commentRepository.findAllByPostId(postId);
-        return CommentResponse.listOf(comments);
+        return CommentResponse.listOf(user, comments);
     }
 
     @Transactional
@@ -71,6 +75,7 @@ public class CommentService {
         }
     }
 
+    @Transactional
     public void pressZzang(Long commentId) {
         User user = (User) authenticationFacade.getPrincipal();
 

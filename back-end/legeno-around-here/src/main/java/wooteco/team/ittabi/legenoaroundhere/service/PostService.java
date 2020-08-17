@@ -12,11 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.PostSearch;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
-import wooteco.team.ittabi.legenoaroundhere.domain.comment.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.PostZzang;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.ZzangState;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
@@ -61,9 +58,7 @@ public class PostService {
         uploadImages(postCreateRequest).forEach(image -> image.setPost(post));
 
         Post savedPost = postRepository.save(post);
-        List<Comment> comments = findAllComment(post.getId());
-        ZzangState zzangState = findPostZzang(post).getZzangState();
-        return PostResponse.of(savedPost, comments, zzangState);
+        return PostResponse.of(user, savedPost);
     }
 
     private List<PostImage> uploadImages(PostCreateRequest postCreateRequest) {
@@ -75,11 +70,12 @@ public class PostService {
             .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public PostResponse findPost(Long id) {
+        User user = (User) authenticationFacade.getPrincipal();
+
         Post post = findPostBy(id);
-        List<Comment> comments = findAllComment(post.getId());
-        ZzangState zzangState = findPostZzang(post).getZzangState();
-        return PostResponse.of(post, comments, zzangState);
+        return PostResponse.of(user, post);
     }
 
     private Post findPostBy(Long id) {
@@ -87,16 +83,14 @@ public class PostService {
             .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
     }
 
+    @Transactional(readOnly = true)
     public Page<PostWithCommentsCountResponse> searchAllPost(Pageable pageable,
         PostSearchRequest postSearchFilter) {
+        User user = (User) authenticationFacade.getPrincipal();
+
         Page<Post> posts = getPostByFilter(pageable, postSearchFilter.toPostSearch());
 
-        return posts
-            .map(post -> {
-                List<Comment> comments = findAllComment(post.getId());
-                ZzangState zzangState = findPostZzang(post).getZzangState();
-                return PostWithCommentsCountResponse.of(post, comments, zzangState);
-            });
+        return posts.map(post -> PostWithCommentsCountResponse.of(user, post));
     }
 
     private Page<Post> getPostByFilter(Pageable pageable, PostSearch postSearch) {
@@ -150,20 +144,19 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    private List<Comment> findAllComment(Long postId) {
-        return commentRepository.findAllByPostId(postId);
-    }
-
-    private PostZzang findPostZzang(Post post) {
-        User user = (User) authenticationFacade.getPrincipal();
-        return post.findPostZzangBy(user);
-    }
-
     private void validateIsCreator(Post post) {
         User user = (User) authenticationFacade.getPrincipal();
 
         if (user.isNotSame(post.getCreator())) {
             throw new NotAuthorizedException("권한이 없습니다.");
         }
+    }
+
+    @Transactional
+    public void pressZzang(Long postId) {
+        User user = (User) authenticationFacade.getPrincipal();
+
+        Post post = findPostBy(postId);
+        post.pressZzang(user);
     }
 }

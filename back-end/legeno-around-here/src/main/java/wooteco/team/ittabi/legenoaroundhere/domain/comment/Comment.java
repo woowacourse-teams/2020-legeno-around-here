@@ -72,8 +72,8 @@ public class Comment extends BaseEntity {
     }
 
     public void pressZzang(User user) {
-        validateAvailablePost();
-        validateAvailableComment();
+        this.validateAvailable();
+        this.post.validateAvailable();
         Optional<CommentZzang> foundZzang = zzangs.stream()
             .filter(commentZzang -> commentZzang.isSameCreator(user))
             .findFirst();
@@ -85,14 +85,7 @@ public class Comment extends BaseEntity {
         zzangs.add(new CommentZzang(this, user));
     }
 
-    private void validateAvailablePost() {
-        if (!this.post.isAvailable()) {
-            throw new NotAvailableException(
-                "ID [" + this.post.getId() + "]에 해당하는 Post가 유효하지 않습니다.");
-        }
-    }
-
-    private void validateAvailableComment() {
+    private void validateAvailable() {
         if (!state.isAvailable()) {
             throw new NotAvailableException("ID [" + this.getId() + "]에 해당하는 Comment가 유효하지 않습니다.");
         }
@@ -112,5 +105,14 @@ public class Comment extends BaseEntity {
 
     public int getZzangSize() {
         return zzangs.size();
+    }
+
+    public boolean hasZzangCreator(User user) {
+        return zzangs.stream()
+            .anyMatch(zzang -> zzang.isSameCreator(user));
+    }
+
+    public boolean isAvailable() {
+        return state.isAvailable();
     }
 }

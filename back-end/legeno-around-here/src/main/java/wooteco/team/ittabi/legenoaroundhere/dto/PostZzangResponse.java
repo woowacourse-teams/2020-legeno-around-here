@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.ZzangState;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
@@ -16,9 +15,9 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.ZzangState;
 public class PostZzangResponse {
 
     private int count;
-    private String state;
+    private boolean activated;
 
-    public static PostZzangResponse of(int likeCount, ZzangState zzangState) {
-        return new PostZzangResponse(likeCount, zzangState.name());
+    public static PostZzangResponse of(int likeCount, boolean activated) {
+        return new PostZzangResponse(likeCount, activated);
     }
 }

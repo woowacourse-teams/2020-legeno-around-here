@@ -15,5 +15,5 @@ import lombok.ToString;
 public class CommentZzangResponse {
 
     private int count;
-    private String state;
+    private boolean activated;
 }

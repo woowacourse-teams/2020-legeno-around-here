@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.CommentZzangResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
@@ -158,5 +159,39 @@ public class CommentServiceTest extends ServiceTest {
         assertThatThrownBy(
             () -> commentService.deleteComment(commentResponse.getId()))
             .isInstanceOf(NotAuthorizedException.class);
+    }
+
+
+    @DisplayName("비활성화된 좋아요를 활성화")
+    @Test
+    void pressCommentZzang_activeCommentZzang_SuccessToActiveCommentZzang() {
+        CommentRequest commentRequest = new CommentRequest(TEST_POST_WRITING);
+
+        Long commentId = commentService.createComment(postResponse.getId(), commentRequest).getId();
+
+        commentService.pressZzang(commentId);
+
+        CommentResponse comment = commentService.findComment(commentId);
+        CommentZzangResponse zzang = comment.getZzang();
+
+        assertThat(zzang.getCount()).isEqualTo(1L);
+        assertThat(zzang.isActivated()).isTrue();
+    }
+
+    @DisplayName("활성화된 좋아요를 비활성화")
+    @Test
+    void pressCommentZzang_inactiveCommentZzang_SuccessToInactiveCommentZzang() {
+        CommentRequest commentRequest = new CommentRequest(TEST_POST_WRITING);
+
+        Long commentId = commentService.createComment(postResponse.getId(), commentRequest).getId();
+
+        commentService.pressZzang(commentId);
+        commentService.pressZzang(commentId);
+
+        CommentResponse comment = commentService.findComment(commentId);
+        CommentZzangResponse zzang = comment.getZzang();
+
+        assertThat(zzang.getCount()).isEqualTo(0L);
+        assertThat(zzang.isActivated()).isFalse();
     }
 }

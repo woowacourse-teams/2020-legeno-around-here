@@ -64,7 +64,7 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         String commentLocation = createComment(postId, accessToken);
         Long commentId = getIdFromUrl(commentLocation);
 
-        CommentResponse commentResponse = findComment(commentId, accessToken);
+        CommentResponse commentResponse = findComment(accessToken, commentId);
 
         assertThat(commentResponse.getId()).isEqualTo(commentId);
         assertThat(commentResponse.getWriting()).isEqualTo(TEST_POST_WRITING);
@@ -81,6 +81,51 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         List<CommentResponse> reFoundPostResponses = findAllCommentBy(postId, accessToken);
 
         assertThat(reFoundPostResponses).hasSize(0);
+    }
+
+    /**
+     * Feature: 댓글의 좋아요 기능
+     * <p>
+     * Scenario: 좋아요 버튼을 누르고, 좋아요 수를 표시한다.
+     * <p>
+     * When 댓글을 등록한다. Then 좋아요 수가 0인 댓글이 등록되었다. 댓글의 짱을 누르지 않은 상태이다.
+     * <p>
+     * When 좋아요 버튼을 누른다. Then 성공했다. 댓글의 짱을 누른 상태이다.
+     * <p>
+     * When 좋아요 버튼이 눌러진 상태에서 다시 좋아요 버튼을 누른다. Then 성공했다. 댓글의 짱을 누르지 않은 상태이다.
+     */
+    @DisplayName("댓글의 좋아요 관리")
+    @Test
+    void manageCommentZzang() {
+        // 댓글 등록
+        String commentLocation = createComment(postId, accessToken);
+        Long commentId = getIdFromUrl(commentLocation);
+        CommentResponse comment = findComment(accessToken, commentId);
+
+        // 댓글 생성 시 초기 댓글 좋아요 수
+        assertThat(comment.getZzang().getCount()).isEqualTo(0L);
+        assertThat(comment.getZzang().isActivated()).isFalse();
+
+        // 비활성화된 좋아요를 활성화
+        pressCommentZzang(comment.getId(), accessToken);
+        comment = findComment(accessToken, commentId);
+
+        assertThat(comment.getZzang().getCount()).isEqualTo(1L);
+        assertThat(comment.getZzang().isActivated()).isTrue();
+
+        // 활성화된 좋아요를 비활성화
+        pressCommentZzang(comment.getId(), accessToken);
+        comment = findComment(accessToken, commentId);
+
+        assertThat(comment.getZzang().getCount()).isEqualTo(0L);
+        assertThat(comment.getZzang().isActivated()).isFalse();
+
+        // 비활성화된 좋아요를 다시 활성화
+        pressCommentZzang(comment.getId(), accessToken);
+        comment = findComment(accessToken, commentId);
+
+        assertThat(comment.getZzang().getCount()).isEqualTo(1L);
+        assertThat(comment.getZzang().isActivated()).isTrue();
     }
 
     private Long createSector() {
@@ -194,7 +239,7 @@ public class CommentAcceptanceTest extends AcceptanceTest {
             .header("Location");
     }
 
-    private CommentResponse findComment(Long commentId, String accessToken) {
+    private CommentResponse findComment(String accessToken, Long commentId) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
@@ -204,5 +249,15 @@ public class CommentAcceptanceTest extends AcceptanceTest {
             .statusCode(HttpStatus.OK.value())
             .extract()
             .as(CommentResponse.class);
+    }
+
+    private void pressCommentZzang(Long commentId, String accessToken) {
+        given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .post("/comments/" + commentId + "/zzangs")
+            .then()
+            .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }

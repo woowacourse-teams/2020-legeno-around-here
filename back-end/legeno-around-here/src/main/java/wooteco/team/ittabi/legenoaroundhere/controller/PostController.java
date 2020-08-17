@@ -82,4 +82,12 @@ public class PostController {
             .ok()
             .body(posts);
     }
+
+    @PostMapping("/{postId}/zzangs")
+    public ResponseEntity<Void> pressPostZzang(@PathVariable Long postId) {
+        postService.pressZzang(postId);
+        return ResponseEntity
+            .noContent()
+            .build();
+    }
 }
