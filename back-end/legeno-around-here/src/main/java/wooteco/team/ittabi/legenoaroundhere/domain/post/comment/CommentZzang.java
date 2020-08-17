@@ -1,9 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.post.comment;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -12,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.ZzangState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 
 @Entity
@@ -29,13 +25,12 @@ public class CommentZzang extends BaseEntity {
     @JoinColumn(name = "creator_id", nullable = false)
     private User creator;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ZzangState zzangState;
-
     public CommentZzang(Comment comment, User creator) {
         this.comment = comment;
         this.creator = creator;
-        this.zzangState = ZzangState.INACTIVATED;
+    }
+
+    public boolean isSameCreator(User user) {
+        return this.creator.equals(user);
     }
 }
