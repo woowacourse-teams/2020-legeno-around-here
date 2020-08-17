@@ -64,12 +64,6 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public Long createAdmin(UserRequest userCreateRequest) {
-        User persistUser = createUserBy(userCreateRequest, Role.ADMIN);
-        return persistUser.getId();
-    }
-
-    @Transactional
     public TokenResponse login(LoginRequest loginRequest) {
         User user = userRepository.findByEmail(new Email(loginRequest.getEmail()))
             .orElseThrow(() -> new NotExistsException("가입되지 않은 회원입니다."));

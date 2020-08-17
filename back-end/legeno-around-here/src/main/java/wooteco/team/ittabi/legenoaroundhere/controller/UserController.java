@@ -31,14 +31,6 @@ public class UserController {
             .build();
     }
 
-    @PostMapping("/joinAdmin")
-    public ResponseEntity<Void> joinAdmin(@RequestBody UserRequest userRequest) {
-        Long userId = userService.createAdmin(userRequest);
-        return ResponseEntity
-            .created(URI.create("/users/" + userId))
-            .build();
-    }
-
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity

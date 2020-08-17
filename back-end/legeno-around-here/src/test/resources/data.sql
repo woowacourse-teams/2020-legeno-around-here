@@ -11,8 +11,8 @@ SELECT id
 FROM CSVRead('src/test/resources/area-seoul.csv');
 
 INSERT INTO User(id, email, nickname, password, created_at, modified_at)
-VALUES (1, 'admin@email.com', '어드민씨',
-        '$2a$10$dEcia20EDmjecE7dlxmSJeb6pHk/cKixUxVdFDKfdABSovUxySFgK', now(), now()),
+VALUES (1, 'admin@test.com', 'adminName',
+        '$2a$10$3tWu7vV57AaV4m96qwTkieQbY8R5TWhDE401ff7XGlSmRC/ItL0F.', now(), now()),
        (2, 'user@email.com', '유저씨',
         '$2a$10$dEcia20EDmjecE7dlxmSJeb6pHk/cKixUxVdFDKfdABSovUxySFgK', now(), now());
 

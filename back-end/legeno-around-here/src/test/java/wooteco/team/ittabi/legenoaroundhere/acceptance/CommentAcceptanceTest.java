@@ -7,7 +7,6 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_PASSWORD;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
@@ -106,25 +105,8 @@ public class CommentAcceptanceTest extends AcceptanceTest {
     }
 
     private String getCreateAdminToken() {
-        createAdmin();
         TokenResponse tokenResponse = login(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD);
         return tokenResponse.getAccessToken();
-    }
-
-    private void createAdmin() {
-        Map<String, String> params = new HashMap<>();
-        params.put("email", TEST_ADMIN_EMAIL);
-        params.put("nickname", TEST_ADMIN_NICKNAME);
-        params.put("password", TEST_ADMIN_PASSWORD);
-
-        given()
-            .body(params)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/joinAdmin")
-            .then()
-            .statusCode(HttpStatus.CREATED.value());
     }
 
     private List<CommentResponse> findAllComment(Long postId, String accessToken) {
