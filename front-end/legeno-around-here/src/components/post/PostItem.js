@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
+import { convertDateFormat } from '../../util/TimeUtils';
 
 const useStyles = makeStyles(() => ({
   grow: {
@@ -27,6 +28,7 @@ const useStyles = makeStyles(() => ({
   cover: {
     flex: '1 0 auto',
     opacity: 0.7,
+    backgroundSize: 'contain',
   },
   photoText: {
     textAlign: 'center',
@@ -48,14 +50,6 @@ const PostItem = ({ post }) => {
     sector,
     writing,
   } = post;
-
-  const convertDateFormat = (UTCDate) => {
-    const dateFormat = UTCDate.split('T');
-    const yyyymmdd = dateFormat[0];
-    const hh = dateFormat[1].split(':')[0];
-    const mm = dateFormat[1].split(':')[1];
-    return yyyymmdd + ' ' + hh + '시' + mm + '분';
-  };
 
   return (
     <Card
