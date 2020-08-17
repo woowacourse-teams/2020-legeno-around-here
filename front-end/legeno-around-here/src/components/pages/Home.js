@@ -52,12 +52,7 @@ const Home = () => {
       <InfiniteScroll
         next={fetchNextPosts}
         hasMore={hasMore}
-        loader={
-          <>
-            <h3>Loading ...</h3>
-            <Loading />
-          </>
-        }
+        loader={<Loading />}
         dataLength={posts.length}
         endMessage={<h3>모두 읽으셨습니다!</h3>}
       >
