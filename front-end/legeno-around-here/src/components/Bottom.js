@@ -17,6 +17,10 @@ import {
   RANKING,
 } from '../constants/BottomItems';
 
+const bottomWarpStyle = {
+  padding: '0px',
+};
+
 const useStyles = makeStyles({
   bottomBarStyle: {
     width: '100%',
@@ -43,6 +47,7 @@ const Bottom = ({ selected }) => {
       position="fixed"
     >
       <BottomNavigationAction
+        style={bottomWarpStyle}
         component={Link}
         to="/"
         label="홈"
@@ -50,6 +55,7 @@ const Bottom = ({ selected }) => {
         icon={<HomeIcon />}
       />
       <BottomNavigationAction
+        style={bottomWarpStyle}
         component={Link}
         to="/ranking"
         label="랭킹"
@@ -57,6 +63,7 @@ const Bottom = ({ selected }) => {
         icon={<EqualizerIcon />}
       />
       <BottomNavigationAction
+        style={bottomWarpStyle}
         component={Link}
         to="/posting"
         label="글쓰기"
@@ -64,6 +71,7 @@ const Bottom = ({ selected }) => {
         icon={<CreateIcon />}
       />
       <BottomNavigationAction
+        style={bottomWarpStyle}
         component={Link}
         to="/sector"
         label="부문"
@@ -71,6 +79,7 @@ const Bottom = ({ selected }) => {
         icon={<CategoryIcon />}
       />
       <BottomNavigationAction
+        style={bottomWarpStyle}
         component={Link}
         to="/myProfile"
         label="프로필"

@@ -11,7 +11,7 @@ import lombok.ToString;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @EqualsAndHashCode
 @ToString
@@ -21,4 +21,14 @@ public class AwardResponse {
     private String description;
     private LocalDateTime date;
     private String location;
+
+    public static AwardResponse of(String name, String description, LocalDateTime date,
+        String location) {
+        return AwardResponse.builder()
+            .name(name)
+            .description(description)
+            .date(date)
+            .location(location)
+            .build();
+    }
 }
