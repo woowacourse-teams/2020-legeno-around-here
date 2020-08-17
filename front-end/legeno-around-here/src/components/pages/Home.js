@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AppBar from '../AppBar';
 import Bottom from '../Bottom';
 
-import { getAllCurrentPosts } from '../api/API';
+import { findAllCurrentPosts } from '../api/API';
 import { getAccessTokenFromCookie } from '../../util/TokenUtils';
 import { HOME } from '../../constants/BottomItems';
 import PostItem from '../post/PostItem';
@@ -19,7 +19,7 @@ const Home = () => {
 
     const loadPosts = async () => {
       setLoading(true);
-      const allPosts = await getAllCurrentPosts(mainAreaId, page, accessToken);
+      const allPosts = await findAllCurrentPosts(mainAreaId, page, accessToken);
       setPosts(allPosts);
       setLoading(false);
     };
