@@ -5,7 +5,7 @@ import Login from './components/pages/Login';
 import PostingPage from './components/pages/posting/PostingPage';
 import MyProfile from './components/pages/MyProfile';
 import SectorPage from './components/pages/sector/SectorPage';
-import PostDetail from './components/pages/PostDetail';
+import PostDetailPage from './components/pages/post/PostDetailPage';
 import Home from './components/pages/Home';
 import Ranking from './components/pages/Ranking';
 
@@ -26,7 +26,7 @@ function App() {
         <Route path="/myProfile" exact component={MyProfile} />
         <Route path="/posting" exact component={PostingPage} />
         <Route path="/sector" exact component={SectorPage} />
-        <Route path="/posts/:postId" exact component={PostDetail} />
+        <Route path="/posts/:postId" exact component={PostDetailPage} />
         <Route path="/home" exact component={Home} />
         <Route path="/ranking" exact component={Ranking} />
         <Redirect path="*" to="/" />
