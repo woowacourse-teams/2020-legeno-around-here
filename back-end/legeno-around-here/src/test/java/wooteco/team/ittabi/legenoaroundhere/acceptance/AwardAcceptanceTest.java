@@ -5,6 +5,7 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
+import io.restassured.RestAssured;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +22,7 @@ public class AwardAcceptanceTest extends AcceptanceTest {
 
     @BeforeEach
     void setUp() {
+        RestAssured.port = port;
         String location = createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         userId = getIdFromUrl(location);
         TokenResponse token = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
