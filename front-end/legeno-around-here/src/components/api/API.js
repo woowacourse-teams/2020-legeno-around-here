@@ -92,7 +92,7 @@ export const findCurrentPostsFromPage = async (
       'X-Auth-Token': accessToken,
     },
   };
-  const response = await axios
+  return await axios
     .get(
       DEFAULT_URL +
         `/posts?` +
@@ -104,12 +104,13 @@ export const findCurrentPostsFromPage = async (
         `sectorIds=`,
       config,
     )
+    .then((response) => response.data.content)
     .catch((error) => {
-      console.log(error);
-      console.log(`최근 글을 가져올 수 없습니다! error : ${error}`);
-      document.location.href = '/login';
+      console.log(`## 최근 글을 가져올 수 없습니다.`);
+      console.log(`status code : ${error.response.status}`);
+      console.log(`response 전체 : ${error.response}`);
+      throw error.response;
     });
-  return response.data.content;
 };
 
 export const findAllAreas = async (page, accessToken, keyword) => {
@@ -118,7 +119,7 @@ export const findAllAreas = async (page, accessToken, keyword) => {
       'X-Auth-Token': accessToken,
     },
   };
-  const response = await axios
+  return await axios
     .get(
       DEFAULT_URL +
         `/areas?` +
@@ -129,10 +130,12 @@ export const findAllAreas = async (page, accessToken, keyword) => {
         `keyword=${keyword}`,
       config,
     )
-    .catch(() => {
-      alert(`해당하는 지역이 없습니다!`);
+    .then((response) => {
+      return response.data.content;
+    })
+    .catch((error) => {
+      throw error.response;
     });
-  return response.data.content;
 };
 
 export const findAllSectors = async (accessToken) => {
