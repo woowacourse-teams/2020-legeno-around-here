@@ -71,7 +71,7 @@ public class PostAcceptanceTest extends AcceptanceTest {
         String postWithoutImageLocation = createPostWithoutImage(accessToken);
         Long postWithoutImageId = getIdFromUrl(postWithoutImageLocation);
 
-        PostResponse postWithoutImageResponse = findPost(postWithoutImageId, accessToken);
+        PostResponse postWithoutImageResponse = findPost(accessToken, postWithoutImageId);
 
         assertThat(postWithoutImageResponse.getId()).isEqualTo(postWithoutImageId);
         assertThat(postWithoutImageResponse.getWriting()).isEqualTo(TEST_POST_WRITING);
@@ -82,7 +82,7 @@ public class PostAcceptanceTest extends AcceptanceTest {
         String postWithImageLocation = createPostWithImage(accessToken);
         Long postWithImageId = getIdFromUrl(postWithImageLocation);
 
-        PostResponse postWithImageResponse = findPost(postWithImageId, accessToken);
+        PostResponse postWithImageResponse = findPost(accessToken, postWithImageId);
 
         assertThat(postWithImageResponse.getId()).isEqualTo(postWithImageId);
         assertThat(postWithImageResponse.getWriting()).isEqualTo(TEST_POST_WRITING);
@@ -98,13 +98,13 @@ public class PostAcceptanceTest extends AcceptanceTest {
         String updatedWriting = "BingBong and Jamie";
         updatePost(postWithoutImageId, updatedWriting, accessToken);
 
-        PostResponse updatedPostResponse = findPost(postWithoutImageId, accessToken);
+        PostResponse updatedPostResponse = findPost(accessToken, postWithoutImageId);
 
         assertThat(updatedPostResponse.getId()).isEqualTo(postWithoutImageId);
         assertThat(updatedPostResponse.getWriting()).isEqualTo(updatedWriting);
 
         // 조회
-        PostResponse postFindResponse = findPost(postWithoutImageId, accessToken);
+        PostResponse postFindResponse = findPost(accessToken, postWithoutImageId);
 
         assertThat(postFindResponse.getId()).isEqualTo(postWithoutImageId);
         assertThat(postFindResponse.getWriting()).isEqualTo(updatedWriting);
@@ -178,6 +178,51 @@ public class PostAcceptanceTest extends AcceptanceTest {
         posts = searchAllPostWithFilter(accessToken,
             "areaIds=" + TEST_AREA_ID + "&sectorIds=" + sectorAId + "," + sectorBId);
         assertThat(posts).hasSize(3);
+    }
+
+    /**
+     * Feature: 글의 좋아요 기능
+     * <p>
+     * Scenario: 좋아요 버튼을 누르고, 좋아요 수를 표시한다.
+     * <p>
+     * When 글을 등록한다. Then 좋아요 수가 0인 글이 등록되었다. 글의 짱을 누르지 않은 상태이다.
+     * <p>
+     * When 좋아요 버튼을 누른다. Then 성공했다. 글의 짱을 누른 상태이다.
+     * <p>
+     * When 좋아요 버튼이 눌러진 상태에서 다시 좋아요 버튼을 누른다. Then 성공했다. 글의 짱을 누르지 않은 상태이다.
+     */
+    @DisplayName("글의 좋아요 관리")
+    @Test
+    void managePostZzang() {
+        // 이미지가 포함되지 않은 글 등록
+        String postLocation = createPostWithoutImage(accessToken);
+        Long postId = getIdFromUrl(postLocation);
+        PostResponse post = findPost(accessToken, postId);
+
+        // 글 생성 시 초기 글 좋아요 수
+        assertThat(post.getZzang().getCount()).isEqualTo(0L);
+        assertThat(post.getZzang().isActivated()).isFalse();
+
+        // 비활성화된 좋아요를 활성화
+        pressPostZzang(accessToken, post.getId());
+        post = findPost(accessToken, postId);
+
+        assertThat(post.getZzang().getCount()).isEqualTo(1L);
+        assertThat(post.getZzang().isActivated()).isTrue();
+
+        // 활성화된 좋아요를 비활성화
+        pressPostZzang(accessToken, post.getId());
+        post = findPost(accessToken, postId);
+
+        assertThat(post.getZzang().getCount()).isEqualTo(0L);
+        assertThat(post.getZzang().isActivated()).isFalse();
+
+        // 비활성화된 좋아요를 다시 활성화
+        pressPostZzang(accessToken, post.getId());
+        post = findPost(accessToken, postId);
+
+        assertThat(post.getZzang().getCount()).isEqualTo(1L);
+        assertThat(post.getZzang().isActivated()).isTrue();
     }
 
     /**
@@ -289,7 +334,7 @@ public class PostAcceptanceTest extends AcceptanceTest {
             .getList("content", PostWithCommentsCountResponse.class);
     }
 
-    private PostResponse findPost(Long id, String accessToken) {
+    private PostResponse findPost(String accessToken, Long id) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
@@ -355,5 +400,15 @@ public class PostAcceptanceTest extends AcceptanceTest {
             .statusCode(HttpStatus.CREATED.value())
             .extract()
             .header("Location");
+    }
+
+    private void pressPostZzang(String accessToken, Long postId) {
+        given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .post("/posts/" + postId + "/zzangs")
+            .then()
+            .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }

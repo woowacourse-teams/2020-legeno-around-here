@@ -7,8 +7,10 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_OTHER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
+import io.restassured.RestAssured;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,11 @@ public class UserAcceptanceTest extends AcceptanceTest {
 
     private static final String USER_LOCATION_FORMAT = "^/users/[1-9][0-9]*$";
     private static final int TOKEN_MIN_SIZE = 1;
+
+    @BeforeEach
+    void setUp() {
+        RestAssured.port = port;
+    }
 
     /**
      * Feature: 회원관리 Scenario: 회원을 관리한다.

@@ -16,7 +16,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @EqualsAndHashCode(exclude = "image")
 @ToString
@@ -56,7 +56,13 @@ public class UserResponse {
             .id(user.getId())
             .email(user.getEmailByString())
             .nickname(user.getNicknameByString())
-            .image(new UserImageResponse(1L, "mock_profile_image", urls.get(0), now(), now()))
+            .image(UserImageResponse.builder()
+                .id(1L)
+                .name("mock_profile_image")
+                .url(urls.get(0))
+                .createdAt(now())
+                .modifiedAt(now())
+                .build())
             .area(AreaResponse.of(user.getArea()))
             .build();
     }
