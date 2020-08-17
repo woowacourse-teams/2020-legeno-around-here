@@ -7,8 +7,6 @@ import MyProfile from './components/pages/MyProfile';
 import SectorPage from './components/pages/sector/SectorPage';
 import PostDetail from './components/pages/PostDetail';
 import Home from './components/pages/Home';
-
-import './style.css';
 import Ranking from './components/pages/Ranking';
 
 function App() {

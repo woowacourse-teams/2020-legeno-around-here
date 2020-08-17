@@ -4,7 +4,7 @@ import { setAccessTokenCookie } from '../../util/TokenUtils';
 const DEFAULT_SIZE = 50;
 const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
-const DEFAULT_URL = 'http://localhost:8080';
+const DEFAULT_URL = 'https://back.capzzang.co.kr';
 
 export const loginUser = (email, password, handleReset) => {
   axios
@@ -102,7 +102,7 @@ export const findAllCurrentPosts = async (mainAreaId, page, accessToken) => {
     )
     .catch((error) => {
       console.log(`최근 글을 가져올 수 없습니다! error : ${error}`);
-      // document.location.href = '/login';
+      document.location.href = '/login';
     });
   return response.data.content;
 };
