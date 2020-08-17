@@ -81,6 +81,28 @@ export const createComment = async (postId, writing, accessToken) => {
   return false;
 };
 
+export const pressPostZzang = async (postId, accessToken) => {
+  const config = {
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
+  };
+  try {
+    const response = await axios.post(
+      DEFAULT_URL + `/posts/${postId}/zzangs`,
+      {},
+      config,
+    );
+    if (response.status === 204) {
+      return true;
+    }
+  } catch (error) {
+    alert('짱이 눌러지지 않았습니다! 다시 작성해주세요!');
+    console.log(error);
+  }
+  return false;
+};
+
 export const findMyInfo = ({
   accessToken,
   setEmailState,

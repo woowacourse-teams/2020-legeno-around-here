@@ -77,7 +77,7 @@ const PostItem = ({ post }) => {
         </CardContent>
         <CardActions disableSpacing>
           <IconButton>
-            {zzang.state === 'ACTIVATE' ? (
+            {zzang.activated === true ? (
               <FavoriteIcon />
             ) : (
               <FavoriteBorderIcon />

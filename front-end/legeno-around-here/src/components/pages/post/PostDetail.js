@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { createComment, findCommentsByPostId } from '../../api/API';
+import {
+  createComment,
+  findCommentsByPostId,
+  pressPostZzang,
+} from '../../api/API';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import Typography from '@material-ui/core/Typography';
 import { TextField, IconButton, Grid } from '@material-ui/core';
@@ -16,9 +20,25 @@ const PostDetail = ({ post }) => {
   const [writing, setWriting] = useState('');
   const [comments, setComments] = useState(post.comments);
   const [loading, setLoading] = useState(false);
+  const [zzang, setZzang] = useState(post.zzang.activated);
+  const [zzangCount, setZzangCount] = useState(post.zzang.count);
 
   const onWritingChanged = (e) => {
     setWriting(e.target.value);
+  };
+
+  const pressZzang = async () => {
+    const isPressed = await pressPostZzang(post.id, accessToken);
+    if (isPressed) {
+      if (zzang) {
+        setZzangCount(zzangCount - 1);
+        setZzang(!zzang);
+        return;
+      }
+      setZzangCount(zzangCount + 1);
+      setZzang(!zzang);
+      return;
+    }
   };
 
   const submitForm = () => {
@@ -65,13 +85,9 @@ const PostDetail = ({ post }) => {
       {post.images.length > 0 && <PostImages images={post.images} />}
       <Grid container>
         <Grid container item xs={6}>
-          <IconButton>
-            {post.zzang.state === 'ACTIVATE' ? (
-              <FavoriteIcon />
-            ) : (
-              <FavoriteBorderIcon />
-            )}
-            {post.zzang.count}
+          <IconButton onClick={pressZzang}>
+            {zzang === true ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+            {zzangCount}
           </IconButton>
           <IconButton>
             <CommentIcon />
