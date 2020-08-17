@@ -68,7 +68,7 @@ const PostingForm = () => {
   }
 
   return (
-    <form onSubmit={submitPost}>
+    <form onSubmit={submitPost} id="posting-form">
       <IconButton className={classes.button}>
         <label htmlFor="upload-photo">
           <AddPhotoAlternateIcon />

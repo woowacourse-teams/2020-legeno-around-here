@@ -50,7 +50,7 @@ export default function PrimarySearchAppBar() {
               color="inherit"
               aria-label="open drawer"
               type="submit"
-              onClick={() => alert('전송!')}
+              form="posting-form"
             >
               <SendIcon />
             </IconButton>
