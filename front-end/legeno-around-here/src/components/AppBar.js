@@ -63,14 +63,20 @@ export default function PrimarySearchAppBar() {
     localStorage.setItem('mainAreaName', '서울특별시');
   }
 
-  const loadAreas = async () => {
+  const loadAreas = () => {
     const accessToken = getAccessTokenFromCookie();
     setLoading(true);
-    const allAreas = await findAllAreas(page, accessToken, areaKeyword);
-    if (allAreas.length === 0) {
-      alert('검색 결과가 없습니다! 다시 검색해주세요!');
-    }
-    setAreas(allAreas);
+    findAllAreas(page, accessToken, areaKeyword)
+      .then(allAreas => {
+        if (allAreas.length === 0) {
+          alert('검색 결과가 없습니다! 다시 검색해주세요!');
+        }
+        setAreas(allAreas);
+      })
+      .catch(errorResponse => {
+        alert('error! F12 참고');
+        console.log(errorResponse);
+      });
     setLoading(false);
   };
 

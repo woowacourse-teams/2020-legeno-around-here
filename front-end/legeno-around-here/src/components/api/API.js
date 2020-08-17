@@ -1,10 +1,11 @@
 import axios from 'axios';
-import {setAccessTokenCookie} from '../../util/TokenUtils';
+import { setAccessTokenCookie } from '../../util/TokenUtils';
 
 const DEFAULT_SIZE = 10;
 const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
-const DEFAULT_URL = 'https://back.capzzang.co.kr';
+// const DEFAULT_URL = 'https://back.capzzang.co.kr';
+const DEFAULT_URL = 'http://localhost:8080';
 
 export const loginUser = (email, password, handleReset) => {
   axios
@@ -119,7 +120,7 @@ export const findAllAreas = async (page, accessToken, keyword) => {
       'X-Auth-Token': accessToken,
     },
   };
-  const response = await axios
+  return await axios
     .get(
       DEFAULT_URL +
         `/areas?` +
@@ -130,10 +131,12 @@ export const findAllAreas = async (page, accessToken, keyword) => {
         `keyword=${keyword}`,
       config,
     )
-    .catch(() => {
-      alert(`해당하는 지역이 없습니다!`);
+    .then(response => {
+      return response.data.content;
+    })
+    .catch(error => {
+      throw error.response;
     });
-  return response.data.content;
 };
 
 export const findAllSectors = async (accessToken) => {
