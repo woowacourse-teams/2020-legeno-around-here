@@ -54,4 +54,13 @@ public class CommentController {
             .noContent()
             .build();
     }
+
+    @PostMapping("/{commentId}/zzangs")
+    public ResponseEntity<Void> pressCommentZzang(@PathVariable Long postId,
+        @PathVariable String commentId) {
+        CommentResponse commentResponse = commentService.pressZzang(postId, commentId);
+        return ResponseEntity
+            .noContent()
+            .build();
+    }
 }
