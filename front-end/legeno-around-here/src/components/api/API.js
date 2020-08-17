@@ -58,6 +58,29 @@ export const createPost = async (formData, accessToken) => {
   }
 };
 
+export const createComment = async (postId, writing, accessToken) => {
+  const config = {
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
+  };
+  try {
+    const response = await axios.post(
+      DEFAULT_URL + `/posts/${postId}/comments`,
+      { writing },
+      config,
+    );
+    if (response.status === 201) {
+      alert('댓글이 성공적으로 전송되었습니다!');
+      return true;
+    }
+  } catch (error) {
+    alert('댓글이 작성되지 않았습니다! 다시 작성해주세요!');
+    console.log(error);
+  }
+  return false;
+};
+
 export const findMyInfo = ({
   accessToken,
   setEmailState,
@@ -167,5 +190,25 @@ export const findPost = async (accessToken, postId) => {
     .catch((error) => {
       alert(`자랑글을 가져올 수 없습니다.${error}`);
       document.location.href = '/';
+    });
+};
+
+export const findCommentsByPostId = async (accessToken, postId) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-Auth-Token': accessToken,
+    },
+  };
+  return await axios
+    .get(DEFAULT_URL + `/posts/${postId}/comments`, config)
+    .then((response) => {
+      if (response.status === 200) {
+        console.log('findCommentsByPostId : ' + response.data);
+        return response.data;
+      }
+    })
+    .catch((error) => {
+      alert(`해당 글의 댓글을 가져올 수 없습니다.${error}`);
     });
 };
