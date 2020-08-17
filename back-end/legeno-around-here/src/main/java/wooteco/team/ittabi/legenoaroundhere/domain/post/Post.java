@@ -1,6 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.post;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,7 +22,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.comment.Comment;
+import wooteco.team.ittabi.legenoaroundhere.domain.comment.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.zzang.PostZzang;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
@@ -84,6 +85,10 @@ public class Post extends BaseEntity {
         }
     }
 
+    public boolean isAvailable() {
+        return this.state.isAvailable();
+    }
+
     public int getPostZzangCount() {
         return postZzangs.size();
     }
@@ -106,5 +111,22 @@ public class Post extends BaseEntity {
 
     public void removePostZzang(PostZzang postZzang) {
         postZzangs.remove(postZzang);
+    }
+
+    public void addComment(Comment comment) {
+        if (!comments.contains(comment)) {
+            comments.add(comment);
+        }
+        if (!comment.hasPost()) {
+            comment.setPost(this);
+        }
+    }
+
+    public void removeComments(Comment comment) {
+        comments.remove(comment);
+    }
+
+    public List<Comment> getComments() {
+        return Collections.unmodifiableList(comments);
     }
 }

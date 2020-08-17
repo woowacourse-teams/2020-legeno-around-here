@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
+import wooteco.team.ittabi.legenoaroundhere.domain.comment.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.comment.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
@@ -45,7 +45,7 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<CommentResponse> findAllComment(Long postId) {
+    public List<CommentResponse> findAllCommentBy(Long postId) {
         List<Comment> comments = commentRepository.findAllByPostId(postId);
         return CommentResponse.listOf(comments);
     }
@@ -71,9 +71,10 @@ public class CommentService {
         }
     }
 
-    public CommentResponse pressZzang(Long postId, String commentId) {
-        Post post = postRepository.findById(postId).
-            orElseThrow(() -> new NotExistsException("ID [" + postId + "]에 해당하는 POST가 존재하지 않습니다."));
-        post.getState().isAvali
+    public void pressZzang(Long commentId) {
+        User user = (User) authenticationFacade.getPrincipal();
+
+        Comment comment = findCommentBy(commentId);
+        comment.pressZzang(user);
     }
 }

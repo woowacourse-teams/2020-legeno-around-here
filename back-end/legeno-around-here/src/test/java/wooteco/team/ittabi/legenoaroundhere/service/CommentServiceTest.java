@@ -128,7 +128,7 @@ public class CommentServiceTest extends ServiceTest {
         commentService.createComment(postResponse.getId(), commentRequest);
 
         List<CommentResponse> commentResponses = commentService
-            .findAllComment(postResponse.getId());
+            .findAllCommentBy(postResponse.getId());
 
         assertThat(commentResponses).hasSize(1);
     }
@@ -143,7 +143,7 @@ public class CommentServiceTest extends ServiceTest {
         commentService.deleteComment(commentResponse.getId());
 
         List<CommentResponse> commentResponses = commentService
-            .findAllComment(postResponse.getId());
+            .findAllCommentBy(postResponse.getId());
         assertThat(commentResponses).hasSize(0);
     }
 

@@ -1,4 +1,4 @@
-package wooteco.team.ittabi.legenoaroundhere.domain.post.comment;
+package wooteco.team.ittabi.legenoaroundhere.domain.comment;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

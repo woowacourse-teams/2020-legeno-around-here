@@ -64,21 +64,21 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         String commentLocation = createComment(postId, accessToken);
         Long commentId = getIdFromUrl(commentLocation);
 
-        CommentResponse commentResponse = findComment(postId, commentId, accessToken);
+        CommentResponse commentResponse = findComment(commentId, accessToken);
 
         assertThat(commentResponse.getId()).isEqualTo(commentId);
         assertThat(commentResponse.getWriting()).isEqualTo(TEST_POST_WRITING);
         assertThat(commentResponse.getZzang()).isNotNull();
 
         // 댓글 목록 조회
-        List<CommentResponse> commentResponses = findAllComment(postId, accessToken);
+        List<CommentResponse> commentResponses = findAllCommentBy(postId, accessToken);
         assertThat(commentResponses).hasSize(1);
 
         // 삭제
-        deleteComment(postId, commentId, accessToken);
-        findNotExistsComment(postId, commentId, accessToken);
+        deleteComment(commentId, accessToken);
+        findNotExistsComment(commentId, accessToken);
 
-        List<CommentResponse> reFoundPostResponses = findAllComment(postId, accessToken);
+        List<CommentResponse> reFoundPostResponses = findAllCommentBy(postId, accessToken);
 
         assertThat(reFoundPostResponses).hasSize(0);
     }
@@ -127,7 +127,7 @@ public class CommentAcceptanceTest extends AcceptanceTest {
             .statusCode(HttpStatus.CREATED.value());
     }
 
-    private List<CommentResponse> findAllComment(Long postId, String accessToken) {
+    private List<CommentResponse> findAllCommentBy(Long postId, String accessToken) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
@@ -140,21 +140,21 @@ public class CommentAcceptanceTest extends AcceptanceTest {
             .getList(".", CommentResponse.class);
     }
 
-    private void findNotExistsComment(Long postId, Long commentId, String accessToken) {
+    private void findNotExistsComment(Long commentId, String accessToken) {
         given()
             .header("X-AUTH-TOKEN", accessToken)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when()
-            .get("/posts/" + postId + "/comments/" + commentId)
+            .get("/comments/" + commentId)
             .then()
             .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
-    private void deleteComment(Long postId, Long commentId, String accessToken) {
+    private void deleteComment(Long commentId, String accessToken) {
         given()
             .header("X-AUTH-TOKEN", accessToken)
             .when()
-            .delete("/posts/" + postId + "/comments/" + commentId)
+            .delete("/comments/" + commentId)
             .then()
             .statusCode(HttpStatus.NO_CONTENT.value());
     }
@@ -194,12 +194,12 @@ public class CommentAcceptanceTest extends AcceptanceTest {
             .header("Location");
     }
 
-    private CommentResponse findComment(Long postId, Long commentId, String accessToken) {
+    private CommentResponse findComment(Long commentId, String accessToken) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
             .when()
-            .get("/posts/" + postId + "/comments/" + commentId)
+            .get("/comments/" + commentId)
             .then()
             .statusCode(HttpStatus.OK.value())
             .extract()
