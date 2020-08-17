@@ -58,7 +58,11 @@ const PostItem = ({ post }) => {
   };
 
   return (
-    <Card className={classes.root} data-id={id}>
+    <Card
+      className={classes.root}
+      data-id={id}
+      onClick={() => (document.location.href = `/posts/${id}`)}
+    >
       <div className={classes.details}>
         <CardContent className={classes.content}>
           <Typography component="h6" variant="h5">
