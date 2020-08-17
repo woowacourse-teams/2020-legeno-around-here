@@ -1,39 +1,122 @@
-import React, { useState, useEffect } from 'react';
-
+import React, { useState } from 'react';
+import { createComment, findCommentsByPostId } from '../../api/API';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
-import Bottom from '../../Bottom';
 import Typography from '@material-ui/core/Typography';
+import { TextField, IconButton, Grid } from '@material-ui/core';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import CommentIcon from '@material-ui/icons/Comment';
+import AddIcon from '@material-ui/icons/Add';
+import Comments from './Comments';
+import PostImages from './PostImages';
+import { convertDateFormat } from '../../../util/TimeUtils';
 
 const PostDetail = ({ post }) => {
+  const accessToken = getAccessTokenFromCookie();
+  const [writing, setWriting] = useState('');
+  const [comments, setComments] = useState(post.comments);
+  const [loading, setLoading] = useState(false);
+
+  const onWritingChanged = (e) => {
+    setWriting(e.target.value);
+  };
+
+  const submitForm = () => {
+    const sendComment = async () => {
+      setLoading(true);
+      const isCommentCreated = await createComment(
+        post.id,
+        writing,
+        accessToken,
+      );
+      if (isCommentCreated) {
+        const loadedComments = await loadComments();
+        setComments(loadedComments);
+      }
+      setLoading(false);
+    };
+    sendComment();
+  };
+
+  const loadComments = async () => {
+    const foundComments = await findCommentsByPostId(accessToken, post.id);
+    setComments(foundComments);
+  };
+
   return (
     <>
-      <Typography>
-        {post.area.fullName}
-        {post.createdAt}
-        {post.creator.image.url}
-        {post.creator.nickname}
-        {post.sector.name}
-        {post.writing}
-      </Typography>
-      <Image>{post.images}</Image>
-      <Typography>{post.zzang.count}</Typography>
-      {post.zzang.state}
+      <Grid container>
+        <Grid container item xs={6}>
+          <Typography>{post.area.fullName}</Typography>
+        </Grid>
+        <Grid
+          container
+          item
+          xs={6}
+          alignItems="flex-start"
+          justify="flex-end"
+          direction="row"
+        >
+          <Typography>{post.creator.nickname}</Typography>
+        </Grid>
+      </Grid>
+      <Typography variant="h5">{post.sector.name} 부문</Typography>
+      <Typography variant="h6">{post.writing}</Typography>
+      {post.images.length > 0 && <PostImages images={post.images} />}
+      <Grid container>
+        <Grid container item xs={6}>
+          <IconButton>
+            {post.zzang.state === 'ACTIVATE' ? (
+              <FavoriteIcon />
+            ) : (
+              <FavoriteBorderIcon />
+            )}
+            {post.zzang.count}
+          </IconButton>
+          <IconButton>
+            <CommentIcon />
+            {post.comments.length}
+          </IconButton>
+        </Grid>
+        <Grid
+          container
+          item
+          xs={6}
+          alignItems="flex-start"
+          justify="flex-end"
+          direction="row"
+        >
+          <Typography display="inline">
+            {convertDateFormat(post.createdAt)}
+          </Typography>
+        </Grid>
+      </Grid>
+
+      <form onSubmit={submitForm}>
+        <Grid container>
+          <Grid container item xs={11}>
+            <TextField
+              type="text"
+              id="standard-multiline-static"
+              fullWidth
+              multiline
+              rows={2}
+              placeholder="댓글을 입력해주세요!"
+              onChange={onWritingChanged}
+              value={writing}
+            />
+          </Grid>
+          <Grid container item xs={1}>
+            <IconButton type="submit">
+              <AddIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
+      </form>
+      {comments.length > 0 && (
+        <Comments comments={comments} loading={loading} />
+      )}
     </>
-    /* <PostSpace>
-        <PostMetaData>
-          <Typography color="textSecondary">{post.areaName}</Typography>
-          <ToRight>
-            <Typography color="textSecondary">{post.creatorName}</Typography>
-          </ToRight>
-        </PostMetaData>
-        <SectionName>{post.sectorName}</SectionName>
-        <Typography>{post.writing}</Typography>
-        <Image src="/logo512.png"></Image>
-        <Typography color="textSecondary">
-          짱이야 {post.zzangCount} &nbsp; 댓글 {post.comments.length}
-        </Typography>
-        <Line></Line>
-      </PostSpace> */
   );
 };
 

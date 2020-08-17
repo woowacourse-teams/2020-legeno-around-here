@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import Typography from '@material-ui/core/Typography';
-
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import Bottom from '../../Bottom';
-import TopBar from '../../postdetail/TopBar';
-import Image from '../../postdetail/Image';
 import { findPost } from '../../api/API';
 import PostDetailTopBar from './PostDetailTopBar';
 import PostDetail from './PostDetail';
 import Loading from '../../Loading';
+import { makeStyles, Container } from '@material-ui/core';
+
+const useStyles = makeStyles(() => ({
+  blankMargin: {
+    marginBottom: 60,
+  },
+}));
 
 const PostDetailPage = ({ match }) => {
+  const classes = useStyles();
+
   const postId = match.params.postId;
   const accessToken = getAccessTokenFromCookie();
   const [post, setPost] = useState(null);
@@ -32,7 +36,10 @@ const PostDetailPage = ({ match }) => {
   return (
     <>
       <PostDetailTopBar />
-      {post && <PostDetail post={post} />}
+      <Container>
+        {post && <PostDetail post={post} />}
+        <div className={classes.blankMargin}></div>
+      </Container>
       <Bottom />
     </>
   );
