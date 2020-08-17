@@ -9,14 +9,14 @@ const SectorItem = ({ sector }) => {
     <>
       <ListItem alignItems="flex-start">
         <ListItemText
-          primary={'부문명 : ' + sector.name}
-          secondary={'부문설명 : ' + sector.description}
+          primary={sector.name + ' 부문'}
+          secondary={sector.description}
         />
         <div>
           <Typography variant="subtitle1">
-            만든이 : {sector.creator.nickname}
+            {sector.creator.nickname} 만듦
           </Typography>
-          <Typography variant="subtitle1">게시글 수 : </Typography>
+          <Typography variant="subtitle1"> 명 도전 중</Typography>
         </div>
       </ListItem>
       <Divider />
