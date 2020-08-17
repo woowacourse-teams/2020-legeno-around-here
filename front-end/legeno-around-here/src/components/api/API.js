@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {setAccessTokenCookie} from '../../util/TokenUtils';
+import { setAccessTokenCookie } from '../../util/TokenUtils';
 
 const DEFAULT_SIZE = 10;
 const DEFAULT_SORTED_BY = 'id';

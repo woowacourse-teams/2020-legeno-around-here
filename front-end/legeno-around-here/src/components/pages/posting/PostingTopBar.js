@@ -1,8 +1,9 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import SectorApplyButton from './SectorApplyButton';
+import SendIcon from '@material-ui/icons/Send';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -43,7 +44,16 @@ export default function PrimarySearchAppBar() {
         <Toolbar>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <SectorApplyButton />
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="open drawer"
+              type="submit"
+              form="posting-form"
+            >
+              <SendIcon />
+            </IconButton>
           </div>
         </Toolbar>
       </AppBar>
