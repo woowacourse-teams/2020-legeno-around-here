@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
@@ -10,7 +10,7 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   grow: {
     flexGrow: 1,
   },
@@ -36,6 +36,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PostItem = ({ post }) => {
+  const classes = useStyles();
+
   const {
     area,
     commentsCount,
@@ -47,8 +49,6 @@ const PostItem = ({ post }) => {
     sector,
     writing,
   } = post;
-
-  const classes = useStyles();
 
   const convertDateFormat = (UTCDate) => {
     const dateFormat = UTCDate.split('T');
@@ -105,48 +105,6 @@ const PostItem = ({ post }) => {
         </CardMedia>
       )}
     </Card>
-
-    // <Card className={classes.root} data-id={id}>
-    //   <div>{images}</div>
-    //   <CardHeader
-    //     avatar={<Avatar className={classes.avatar}>{creator.nickname}</Avatar>}
-    //     title={sector.name}
-    //     subheader={createdAt}
-    //   />
-    //   {images}
-    //   <CardMedia
-    //     className={classes.media}
-    //     image="/static/images/cards/paella.jpg"
-    //     title="Paella dish"
-    //   />
-    //   <CardContent>
-    //     <Typography variant="body2" color="textSecondary" component="p">
-    //       {writing}
-    //     </Typography>
-    //     <Typography variant="body2" color="textSecondary" component="p">
-    //       작성 지역 : {area.fullname}
-    //     </Typography>
-    //   </CardContent>
-    //   <CardActions disableSpacing>
-    //     <IconButton>
-    //       {zzang.state === 'ACTIVATE' ? (
-    //         <FavoriteIcon />
-    //       ) : (
-    //         <FavoriteBorderIcon />
-    //       )}
-    //       {zzang.count}
-    //     </IconButton>
-    //     <IconButton>
-    //       <CommentIcon />
-    //       {commentsCount}
-    //     </IconButton>
-
-    //     <div className={classes.grow} />
-    //     <IconButton aria-label="settings">
-    //       <MoreVertIcon />
-    //     </IconButton>
-    //   </CardActions>
-    // </Card>
   );
 };
 

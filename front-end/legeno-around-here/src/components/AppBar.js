@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, {useState} from 'react';
+import {makeStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -13,8 +13,8 @@ import Fade from '@material-ui/core/Fade';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
-import { findAllAreas } from './api/API';
-import { getAccessTokenFromCookie } from '../util/TokenUtils';
+import {findAllAreas} from './api/API';
+import {getAccessTokenFromCookie} from '../util/TokenUtils';
 import List from '@material-ui/core/List';
 import AreaItem from './AreaItem';
 import Loading from './Loading';
