@@ -65,8 +65,18 @@ const PostItem = ({ post }) => {
           <Typography variant="subtitle1" color="textSecondary">
             {convertDateFormat(createdAt)}
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            내용 : {writing}
+
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            component="p"
+            style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              width: '190px',
+            }}
+          >
+            {writing}
           </Typography>
           <Typography variant="subtitle1" color="textSecondary">
             작성자 : {creator.nickname}
