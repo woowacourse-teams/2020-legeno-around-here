@@ -67,13 +67,13 @@ export default function PrimarySearchAppBar() {
     const accessToken = getAccessTokenFromCookie();
     setLoading(true);
     findAllAreas(page, accessToken, areaKeyword)
-      .then(allAreas => {
+      .then((allAreas) => {
         if (allAreas.length === 0) {
           alert('검색 결과가 없습니다! 다시 검색해주세요!');
         }
         setAreas(allAreas);
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         alert('error! F12 참고');
         console.log(errorResponse);
       });

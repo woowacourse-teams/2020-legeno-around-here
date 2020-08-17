@@ -1,11 +1,10 @@
 import axios from 'axios';
-import { setAccessTokenCookie } from '../../util/TokenUtils';
+import {setAccessTokenCookie} from '../../util/TokenUtils';
 
 const DEFAULT_SIZE = 10;
 const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
-// const DEFAULT_URL = 'https://back.capzzang.co.kr';
-const DEFAULT_URL = 'http://localhost:8080';
+const DEFAULT_URL = 'https://back.capzzang.co.kr';
 
 export const loginUser = (email, password, handleReset) => {
   axios
@@ -131,10 +130,10 @@ export const findAllAreas = async (page, accessToken, keyword) => {
         `keyword=${keyword}`,
       config,
     )
-    .then(response => {
+    .then((response) => {
       return response.data.content;
     })
-    .catch(error => {
+    .catch((error) => {
       throw error.response;
     });
 };
