@@ -70,4 +70,10 @@ public class CommentService {
             throw new NotAuthorizedException("권한이 없습니다.");
         }
     }
+
+    public CommentResponse pressZzang(Long postId, String commentId) {
+        Post post = postRepository.findById(postId).
+            orElseThrow(() -> new NotExistsException("ID [" + postId + "]에 해당하는 POST가 존재하지 않습니다."));
+        post.getState().isAvali
+    }
 }
