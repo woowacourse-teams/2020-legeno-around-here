@@ -4,6 +4,7 @@ import TopBar from '../myProfile/TopBar';
 import Bottom from '../Bottom';
 import { PROFILE } from '../../constants/BottomItems';
 import { findMyInfo } from '../api/API';
+import Loading from '../Loading';
 import { getAccessTokenFromCookie } from '../../util/TokenUtils';
 import {
   ProfilePhoto,
@@ -20,14 +21,21 @@ function MyProfile() {
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useMemo(() => {
+    setLoading(true);
     findMyInfo({
       accessToken: accessToken,
       setEmailState: setEmail,
       setNicknameState: setNickname,
     });
+    setLoading(false);
   }, [accessToken]);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>
