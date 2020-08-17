@@ -2,8 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
+import SectorApplyButton from './SectorApplyButton';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -44,19 +43,7 @@ export default function PrimarySearchAppBar() {
         <Toolbar>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <Button
-              edge="start"
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="open drawer"
-              onClick={() =>
-                alert('아직 부문 신청 기능이 완성되지 않았습니다!')
-              }
-            >
-              <Typography className={classes.title} variant="h6" noWrap>
-                부문신청
-              </Typography>
-            </Button>
+            <SectorApplyButton />
           </div>
         </Toolbar>
       </AppBar>

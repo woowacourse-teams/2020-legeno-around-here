@@ -1,8 +1,8 @@
 import React from 'react';
-import {BrowserRouter, Redirect, Route, Switch} from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Join from './components/pages/Join';
 import Login from './components/pages/Login';
-import Posting from './components/pages/posting/Posting';
+import PostingPage from './components/pages/posting/PostingPage';
 import MyProfile from './components/pages/MyProfile';
 import SectorPage from './components/pages/sector/SectorPage';
 import PostDetail from './components/pages/PostDetail';
@@ -24,7 +24,7 @@ function App() {
         <Route path="/join" exact component={Join} />
         <Route path="/login" exact component={Login} />
         <Route path="/myProfile" exact component={MyProfile} />
-        <Route path="/posting" exact component={Posting} />
+        <Route path="/posting" exact component={PostingPage} />
         <Route path="/sector" exact component={SectorPage} />
         <Route path="/posts/:postId" exact component={PostDetail} />
         <Route path="/home" exact component={Home} />
