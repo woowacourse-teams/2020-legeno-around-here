@@ -1,10 +1,10 @@
 import axios from 'axios';
-import {setAccessTokenCookie} from '../../util/TokenUtils';
+import { setAccessTokenCookie } from '../../util/TokenUtils';
 
 const DEFAULT_SIZE = 10;
 const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
-const DEFAULT_URL = 'https://back.capzzang.co.kr';
+const DEFAULT_URL = 'http://localhost:8080';
 
 export const loginUser = (email, password, handleReset) => {
   axios
@@ -150,31 +150,22 @@ export const findAllSectors = async (accessToken) => {
   return response.data.content;
 };
 
-export const findPost = ({ accessToken, postId, setPostState }) => {
+export const findPost = async (accessToken, postId) => {
   const config = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       'X-Auth-Token': accessToken,
     },
   };
-  axios
+  return await axios
     .get(DEFAULT_URL + '/posts/' + postId, config)
-    .then(async (response) => {
-      const postResponse = await response.data;
-      console.log(postResponse);
-      setPostState({
-        id: postResponse.id,
-        writing: postResponse.writing,
-        images: postResponse.images,
-        areaName: postResponse.area.fullName,
-        sectorName: postResponse.sector.name,
-        creatorName: postResponse.creator.nickname,
-        zzangCount: postResponse.zzang.count,
-        comments: postResponse.comments,
-      });
+    .then((response) => {
+      if (response.status === 200) {
+        return response.data;
+      }
     })
     .catch((error) => {
       alert(`자랑글을 가져올 수 없습니다.${error}`);
-      // document.location.href = '/';
+      document.location.href = '/';
     });
 };

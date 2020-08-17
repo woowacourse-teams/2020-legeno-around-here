@@ -7,84 +7,35 @@ import Bottom from '../../Bottom';
 import TopBar from '../../postdetail/TopBar';
 import Image from '../../postdetail/Image';
 import { findPost } from '../../api/API';
+import PostDetailTopBar from './PostDetailTopBar';
+import PostDetail from './PostDetail';
+import Loading from '../../Loading';
 
-const Line = styled.div`
-  width: 100%;
-  height: 1px;
-  background-color: #bbbbbb;
-`;
-
-const SectionName = styled.div`
-  width: 80%;
-  border-radius: 100px;
-  background-color: #eeeeee;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  font-size: 13px;
-  padding-top: 3px;
-  padding-bottom: 3px;
-  margin-bottom: 10px;
-`;
-
-const PostSpace = styled.div`
-  margin: 10px auto;
-  width: 95%;
-`;
-
-const PostMetaData = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
-
-const ToRight = styled.div`
-  margin-right: 0;
-  margin-left: auto;
-`;
-
-const PostDetail = ({ match }) => {
-  const [accessToken] = useState(getAccessTokenFromCookie());
-  const { postId } = match.params;
-  const [post, setPost] = useState({
-    id: null,
-    writing: '',
-    images: null,
-    areaName: '',
-    sectionName: '',
-    creatorName: '',
-    zzangCount: 0,
-    comments: [],
-  });
+const PostDetailPage = ({ match }) => {
+  const postId = match.params.postId;
+  const accessToken = getAccessTokenFromCookie();
+  const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    findPost({
-      accessToken: accessToken,
-      postId: postId,
-      setPostState: setPost,
-    });
+    const loadPost = async () => {
+      setLoading(true);
+      const post = await findPost(accessToken, postId);
+      console.log(post);
+      setPost(post);
+      setLoading(false);
+    };
+    loadPost();
   }, [accessToken, postId]);
 
+  if (loading) return <Loading />;
   return (
     <>
-      <TopBar backButtonLink="/"></TopBar>
-      <PostSpace>
-        <PostMetaData>
-          <Typography color="textSecondary">{post.areaName}</Typography>
-          <ToRight>
-            <Typography color="textSecondary">{post.creatorName}</Typography>
-          </ToRight>
-        </PostMetaData>
-        <SectionName>{post.sectorName}</SectionName>
-        <Typography>{post.writing}</Typography>
-        <Image src="/logo512.png"></Image>
-        <Typography color="textSecondary">
-          짱이야 {post.zzangCount} &nbsp; 댓글 {post.comments.length}
-        </Typography>
-        <Line></Line>
-      </PostSpace>
-      <Bottom></Bottom>
+      <PostDetailTopBar />
+      {post && <PostDetail post={post} />}
+      <Bottom />
     </>
   );
 };
 
-export default PostDetail;
+export default PostDetailPage;
