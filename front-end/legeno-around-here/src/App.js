@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import Join from './components/pages/Join';
 import Login from './components/pages/Login';
-import Posting from './components/pages/Posting';
+import Posting from './components/pages/posting/Posting';
 import MyProfile from './components/pages/MyProfile';
 import Sector from './components/pages/Sector';
 import PostDetail from './components/pages/PostDetail';
