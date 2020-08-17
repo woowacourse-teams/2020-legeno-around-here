@@ -24,7 +24,9 @@ function Sector() {
     findAllSectors(setSectors, accessToken);
     setLoading(false);
   }, [accessToken]);
+
   if (loading) return <div>Loading...</div>;
+
   return (
     <>
       <Sectors sectors={currentSectors} />

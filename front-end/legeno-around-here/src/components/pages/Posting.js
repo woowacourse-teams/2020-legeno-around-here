@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 
 import TopBar from '../posting/TopBar';
-import { getAccessTokenFromCookie } from '../../util/TokenUtils';
+import {getAccessTokenFromCookie} from '../../util/TokenUtils';
 import TextInput from '../posting/TextInput';
 import ImageInput from '../posting/ImageInput';
 import Bottom from '../Bottom';
-import { WRITING } from '../../constants/BottomItems';
+import {WRITING} from '../../constants/BottomItems';
 import Loading from '../Loading';
-import { createPost } from '../api/API';
+import {createPost} from '../api/API';
 
 const Form = styled.form`
   width: 100%;
@@ -73,11 +73,7 @@ const Posting = () => {
             onChange={onWritingChanged}
             value={writing}
           />
-          <ImageInput
-            type="file"
-            multiple
-            onChange={onImagesChanged}
-          ></ImageInput>
+          <ImageInput type="file" multiple onChange={onImagesChanged} />
           <button onClick={(e) => e.preventDefault()}>
             부문을 추가해주세요
           </button>
