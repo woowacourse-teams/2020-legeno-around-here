@@ -43,9 +43,6 @@ const Home = () => {
         console.log(e);
         setHasMore(false);
       });
-
-    const nextPage = page + 1;
-    setPage(nextPage);
   };
 
   return (
