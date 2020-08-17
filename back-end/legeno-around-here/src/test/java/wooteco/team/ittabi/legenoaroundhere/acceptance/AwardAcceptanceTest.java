@@ -1,5 +1,10 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
+
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -7,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import wooteco.team.ittabi.legenoaroundhere.dto.AwardResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
 public class AwardAcceptanceTest extends AcceptanceTest {
 
@@ -15,10 +21,10 @@ public class AwardAcceptanceTest extends AcceptanceTest {
 
     @BeforeEach
     void setUp() {
-//        String location = createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
-//        userId = getIdFromUrl(location);
-//        TokenResponse token = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
-//        accessToken = token.getAccessToken();
+        String location = createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        userId = getIdFromUrl(location);
+        TokenResponse token = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
+        accessToken = token.getAccessToken();
     }
 
     /**
@@ -31,11 +37,11 @@ public class AwardAcceptanceTest extends AcceptanceTest {
     @DisplayName("수상 내역 조회")
     @Test
     void findAward() {
-//        List<AwardResponse> awards = findAllAward(accessToken, userId);
-//        assertThat(awards).hasSize(9);
-//
-//        awards = findMyAward(accessToken);
-//        assertThat(awards).hasSize(9);
+        List<AwardResponse> awards = findAllAward(accessToken, userId);
+        assertThat(awards).hasSize(9);
+
+        awards = findMyAward(accessToken);
+        assertThat(awards).hasSize(9);
     }
 
     private List<AwardResponse> findAllAward(String accessToken, Long userId) {
