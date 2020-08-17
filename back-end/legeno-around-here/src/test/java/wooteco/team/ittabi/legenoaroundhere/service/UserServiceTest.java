@@ -47,12 +47,23 @@ class UserServiceTest {
 
     @Test
     @DisplayName("User 생성")
-    void createUser() {
+    void createUser_Success() {
         UserRequest userRequest =
             new UserRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD, TEST_AREA_ID);
         Long userId = userService.createUser(userRequest);
 
         assertThat(userId).isNotNull();
+    }
+
+    @Test
+    @DisplayName("User 생성, 실패 - 중복된 이메일")
+    void createUser_DuplicationEmail_ThrownException() {
+        UserRequest userRequest =
+            new UserRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD, TEST_AREA_ID);
+        Long userId = userService.createUser(userRequest);
+
+        assertThatThrownBy(() -> userService.createUser(userRequest))
+            .isInstanceOf(WrongUserInputException.class);
     }
 
     @Test

@@ -39,20 +39,24 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public Long createUser(UserRequest userRequest) {
-        User persistUser = createUserBy(userRequest, Role.USER);
-        return persistUser.getId();
-    }
+        Area area = findAreaBy(userRequest.getAreaId());
 
-    private User createUserBy(UserRequest userCreateRequest, Role userRole) {
-        Area area = findAreaBy(userCreateRequest.getAreaId());
+        // ToDo 삭제 계정과 겹치는 것을 허용할지 추후 고려하기
+        userRepository.findByEmail(new Email(userRequest.getEmail()))
+            .ifPresent(user -> {
+                throw new WrongUserInputException(
+                    "[" + userRequest.getEmail() + "] 이메일은 이미 사용중입니다.");
+            });
 
-        return userRepository.save(User.builder()
-            .email(new Email(userCreateRequest.getEmail()))
-            .nickname(new Nickname(userCreateRequest.getNickname()))
-            .password(new Password(passwordEncoder.encode(userCreateRequest.getPassword())))
-            .roles(Collections.singletonList(userRole.getRoleName()))
+        User persistUser = userRepository.save(User.builder()
+            .email(new Email(userRequest.getEmail()))
+            .nickname(new Nickname(userRequest.getNickname()))
+            .password(new Password(passwordEncoder.encode(userRequest.getPassword())))
+            .roles(Collections.singletonList(Role.USER.name()))
             .area(area)
             .build());
+
+        return persistUser.getId();
     }
 
     private Area findAreaBy(Long areaId) {
