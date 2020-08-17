@@ -51,8 +51,11 @@ public class PostTest {
     @DisplayName("길이 검증 - 예외 발생")
     @Test
     void validateLength_OverLength_ThrownException() {
-        String overLengthInput = "aaaaaaaaaaaaaaaaaaaaa";
-        assertThatThrownBy(() -> new Post(overLengthInput, area, sector, user))
+        StringBuilder overLengthInput = new StringBuilder();
+        for (int i = 0; i <= 2000; i++) {
+            overLengthInput.append("a");
+        }
+        assertThatThrownBy(() -> new Post(overLengthInput.toString(), area, sector, user))
             .isInstanceOf(WrongUserInputException.class);
     }
 }

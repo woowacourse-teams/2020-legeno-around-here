@@ -39,7 +39,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @Where(clause = "deleted_at IS NULL")
 public class Post extends BaseEntity {
 
-    private static final int MAX_LENGTH = 20;
+    private static final int MAX_LENGTH = 2000;
 
     @Lob
     @Column(nullable = false)
