@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 
-import { getAccessTokenFromCookie } from '../../util/TokenUtils';
-import Bottom from '../Bottom';
-import TopBar from '../postdetail/TopBar';
-import Image from '../postdetail/Image';
-import { findPost } from '../api/API';
+import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
+import Bottom from '../../Bottom';
+import TopBar from '../../postdetail/TopBar';
+import Image from '../../postdetail/Image';
+import { findPost } from '../../api/API';
 
 const Line = styled.div`
   width: 100%;
