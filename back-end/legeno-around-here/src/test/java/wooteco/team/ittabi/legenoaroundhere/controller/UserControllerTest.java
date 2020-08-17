@@ -142,8 +142,13 @@ class UserControllerTest {
     @Test
     @DisplayName("내 정보 얻기")
     void findUser() throws Exception {
-        UserResponse expected = new UserResponse(TEST_USER_ID, TEST_USER_EMAIL, TEST_USER_NICKNAME,
-            null, null);
+        UserResponse expected = UserResponse.builder()
+            .id(TEST_USER_ID)
+            .email(TEST_USER_EMAIL)
+            .nickname(TEST_USER_NICKNAME)
+            .image(null)
+            .area(null)
+            .build();
         given(userService.findUser()).willReturn(expected);
 
         String expectedJson = objectMapper.writeValueAsString(expected);
@@ -162,8 +167,13 @@ class UserControllerTest {
     @Test
     @DisplayName("내 정보 수정")
     void updateUser() throws Exception {
-        UserResponse expected = new UserResponse(TEST_USER_ID, TEST_USER_EMAIL, TEST_USER_NICKNAME,
-            null, null);
+        UserResponse expected = UserResponse.builder()
+            .id(TEST_USER_ID)
+            .email(TEST_USER_EMAIL)
+            .nickname(TEST_USER_NICKNAME)
+            .image(null)
+            .area(null)
+            .build();
         given(userService.updateUser(any())).willReturn(expected);
 
         String expectedJson = objectMapper.writeValueAsString(expected);

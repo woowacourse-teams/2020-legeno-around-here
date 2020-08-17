@@ -30,6 +30,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostZzangResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
@@ -318,5 +319,38 @@ public class PostServiceTest extends ServiceTest {
         assertThatThrownBy(
             () -> postService.deletePost(createdPostResponse.getId()))
             .isInstanceOf(NotAuthorizedException.class);
+    }
+
+    @DisplayName("비활성화된 좋아요를 활성화")
+    @Test
+    void pressPostZzang_activePostZzang_SuccessToActivePostZzang() {
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+        Long postId = postService.createPost(postCreateRequest).getId();
+
+        postService.pressZzang(postId);
+
+        PostResponse post = postService.findPost(postId);
+        PostZzangResponse zzang = post.getZzang();
+
+        assertThat(zzang.getCount()).isEqualTo(1L);
+        assertThat(zzang.isActivated()).isTrue();
+    }
+
+    @DisplayName("활성화된 좋아요를 비활성화")
+    @Test
+    void pressPostZzang_inactivePostZzang_SuccessToInactivePostZzang() {
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+        Long postId = postService.createPost(postCreateRequest).getId();
+
+        postService.pressZzang(postId);
+        postService.pressZzang(postId);
+
+        PostResponse post = postService.findPost(postId);
+        PostZzangResponse zzang = post.getZzang();
+
+        assertThat(zzang.getCount()).isEqualTo(0L);
+        assertThat(zzang.isActivated()).isFalse();
     }
 }

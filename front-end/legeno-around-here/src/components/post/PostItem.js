@@ -1,5 +1,5 @@
 import React from 'react';
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
+import { convertDateFormat } from '../../util/TimeUtils';
 
 const useStyles = makeStyles(() => ({
   grow: {
@@ -27,11 +28,11 @@ const useStyles = makeStyles(() => ({
   cover: {
     flex: '1 0 auto',
     opacity: 0.7,
+    backgroundSize: 'contain',
   },
   photoText: {
     textAlign: 'center',
-    fontSize: 40,
-    marginTop: '50%',
+    marginTop: 100,
   },
 }));
 
@@ -50,16 +51,12 @@ const PostItem = ({ post }) => {
     writing,
   } = post;
 
-  const convertDateFormat = (UTCDate) => {
-    const dateFormat = UTCDate.split('T');
-    const yyyymmdd = dateFormat[0];
-    const hh = dateFormat[1].split(':')[0];
-    const mm = dateFormat[1].split(':')[1];
-    return yyyymmdd + ' ' + hh + '시' + mm + '분';
-  };
-
   return (
-    <Card className={classes.root} data-id={id}>
+    <Card
+      className={classes.root}
+      data-id={id}
+      onClick={() => (document.location.href = `/posts/${id}`)}
+    >
       <div className={classes.details}>
         <CardContent className={classes.content}>
           <Typography component="h6" variant="h5">
@@ -68,8 +65,18 @@ const PostItem = ({ post }) => {
           <Typography variant="subtitle1" color="textSecondary">
             {convertDateFormat(createdAt)}
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            내용 : {writing}
+
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            component="p"
+            style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              width: '190px',
+            }}
+          >
+            {writing}
           </Typography>
           <Typography variant="subtitle1" color="textSecondary">
             작성자 : {creator.nickname}
@@ -80,7 +87,7 @@ const PostItem = ({ post }) => {
         </CardContent>
         <CardActions disableSpacing>
           <IconButton>
-            {zzang.state === 'ACTIVATE' ? (
+            {zzang.activated === true ? (
               <FavoriteIcon />
             ) : (
               <FavoriteBorderIcon />

@@ -12,7 +12,7 @@ import lombok.ToString;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @EqualsAndHashCode
 @ToString

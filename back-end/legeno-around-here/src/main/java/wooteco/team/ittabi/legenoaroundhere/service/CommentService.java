@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
+import wooteco.team.ittabi.legenoaroundhere.domain.comment.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.comment.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
@@ -35,19 +35,23 @@ public class CommentService {
         comment.setPost(post);
 
         Comment savedComment = commentRepository.save(comment);
-        return CommentResponse.of(savedComment);
+        return CommentResponse.of(user, savedComment);
     }
 
     @Transactional(readOnly = true)
     public CommentResponse findComment(Long commentId) {
+        User user = (User) authenticationFacade.getPrincipal();
+
         Comment comment = findCommentBy(commentId);
-        return CommentResponse.of(comment);
+        return CommentResponse.of(user, comment);
     }
 
     @Transactional(readOnly = true)
-    public List<CommentResponse> findAllComment(Long postId) {
+    public List<CommentResponse> findAllCommentBy(Long postId) {
+        User user = (User) authenticationFacade.getPrincipal();
+
         List<Comment> comments = commentRepository.findAllByPostId(postId);
-        return CommentResponse.listOf(comments);
+        return CommentResponse.listOf(user, comments);
     }
 
     @Transactional
@@ -69,5 +73,13 @@ public class CommentService {
         if (user.isNotSame(comment.getCreator())) {
             throw new NotAuthorizedException("권한이 없습니다.");
         }
+    }
+
+    @Transactional
+    public void pressZzang(Long commentId) {
+        User user = (User) authenticationFacade.getPrincipal();
+
+        Comment comment = findCommentBy(commentId);
+        comment.pressZzang(user);
     }
 }
