@@ -10,6 +10,7 @@ public class LegenoAroundHereApplication {
 
     private static final String APPLICATION_LOCATIONS = "spring.config.location="
         + "classpath:application.properties,"
+        + "/app/config/back/application-prod.properties"
         + "/app/config/back/profile.yml";
 
     public static void main(String[] args) {
