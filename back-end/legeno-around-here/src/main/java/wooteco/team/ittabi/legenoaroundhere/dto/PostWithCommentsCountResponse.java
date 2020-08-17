@@ -14,7 +14,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @EqualsAndHashCode
 @ToString
@@ -39,7 +39,7 @@ public class PostWithCommentsCountResponse {
             .sector(SectorResponse.of(post.getSector()))
             .commentsCount(post.getAvailableCommentsSize())
             .creator(UserResponse.from(post.getCreator()))
-            .zzang(PostZzangResponse.of(post.getPostZzangCount(), post.hasZzangCreator(user)))
+            .zzang(PostZzangResponse.of(user, post))
             .createdAt(post.getCreatedAt())
             .build();
     }

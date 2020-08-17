@@ -14,7 +14,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @EqualsAndHashCode
 @ToString
@@ -40,7 +40,7 @@ public class PostResponse {
             .area(AreaResponse.of(post.getArea()))
             .sector(SectorResponse.of(post.getSector()))
             .creator(UserResponse.from(post.getCreator()))
-            .zzang(PostZzangResponse.of(post.getPostZzangCount(), post.hasZzangCreator(user)))
+            .zzang(PostZzangResponse.of(user, post))
             .createdAt(post.getCreatedAt())
             .modifiedAt(post.getModifiedAt())
             .build();

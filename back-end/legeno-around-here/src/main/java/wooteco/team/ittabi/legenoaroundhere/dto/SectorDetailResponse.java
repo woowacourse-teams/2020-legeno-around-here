@@ -11,7 +11,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @EqualsAndHashCode
 @ToString

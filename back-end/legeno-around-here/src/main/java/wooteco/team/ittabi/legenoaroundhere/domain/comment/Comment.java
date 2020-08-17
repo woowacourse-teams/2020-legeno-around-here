@@ -103,7 +103,7 @@ public class Comment extends BaseEntity {
         return Objects.nonNull(this.post);
     }
 
-    public int getZzangSize() {
+    public int getZzangCounts() {
         return zzangs.size();
     }
 
