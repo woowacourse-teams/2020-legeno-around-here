@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { setAccessTokenCookie } from '../../util/TokenUtils';
+import { loginUser } from '../api/API';
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -61,21 +60,7 @@ function LoginForm() {
   }, []);
 
   const login = useCallback(() => {
-    axios
-      .post('http://localhost:8080/login', {
-        email,
-        password,
-      })
-      .then(async (response) => {
-        const tokenResponse = await response.data;
-        setAccessTokenCookie(tokenResponse.accessToken);
-        alert('로그인되었습니다.');
-        document.location.href = '/mypage';
-      })
-      .catch(() => {
-        alert('로그인에 실패하였습니다.');
-        handleReset();
-      });
+    loginUser(email, password, handleReset);
   }, [email, password, handleReset]);
 
   const handleSubmit = useCallback(

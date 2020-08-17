@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 import Avatar from '@material-ui/core/Avatar';
@@ -12,6 +11,7 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { createUser } from '../api/API';
 
 const Copyright = () => {
   return (
@@ -139,20 +139,7 @@ function JoinForm() {
   }, []);
 
   const join = useCallback(() => {
-    axios
-      .post('http://localhost:8080/join', {
-        email,
-        nickname,
-        password,
-      })
-      .then((response) => {
-        alert('회원가입을 축하드립니다.');
-        document.location.href = '/login';
-      })
-      .catch(() => {
-        alert('회원가입에 실패하였습니다.');
-        handleReset();
-      });
+    createUser(email, nickname, password, handleReset);
   }, [email, nickname, password, handleReset]);
 
   const handleSubmit = useCallback(

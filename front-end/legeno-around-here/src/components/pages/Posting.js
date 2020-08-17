@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 
 import TopBar from '../posting/TopBar';
 import { getAccessTokenFromCookie } from '../../util/TokenUtils';
@@ -8,6 +7,8 @@ import TextInput from '../posting/TextInput';
 import ImageInput from '../posting/ImageInput';
 import Bottom from '../Bottom';
 import { WRITING } from '../../constants/BottomItems';
+import Loading from '../Loading';
+import { createPost } from '../api/API';
 
 const Form = styled.form`
   width: 100%;
@@ -38,7 +39,6 @@ const Posting = () => {
   const submitPost = (e) => {
     e.preventDefault();
 
-    const url = 'http://localhost:8080/posts';
     const mainAreaId = localStorage.getItem('mainAreaId');
 
     const formData = new FormData();
@@ -51,30 +51,16 @@ const Posting = () => {
     formData.append('areaId', mainAreaId);
     formData.append('sectorId', 1);
 
-    const config = {
-      headers: {
-        'X-Auth-Token': accessToken,
-      },
-    };
-
     const sendPost = async () => {
       setLoading(true);
-      try {
-        const response = await axios.post(url, formData, config);
-        if (response.status === 201) {
-          alert('전송에 성공했습니다!');
-          document.location.href = response.headers.location;
-        }
-      } catch (e) {
-        console.log(e);
-      }
+      await createPost(formData, accessToken);
       setLoading(false);
     };
     sendPost();
   };
 
   if (loading) {
-    return <div>현재 전송중입니다 :) 조금만 기다려주세요!</div>;
+    return <Loading />;
   }
 
   return (

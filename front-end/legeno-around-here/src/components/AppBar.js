@@ -13,10 +13,11 @@ import Fade from '@material-ui/core/Fade';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
-import { getAllAreas } from './api/API';
+import { findAllAreas } from './api/API';
 import { getAccessTokenFromCookie } from '../util/TokenUtils';
 import List from '@material-ui/core/List';
 import AreaItem from './AreaItem';
+import Loading from './Loading';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -65,7 +66,7 @@ export default function PrimarySearchAppBar() {
   const loadAreas = async () => {
     const accessToken = getAccessTokenFromCookie();
     setLoading(true);
-    const allAreas = await getAllAreas(page, accessToken, areaKeyword);
+    const allAreas = await findAllAreas(page, accessToken, areaKeyword);
     if (allAreas.length === 0) {
       alert('검색 결과가 없습니다! 다시 검색해주세요!');
     }
@@ -91,7 +92,7 @@ export default function PrimarySearchAppBar() {
 
   return (
     <>
-      {loading && <div>Loading ...</div>}
+      {loading && <Loading />}
       <AppBar position="sticky">
         <Toolbar>
           <IconButton
