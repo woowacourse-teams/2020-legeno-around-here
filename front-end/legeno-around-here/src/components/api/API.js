@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { setAccessTokenCookie } from '../../util/TokenUtils';
+import {setAccessTokenCookie} from '../../util/TokenUtils';
 
-const DEFAULT_SIZE = 50;
+const DEFAULT_SIZE = 10;
 const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
-const DEFAULT_URL = 'https://back.capzzang.co.kr';
+const DEFAULT_URL = 'http://localhost:8080';
 
 export const loginUser = (email, password, handleReset) => {
   axios
@@ -82,7 +82,11 @@ export const findMyInfo = ({
     });
 };
 
-export const findAllCurrentPosts = async (mainAreaId, page, accessToken) => {
+export const findCurrentPostsFromPage = async (
+  mainAreaId,
+  page,
+  accessToken,
+) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -101,6 +105,7 @@ export const findAllCurrentPosts = async (mainAreaId, page, accessToken) => {
       config,
     )
     .catch((error) => {
+      console.log(error);
       console.log(`최근 글을 가져올 수 없습니다! error : ${error}`);
       document.location.href = '/login';
     });
@@ -130,23 +135,19 @@ export const findAllAreas = async (page, accessToken, keyword) => {
   return response.data.content;
 };
 
-export const findAllSectors = (setSectors, accessToken) => {
+export const findAllSectors = async (accessToken) => {
   const config = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       'X-Auth-Token': accessToken,
     },
   };
-  axios
+  const response = await axios
     .get(DEFAULT_URL + '/sectors?size=50', config)
-    .then(async (response) => {
-      const userResponse = await response.data;
-      setSectors(userResponse.content);
-      console.log(userResponse.content);
-    })
     .catch((error) => {
       alert(`부문정보를 가져올 수 없습니다.${error}`);
     });
+  return response.data.content;
 };
 
 export const findPost = ({ accessToken, postId, setPostState }) => {

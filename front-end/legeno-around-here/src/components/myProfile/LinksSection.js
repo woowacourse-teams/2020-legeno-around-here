@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 export const NavSection = styled.div`
   width: 97%;
@@ -12,8 +12,8 @@ export const NavSection = styled.div`
 
 export const NavElement = ({ linkTo, children }) => {
   return (
-    <StyledLink to={ linkTo }>
-      <LinkText>{ children }</LinkText>
+    <StyledLink to={linkTo}>
+      <LinkText>{children}</LinkText>
     </StyledLink>
   );
 };
@@ -28,7 +28,11 @@ const StyledLink = styled(Link)`
   text-decoration: none;
   background-color: #ffffff;
 
-  &:focus, &:hover, &:visited, &:link, &:active {
+  &:focus,
+  &:hover,
+  &:visited,
+  &:link,
+  &:active {
     text-decoration: none;
   }
 `;

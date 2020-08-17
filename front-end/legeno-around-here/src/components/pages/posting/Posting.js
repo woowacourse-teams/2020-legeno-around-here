@@ -73,11 +73,7 @@ const Posting = () => {
             onChange={onWritingChanged}
             value={writing}
           />
-          <ImageInput
-            type="file"
-            multiple
-            onChange={onImagesChanged}
-          ></ImageInput>
+          <ImageInput type="file" multiple onChange={onImagesChanged} />
           <button onClick={(e) => e.preventDefault()}>
             부문을 추가해주세요
           </button>
