@@ -16,7 +16,7 @@ export const loginUser = (email, password, handleReset) => {
       const tokenResponse = await response.data;
       setAccessTokenCookie(tokenResponse.accessToken);
       alert('로그인되었습니다.');
-      document.location.href = '/myProfile';
+      document.location.href = '/home';
     })
     .catch(() => {
       alert('로그인에 실패하였습니다.');
