@@ -37,7 +37,7 @@ const PostDetailTopBar = () => {
             aria-label="show 17 new notifications"
             color="inherit"
             onClick={() => {
-              alert('아직 신고기능이 완성되지 않았습니다!');
+              alert('아직 알람기능이 완성되지 않았습니다!');
             }}
           >
             <Badge badgeContent={0} color="secondary">
