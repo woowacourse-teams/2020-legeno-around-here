@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
-import java.util.Collections;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,14 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.Nickname;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.Password;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.Role;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
+import wooteco.team.ittabi.legenoaroundhere.domain.user.UserImage;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
@@ -38,25 +36,21 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Transactional
-    public Long createUser(UserRequest userRequest) {
-        Area area = findAreaBy(userRequest.getAreaId());
-
+    public Long createUser(UserCreateRequest userCreateRequest) {
         // ToDo 삭제 계정과 겹치는 것을 허용할지 추후 고려하기
-        userRepository.findByEmail(new Email(userRequest.getEmail()))
+        userRepository.findByEmail(new Email(userCreateRequest.getEmail()))
             .ifPresent(user -> {
                 throw new WrongUserInputException(
-                    "[" + userRequest.getEmail() + "] 이메일은 이미 사용중입니다.");
+                    "[" + userCreateRequest.getEmail() + "] 이메일은 이미 사용중입니다.");
             });
 
-        User persistUser = userRepository.save(User.builder()
-            .email(new Email(userRequest.getEmail()))
-            .nickname(new Nickname(userRequest.getNickname()))
-            .password(new Password(passwordEncoder.encode(userRequest.getPassword())))
-            .roles(Collections.singletonList(Role.USER.name()))
-            .area(area)
-            .build());
+        userCreateRequest.setPassword(passwordEncoder.encode(userCreateRequest.getPassword()));
 
-        return persistUser.getId();
+        Area area = findAreaBy(userCreateRequest.getAreaId());
+        User user = userCreateRequest.toUser(area);
+        User createdUser = userRepository.save(user);
+
+        return createdUser.getId();
     }
 
     private Area findAreaBy(Long areaId) {
@@ -87,25 +81,18 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public UserResponse updateUser(UserRequest userUpdateRequest) {
+    public UserResponse updateUser(UserUpdateRequest userUpdateRequest) {
         User user = (User) authenticationFacade.getPrincipal();
-        User persistUser = userRepository.findByEmail(user.getEmail())
+        User foundUser = userRepository.findByEmail(user.getEmail())
             .orElseThrow(() -> new NotExistsException("사용자를 찾을 수 없습니다."));
 
-        updatePersistUser(persistUser, userUpdateRequest);
+        userUpdateRequest.setPassword(passwordEncoder.encode(userUpdateRequest.getPassword()));
+        Area area = findAreaBy(userUpdateRequest.getAreaId());
+        UserImage userImage = null;
 
-        return UserResponse.from(persistUser);
-    }
+        foundUser.update(userUpdateRequest.toUser(area, userImage));
 
-    private void updatePersistUser(User persistUser, UserRequest userUpdateRequest) {
-        Nickname newNickname = new Nickname(userUpdateRequest.getNickname());
-        Password newPassword = new Password(
-            passwordEncoder.encode(userUpdateRequest.getPassword()));
-        Area newArea = findAreaBy(userUpdateRequest.getAreaId());
-
-        persistUser.setNickname(newNickname);
-        persistUser.setPassword(newPassword);
-        persistUser.setArea(newArea);
+        return UserResponse.from(foundUser);
     }
 
     @Transactional

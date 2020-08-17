@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 
 @SpringBootTest
@@ -43,8 +43,9 @@ class JwtTokenDecoderTest {
     @DisplayName("토큰으로부터 Authentication 얻기")
     void getAuthentication() {
         userService
-            .createUser(new UserRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD,
-                TEST_AREA_ID));
+            .createUser(
+                new UserCreateRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD,
+                    TEST_AREA_ID));
         userService.login(new LoginRequest(TEST_USER_EMAIL, TEST_USER_PASSWORD));
 
         assertThat(jwtTokenDecoder.getAuthentication(token))

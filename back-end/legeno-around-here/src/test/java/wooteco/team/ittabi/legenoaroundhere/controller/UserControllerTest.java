@@ -30,7 +30,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
@@ -58,7 +58,8 @@ class UserControllerTest {
         given(userService.createUser(any())).willReturn(TEST_USER_ID);
 
         String inputJson = objectMapper.writeValueAsString(
-            new UserRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD, TEST_AREA_ID));
+            new UserCreateRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD,
+                TEST_AREA_ID));
 
         this.mockMvc.perform(post("/join")
             .content(inputJson)

@@ -22,8 +22,9 @@ import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
@@ -48,9 +49,10 @@ class UserServiceTest {
     @Test
     @DisplayName("User 생성")
     void createUser_Success() {
-        UserRequest userRequest =
-            new UserRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD, TEST_AREA_ID);
-        Long userId = userService.createUser(userRequest);
+        UserCreateRequest userCreateRequest =
+            new UserCreateRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD,
+                TEST_AREA_ID);
+        Long userId = userService.createUser(userCreateRequest);
 
         assertThat(userId).isNotNull();
     }
@@ -58,20 +60,22 @@ class UserServiceTest {
     @Test
     @DisplayName("User 생성, 실패 - 중복된 이메일")
     void createUser_DuplicationEmail_ThrownException() {
-        UserRequest userRequest =
-            new UserRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD, TEST_AREA_ID);
-        Long userId = userService.createUser(userRequest);
+        UserCreateRequest userCreateRequest =
+            new UserCreateRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD,
+                TEST_AREA_ID);
+        Long userId = userService.createUser(userCreateRequest);
 
-        assertThatThrownBy(() -> userService.createUser(userRequest))
+        assertThatThrownBy(() -> userService.createUser(userCreateRequest))
             .isInstanceOf(WrongUserInputException.class);
     }
 
     @Test
     @DisplayName("로그인")
     void login() {
-        UserRequest userRequest =
-            new UserRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD, TEST_AREA_ID);
-        userService.createUser(userRequest);
+        UserCreateRequest userCreateRequest =
+            new UserCreateRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD,
+                TEST_AREA_ID);
+        userService.createUser(userCreateRequest);
 
         TokenResponse response = userService.login(new LoginRequest(TEST_USER_EMAIL,
             TEST_USER_PASSWORD));
@@ -89,9 +93,10 @@ class UserServiceTest {
     @Test
     @DisplayName("로그인 - 비밀번호가 틀렸을 때")
     void login_IfPasswordIsWrong_ThrowException() {
-        UserRequest userRequest =
-            new UserRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD, TEST_AREA_ID);
-        userService.createUser(userRequest);
+        UserCreateRequest userCreateRequest =
+            new UserCreateRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD,
+                TEST_AREA_ID);
+        userService.createUser(userCreateRequest);
 
         assertThatThrownBy(() -> userService.login(new LoginRequest(TEST_USER_EMAIL, "wrong")))
             .isInstanceOf(WrongUserInputException.class);
@@ -100,9 +105,10 @@ class UserServiceTest {
     @Test
     @DisplayName("email로 User 찾기 (UserDetails 오버라이딩 메서드)")
     void loadUserByUsername() {
-        UserRequest userRequest =
-            new UserRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD, TEST_AREA_ID);
-        userService.createUser(userRequest);
+        UserCreateRequest userCreateRequest =
+            new UserCreateRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD,
+                TEST_AREA_ID);
+        userService.createUser(userCreateRequest);
 
         User user = (User) userService.loadUserByUsername(TEST_USER_EMAIL);
 
@@ -120,8 +126,9 @@ class UserServiceTest {
     }
 
     private User createUser(String email, String nickname, String password) {
-        UserRequest userRequest = new UserRequest(email, nickname, password, TEST_AREA_ID);
-        Long userId = userService.createUser(userRequest);
+        UserCreateRequest userCreateRequest = new UserCreateRequest(email, nickname, password,
+            TEST_AREA_ID);
+        Long userId = userService.createUser(userCreateRequest);
 
         return userRepository.findById(userId)
             .orElseThrow(() -> new NotExistsException("해당하는 사용자가 존재하지 않습니다."));
@@ -139,8 +146,8 @@ class UserServiceTest {
     void updateUser() {
         User createdUser = createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         setAuthentication(createdUser);
-        UserRequest userUpdateRequest
-            = new UserRequest(null, "newname", "newpassword", TEST_AREA_ID);
+        UserUpdateRequest userUpdateRequest
+            = new UserUpdateRequest("newname", "newpassword", TEST_AREA_ID, null);
 
         UserResponse updatedUserResponse = userService.updateUser(userUpdateRequest);
 

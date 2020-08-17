@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 
 @RestController
@@ -24,8 +25,8 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<Void> join(@RequestBody UserRequest userRequest) {
-        Long userId = userService.createUser(userRequest);
+    public ResponseEntity<Void> join(@RequestBody UserCreateRequest userCreateRequest) {
+        Long userId = userService.createUser(userCreateRequest);
         return ResponseEntity
             .created(URI.create("/users/" + userId))
             .build();
@@ -33,20 +34,24 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
+        TokenResponse token = userService.login(loginRequest);
         return ResponseEntity
-            .ok(userService.login(loginRequest));
+            .ok(token);
     }
 
     @GetMapping("/users/myinfo")
     public ResponseEntity<UserResponse> findUser() {
+        UserResponse user = userService.findUser();
         return ResponseEntity
-            .ok(userService.findUser());
+            .ok(user);
     }
 
     @PutMapping("/users/myinfo")
-    public ResponseEntity<UserResponse> updateUser(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserResponse> updateUser(
+        @RequestBody UserUpdateRequest userUpdateRequest) {
+        UserResponse user = userService.updateUser(userUpdateRequest);
         return ResponseEntity
-            .ok(userService.updateUser(userRequest));
+            .ok(user);
     }
 
     @DeleteMapping("/users/myinfo")

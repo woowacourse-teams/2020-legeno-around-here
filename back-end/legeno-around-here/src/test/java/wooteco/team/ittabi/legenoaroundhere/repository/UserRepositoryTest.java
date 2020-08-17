@@ -9,9 +9,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.Nickname;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.Password;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 
 @DataJpaTest
@@ -24,9 +21,9 @@ public class UserRepositoryTest {
     @Test
     void save() {
         User notSavedUser = User.builder()
-            .email(new Email(TEST_USER_EMAIL))
-            .nickname(new Nickname(TEST_USER_NICKNAME))
-            .password(new Password(TEST_USER_PASSWORD))
+            .email(TEST_USER_EMAIL)
+            .nickname(TEST_USER_NICKNAME)
+            .password(TEST_USER_PASSWORD)
             .build();
         assertThat(notSavedUser.getId()).isNull();
         assertThat(notSavedUser.getCreatedAt()).isNull();
