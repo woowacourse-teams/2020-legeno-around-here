@@ -130,23 +130,19 @@ export const findAllAreas = async (page, accessToken, keyword) => {
   return response.data.content;
 };
 
-export const findAllSectors = (setSectors, accessToken) => {
+export const findAllSectors = async (accessToken) => {
   const config = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       'X-Auth-Token': accessToken,
     },
   };
-  axios
+  const response = await axios
     .get(DEFAULT_URL + '/sectors?size=50', config)
-    .then(async (response) => {
-      const userResponse = await response.data;
-      setSectors(userResponse.content);
-      console.log(userResponse.content);
-    })
     .catch((error) => {
       alert(`부문정보를 가져올 수 없습니다.${error}`);
     });
+  return response.data.content;
 };
 
 export const findPost = ({ accessToken, postId, setPostState }) => {
