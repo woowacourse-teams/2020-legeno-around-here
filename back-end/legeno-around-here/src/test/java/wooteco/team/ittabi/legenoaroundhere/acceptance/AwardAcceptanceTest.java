@@ -6,6 +6,7 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,17 @@ import wooteco.team.ittabi.legenoaroundhere.dto.AwardResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
 public class AwardAcceptanceTest extends AcceptanceTest {
+
+    private Long userId;
+    private String accessToken;
+
+    @BeforeEach
+    void setUp() {
+        String location = createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        userId = getIdFromUrl(location);
+        TokenResponse token = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
+        accessToken = token.getAccessToken();
+    }
 
     /**
      * Feature: 수상 내역을 조회한다. Scenario: 수상 내역을 조회한다.
@@ -25,11 +37,6 @@ public class AwardAcceptanceTest extends AcceptanceTest {
     @DisplayName("수상 내역 조회")
     @Test
     void findAward() {
-        Long userId = getIdFromUrl(
-            createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD));
-        TokenResponse token = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
-        String accessToken = token.getAccessToken();
-
         List<AwardResponse> awards = findAllAward(accessToken, userId);
         assertThat(awards).hasSize(9);
 
