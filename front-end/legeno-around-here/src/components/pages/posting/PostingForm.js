@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import { createPost } from '../../api/API';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
+import SectorApplyButton from '../sector/SectorApplyButton';
 
 const useStyles = makeStyles(() => ({
   uploadPhoto: {
@@ -94,6 +95,9 @@ const PostingForm = () => {
         onChange={onWritingChanged}
         value={writing}
       />
+      <Typography>
+        아직 부문을 정하지 않으셨나요? <SectorApplyButton />을 해보세요!!
+      </Typography>
     </form>
   );
 };
