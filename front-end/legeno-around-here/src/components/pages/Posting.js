@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 
 import TopBar from '../posting/TopBar';
-import { getAccessTokenFromCookie } from '../../util/TokenUtils';
+import {getAccessTokenFromCookie} from '../../util/TokenUtils';
 import TextInput from '../posting/TextInput';
 import ImageInput from '../posting/ImageInput';
 import Bottom from '../Bottom';
-import { WRITING } from '../../constants/BottomItems';
-import { createPost } from '../api/API';
+import {WRITING} from '../../constants/BottomItems';
+import Loading from '../Loading';
+import {createPost} from '../api/API';
 
 const Form = styled.form`
   width: 100%;
@@ -59,7 +60,7 @@ const Posting = () => {
   };
 
   if (loading) {
-    return <div>현재 전송중입니다 :) 조금만 기다려주세요!</div>;
+    return <Loading />;
   }
 
   return (

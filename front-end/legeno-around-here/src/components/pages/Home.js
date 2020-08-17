@@ -8,6 +8,7 @@ import {findCurrentPostsFromPage} from '../api/API';
 import {getAccessTokenFromCookie} from '../../util/TokenUtils';
 import {HOME} from '../../constants/BottomItems';
 import PostItem from '../post/PostItem';
+import Loading from '../Loading';
 
 const Home = () => {
   const [page, setPage] = useState(0);
@@ -51,7 +52,12 @@ const Home = () => {
       <InfiniteScroll
         next={fetchNextPosts}
         hasMore={hasMore}
-        loader={<h3>Loading ...</h3>}
+        loader={
+          <>
+            <h3>Loading ...</h3>
+            <Loading />
+          </>
+        }
         dataLength={posts.length}
         endMessage={<h3>모두 읽으셨습니다!</h3>}
       >
