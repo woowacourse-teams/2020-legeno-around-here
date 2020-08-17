@@ -1,7 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.config;
 
-import com.google.common.collect.ImmutableList;
-import java.util.Arrays;
 import java.util.Collections;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -42,7 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
-      configuration.setExposedHeaders(Collections.singletonList("Location"));
+        configuration.setExposedHeaders(Collections.singletonList("Location"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
