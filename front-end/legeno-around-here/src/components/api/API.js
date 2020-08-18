@@ -105,8 +105,9 @@ export const pressPostZzang = async (postId, accessToken) => {
 
 export const findMyInfo = ({
   accessToken,
-  setEmailState,
-  setNicknameState,
+  setEmail,
+  setNickname,
+  setProfilePhotoUrl
 }) => {
   const config = {
     headers: {
@@ -118,8 +119,9 @@ export const findMyInfo = ({
     .get(DEFAULT_URL + '/users/myinfo', config)
     .then(async (response) => {
       const userResponse = await response.data;
-      setEmailState(userResponse.email);
-      setNicknameState(userResponse.nickname);
+      setEmail(userResponse.email);
+      setNickname(userResponse.nickname);
+      setProfilePhotoUrl(userResponse.image.url);
     })
     .catch((error) => {
       alert(`회원정보를 가져올 수 없습니다.${error}`);

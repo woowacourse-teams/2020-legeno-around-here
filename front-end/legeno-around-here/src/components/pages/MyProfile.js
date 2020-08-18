@@ -22,14 +22,16 @@ function MyProfile() {
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useMemo(() => {
     setLoading(true);
     findMyInfo({
       accessToken: accessToken,
-      setEmailState: setEmail,
-      setNicknameState: setNickname,
+      setEmail: setEmail,
+      setNickname: setNickname,
+      setProfilePhotoUrl: setProfilePhotoUrl,
     });
     setLoading(false);
   }, [accessToken]);
@@ -42,7 +44,7 @@ function MyProfile() {
     <>
       <TopBar backButtonLink="/"></TopBar>
       <TopSection>
-        <ProfilePhoto></ProfilePhoto>
+        <ProfilePhoto photoUrl={profilePhotoUrl}></ProfilePhoto>
         <PrivacyBox>
           <Typography component="h1" variant="h5">
             <Nickname>{nickname}</Nickname>
