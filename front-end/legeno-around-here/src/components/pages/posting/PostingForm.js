@@ -54,13 +54,30 @@ const useStyles = makeStyles((theme) => ({
     zIndex: -1,
     pointerEvents: 'none',
   },
+  selectSectorButton: {
+    display: 'inlineBlock',
+    fontSize: '140%',
+    color: '#3366bb',
+  },
+  sector: {
+    display: 'inline',
+    borderRadius: 100,
+    backgroundColor: 'skyblue',
+    padding: '5px 8px 5px 8px',
+  },
 }));
 
 const PostingForm = () => {
   const classes = useStyles();
   const [accessToken] = useState(getAccessTokenFromCookie());
+
   const [writing, setWriting] = useState('');
+  const [sector, setSector] = useState({
+    id: null,
+    name: '',
+  });
   const [images, setImages] = useState([]);
+
   const [loading, setLoading] = useState(false);
   const [sectors, setSectors] = useState([]);
   const [open, setOpen] = useState(false);
@@ -112,7 +129,7 @@ const PostingForm = () => {
     }
     formData.append('writing', writing);
     formData.append('areaId', mainAreaId);
-    formData.append('sectorId', 1);
+    formData.append('sectorId', sector.id);
 
     const sendPost = async () => {
       setLoading(true);
@@ -154,10 +171,17 @@ const PostingForm = () => {
           onChange={onWritingChanged}
           value={writing}
         />
+        <Button onClick={handleOpen} className={classes.selectSectorButton}>
+          부문 설정
+        </Button>
+        {sector.id !== null ? (
+          <Typography className={classes.sector}>{sector.name}</Typography>
+        ) : (
+          ''
+        )}
         <Typography>
-          아직 부문을 정하지 않으셨나요? <SectorApplyButton />을 해보세요!!
+          참가하고 싶은 부문이 없으신가요? <SectorApplyButton />을 해보세요!!
         </Typography>
-        <Button onClick={handleOpen}>부문 목록</Button>
       </form>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -180,6 +204,13 @@ const PostingForm = () => {
                     <ListItem
                       key={sector.id}
                       alignItems="flex-start"
+                      onClick={() => {
+                        setSector({
+                          id: sector.id,
+                          name: sector.name,
+                        });
+                        handleClose();
+                      }}
                     >
                       <ListItemText
                         primary={sector.name + ' 부문'}
