@@ -62,7 +62,6 @@ const PostingForm = () => {
   const [writing, setWriting] = useState('');
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [sectorId, setSectorId] = useState('');
   const [sectors, setSectors] = useState([]);
   const [open, setOpen] = useState(false);
 
@@ -181,7 +180,6 @@ const PostingForm = () => {
                     <ListItem
                       key={sector.id}
                       alignItems="flex-start"
-                      onClick={() => setSectorId(sector.id)}
                     >
                       <ListItemText
                         primary={sector.name + ' 부문'}
