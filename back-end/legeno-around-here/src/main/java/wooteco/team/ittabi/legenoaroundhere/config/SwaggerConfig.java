@@ -57,6 +57,12 @@ public class SwaggerConfig {
     }
 
     @Bean
+    public Docket userImageApiDocket() {
+        groupName = "userImages";
+        return getDocket(groupName, "/user-images/**", DEFAULT_TITLE + groupName);
+    }
+
+    @Bean
     public Docket userJoinApiDocket() {
         groupName = "join";
         return getDocket(groupName, "/join/**", DEFAULT_TITLE + groupName);
