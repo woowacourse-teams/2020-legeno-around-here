@@ -54,7 +54,8 @@ public class User extends BaseEntity implements UserDetails {
     private Password password;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> roles = Collections.singletonList(Role.USER.getRoleName());
+    private List<String> roles
+        = new ArrayList<>(Collections.singletonList(Role.USER.getRoleName()));
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private UserImage image = null;
