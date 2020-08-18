@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import Loading from '../../Loading';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import {
-  Typography,
   Backdrop,
   Button,
-  Modal,
+  Divider,
   Fade,
   List,
   ListItem,
   ListItemText,
-  Divider,
+  Modal,
+  Typography,
 } from '@material-ui/core';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 
-import { createPost, findAllSectors } from '../../api/API';
-import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
+import {createPost, findAllSectors} from '../../api/API';
+import {getAccessTokenFromCookie} from '../../../util/TokenUtils';
 import useStyles from './PostingFormStyles';
 import SectorApplyButton from '../sector/SectorApplyButton';
 
@@ -29,7 +29,7 @@ const PostingForm = () => {
     id: null,
     name: '',
   });
-  const [area, setArea] = useState({
+  const [area] = useState({
     id: localStorage.getItem('mainAreaId'),
     name: localStorage.getItem('mainAreaName'),
   });
