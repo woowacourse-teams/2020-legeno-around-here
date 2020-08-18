@@ -45,6 +45,17 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'skyblue',
     padding: '5px 8px 5px 8px',
   },
+  selectAreaButton: {
+    display: 'inlineBlock',
+    fontSize: '140%',
+    color: '#3366bb',
+  },
+  area: {
+    display: 'inline',
+    borderRadius: 100,
+    backgroundColor: 'skyblue',
+    padding: '5px 8px 5px 8px',
+  }
 }));
 
 export default useStyles;

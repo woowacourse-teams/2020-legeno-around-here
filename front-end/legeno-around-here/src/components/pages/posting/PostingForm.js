@@ -29,6 +29,10 @@ const PostingForm = () => {
     id: null,
     name: '',
   });
+  const [area, setArea] = useState({
+    id: localStorage.getItem('mainAreaId'),
+    name: localStorage.getItem('mainAreaName'),
+  });
   const [images, setImages] = useState([]);
 
   const [loading, setLoading] = useState(false);
@@ -72,8 +76,6 @@ const PostingForm = () => {
   const submitPost = (e) => {
     e.preventDefault();
 
-    const mainAreaId = localStorage.getItem('mainAreaId');
-
     const formData = new FormData();
     if (images.length > 0) {
       Array.from(images).forEach((image) => {
@@ -81,7 +83,7 @@ const PostingForm = () => {
       });
     }
     formData.append('writing', writing);
-    formData.append('areaId', mainAreaId);
+    formData.append('areaId', area.id);
     formData.append('sectorId', sector.id);
 
     const sendPost = async () => {
@@ -124,6 +126,7 @@ const PostingForm = () => {
           onChange={onWritingChanged}
           value={writing}
         />
+
         <Button onClick={handleOpen} className={classes.selectSectorButton}>
           부문 설정
         </Button>
@@ -132,6 +135,18 @@ const PostingForm = () => {
         ) : (
           ''
         )}
+
+        <br />
+
+        <Button className={classes.selectAreaButton}>
+          지역 설정
+        </Button>
+        {area.id !== null ? (
+          <Typography className={classes.area}>{area.name}</Typography>
+        ) : (
+          ''
+        )}
+
         <Typography>
           참가하고 싶은 부문이 없으신가요? <SectorApplyButton />을 해보세요!!
         </Typography>
