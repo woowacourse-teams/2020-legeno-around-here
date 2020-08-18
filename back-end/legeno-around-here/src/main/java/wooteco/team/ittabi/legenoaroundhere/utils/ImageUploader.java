@@ -62,13 +62,12 @@ public class ImageUploader {
     }
 
     public UserImage uploadUserImage(MultipartFile multipartFile) {
-        if (Objects.isNull(multipartFile) || multipartFile.isEmpty()) {
-            throw new WrongUserInputException("첨부된 이미지가 없습니다.");
-        }
-        User user = (User) authenticationFacade.getPrincipal();
         validateImage(multipartFile);
+        User user = (User) authenticationFacade.getPrincipal();
+
         String imageUrl = s3Uploader
             .upload(multipartFile, USER_IMAGE_DIR + calculateUserHashCode(user));
+
         return UserImage.builder()
             .name(multipartFile.getName())
             .url(imageUrl)
@@ -90,6 +89,9 @@ public class ImageUploader {
     }
 
     private void validateImage(MultipartFile multipartFile) {
+        if (Objects.isNull(multipartFile) || multipartFile.isEmpty()) {
+            throw new WrongUserInputException("첨부된 이미지가 없습니다.");
+        }
         ImageExtension.validateImageExtension(multipartFile);
         validateImageMimeType(multipartFile);
     }

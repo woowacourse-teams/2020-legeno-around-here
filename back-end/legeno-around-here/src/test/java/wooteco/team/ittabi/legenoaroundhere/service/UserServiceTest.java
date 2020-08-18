@@ -44,7 +44,7 @@ class UserServiceTest extends ServiceTest {
 
     @Test
     @DisplayName("User 생성, 실패 - 중복된 이메일")
-    void createUser_DuplicationEmail_ThrownException() {
+    void createUser_DuplicatedEmail_ThrownException() {
         UserCreateRequest userCreateRequest = new UserCreateRequest(TEST_USER_EMAIL,
             TEST_USER_NICKNAME, TEST_USER_PASSWORD, TEST_AREA_ID);
         userService.createUser(userCreateRequest);
