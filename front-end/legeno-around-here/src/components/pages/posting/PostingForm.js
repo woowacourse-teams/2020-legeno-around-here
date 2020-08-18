@@ -113,7 +113,7 @@ const PostingForm = () => {
     }
     formData.append('writing', writing);
     formData.append('areaId', mainAreaId);
-    formData.append('sectorId', sectorId);
+    formData.append('sectorId', 1);
 
     const sendPost = async () => {
       setLoading(true);
