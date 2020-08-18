@@ -1,21 +1,21 @@
-import React, { useState, useMemo } from 'react';
+import React, {useMemo, useState} from 'react';
 
-import TopBar from '../myProfile/TopBar';
+import TopBar from './myProfile/myProfileTopBar'
 import Bottom from '../Bottom';
-import { PROFILE } from '../../constants/BottomItems';
-import { findMyInfo } from '../api/API';
+import {PROFILE} from '../../constants/BottomItems';
+import {findMyInfo} from '../api/API';
 import Loading from '../Loading';
-import { getAccessTokenFromCookie } from '../../util/TokenUtils';
+import {getAccessTokenFromCookie} from '../../util/TokenUtils';
 import {
-  ProfilePhoto,
-  Nickname,
   Email,
-  TopSection,
+  Nickname,
   PrivacyBox,
   PrivacyEditBox,
+  ProfilePhoto,
+  TopSection,
 } from '../myProfile/PrivacySection';
-import { AwardsSection, AwardSummary } from '../myProfile/AwardSection';
-import { NavSection, NavElement } from '../myProfile/LinksSection';
+import {AwardsSection, AwardSummary} from '../myProfile/AwardSection';
+import {NavElement, NavSection} from '../myProfile/LinksSection';
 
 function MyProfile() {
   const [accessToken] = useState(getAccessTokenFromCookie());
