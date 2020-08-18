@@ -1,6 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +26,9 @@ public class UserImageResponse {
     private LocalDateTime modifiedAt;
 
     public static UserImageResponse of(UserImage userImage) {
+        if (Objects.isNull(userImage)) {
+            return null;
+        }
         return UserImageResponse.builder()
             .id(userImage.getId())
             .name(userImage.getName())
