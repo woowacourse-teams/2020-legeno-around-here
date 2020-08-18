@@ -24,6 +24,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
 import wooteco.team.ittabi.legenoaroundhere.repository.AreaRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
+import wooteco.team.ittabi.legenoaroundhere.utils.ImageUploader;
 
 @Service
 @AllArgsConstructor
@@ -33,6 +34,7 @@ public class UserService implements UserDetailsService {
     private final AreaRepository areaRepository;
     private final JwtTokenGenerator jwtTokenGenerator;
     private final IAuthenticationFacade authenticationFacade;
+    private final ImageUploader imageUploader;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Transactional
@@ -88,11 +90,19 @@ public class UserService implements UserDetailsService {
 
         userUpdateRequest.setPassword(passwordEncoder.encode(userUpdateRequest.getPassword()));
         Area area = findAreaBy(userUpdateRequest.getAreaId());
-        UserImage userImage = null;
+        UserImage userImage = makeUserImage(foundUser, userUpdateRequest);
 
         foundUser.update(userUpdateRequest.toUser(area, userImage));
 
         return UserResponse.from(foundUser);
+    }
+
+    private UserImage makeUserImage(User foundUser, UserUpdateRequest userUpdateRequest) {
+        UserImage userImage = imageUploader.uploadUserImage(userUpdateRequest.getImage());
+        if (Objects.nonNull(userImage)) {
+            userImage.setUser(foundUser);
+        }
+        return userImage;
     }
 
     @Transactional

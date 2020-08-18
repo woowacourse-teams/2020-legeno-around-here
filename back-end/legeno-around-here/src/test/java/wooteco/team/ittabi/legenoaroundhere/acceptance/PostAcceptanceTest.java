@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_OTHER_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_DIR;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_OTHER_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
@@ -387,8 +389,8 @@ public class PostAcceptanceTest extends AcceptanceTest {
         return given()
             .log().all()
             .formParam("writing", TEST_POST_WRITING)
-            .multiPart("images", new File(TEST_IMAGE_DIR + "right_image1.jpg"))
-            .multiPart("images", new File(TEST_IMAGE_DIR + "right_image2.jpg"))
+            .multiPart("images", new File(TEST_IMAGE_DIR + TEST_IMAGE_NAME))
+            .multiPart("images", new File(TEST_IMAGE_DIR + TEST_IMAGE_OTHER_NAME))
             .formParam("areaId", TEST_AREA_ID)
             .formParam("sectorId", sectorId)
             .header("X-AUTH-TOKEN", accessToken)
