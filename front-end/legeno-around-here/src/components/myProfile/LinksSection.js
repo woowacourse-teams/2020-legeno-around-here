@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
+import Typography from "@material-ui/core/Typography";
+import {makeStyles} from "@material-ui/core/styles";
 
 export const NavSection = styled.div`
   width: 97%;
@@ -10,10 +12,19 @@ export const NavSection = styled.div`
   background-color: #eeeeee;
 `;
 
+const useStyle = makeStyles((theme) => ({
+  textStyle: {
+    color: 'black',
+    fontSize: '18px',
+  },
+}));
+
 export const NavElement = ({ linkTo, children }) => {
+  const classes = useStyle();
+
   return (
     <StyledLink to={linkTo}>
-      <LinkText>{children}</LinkText>
+      <Typography className={classes.textStyle}>{children}</Typography>
     </StyledLink>
   );
 };
@@ -35,9 +46,4 @@ const StyledLink = styled(Link)`
   &:active {
     text-decoration: none;
   }
-`;
-
-const LinkText = styled.div`
-  margin-left: 5px;
-  color: black;
 `;
