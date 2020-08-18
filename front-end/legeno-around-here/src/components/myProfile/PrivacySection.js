@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { MAIN_COLOR } from '../../constants/Color';
+import {MAIN_COLOR} from '../../constants/Color';
 
 export const ProfilePhoto = styled.div`
   width: 100px;
@@ -12,7 +12,7 @@ export const ProfilePhoto = styled.div`
 
 export const Nickname = styled.div`
   display: inline;
-  font-size: 24px;
+  font-size: 25px;
 `;
 
 export const Email = styled.div`
