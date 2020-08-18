@@ -21,6 +21,24 @@ public class SwaggerConfig {
     private String groupName;
 
     @Bean
+    public Docket areaApiDocket() {
+        groupName = "areas";
+        return getDocket(groupName, "/areas/**", DEFAULT_TITLE + groupName);
+    }
+
+    @Bean
+    public Docket awardApiDocket() {
+        groupName = "awards";
+        return getDocket(groupName, "/**/awards/**", DEFAULT_TITLE + groupName);
+    }
+
+    @Bean
+    public Docket commentApiDocket() {
+        groupName = "comments";
+        return getDocket(groupName, "/**/comments/**", DEFAULT_TITLE + groupName);
+    }
+
+    @Bean
     public Docket postApiDocket() {
         groupName = "posts";
         return getDocket(groupName, "/posts/**", DEFAULT_TITLE + groupName);
@@ -30,6 +48,12 @@ public class SwaggerConfig {
     public Docket sectorApiDocket() {
         groupName = "sectors";
         return getDocket(groupName, "/sectors/**", DEFAULT_TITLE + groupName);
+    }
+
+    @Bean
+    public Docket userApiDocket() {
+        groupName = "users";
+        return getDocket(groupName, "/users/**", DEFAULT_TITLE + groupName);
     }
 
     @Bean
