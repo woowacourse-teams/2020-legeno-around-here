@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.UserImage;
@@ -20,7 +19,7 @@ public class UserUpdateRequest {
     private String nickname;
     private String password;
     private Long areaId;
-    private MultipartFile image;
+    private Long imageId;
 
     public void setPassword(String password) {
         this.password = password;

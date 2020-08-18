@@ -90,6 +90,16 @@ public class User extends BaseEntity implements UserDetails {
         this.password = user.password;
         this.area = user.area;
         this.image = user.image;
+        setUserAtImage(user.image);
+    }
+
+    private void setUserAtImage(UserImage userImage) {
+        if (Objects.isNull(userImage)) {
+            return;
+        }
+        if (userImage.hasNotUser()) {
+            image.setInitUser(this);
+        }
     }
 
     public boolean isNotSame(User user) {

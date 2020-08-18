@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
@@ -46,8 +48,17 @@ public class UserController {
             .ok(user);
     }
 
+    @PostMapping("/user-images")
+    public ResponseEntity<UserImageResponse> uploadUserImage(MultipartFile image) {
+        UserImageResponse userImage = userService.uploadUserImage(image);
+        return ResponseEntity
+            .created(URI.create("/user-images" + userImage.getId()))
+            .body(userImage);
+    }
+
     @PutMapping("/users/myinfo")
-    public ResponseEntity<UserResponse> updateUser(UserUpdateRequest userUpdateRequest) {
+    public ResponseEntity<UserResponse> updateUser(
+        @RequestBody UserUpdateRequest userUpdateRequest) {
         UserResponse user = userService.updateUser(userUpdateRequest);
         return ResponseEntity
             .ok(user);

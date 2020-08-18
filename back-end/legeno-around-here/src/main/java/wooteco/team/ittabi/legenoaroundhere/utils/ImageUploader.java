@@ -22,6 +22,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.UserImage;
 import wooteco.team.ittabi.legenoaroundhere.domain.util.ImageExtension;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotFoundAlgorithmException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageMimeTypeException;
+import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 @Slf4j
 @Transactional
@@ -61,8 +62,8 @@ public class ImageUploader {
     }
 
     public UserImage uploadUserImage(MultipartFile multipartFile) {
-        if (Objects.isNull(multipartFile)) {
-            return null;
+        if (Objects.isNull(multipartFile) || multipartFile.isEmpty()) {
+            throw new WrongUserInputException("첨부된 이미지가 없습니다.");
         }
         User user = (User) authenticationFacade.getPrincipal();
         validateImage(multipartFile);

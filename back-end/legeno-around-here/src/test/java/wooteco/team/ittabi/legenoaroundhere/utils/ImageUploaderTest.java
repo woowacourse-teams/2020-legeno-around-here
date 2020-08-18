@@ -23,6 +23,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.UserImage;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageMimeTypeException;
+import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.service.ServiceTest;
 
 public class ImageUploaderTest extends ServiceTest {
@@ -116,12 +117,11 @@ public class ImageUploaderTest extends ServiceTest {
         assertThat(userImage.getName()).isEqualTo(multipartFile.getName());
     }
 
-    @DisplayName("포스트 이미지 업로드 - 빈 값 리턴, Null일 때")
+    @DisplayName("포스트 이미지 업로드 - 예외 반환, Null일 때")
     @Test
-    void uploadUserImage_Null_ReturnEmpty() {
-        UserImage userImage = imageUploader.uploadUserImage(null);
-
-        assertThat(userImage).isNull();
+    void uploadUserImage_Null_ThrownException() {
+        assertThatThrownBy(() -> imageUploader.uploadUserImage(null))
+            .isInstanceOf(WrongUserInputException.class);
     }
 
     @DisplayName("사용자 이미지 업로드 - 실패, 이미지 파일 MIME Type 유효성 검사")

@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
@@ -17,12 +18,14 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.UserImage;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
 import wooteco.team.ittabi.legenoaroundhere.repository.AreaRepository;
+import wooteco.team.ittabi.legenoaroundhere.repository.UserImageRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.ImageUploader;
 
@@ -31,6 +34,7 @@ import wooteco.team.ittabi.legenoaroundhere.utils.ImageUploader;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final UserImageRepository userImageRepository;
     private final AreaRepository areaRepository;
     private final JwtTokenGenerator jwtTokenGenerator;
     private final IAuthenticationFacade authenticationFacade;
@@ -87,22 +91,21 @@ public class UserService implements UserDetailsService {
         User user = (User) authenticationFacade.getPrincipal();
         User foundUser = userRepository.findByEmail(user.getEmail())
             .orElseThrow(() -> new NotExistsException("사용자를 찾을 수 없습니다."));
+        Area area = findAreaBy(userUpdateRequest.getAreaId());
+        UserImage userImage = findUserImageBy(userUpdateRequest.getImageId());
 
         userUpdateRequest.setPassword(passwordEncoder.encode(userUpdateRequest.getPassword()));
-        Area area = findAreaBy(userUpdateRequest.getAreaId());
-        UserImage userImage = makeUserImage(foundUser, userUpdateRequest);
-
         foundUser.update(userUpdateRequest.toUser(area, userImage));
 
         return UserResponse.from(foundUser);
     }
 
-    private UserImage makeUserImage(User foundUser, UserUpdateRequest userUpdateRequest) {
-        UserImage userImage = imageUploader.uploadUserImage(userUpdateRequest.getImage());
-        if (Objects.nonNull(userImage)) {
-            userImage.setUser(foundUser);
+    private UserImage findUserImageBy(Long userImageId) {
+        if (Objects.isNull(userImageId)) {
+            return null;
         }
-        return userImage;
+        return userImageRepository.findById(userImageId)
+            .orElseThrow(() -> new NotExistsException("유효하지 않은 Image입니다."));
     }
 
     @Transactional
@@ -117,5 +120,13 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(new Email(email))
             .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+    }
+
+    @Transactional
+    public UserImageResponse uploadUserImage(MultipartFile userImageFile) {
+        UserImage userImage = imageUploader.uploadUserImage(userImageFile);
+        UserImage savedUserImage = userImageRepository.save(userImage);
+
+        return UserImageResponse.of(savedUserImage);
     }
 }

@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 
 public class UserAcceptanceTest extends AcceptanceTest {
@@ -62,20 +63,20 @@ public class UserAcceptanceTest extends AcceptanceTest {
 
         // 로그인
         TokenResponse tokenResponse = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
+        String accessToken = tokenResponse.getAccessToken();
         assertThat(tokenResponse).isNotNull();
-        assertThat(tokenResponse.getAccessToken())
-            .hasSizeGreaterThanOrEqualTo(TOKEN_MIN_SIZE);
+        assertThat(accessToken).hasSizeGreaterThanOrEqualTo(TOKEN_MIN_SIZE);
 
         // 내 정보 조회
-        UserResponse userResponse = findUser(tokenResponse.getAccessToken());
+        UserResponse userResponse = findUser(accessToken);
         assertThat(userResponse).isNotNull();
         assertThat(userResponse.getId()).isNotNull();
         assertThat(userResponse.getEmail()).isEqualTo(TEST_USER_EMAIL);
         assertThat(userResponse.getNickname()).isEqualTo(TEST_USER_NICKNAME);
 
         // 내 정보 수정
-        updateUserWithoutAreaAndImage(tokenResponse.getAccessToken(), "newname", "newpassword");
-        UserResponse updatedUserResponse = findUser(tokenResponse.getAccessToken());
+        updateUserWithoutAreaAndImage(accessToken, "newname", "newpassword");
+        UserResponse updatedUserResponse = findUser(accessToken);
         assertThat(updatedUserResponse.getNickname()).isEqualTo("newname");
         TokenResponse updatedTokenResponse = login(TEST_USER_EMAIL, "newpassword");
         assertThat(updatedTokenResponse).isNotNull();
@@ -122,8 +123,11 @@ public class UserAcceptanceTest extends AcceptanceTest {
         assertThat(userResponse.getArea()).isNotNull();
         assertThat(userResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
 
+        // 프로필 사진 등록
+        UserImageResponse userImageResponse = createUserImage(accessToken);
+
         userResponse = updateUserWithAreaAndImage(accessToken, TEST_USER_NICKNAME,
-            TEST_USER_PASSWORD);
+            TEST_USER_PASSWORD, userImageResponse.getId());
         assertThat(userResponse.getArea()).isNotNull();
         assertThat(userResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
         assertThat(userResponse.getImage()).isNotNull();
@@ -182,51 +186,56 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 
-    private UserResponse updateUserWithoutAreaAndImage(String accessToken, String nickname,
-        String password) {
+    private UserImageResponse createUserImage(String accessToken) {
         return given()
             .log().all()
-            .formParam("nickname", nickname)
-            .formParam("password", password)
-            .header("X-AUTH-TOKEN", accessToken)
-            .config(RestAssuredConfig.config()
-                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
-            .when()
-            .put("/users/myinfo")
-            .then()
-            .statusCode(HttpStatus.OK.value())
-            .extract().as(UserResponse.class);
-    }
-
-    private UserResponse updateUserWithAreaAndWithoutImage(String accessToken, String nickname,
-        String password) {
-        return given()
-            .log().all()
-            .formParam("nickname", nickname)
-            .formParam("password", password)
-            .formParam("areaId", TEST_AREA_ID)
-            .header("X-AUTH-TOKEN", accessToken)
-            .config(RestAssuredConfig.config()
-                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
-            .when()
-            .put("/users/myinfo")
-            .then()
-            .statusCode(HttpStatus.OK.value())
-            .extract().as(UserResponse.class);
-    }
-
-    private UserResponse updateUserWithAreaAndImage(String accessToken, String nickname,
-        String password) {        // TODO: 2020/07/28 이미지를 포함했을 때 한글이 안 나오는 문제
-
-        return given()
-            .log().all()
-            .formParam("nickname", nickname)
-            .formParam("password", password)
-            .formParam("areaId", TEST_AREA_ID)
             .multiPart("image", new File(TEST_IMAGE_DIR + TEST_IMAGE_NAME))
             .header("X-AUTH-TOKEN", accessToken)
             .config(RestAssuredConfig.config()
                 .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+            .when()
+            .post("/user-images")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract().as(UserImageResponse.class);
+    }
+
+    private UserResponse updateUserWithoutAreaAndImage(String accessToken, String nickname,
+        String password) {
+        Map<String, String> params = new HashMap<>();
+        params.put("nickname", nickname);
+        params.put("password", password);
+
+        return updateUserBy(accessToken, params);
+    }
+
+    private UserResponse updateUserWithAreaAndWithoutImage(String accessToken, String nickname,
+        String password) {
+        Map<String, String> params = new HashMap<>();
+        params.put("nickname", nickname);
+        params.put("password", password);
+        params.put("areaId", String.valueOf(TEST_AREA_ID));
+
+        return updateUserBy(accessToken, params);
+    }
+
+    private UserResponse updateUserWithAreaAndImage(String accessToken, String nickname,
+        String password, Long imageId) {
+        Map<String, String> params = new HashMap<>();
+        params.put("nickname", nickname);
+        params.put("password", password);
+        params.put("areaId", String.valueOf(TEST_AREA_ID));
+        params.put("imageId", String.valueOf(imageId));
+
+        return updateUserBy(accessToken, params);
+    }
+
+    private UserResponse updateUserBy(String accessToken, Map<String, String> params) {
+        return given()
+            .header("X-AUTH-TOKEN", accessToken)
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .put("/users/myinfo")
             .then()
