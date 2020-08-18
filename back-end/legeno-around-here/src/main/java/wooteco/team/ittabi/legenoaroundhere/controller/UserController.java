@@ -47,8 +47,7 @@ public class UserController {
     }
 
     @PutMapping("/users/myinfo")
-    public ResponseEntity<UserResponse> updateUser(
-        @RequestBody UserUpdateRequest userUpdateRequest) {
+    public ResponseEntity<UserResponse> updateUser(UserUpdateRequest userUpdateRequest) {
         UserResponse user = userService.updateUser(userUpdateRequest);
         return ResponseEntity
             .ok(user);

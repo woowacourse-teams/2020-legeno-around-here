@@ -1,13 +1,18 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
+import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_DIR;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_OTHER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import io.restassured.RestAssured;
+import io.restassured.config.RestAssuredConfig;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,7 +74,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
         assertThat(userResponse.getNickname()).isEqualTo(TEST_USER_NICKNAME);
 
         // 내 정보 수정
-        updateUserWithoutArea(tokenResponse.getAccessToken(), "newname", "newpassword");
+        updateUserWithoutAreaAndImage(tokenResponse.getAccessToken(), "newname", "newpassword");
         UserResponse updatedUserResponse = findUser(tokenResponse.getAccessToken());
         assertThat(updatedUserResponse.getNickname()).isEqualTo("newname");
         TokenResponse updatedTokenResponse = login(TEST_USER_EMAIL, "newpassword");
@@ -108,14 +113,20 @@ public class UserAcceptanceTest extends AcceptanceTest {
         assertThat(userResponse.getArea()).isNotNull();
         assertThat(userResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
 
-        updateUserWithoutArea(accessToken, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        updateUserWithoutAreaAndImage(accessToken, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         userResponse = findUser(accessToken);
         assertThat(userResponse.getArea()).isNull();
 
-        updateUserWithArea(accessToken, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        updateUserWithAreaAndWithoutImage(accessToken, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         userResponse = findUser(accessToken);
         assertThat(userResponse.getArea()).isNotNull();
         assertThat(userResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
+
+        userResponse = updateUserWithAreaAndImage(accessToken, TEST_USER_NICKNAME,
+            TEST_USER_PASSWORD);
+        assertThat(userResponse.getArea()).isNotNull();
+        assertThat(userResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
+        assertThat(userResponse.getImage()).isNotNull();
     }
 
     private String createUserWithoutArea(String email, String nickname, String password) {
@@ -171,31 +182,51 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 
-    private UserResponse updateUserWithoutArea(String accessToken, String nickname,
+    private UserResponse updateUserWithoutAreaAndImage(String accessToken, String nickname,
         String password) {
-        Map<String, String> params = new HashMap<>();
-        params.put("nickname", nickname);
-        params.put("password", password);
-
-        return updateUserBy(accessToken, params);
-    }
-
-    private UserResponse updateUserWithArea(String accessToken, String nickname,
-        String password) {
-        Map<String, String> params = new HashMap<>();
-        params.put("nickname", nickname);
-        params.put("password", password);
-        params.put("areaId", String.valueOf(TEST_AREA_ID));
-
-        return updateUserBy(accessToken, params);
-    }
-
-    private UserResponse updateUserBy(String accessToken, Map<String, String> params) {
         return given()
+            .log().all()
+            .formParam("nickname", nickname)
+            .formParam("password", password)
             .header("X-AUTH-TOKEN", accessToken)
-            .body(params)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .config(RestAssuredConfig.config()
+                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+            .when()
+            .put("/users/myinfo")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract().as(UserResponse.class);
+    }
+
+    private UserResponse updateUserWithAreaAndWithoutImage(String accessToken, String nickname,
+        String password) {
+        return given()
+            .log().all()
+            .formParam("nickname", nickname)
+            .formParam("password", password)
+            .formParam("areaId", TEST_AREA_ID)
+            .header("X-AUTH-TOKEN", accessToken)
+            .config(RestAssuredConfig.config()
+                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+            .when()
+            .put("/users/myinfo")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract().as(UserResponse.class);
+    }
+
+    private UserResponse updateUserWithAreaAndImage(String accessToken, String nickname,
+        String password) {        // TODO: 2020/07/28 이미지를 포함했을 때 한글이 안 나오는 문제
+
+        return given()
+            .log().all()
+            .formParam("nickname", nickname)
+            .formParam("password", password)
+            .formParam("areaId", TEST_AREA_ID)
+            .multiPart("image", new File(TEST_IMAGE_DIR + TEST_IMAGE_NAME))
+            .header("X-AUTH-TOKEN", accessToken)
+            .config(RestAssuredConfig.config()
+                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
             .when()
             .put("/users/myinfo")
             .then()
