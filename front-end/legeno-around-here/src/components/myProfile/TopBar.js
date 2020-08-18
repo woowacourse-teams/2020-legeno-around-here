@@ -1,21 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 
-import { MAIN_COLOR } from '../../constants/Color';
 import BackButton from './BackButton';
-import { HEIGHT, ACTUAL_ITEM_SPACE_WIDTH } from '../../constants/TopBar';
-
-const useStyles = makeStyles(() => ({
-  topBarBackground: {
-    background: MAIN_COLOR,
-    height: HEIGHT,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
-}));
+import { ACTUAL_ITEM_SPACE_WIDTH } from '../../constants/TopBar';
 
 const ActualItemSpace = styled.div`
   width: ${ACTUAL_ITEM_SPACE_WIDTH};
@@ -26,10 +14,8 @@ const ActualItemSpace = styled.div`
 `;
 
 const TopBar = ({ backButtonLink }) => {
-  const classes = useStyles();
-
   return (
-    <AppBar position="sticky" className={classes.topBarBackground}>
+    <AppBar position="sticky">
       <ActualItemSpace>
         <BackButton linkTo={backButtonLink} />
       </ActualItemSpace>
