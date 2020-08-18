@@ -16,6 +16,7 @@ import {
 } from '../myProfile/PrivacySection';
 import {AwardsSection, AwardSummary} from '../myProfile/AwardSection';
 import {NavElement, NavSection} from '../myProfile/LinksSection';
+import Typography from "@material-ui/core/Typography";
 
 function MyProfile() {
   const [accessToken] = useState(getAccessTokenFromCookie());
@@ -43,7 +44,9 @@ function MyProfile() {
       <TopSection>
         <ProfilePhoto></ProfilePhoto>
         <PrivacyBox>
-          <Nickname>{nickname}</Nickname>
+          <Typography component="h1" variant="h5">
+            <Nickname>{nickname}</Nickname>
+          </Typography>
           <Email>{email}</Email>
         </PrivacyBox>
         <PrivacyEditBox>수정</PrivacyEditBox>
