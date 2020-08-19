@@ -13,6 +13,8 @@ import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 class AreaRepositoryTest {
 
     protected static final int INIT_DATA_SIZE = 493;
+    protected static final int SEOUL_SUB_AREA_COUNT = INIT_DATA_SIZE - 1;
+    protected static final long SEOUL_AREA_ID = 1L;
 
     @Autowired
     AreaRepository areaRepository;
@@ -22,5 +24,12 @@ class AreaRepositoryTest {
     void init_checkingArea() {
         List<Area> areas = areaRepository.findAll();
         assertThat(areas).hasSize(INIT_DATA_SIZE);
+    }
+
+    @DisplayName("서울특별시 ID로 검색시 SubAreas 확인")
+    @Test
+    void findAreas_UseAreaId_FoundSubArea() {
+        List<Area> areas = areaRepository.findSubAreasById(SEOUL_AREA_ID);
+        assertThat(areas).hasSize(SEOUL_SUB_AREA_COUNT);
     }
 }

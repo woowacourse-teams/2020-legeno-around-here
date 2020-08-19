@@ -111,10 +111,11 @@ public class PostService {
     }
 
     private List<Area> findAllAreas(Long areaId) {
-        List<Area> allArea = areaRepository.findAll();
-        Area foundArea = areaRepository.findById(areaId)
-            .orElseThrow(() -> new NotExistsException("해당 Area가 없습니다."));
-        return findSubAreas(allArea, foundArea);
+        List<Area> subAreas = areaRepository.findSubAreasById(areaId);
+        if (subAreas.isEmpty()) {
+            throw new NotExistsException("해당 Area가 존재하지 않습니다.");
+        }
+        return subAreas;
     }
 
     private List<Area> findSubAreas(List<Area> areas, Area targetArea) {
