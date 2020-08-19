@@ -43,7 +43,9 @@ public class UserAcceptanceTest extends AcceptanceTest {
      * <p>
      * When 내 정보를 조회한다. Then 내 정보가 조회된다.
      * <p>
-     * When 내 정보를 수정한다. Then 내 정보가 수정된다.
+     * When 내 정보를 이미지를 포함하여 수정한다. Then 내 정보가 수정된다.
+     * <p>
+     * When 내 정보를 이미지를 사용하지 않는 방향으로 수정한다. Then 내 정보가 수정된다.
      * <p>
      * Given 로그인이 되어있는 상태이다. * When 회원 탈퇴 요청을 한다. Then 회원 탈퇴가 되었다.
      */
@@ -77,19 +79,23 @@ public class UserAcceptanceTest extends AcceptanceTest {
         // 프로필 사진 등록
         UserImageResponse userImageResponse = createUserImage(accessToken);
 
-        // 내 정보 수정
+        // 내 정보 수정 - 프로필 사진 포함
         updateUserWithImage(accessToken, "newname", "newpassword", userImageResponse.getId());
         UserResponse updatedUserResponse = findUser(accessToken);
         assertThat(updatedUserResponse.getNickname()).isEqualTo("newname");
-        TokenResponse updatedTokenResponse = login(TEST_USER_EMAIL, "newpassword");
-        assertThat(updatedTokenResponse).isNotNull();
-        assertThat(updatedTokenResponse.getAccessToken())
-            .hasSizeGreaterThanOrEqualTo(TOKEN_MIN_SIZE);
-        assertThat(userResponse.getImage()).isNotNull();
+        assertThat(updatedUserResponse.getImage()).isNotNull();
+        login(TEST_USER_EMAIL, "newpassword");
+
+        // 내 정보 수정 - 프로필 사진 사용 안함(기본 이미지)
+        updateUserWithImage(accessToken, TEST_USER_NICKNAME, TEST_USER_PASSWORD, null);
+        updatedUserResponse = findUser(accessToken);
+        assertThat(updatedUserResponse.getNickname()).isEqualTo(TEST_USER_NICKNAME);
+        assertThat(updatedUserResponse.getImage()).isNull();
+        login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
 
         // 회원 탈퇴
-        deleteUser(updatedTokenResponse.getAccessToken());
-        findNotExistUser(updatedTokenResponse.getAccessToken());
+        deleteUser(accessToken);
+        findNotExistUser(accessToken);
     }
 
     /**
