@@ -93,11 +93,9 @@ const PostingForm = () => {
     };
     sendPost();
   };
-
   if (loading) {
     return <Loading />;
   }
-
   return (
     <>
       <form onSubmit={submitPost} id="posting-form">
@@ -126,7 +124,6 @@ const PostingForm = () => {
           onChange={onWritingChanged}
           value={writing}
         />
-
         <Button onClick={handleOpen} className={classes.selectSectorButton}>
           부문 설정
         </Button>
@@ -135,18 +132,13 @@ const PostingForm = () => {
         ) : (
           ''
         )}
-
         <br />
-
-        <Button className={classes.selectAreaButton}>
-          지역 설정
-        </Button>
+        <Button className={classes.selectAreaButton}>지역 설정</Button>
         {area.id !== null ? (
           <Typography className={classes.area}>{area.name}</Typography>
         ) : (
           ''
         )}
-
         <Typography>
           참가하고 싶은 부문이 없으신가요? <SectorApplyButton />을 해보세요!!
         </Typography>

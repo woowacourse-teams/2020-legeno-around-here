@@ -107,7 +107,7 @@ export const findMyInfo = ({
   accessToken,
   setEmail,
   setNickname,
-  setProfilePhotoUrl
+  setProfilePhotoUrl,
 }) => {
   const config = {
     headers: {
