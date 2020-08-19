@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -114,11 +115,31 @@ public class PostService {
     }
 
     private List<Area> findAllAreas(List<Long> areaIds) {
-        List<Area> areas = areaRepository.findAllById(areaIds);
-        if (areas.size() != areaIds.size()) {
-            throw new WrongUserInputException("유효하지 않은 Area ID를 사용하셨습니다.");
+        List<Area> allArea = areaRepository.findAll();
+        List<Area> foundArea = findAreas(allArea, areaIds);
+
+        List<Area> areas = new ArrayList<>();
+        for (Area area : foundArea) {
+            areas.addAll(findSubAreas(allArea, area));
         }
         return areas;
+    }
+
+    private List<Area> findAreas(List<Area> allArea, List<Long> areaIds) {
+        List<Area> foundArea = allArea.stream()
+            .filter(area -> area.isIncludeId(areaIds))
+            .collect(Collectors.toList());
+
+        if (areaIds.size() != foundArea.size()) {
+            throw new WrongUserInputException("유효하지 않은 Area ID를 사용하셨습니다.");
+        }
+        return foundArea;
+    }
+
+    private List<Area> findSubAreas(List<Area> areas, Area targetArea) {
+        return areas.stream()
+            .filter(area -> area.isSubAreaOf(targetArea))
+            .collect(Collectors.toList());
     }
 
     private List<Sector> findAllSectors(List<Long> sectorIds) {

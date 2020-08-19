@@ -4,6 +4,7 @@ import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_OTHER_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_SUB_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_DIR;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
@@ -130,11 +131,11 @@ public class PostAcceptanceTest extends AcceptanceTest {
      * <p>
      * When 글을 areaIds / sectorIds 값 없이 조회한다. Then 글이 전체 조회되었다.
      * <p>
-     * When 글을 areaIds만 포함하여 조회한다. Then areaIds에 해당하는 글들만 조회되었다.
+     * When 글을 areaIds만 포함하여 조회한다. Then areaIds에 해당하는(하위지역 포함) 글들만 조회되었다.
      * <p>
      * When 글을 sectorIds만 포함하여 조회한다. Then sectorIds에 해당하는 글들만 조회되었다.
      * <p>
-     * When 글을 areaIds, sectorIds를 포함하여 조회한다. Then areaIds, sectorIds에 해당하는 글들만 조회되었다.
+     * When 글을 areaIds, sectorIds를 포함하여 조회한다. Then areaIds, sectorIds에 해당하는(하위지역 포함) 글들만 조회되었다.
      */
     @DisplayName("글 필터 조회")
     @Test
@@ -147,8 +148,8 @@ public class PostAcceptanceTest extends AcceptanceTest {
         createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_ID, sectorBId);
         createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_ID, sectorBId);
         createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_ID, sectorCId);
-        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_ID, sectorCId);
-        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_ID, sectorCId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_SUB_ID, sectorCId);
+        createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_SUB_ID, sectorCId);
         createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorAId);
         createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorAId);
         createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorBId);
@@ -167,7 +168,7 @@ public class PostAcceptanceTest extends AcceptanceTest {
         posts = searchAllPostWithFilter(accessToken, "areaIds=&sectorIds=");
         assertThat(posts).hasSize(15);
 
-        // 글을 areaIds만 포함하여 조회
+        // 글을 areaIds만 포함하여 조회 - 하위지역 포함 조회
         posts = searchAllPostWithFilter(accessToken, "areaIds=" + TEST_AREA_ID);
         assertThat(posts).hasSize(6);
 

@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.area;
 
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import lombok.AccessLevel;
@@ -48,5 +49,23 @@ public class Area extends BaseEntity {
             return secondDepthName;
         }
         return firstDepthName;
+    }
+
+    public boolean isIncludeId(List<Long> areaIds) {
+        return areaIds.contains(this.getId());
+    }
+
+    public boolean isSubAreaOf(Area targetArea) {
+        return equalOrTargetEmpty(this.firstDepthName, targetArea.firstDepthName)
+            && equalOrTargetEmpty(this.secondDepthName, targetArea.secondDepthName)
+            && equalOrTargetEmpty(this.thirdDepthName, targetArea.thirdDepthName)
+            && equalOrTargetEmpty(this.fourthDepthName, targetArea.fourthDepthName);
+    }
+
+    private boolean equalOrTargetEmpty(String name, String targetName) {
+        if (targetName.isEmpty() || targetName.equals(name)) {
+            return true;
+        }
+        return false;
     }
 }
