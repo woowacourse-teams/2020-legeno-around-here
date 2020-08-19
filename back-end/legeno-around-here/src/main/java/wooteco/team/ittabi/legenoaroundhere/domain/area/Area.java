@@ -63,9 +63,6 @@ public class Area extends BaseEntity {
     }
 
     private boolean equalOrTargetEmpty(String name, String targetName) {
-        if (targetName.isEmpty() || targetName.equals(name)) {
-            return true;
-        }
-        return false;
+        return targetName.isEmpty() || targetName.equals(name);
     }
 }
