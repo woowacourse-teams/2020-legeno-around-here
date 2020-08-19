@@ -19,7 +19,7 @@ class AreaServiceTest extends ServiceTest {
 
     @DisplayName("Keyword 기준 조회 - 조회, 존재하는 키워드")
     @ParameterizedTest
-    @CsvSource(value = {"서울특, 493", "송파, 14", "잠실, 1", "동, 427"})
+    @CsvSource(value = {"서울특, 492", "송파, 14", "잠실, 1", "동, 427"})
     void searchAllAreaBy_ExistsKeyword_Success(String keyword, int expectedCount) {
         Page<AreaResponse> areas = areaService.searchAllArea(Pageable.unpaged(), keyword);
         assertThat(areas.getContent()).hasSize(expectedCount);
