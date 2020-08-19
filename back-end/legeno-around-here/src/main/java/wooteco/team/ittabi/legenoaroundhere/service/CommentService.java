@@ -52,6 +52,7 @@ public class CommentService {
         User user = (User) authenticationFacade.getPrincipal();
 
         List<Comment> comments = commentRepository.findAllByPostId(postId);
+
         return CommentResponse.listOf(user, comments);
     }
 

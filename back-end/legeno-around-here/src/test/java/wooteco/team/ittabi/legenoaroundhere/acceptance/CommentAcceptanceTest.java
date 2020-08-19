@@ -84,8 +84,8 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         assertThat(commentResponse.getZzang()).isNotNull();
 
         // 삭제
-        deleteComment(commentId, accessToken);
-        findNotExistsComment(commentId, accessToken);
+        deleteComment(accessToken, commentId);
+        findNotExistsComment(accessToken, commentId);
 
         List<CommentResponse> reFoundPostResponses = findAllCommentBy(postId, accessToken);
 
@@ -101,11 +101,15 @@ public class CommentAcceptanceTest extends AcceptanceTest {
      * <p>
      * When 대댓글을 등록한다. Then 대댓글이 등록된다.
      * <p>
+     * When 댓글 목록을 조회한다. Then 대댓글이 아닌 댓글 목록을 응답받는다. And 댓글 목록은 n개이다.
+     * <p>
+     * When 대댓글을 삭제한다. Then 댓글 목록 조회 및 댓글 조회시 조회되지 않는다.
+     * <p>
      * When 대댓글이 달리지 않은 댓글을 삭제한다. Then 댓글 목록 조회 및 댓글 조회시 조회되지 않는다.
      * <p>
      * When 대댓글이 달린 댓글을 삭제한다. Then 댓글 목록 조회 및 댓글 조회시 내용이 null이 조회된다.
      * <p>
-     * When 대댓글을 삭제한다. Then 댓글 목록 조회 및 댓글 조회시 조회되지 않는다.
+     * When 삭제된 댓글의 대댓글이 모두 삭제된다. Then 댓글 목록 조회 및 댓글 조회시 조회되지 않는다.
      */
     @DisplayName("대댓글 관리")
     @Test
@@ -130,6 +134,29 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         List<CommentResponse> cocomments = commentResponse.getCocomments();
         assertThat(cocomments).hasSize(1);
         assertThat(cocomments.get(0).getWriting()).isEqualTo(TEST_COMMENT_OTHER_WRITING);
+
+        // 댓글 목록 조회
+        List<CommentResponse> commentResponses = findAllCommentBy(postId, accessToken);
+        assertThat(commentResponses).hasSize(1);
+
+        // 대댓글 삭제
+        deleteComment(accessToken, cocommentId);
+        findNotExistsComment(accessToken, cocommentId);
+        commentResponse = findComment(accessToken, commentId);
+        assertThat(commentResponse.getCocomments()).isEmpty();
+
+        // 댓글 삭제
+        deleteComment(accessToken, commentId);
+        findNotExistsComment(accessToken, commentId);
+        commentResponses = findAllCommentBy(postId, accessToken);
+        assertThat(commentResponses).isEmpty();
+
+//        // 댓글 및 대댓글 재생성
+//        commentLocation = createComment(postId, accessToken);
+//        commentId = getIdFromUrl(commentLocation);
+//
+//        cocommentLocation = createCocomment(accessToken, commentId, TEST_COMMENT_OTHER_WRITING);
+//        cocommentId = getIdFromUrl(cocommentLocation);
 
     }
 
@@ -218,7 +245,7 @@ public class CommentAcceptanceTest extends AcceptanceTest {
             .getList(".", CommentResponse.class);
     }
 
-    private void findNotExistsComment(Long commentId, String accessToken) {
+    private void findNotExistsComment(String accessToken, Long commentId) {
         given()
             .header("X-AUTH-TOKEN", accessToken)
             .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -228,7 +255,7 @@ public class CommentAcceptanceTest extends AcceptanceTest {
             .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
-    private void deleteComment(Long commentId, String accessToken) {
+    private void deleteComment(String accessToken, Long commentId) {
         given()
             .header("X-AUTH-TOKEN", accessToken)
             .when()
