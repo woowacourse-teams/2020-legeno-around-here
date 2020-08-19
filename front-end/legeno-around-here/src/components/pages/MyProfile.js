@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react';
 
-import TopBar from './myProfile/myProfileTopBar'
+import TopBar from './myProfile/myProfileTopBar';
 import Bottom from '../Bottom';
 import {PROFILE} from '../../constants/BottomItems';
 import {findMyInfo} from '../api/API';
@@ -22,7 +22,9 @@ function MyProfile() {
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
-  const [profilePhotoUrl, setProfilePhotoUrl] = useState(null);
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState(
+    '/default-profile.png',
+  );
   const [loading, setLoading] = useState(false);
 
   useMemo(() => {
