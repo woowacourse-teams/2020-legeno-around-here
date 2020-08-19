@@ -8,7 +8,7 @@ SELECT id
      , fourth_depth_name
      , NOW()
      , NOW()
-FROM CSVRead('src/test/resources/area-seoul.csv');
+FROM CSVRead('src/test/resources/area.csv');
 
 INSERT INTO User(id, email, nickname, password, created_at, modified_at)
 VALUES (1, 'admin@test.com', 'adminName',
