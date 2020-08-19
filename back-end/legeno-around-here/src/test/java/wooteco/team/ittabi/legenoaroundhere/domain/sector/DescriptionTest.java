@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -48,5 +49,17 @@ class DescriptionTest {
 
         assertThatThrownBy(() -> new Description(stringBuilder.toString()))
             .isInstanceOf(WrongUserInputException.class);
+    }
+
+    @Test
+    void getDescription_wordCount10_thenReturn10() {
+        StringBuilder message = new StringBuilder();
+        for (int i = 0; i < 100; i++) {
+            message.append("0");
+        }
+        Description description = new Description(message.toString());
+
+        int expected = 10;
+        assertThat(description.getDescription(expected).length()).isEqualTo(expected);
     }
 }

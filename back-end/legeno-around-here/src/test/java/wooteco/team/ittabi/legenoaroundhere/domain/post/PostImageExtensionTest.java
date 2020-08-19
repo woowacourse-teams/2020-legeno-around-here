@@ -1,4 +1,4 @@
-package wooteco.team.ittabi.legenoaroundhere.domain;
+package wooteco.team.ittabi.legenoaroundhere.domain.post;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_TEXT_CONTENT_TYPE;
