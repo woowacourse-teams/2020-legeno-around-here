@@ -24,11 +24,13 @@ public class AwardResponse {
     private LocalDateTime date;
     private String location;
 
-    public static AwardResponse of(String name, String description, LocalDateTime date,
+    public static AwardResponse of(String name, String description, String period,
+        LocalDateTime date,
         String location) {
         return AwardResponse.builder()
             .name(name)
             .description(description)
+            .period(period)
             .date(date)
             .location(location)
             .build();
