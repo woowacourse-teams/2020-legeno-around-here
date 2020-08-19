@@ -9,7 +9,6 @@ import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.comment.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
-import wooteco.team.ittabi.legenoaroundhere.dto.CocommentRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
@@ -96,9 +95,14 @@ public class CommentService {
         return CommentResponse.of(user, comment);
     }
 
-    public CommentResponse createCocomment(CocommentRequest cocommentRequest) {
+    public CommentResponse createCocomment(Long commentId, CommentRequest commentRequest) {
         User user = (User) authenticationFacade.getPrincipal();
 
-        return null;
+        Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(() -> new NotExistsException("해당 도메인이 없습니다."));
+
+        Comment cocomment = commentRepository.save(CommentAssembler.assemble(user, commentRequest));
+        cocomment.setComment(comment);
+        return CommentResponse.of(user, cocomment);
     }
 }

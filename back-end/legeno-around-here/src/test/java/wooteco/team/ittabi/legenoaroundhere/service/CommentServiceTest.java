@@ -3,6 +3,8 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.CommentConstants.TEST_COMMENT_OTHER_WRITING;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.CommentConstants.TEST_COMMENT_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_EMPTY_MULTIPART_FILES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_INVALID_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
@@ -193,5 +195,22 @@ public class CommentServiceTest extends ServiceTest {
 
         assertThat(zzang.getCount()).isEqualTo(0L);
         assertThat(zzang.isActivated()).isFalse();
+    }
+
+    @DisplayName("코멘트 내용 변경, 성공")
+    @Test
+    void updateComment_ChangeWriting_Success() {
+        CommentRequest commentRequest = new CommentRequest(TEST_COMMENT_WRITING);
+        Long commentId = commentService.createComment(postResponse.getId(), commentRequest).getId();
+
+        CommentRequest commentUpdateRequest = new CommentRequest(TEST_COMMENT_OTHER_WRITING);
+        CommentResponse commentResponse
+            = commentService.updateComment(commentId, commentUpdateRequest);
+
+        assertThat(commentResponse.getWriting()).isEqualTo(TEST_COMMENT_OTHER_WRITING);
+    }
+
+    @Test
+    void createCocomment() {
     }
 }

@@ -2,6 +2,7 @@ package wooteco.team.ittabi.legenoaroundhere.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -35,10 +36,18 @@ public class CommentResponse {
             .writing(comment.getWriting())
             .zzang(CommentZzangResponse.of(user, comment))
             .creator(UserResponse.from(comment.getCreator()))
-            .cocomments(cocommentListOf(user, comment.getCocomments()))
+            .cocomments(makeCocommentResponses(user, comment))
             .createdAt(comment.getCreatedAt())
             .modifiedAt(comment.getModifiedAt())
             .build();
+    }
+
+    private static List<CommentResponse> makeCocommentResponses(User user, Comment comment) {
+        List<Comment> cocomments = comment.getCocomments();
+        if (Objects.isNull(cocomments)) {
+            return null;
+        }
+        return cocommentListOf(user, cocomments);
     }
 
     private static CommentResponse cocommentOf(User user, Comment comment) {
@@ -58,7 +67,7 @@ public class CommentResponse {
             .collect(Collectors.toList());
     }
 
-    public static List<CommentResponse> cocommentListOf(User user, List<Comment> comments) {
+    private static List<CommentResponse> cocommentListOf(User user, List<Comment> comments) {
         return comments.stream()
             .map(comment -> cocommentOf(user, comment))
             .collect(Collectors.toList());

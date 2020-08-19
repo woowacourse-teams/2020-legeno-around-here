@@ -3,6 +3,8 @@ package wooteco.team.ittabi.legenoaroundhere.acceptance;
 import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.CommentConstants.TEST_COMMENT_OTHER_WRITING;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.CommentConstants.TEST_COMMENT_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
@@ -52,7 +54,9 @@ public class CommentAcceptanceTest extends AcceptanceTest {
      * <p>
      * When 댓글 목록을 조회한다. Then 댓글 목록을 응답받는다. And 댓글 목록은 n개이다.
      * <p>
-     * When 댓글을 조회한다. Then 글을 응답 받는다.
+     * When 댓글을 조회한다. Then 댓글을 응답 받는다.
+     * <p>
+     * When 댓글을 수정한다. Then 댓글이 수정된다.
      * <p>
      * When 댓글을 삭제한다. Then 댓글이 삭제 상태로 변경된다. And 다시 댓글을 조회할 수 없다. And 댓글 목록은 n-1개이다.
      */
@@ -66,12 +70,18 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         CommentResponse commentResponse = findComment(accessToken, commentId);
 
         assertThat(commentResponse.getId()).isEqualTo(commentId);
-        assertThat(commentResponse.getWriting()).isEqualTo(TEST_POST_WRITING);
+        assertThat(commentResponse.getWriting()).isEqualTo(TEST_COMMENT_WRITING);
         assertThat(commentResponse.getZzang()).isNotNull();
 
         // 댓글 목록 조회
         List<CommentResponse> commentResponses = findAllCommentBy(postId, accessToken);
         assertThat(commentResponses).hasSize(1);
+
+        // 수정
+        commentResponse = updateComment(accessToken, commentId, TEST_COMMENT_OTHER_WRITING);
+        assertThat(commentResponse.getId()).isEqualTo(commentId);
+        assertThat(commentResponse.getWriting()).isEqualTo(TEST_COMMENT_OTHER_WRITING);
+        assertThat(commentResponse.getZzang()).isNotNull();
 
         // 삭제
         deleteComment(commentId, accessToken);
@@ -186,7 +196,6 @@ public class CommentAcceptanceTest extends AcceptanceTest {
             .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-
     private String createPostWithoutImage(String accessToken, Long sectorId) {
         return given()
             .log().all()
@@ -206,7 +215,7 @@ public class CommentAcceptanceTest extends AcceptanceTest {
 
     private String createComment(Long postId, String accessToken) {
         Map<String, String> params = new HashMap<>();
-        params.put("writing", TEST_POST_WRITING);
+        params.put("writing", TEST_COMMENT_WRITING);
 
         return given()
             .log().all()
@@ -219,6 +228,24 @@ public class CommentAcceptanceTest extends AcceptanceTest {
             .statusCode(HttpStatus.CREATED.value())
             .extract()
             .header("Location");
+    }
+
+    private CommentResponse updateComment(String accessToken, Long commentId, String writing) {
+        Map<String, String> params = new HashMap<>();
+        params.put("writing", writing);
+
+        return given()
+            .log().all()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .put("/comments/" + commentId)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .as(CommentResponse.class);
     }
 
     private CommentResponse findComment(String accessToken, Long commentId) {

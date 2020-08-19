@@ -17,7 +17,6 @@ import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -31,7 +30,6 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
 @ToString(exclude = {"post"})
 @SQLDelete(sql = "UPDATE comment SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
@@ -121,5 +119,18 @@ public class Comment extends BaseEntity {
 
     public boolean isAvailable() {
         return state.isAvailable();
+    }
+
+    public void setWriting(String writing) {
+        this.writing = writing;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public void setComment(Comment comment) {
+        this.comment = comment;
+        comment.cocomments.add(this);
     }
 }

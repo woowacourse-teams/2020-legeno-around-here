@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import wooteco.team.ittabi.legenoaroundhere.dto.CocommentRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
 import wooteco.team.ittabi.legenoaroundhere.service.CommentService;
@@ -32,9 +31,10 @@ public class CommentController {
             .build();
     }
 
-    @PostMapping("/posts/{postId}/cocomments")
-    public ResponseEntity<Void> createCocomment(@RequestBody CocommentRequest cocommentRequest) {
-        CommentResponse commentResponse = commentService.createCocomment(cocommentRequest);
+    @PostMapping("/posts/{postId}/comments/{commentId}/comments")
+    public ResponseEntity<Void> createCocomment(@PathVariable Long commentId,
+        @RequestBody CommentRequest commentRequest) {
+        CommentResponse commentResponse = commentService.createCocomment(commentId, commentRequest);
         return ResponseEntity
             .created(URI.create("/comments/" + commentResponse.getId()))
             .build();
