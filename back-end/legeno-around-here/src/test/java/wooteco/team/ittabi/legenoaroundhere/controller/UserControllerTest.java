@@ -147,8 +147,6 @@ class UserControllerTest {
             .id(TEST_USER_ID)
             .email(TEST_USER_EMAIL)
             .nickname(TEST_USER_NICKNAME)
-            .image(null)
-            .area(null)
             .build();
         given(userService.findUser()).willReturn(expected);
 
@@ -172,8 +170,6 @@ class UserControllerTest {
             .id(TEST_USER_ID)
             .email(TEST_USER_EMAIL)
             .nickname(TEST_USER_NICKNAME)
-            .image(null)
-            .area(null)
             .build();
         given(userService.updateUser(any())).willReturn(expected);
 

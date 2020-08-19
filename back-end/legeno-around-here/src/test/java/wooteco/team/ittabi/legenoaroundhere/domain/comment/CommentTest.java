@@ -39,7 +39,6 @@ class CommentTest {
         post = Post.builder()
             .writing(TEST_POST_WRITING)
             .creator(creator)
-            .area(null)
             .sector(Sector.builder()
                 .state(SectorState.PUBLISHED)
                 .name(TEST_SECTOR_NAME)

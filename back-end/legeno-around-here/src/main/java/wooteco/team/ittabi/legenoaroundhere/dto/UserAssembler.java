@@ -22,7 +22,6 @@ public class UserAssembler {
     public static User assemble(UserUpdateRequest userUpdateRequest, Area area,
         UserImage userImage) {
         return User.builder()
-            .email(null)
             .nickname(userUpdateRequest.getNickname())
             .password(PASSWORD_ENCODER.encode(userUpdateRequest.getPassword()))
             .area(area)
