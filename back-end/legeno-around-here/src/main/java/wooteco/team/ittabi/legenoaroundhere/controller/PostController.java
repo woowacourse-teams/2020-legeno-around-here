@@ -72,11 +72,12 @@ public class PostController {
             .build();
     }
 
-    @GetMapping("/ranking")
+    @GetMapping("/ranking/{criteria}")
     public ResponseEntity<Page<PostWithCommentsCountResponse>> searchAllRanking(
+        @PathVariable String criteria,
         PageRequest pageRequest, PostSearchRequest postSearchRequest) {
         Page<PostWithCommentsCountResponse> posts
-            = postService.searchAllPost(pageRequest.getPageable(), postSearchRequest);
+            = postService.searchRanking(criteria, pageRequest.getPageable(), postSearchRequest);
 
         return ResponseEntity
             .ok()

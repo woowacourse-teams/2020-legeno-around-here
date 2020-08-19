@@ -180,4 +180,10 @@ public class PostService {
         Post post = findPostBy(postId);
         post.pressZzang(user);
     }
+
+    @Transactional
+    public Page<PostWithCommentsCountResponse> searchRanking(String criteria, Pageable pageable,
+        PostSearchRequest postSearchRequest) {
+        return null;
+    }
 }

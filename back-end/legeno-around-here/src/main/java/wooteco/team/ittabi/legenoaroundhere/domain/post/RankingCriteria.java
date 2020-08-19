@@ -1,6 +1,6 @@
-package wooteco.team.ittabi.legenoaroundhere.domain.rank;
+package wooteco.team.ittabi.legenoaroundhere.domain.post;
 
-public enum Criteria {
+public enum RankingCriteria {
     LAST_DAY("day"),
     LAST_WEEK("week"),
     LAST_MONTH("month"),
@@ -8,7 +8,7 @@ public enum Criteria {
 
     private final String criteria;
 
-    Criteria(String criteria) {
+    RankingCriteria(String criteria) {
         this.criteria = criteria;
     }
 
