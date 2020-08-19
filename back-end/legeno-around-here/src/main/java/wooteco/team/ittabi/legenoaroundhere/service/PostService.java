@@ -15,6 +15,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchRequest;
@@ -51,7 +52,7 @@ public class PostService {
             .filter(Sector::isUsed)
             .orElseThrow(() -> new WrongUserInputException("입력하신 부문이 존재하지 않습니다."));
 
-        Post post = postCreateRequest.toPost(area, sector, user);
+        Post post = PostAssembler.assemble(postCreateRequest, area, sector, user);
         List<PostImage> postImages = uploadPostImages(post, postCreateRequest.getImages());
         post.setPostImages(postImages);
 

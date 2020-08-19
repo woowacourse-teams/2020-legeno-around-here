@@ -17,6 +17,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.UserImage;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
@@ -33,13 +34,14 @@ import wooteco.team.ittabi.legenoaroundhere.utils.ImageUploader;
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
 
+    private static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
+
     private final UserRepository userRepository;
     private final UserImageRepository userImageRepository;
     private final AreaRepository areaRepository;
     private final JwtTokenGenerator jwtTokenGenerator;
     private final IAuthenticationFacade authenticationFacade;
     private final ImageUploader imageUploader;
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Transactional
     public Long createUser(UserCreateRequest userCreateRequest) {
@@ -50,10 +52,8 @@ public class UserService implements UserDetailsService {
                     "[" + userCreateRequest.getEmail() + "] 이메일은 이미 사용중입니다.");
             });
 
-        userCreateRequest.setPassword(passwordEncoder.encode(userCreateRequest.getPassword()));
-
         Area area = findAreaBy(userCreateRequest.getAreaId());
-        User user = userCreateRequest.toUser(area);
+        User user = UserAssembler.assemble(userCreateRequest, area);
         User createdUser = userRepository.save(user);
 
         return createdUser.getId();
@@ -72,7 +72,7 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByEmail(new Email(loginRequest.getEmail()))
             .orElseThrow(() -> new NotExistsException("가입되지 않은 회원입니다."));
 
-        if (!passwordEncoder.matches(
+        if (!PASSWORD_ENCODER.matches(
             loginRequest.getPassword(), user.getPasswordByString())) {
             throw new WrongUserInputException("잘못된 비밀번호입니다.");
         }
@@ -94,8 +94,7 @@ public class UserService implements UserDetailsService {
         Area area = findAreaBy(userUpdateRequest.getAreaId());
         UserImage userImage = findUserImageBy(userUpdateRequest.getImageId());
 
-        userUpdateRequest.setPassword(passwordEncoder.encode(userUpdateRequest.getPassword()));
-        foundUser.update(userUpdateRequest.toUser(area, userImage));
+        foundUser.update(UserAssembler.assemble(userUpdateRequest, area, userImage));
 
         return UserResponse.from(foundUser);
     }
