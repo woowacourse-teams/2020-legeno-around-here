@@ -1,12 +1,16 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +18,8 @@ import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.PostSearch;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.PostZzang;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.RankingCriteria;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
@@ -183,7 +189,25 @@ public class PostService {
 
     @Transactional
     public Page<PostWithCommentsCountResponse> searchRanking(String criteria, Pageable pageable,
-        PostSearchRequest postSearchRequest) {
-        return null;
+        PostSearchRequest postSearchFilter) {
+
+        Page<Post> unfilteredPosts = getPostByFilter(pageable, postSearchFilter.toPostSearch());
+
+        RankingCriteria rankingCriteria = RankingCriteria.of(criteria);
+        LocalDateTime startDate = rankingCriteria.getStartDate();
+        LocalDateTime endDate = rankingCriteria.getEndDate();
+
+        List<Post> filteredPosts = unfilteredPosts.stream()
+            .sorted(Comparator.comparing(post -> post.getPostZzangCountByDate(startDate, endDate)))
+            .collect(Collectors.toList());
+
+        System.out.println(filteredPosts);
+
+        Collections.reverse(filteredPosts);
+
+        User user = (User) authenticationFacade.getPrincipal();
+        PageImpl<Post> posts = new PageImpl<>(filteredPosts);
+
+        return posts.map(post -> PostWithCommentsCountResponse.of(user, post));
     }
 }

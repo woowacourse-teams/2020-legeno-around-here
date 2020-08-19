@@ -2,6 +2,7 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static wooteco.team.ittabi.legenoaroundhere.domain.post.RankingCriteria.TOTAL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_OTHER_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_CONTENT_TYPE;
@@ -50,6 +51,10 @@ public class PostServiceTest extends ServiceTest {
     private SectorService sectorService;
 
     private User user;
+    private User userA;
+    private User userB;
+    private User userC;
+    private User userD;
     private User another;
     private SectorResponse sector;
     private Long sectorId;
@@ -59,6 +64,10 @@ public class PostServiceTest extends ServiceTest {
     void setUp() {
         user = createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         another = createUser(TEST_USER_OTHER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        userA = createUser(TEST_USER_EMAIL + "A", TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        userB = createUser(TEST_USER_EMAIL + "B", TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        userC = createUser(TEST_USER_EMAIL + "C", TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        userD = createUser(TEST_USER_EMAIL + "D", TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         setAuthentication(user);
 
         sector = sectorService.createSector(TEST_SECTOR_REQUEST);
@@ -352,5 +361,50 @@ public class PostServiceTest extends ServiceTest {
 
         assertThat(zzang.getCount()).isEqualTo(0L);
         assertThat(zzang.isActivated()).isFalse();
+    }
+
+
+    @DisplayName("모든 부문, 모든 지역 랭킹 조회 - 전체 기간")
+    @Test
+    void searchRanking_TotalCriteria_SuccessToFind() {
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+        Long postIdA = postService.createPost(postCreateRequest).getId();
+        postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorOtherId);
+        Long postIdB = postService.createPost(postCreateRequest).getId();
+        postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorId);
+        Long postIdC = postService.createPost(postCreateRequest).getId();
+        postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
+        Long postIdD = postService.createPost(postCreateRequest).getId();
+
+        setAuthentication(userA);
+        postService.pressZzang(postIdB);
+        postService.pressZzang(postIdC);
+        postService.pressZzang(postIdA);
+        postService.pressZzang(postIdD);
+        setAuthentication(userB);
+        postService.pressZzang(postIdB);
+        postService.pressZzang(postIdC);
+        postService.pressZzang(postIdA);
+        setAuthentication(userC);
+        postService.pressZzang(postIdB);
+        postService.pressZzang(postIdC);
+        setAuthentication(userD);
+        postService.pressZzang(postIdB);
+
+        PostSearchRequest postSearchRequest = new PostSearchRequest(
+            null, null);
+        Page<PostWithCommentsCountResponse> posts
+            = postService
+            .searchRanking(TOTAL.getCriteriaName(), Pageable.unpaged(), postSearchRequest);
+
+        assertThat(posts.getContent()).hasSize(4);
+        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdB);
+        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdC);
+        assertThat(posts.getContent().get(2).getId()).isEqualTo(postIdA);
+        assertThat(posts.getContent().get(3).getId()).isEqualTo(postIdD);
     }
 }

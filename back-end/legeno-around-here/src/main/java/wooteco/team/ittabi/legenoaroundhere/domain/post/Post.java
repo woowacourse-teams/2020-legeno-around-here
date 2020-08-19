@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.post;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -94,6 +95,12 @@ public class Post extends BaseEntity {
         return zzangs.size();
     }
 
+    public int getPostZzangCountByDate(LocalDateTime startDate, LocalDateTime endDate) {
+        return (int) zzangs.stream()
+            .filter(postZzang -> (postZzang.getCreatedAt().isAfter(startDate))
+                && (postZzang.getCreatedAt().isBefore(endDate)))
+            .count();
+    }
 
     public PostZzang findPostZzangBy(User user) {
         return zzangs.stream()
