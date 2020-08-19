@@ -93,6 +93,47 @@ public class CommentAcceptanceTest extends AcceptanceTest {
     }
 
     /**
+     * Feature: 댓글 관리
+     * <p>
+     * Scenario: 댓글을 관리한다.
+     * <p>
+     * Given 댓글이 등록되어 있다.
+     * <p>
+     * When 대댓글을 등록한다. Then 대댓글이 등록된다.
+     * <p>
+     * When 대댓글이 달리지 않은 댓글을 삭제한다. Then 댓글 목록 조회 및 댓글 조회시 조회되지 않는다.
+     * <p>
+     * When 대댓글이 달린 댓글을 삭제한다. Then 댓글 목록 조회 및 댓글 조회시 내용이 null이 조회된다.
+     * <p>
+     * When 대댓글을 삭제한다. Then 댓글 목록 조회 및 댓글 조회시 조회되지 않는다.
+     */
+    @DisplayName("대댓글 관리")
+    @Test
+    void manageCocomment() {
+        // 댓글 등록 및 조회
+        String commentLocation = createComment(postId, accessToken);
+        Long commentId = getIdFromUrl(commentLocation);
+
+        CommentResponse commentResponse = findComment(accessToken, commentId);
+        assertThat(commentResponse.getCocomments()).isEmpty();
+
+        // 대댓글 생성 및 조회
+        String cocommentLocation =
+            createCocomment(accessToken, commentId, TEST_COMMENT_OTHER_WRITING);
+        Long cocommentId = getIdFromUrl(cocommentLocation);
+
+        CommentResponse cocommentResponse = findComment(accessToken, cocommentId);
+        assertThat(cocommentResponse.getWriting()).isEqualTo(TEST_COMMENT_OTHER_WRITING);
+        assertThat(cocommentResponse.getCocomments()).isEmpty();
+
+        commentResponse = findComment(accessToken, commentId);
+        List<CommentResponse> cocomments = commentResponse.getCocomments();
+        assertThat(cocomments).hasSize(1);
+        assertThat(cocomments.get(0).getWriting()).isEqualTo(TEST_COMMENT_OTHER_WRITING);
+
+    }
+
+    /**
      * Feature: 댓글의 좋아요 기능
      * <p>
      * Scenario: 좋아요 버튼을 누르고, 좋아요 수를 표시한다.
@@ -198,7 +239,6 @@ public class CommentAcceptanceTest extends AcceptanceTest {
 
     private String createPostWithoutImage(String accessToken, Long sectorId) {
         return given()
-            .log().all()
             .formParam("writing", TEST_POST_WRITING)
             .formParam("areaId", TEST_AREA_ID)
             .formParam("sectorId", sectorId)
@@ -218,7 +258,6 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         params.put("writing", TEST_COMMENT_WRITING);
 
         return given()
-            .log().all()
             .body(params)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
@@ -230,12 +269,27 @@ public class CommentAcceptanceTest extends AcceptanceTest {
             .header("Location");
     }
 
+    private String createCocomment(String accessToken, Long commentId, String writing) {
+        Map<String, String> params = new HashMap<>();
+        params.put("writing", writing);
+
+        return given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .post("/posts/" + postId + "/comments/" + commentId + "/comments")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract()
+            .header("Location");
+    }
+
     private CommentResponse updateComment(String accessToken, Long commentId, String writing) {
         Map<String, String> params = new HashMap<>();
         params.put("writing", writing);
 
         return given()
-            .log().all()
             .body(params)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -243,6 +297,7 @@ public class CommentAcceptanceTest extends AcceptanceTest {
             .when()
             .put("/comments/" + commentId)
             .then()
+            .log().all()
             .statusCode(HttpStatus.OK.value())
             .extract()
             .as(CommentResponse.class);
@@ -255,6 +310,7 @@ public class CommentAcceptanceTest extends AcceptanceTest {
             .when()
             .get("/comments/" + commentId)
             .then()
+            .log().all()
             .statusCode(HttpStatus.OK.value())
             .extract()
             .as(CommentResponse.class);

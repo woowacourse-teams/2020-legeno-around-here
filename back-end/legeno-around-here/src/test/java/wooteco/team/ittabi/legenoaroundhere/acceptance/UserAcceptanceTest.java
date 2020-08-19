@@ -189,7 +189,6 @@ public class UserAcceptanceTest extends AcceptanceTest {
 
     private UserImageResponse createUserImage(String accessToken) {
         return given()
-            .log().all()
             .multiPart("image", new File(TEST_IMAGE_DIR + TEST_IMAGE_NAME))
             .header("X-AUTH-TOKEN", accessToken)
             .config(RestAssuredConfig.config()

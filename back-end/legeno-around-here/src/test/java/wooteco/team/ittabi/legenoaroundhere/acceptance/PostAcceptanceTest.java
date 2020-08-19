@@ -351,7 +351,6 @@ public class PostAcceptanceTest extends AcceptanceTest {
 
     private String createPostWithoutImage(String accessToken) {
         return given()
-            .log().all()
             .formParam("writing", TEST_POST_WRITING)
             .formParam("areaId", TEST_AREA_ID)
             .formParam("sectorId", sectorId)
@@ -369,7 +368,6 @@ public class PostAcceptanceTest extends AcceptanceTest {
     private String createPostWithoutImageWithAreaAndSector(String accessToken, Long areaId,
         Long sectorId) {
         return given()
-            .log().all()
             .formParam("writing", TEST_POST_WRITING)
             .formParam("areaId", areaId)
             .formParam("sectorId", sectorId)
@@ -388,7 +386,6 @@ public class PostAcceptanceTest extends AcceptanceTest {
         // TODO: 2020/07/28 이미지를 포함했을 때 한글이 안 나오는 문제
 
         return given()
-            .log().all()
             .formParam("writing", TEST_POST_WRITING)
             .multiPart("images", new File(TEST_IMAGE_DIR + TEST_IMAGE_NAME))
             .multiPart("images", new File(TEST_IMAGE_DIR + TEST_IMAGE_OTHER_NAME))

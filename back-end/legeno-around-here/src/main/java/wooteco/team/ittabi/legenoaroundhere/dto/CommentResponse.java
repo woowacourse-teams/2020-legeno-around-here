@@ -1,6 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -45,7 +46,7 @@ public class CommentResponse {
     private static List<CommentResponse> makeCocommentResponses(User user, Comment comment) {
         List<Comment> cocomments = comment.getCocomments();
         if (Objects.isNull(cocomments)) {
-            return null;
+            return new ArrayList<>();
         }
         return cocommentListOf(user, cocomments);
     }
@@ -56,6 +57,7 @@ public class CommentResponse {
             .writing(comment.getWriting())
             .zzang(CommentZzangResponse.of(user, comment))
             .creator(UserResponse.from(comment.getCreator()))
+            .cocomments(new ArrayList<>())
             .createdAt(comment.getCreatedAt())
             .modifiedAt(comment.getModifiedAt())
             .build();
