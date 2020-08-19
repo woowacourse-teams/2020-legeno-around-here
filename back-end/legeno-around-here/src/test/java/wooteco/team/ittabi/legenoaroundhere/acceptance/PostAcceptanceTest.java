@@ -227,18 +227,6 @@ public class PostAcceptanceTest extends AcceptanceTest {
         assertThat(post.getZzang().isActivated()).isTrue();
     }
 
-    /**
-     * Feature: 글 랭킹 조회
-     * <p>
-     * Scenario: 글을 랭킹 조회 한다.
-     * <p>
-     */
-    @DisplayName("글 랭킹 조회")
-    @Test
-    void searchRanking() {
-        // 일단 글 조회와 동일합니다.
-    }
-
     private Long createSector(String accessToken, String name) {
         Map<String, String> params = new HashMap<>();
         params.put("name", name);
