@@ -149,4 +149,8 @@ public class Post extends BaseEntity {
                 "ID [" + this.getId() + "]에 해당하는 Post가 유효하지 않습니다.");
         }
     }
+
+    public String getWriting(int wordCount) {
+        return writing.substring(0, wordCount);
+    }
 }
