@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import wooteco.team.ittabi.legenoaroundhere.dto.PageRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PageableAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
@@ -28,6 +29,7 @@ public class SectorController {
     @GetMapping("/{id}")
     public ResponseEntity<SectorResponse> findAvailableSector(@PathVariable Long id) {
         SectorResponse sector = sectorService.findAvailableSector(id);
+
         return ResponseEntity
             .ok(sector);
     }
@@ -35,8 +37,9 @@ public class SectorController {
     @GetMapping
     public ResponseEntity<Page<SectorResponse>> searchAvailableSectors(PageRequest pageRequest,
         @RequestParam(defaultValue = "") String keyword) {
-        Page<SectorResponse> sectors
-            = sectorService.searchAvailableSectors(pageRequest.getPageable(), keyword);
+        Page<SectorResponse> sectors = sectorService
+            .searchAvailableSectors(PageableAssembler.assemble(pageRequest), keyword);
+
         return ResponseEntity
             .ok(sectors);
     }
@@ -45,6 +48,7 @@ public class SectorController {
     public ResponseEntity<Void> createPendingSector(@RequestBody SectorRequest sectorRequest) {
         SectorResponse sectorResponse = sectorService.createPendingSector(sectorRequest);
         Long id = sectorResponse.getId();
+
         return ResponseEntity
             .created(URI.create("/sectors/" + id))
             .build();
@@ -53,7 +57,7 @@ public class SectorController {
     @GetMapping("/me")
     public ResponseEntity<Page<SectorDetailResponse>> findAllMySector(PageRequest pageRequest) {
         Page<SectorDetailResponse> sectorDetailResponses
-            = sectorService.findAllMySector(pageRequest.getPageable());
+            = sectorService.findAllMySector(PageableAssembler.assemble(pageRequest));
 
         return ResponseEntity
             .ok(sectorDetailResponses);

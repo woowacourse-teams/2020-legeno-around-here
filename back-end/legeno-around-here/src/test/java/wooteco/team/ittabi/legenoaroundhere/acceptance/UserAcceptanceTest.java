@@ -1,13 +1,18 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
+import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_DIR;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_OTHER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import io.restassured.RestAssured;
+import io.restassured.config.RestAssuredConfig;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 
 public class UserAcceptanceTest extends AcceptanceTest {
@@ -37,7 +43,9 @@ public class UserAcceptanceTest extends AcceptanceTest {
      * <p>
      * When 내 정보를 조회한다. Then 내 정보가 조회된다.
      * <p>
-     * When 내 정보를 수정한다. Then 내 정보가 수정된다.
+     * When 내 정보를 이미지를 포함하여 수정한다. Then 내 정보가 수정된다.
+     * <p>
+     * When 내 정보를 이미지를 사용하지 않는 방향으로 수정한다. Then 내 정보가 수정된다.
      * <p>
      * Given 로그인이 되어있는 상태이다. * When 회원 탈퇴 요청을 한다. Then 회원 탈퇴가 되었다.
      */
@@ -57,29 +65,37 @@ public class UserAcceptanceTest extends AcceptanceTest {
 
         // 로그인
         TokenResponse tokenResponse = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
+        String accessToken = tokenResponse.getAccessToken();
         assertThat(tokenResponse).isNotNull();
-        assertThat(tokenResponse.getAccessToken())
-            .hasSizeGreaterThanOrEqualTo(TOKEN_MIN_SIZE);
+        assertThat(accessToken).hasSizeGreaterThanOrEqualTo(TOKEN_MIN_SIZE);
 
         // 내 정보 조회
-        UserResponse userResponse = findUser(tokenResponse.getAccessToken());
+        UserResponse userResponse = findUser(accessToken);
         assertThat(userResponse).isNotNull();
         assertThat(userResponse.getId()).isNotNull();
         assertThat(userResponse.getEmail()).isEqualTo(TEST_USER_EMAIL);
         assertThat(userResponse.getNickname()).isEqualTo(TEST_USER_NICKNAME);
 
-        // 내 정보 수정
-        updateUserWithoutArea(tokenResponse.getAccessToken(), "newname", "newpassword");
-        UserResponse updatedUserResponse = findUser(tokenResponse.getAccessToken());
+        // 프로필 사진 등록
+        UserImageResponse userImageResponse = createUserImage(accessToken);
+
+        // 내 정보 수정 - 프로필 사진 포함
+        updateUserWithImage(accessToken, "newname", "newpassword", userImageResponse.getId());
+        UserResponse updatedUserResponse = findUser(accessToken);
         assertThat(updatedUserResponse.getNickname()).isEqualTo("newname");
-        TokenResponse updatedTokenResponse = login(TEST_USER_EMAIL, "newpassword");
-        assertThat(updatedTokenResponse).isNotNull();
-        assertThat(updatedTokenResponse.getAccessToken())
-            .hasSizeGreaterThanOrEqualTo(TOKEN_MIN_SIZE);
+        assertThat(updatedUserResponse.getImage()).isNotNull();
+        login(TEST_USER_EMAIL, "newpassword");
+
+        // 내 정보 수정 - 프로필 사진 사용 안함(기본 이미지)
+        updateUserWithImage(accessToken, TEST_USER_NICKNAME, TEST_USER_PASSWORD, null);
+        updatedUserResponse = findUser(accessToken);
+        assertThat(updatedUserResponse.getNickname()).isEqualTo(TEST_USER_NICKNAME);
+        assertThat(updatedUserResponse.getImage()).isNull();
+        login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
 
         // 회원 탈퇴
-        deleteUser(updatedTokenResponse.getAccessToken());
-        findNotExistUser(updatedTokenResponse.getAccessToken());
+        deleteUser(accessToken);
+        findNotExistUser(accessToken);
     }
 
     /**
@@ -108,11 +124,11 @@ public class UserAcceptanceTest extends AcceptanceTest {
         assertThat(userResponse.getArea()).isNotNull();
         assertThat(userResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
 
-        updateUserWithoutArea(accessToken, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        updateUserWithoutAreaAndImage(accessToken, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         userResponse = findUser(accessToken);
         assertThat(userResponse.getArea()).isNull();
 
-        updateUserWithArea(accessToken, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        updateUserWithAreaAndWithoutImage(accessToken, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         userResponse = findUser(accessToken);
         assertThat(userResponse.getArea()).isNotNull();
         assertThat(userResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
@@ -171,7 +187,21 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 
-    private UserResponse updateUserWithoutArea(String accessToken, String nickname,
+    private UserImageResponse createUserImage(String accessToken) {
+        return given()
+            .log().all()
+            .multiPart("image", new File(TEST_IMAGE_DIR + TEST_IMAGE_NAME))
+            .header("X-AUTH-TOKEN", accessToken)
+            .config(RestAssuredConfig.config()
+                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+            .when()
+            .post("/user-images")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract().as(UserImageResponse.class);
+    }
+
+    private UserResponse updateUserWithoutAreaAndImage(String accessToken, String nickname,
         String password) {
         Map<String, String> params = new HashMap<>();
         params.put("nickname", nickname);
@@ -180,12 +210,23 @@ public class UserAcceptanceTest extends AcceptanceTest {
         return updateUserBy(accessToken, params);
     }
 
-    private UserResponse updateUserWithArea(String accessToken, String nickname,
+    private UserResponse updateUserWithAreaAndWithoutImage(String accessToken, String nickname,
         String password) {
         Map<String, String> params = new HashMap<>();
         params.put("nickname", nickname);
         params.put("password", password);
         params.put("areaId", String.valueOf(TEST_AREA_ID));
+
+        return updateUserBy(accessToken, params);
+    }
+
+    private UserResponse updateUserWithImage(String accessToken, String nickname,
+        String password, Long imageId) {
+        Map<String, String> params = new HashMap<>();
+        params.put("nickname", nickname);
+        params.put("password", password);
+        params.put("areaId", String.valueOf(TEST_AREA_ID));
+        params.put("imageId", String.valueOf(imageId));
 
         return updateUserBy(accessToken, params);
     }

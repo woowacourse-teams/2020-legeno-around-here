@@ -12,7 +12,7 @@ import lombok.ToString;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class UserRequest {
+public class UserCreateRequest {
 
     private String email;
     private String nickname;

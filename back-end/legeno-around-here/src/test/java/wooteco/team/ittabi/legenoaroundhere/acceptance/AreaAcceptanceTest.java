@@ -72,9 +72,9 @@ public class AreaAcceptanceTest extends AcceptanceTest {
      * <p>
      * When 사용자가 키워드를 비워두고 지역을 50Page, 10Size 조회한다. Then 3건이 조회된다.
      * <p>
-     * When 사용자가 "서울특별시"라는 키워드로 지역을 50Page, 10Size 조회한다. Then 3건이 조회된다.
+     * When 사용자가 "서울특별시"라는 키워드로 지역을 50Page, 10Size 조회한다. Then 2건이 조회된다.
      * <p>
-     * When 사용자가 "서울특별시 "라는 키워드로 지역을 50Page, 10Size 조회한다. 조회한다. Then 2건이 조회된다.
+     * When 사용자가 "서울특별시 "라는 키워드로 지역을 50Page, 10Size 조회한다. 조회한다. Then 1건이 조회된다.
      * <p>
      * When 사용자가 "서울시"라는 키워드로 지역을 1Page, 10Size 조회한다. Then 1건도 조회되지 않는다.
      * <p>
@@ -94,10 +94,10 @@ public class AreaAcceptanceTest extends AcceptanceTest {
         assertThat(areas).hasSize(3);
 
         areas = searchAllArea(accessToken, "page=49&size=10&keyword=서울특별시");
-        assertThat(areas).hasSize(3);
+        assertThat(areas).hasSize(2);
 
         areas = searchAllArea(accessToken, "page=49&size=10&keyword=서울특별시 ");
-        assertThat(areas).hasSize(2);
+        assertThat(areas).hasSize(1);
 
         areas = searchAllArea(accessToken, "page=0&size=10&keyword=서울시");
         assertThat(areas).hasSize(0);
