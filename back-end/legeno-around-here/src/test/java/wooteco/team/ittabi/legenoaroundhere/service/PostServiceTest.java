@@ -363,7 +363,6 @@ public class PostServiceTest extends ServiceTest {
         assertThat(zzang.isActivated()).isFalse();
     }
 
-
     @DisplayName("모든 부문, 모든 지역 랭킹 조회 - 전체 기간")
     @Test
     void searchRanking_TotalCriteria_SuccessToFind() {
@@ -380,6 +379,10 @@ public class PostServiceTest extends ServiceTest {
             TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
+        //PostB 짱이야4
+        //PostC 짱이야3
+        //PostA 짱이야2
+        //PostD 짱이야1
         setAuthentication(userA);
         postService.pressZzang(postIdB);
         postService.pressZzang(postIdC);
