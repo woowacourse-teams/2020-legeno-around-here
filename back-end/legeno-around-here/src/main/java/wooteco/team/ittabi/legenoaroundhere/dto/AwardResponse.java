@@ -19,6 +19,8 @@ public class AwardResponse {
 
     private String name;
     private String description;
+    @Builder.Default
+    private String period = "";
     private LocalDateTime date;
     private String location;
 

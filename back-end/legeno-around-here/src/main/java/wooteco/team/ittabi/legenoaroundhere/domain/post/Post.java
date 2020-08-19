@@ -153,4 +153,12 @@ public class Post extends BaseEntity {
     public String getWriting(int wordCount) {
         return writing.substring(0, wordCount);
     }
+
+    public String getAreaLastDepthName() {
+        return area.getLastDepthName();
+    }
+
+    public String getSectorName() {
+        return sector.getName();
+    }
 }

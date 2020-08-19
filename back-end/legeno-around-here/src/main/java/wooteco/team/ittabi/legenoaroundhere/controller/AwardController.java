@@ -3,13 +3,16 @@ package wooteco.team.ittabi.legenoaroundhere.controller;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import wooteco.team.ittabi.legenoaroundhere.dto.AwardResponse;
+import wooteco.team.ittabi.legenoaroundhere.service.AwardService;
 
 @RestController
+@AllArgsConstructor
 public class AwardController {
 
     private final static List<AwardResponse> awards = new ArrayList<>();
@@ -35,15 +38,21 @@ public class AwardController {
             .add(AwardResponse.of("이따비팀 화이팅 부문 창시자", "이따비팀 화이팅", LocalDateTime.now(), "/posts/1"));
     }
 
+    private final AwardService awardService;
+
     @GetMapping("/users/{id}/awards")
-    public ResponseEntity<List<AwardResponse>> findAwards(@PathVariable String id) {
+    public ResponseEntity<List<AwardResponse>> findAwards(@PathVariable Long id) {
+        List<AwardResponse> awards = awardService.findAwards(id);
+
         return ResponseEntity
-            .ok(awards);
+            .ok(this.awards);
     }
 
     @GetMapping("/awards/my")
     public ResponseEntity<List<AwardResponse>> findMyAwards() {
+        List<AwardResponse> awards = awardService.findMyAwards();
+
         return ResponseEntity
-            .ok(awards);
+            .ok(this.awards);
     }
 }
