@@ -13,6 +13,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
@@ -33,7 +34,7 @@ public class SectorService {
     @Transactional
     public SectorResponse createSector(SectorRequest sectorRequest) {
         User user = (User) authenticationFacade.getPrincipal();
-        Sector sector = sectorRequest.toSector(user, SectorState.PUBLISHED);
+        Sector sector = SectorAssembler.assemble(user, sectorRequest, SectorState.PUBLISHED);
 
         validateSectorUnique(sector);
         return saveSector(sector);
@@ -90,7 +91,7 @@ public class SectorService {
         Sector sector = findUsedSectorBy(id);
 
         User user = (User) authenticationFacade.getPrincipal();
-        sector.update(sectorRequest.toSector(user, SectorState.PUBLISHED));
+        sector.update(SectorAssembler.assemble(user, sectorRequest, SectorState.PUBLISHED));
     }
 
     @Transactional
@@ -114,7 +115,7 @@ public class SectorService {
     @Transactional
     public SectorResponse createPendingSector(SectorRequest sectorRequest) {
         User user = (User) authenticationFacade.getPrincipal();
-        Sector sector = sectorRequest.toSector(user, SectorState.PENDING);
+        Sector sector = SectorAssembler.assemble(user, sectorRequest, SectorState.PENDING);
 
         validateSectorUnique(sector);
         return saveSector(sector);

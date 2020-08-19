@@ -5,8 +5,12 @@ import {MAIN_COLOR} from '../../constants/Color';
 export const ProfilePhoto = styled.div`
   width: 100px;
   height: 100px;
-  background-color: white;
+  background-image: url(https://www.talkwalker.com/images/2020/blog-headers/image-analysis.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
   border-radius: 300px;
+  // background-image: url(${props => props.photoUrl});
   border: 1px solid ${MAIN_COLOR};
 `;
 

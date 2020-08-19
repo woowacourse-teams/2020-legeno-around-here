@@ -26,6 +26,7 @@ public class CommentController {
     public ResponseEntity<Void> createComment(@PathVariable Long postId,
         @RequestBody CommentRequest commentRequest) {
         CommentResponse commentResponse = commentService.createComment(postId, commentRequest);
+
         return ResponseEntity
             .created(URI.create("/comments/" + commentResponse.getId()))
             .build();
@@ -51,6 +52,7 @@ public class CommentController {
     @GetMapping("/comments/{commentId}")
     public ResponseEntity<CommentResponse> findComment(@PathVariable Long commentId) {
         CommentResponse commentResponse = commentService.findComment(commentId);
+
         return ResponseEntity
             .ok()
             .body(commentResponse);
@@ -59,6 +61,7 @@ public class CommentController {
     @GetMapping("/posts/{postId}/comments")
     public ResponseEntity<List<CommentResponse>> findAllCommentBy(@PathVariable Long postId) {
         List<CommentResponse> commentResponses = commentService.findAllCommentBy(postId);
+
         return ResponseEntity
             .ok()
             .body(commentResponses);
@@ -67,6 +70,7 @@ public class CommentController {
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
         commentService.deleteComment(commentId);
+
         return ResponseEntity
             .noContent()
             .build();

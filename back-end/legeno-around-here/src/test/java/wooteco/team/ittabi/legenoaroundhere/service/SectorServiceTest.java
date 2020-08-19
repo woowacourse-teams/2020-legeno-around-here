@@ -9,8 +9,7 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstan
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_INVALID_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_ID;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +23,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
@@ -33,7 +31,6 @@ import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorUpdateStateRequest;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotUniqueException;
@@ -48,30 +45,15 @@ class SectorServiceTest extends ServiceTest {
     private PostService postService;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private IAuthenticationFacade authenticationFacade;
 
     private User admin;
 
     @BeforeEach
     void setUp() {
-        admin = createAdmin();
+        admin = userRepository.findById(TEST_ADMIN_ID)
+            .orElseThrow(() -> new NotExistsException(TEST_ADMIN_ID + "에 해당하는 User가 없습니다."));
         setAuthentication(admin);
-    }
-
-    private User createAdmin() {
-        UserRequest userRequest
-            = new UserRequest(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_EMAIL,
-            TEST_AREA_ID);
-        Long userId = userService.createAdmin(userRequest);
-
-        return userRepository.findById(userId)
-            .orElseThrow(() -> new NotExistsException("해당하는 사용자가 존재하지 않습니다."));
     }
 
     @DisplayName("Sector 생성 - 성공")

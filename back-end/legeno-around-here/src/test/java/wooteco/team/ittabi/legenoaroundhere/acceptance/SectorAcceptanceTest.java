@@ -10,7 +10,6 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstan
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_PASSWORD;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
@@ -233,7 +232,6 @@ public class SectorAcceptanceTest extends AcceptanceTest {
     }
 
     private String getCreateAdminToken() {
-        createAdmin(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_PASSWORD);
         TokenResponse tokenResponse = login(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD);
         return tokenResponse.getAccessToken();
     }
@@ -266,7 +264,6 @@ public class SectorAcceptanceTest extends AcceptanceTest {
     @Test
     void pagingFindSector() {
         // 관리자 로그인
-        createAdmin(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_PASSWORD);
         TokenResponse tokenResponse = login(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD);
         String accessToken = tokenResponse.getAccessToken();
 
@@ -362,7 +359,6 @@ public class SectorAcceptanceTest extends AcceptanceTest {
     @Test
     void findAreaByKeyword() {
         // 관리자 로그인
-        createAdmin(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_PASSWORD);
         TokenResponse tokenResponse = login(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD);
         String accessToken = tokenResponse.getAccessToken();
 
@@ -412,7 +408,6 @@ public class SectorAcceptanceTest extends AcceptanceTest {
     @DisplayName("인기 부문 조회")
     @Test
     void findBestSectorsWithCounts() {
-        createAdmin(TEST_ADMIN_EMAIL, TEST_ADMIN_NICKNAME, TEST_ADMIN_PASSWORD);
         TokenResponse tokenResponse = login(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD);
         String accessToken = tokenResponse.getAccessToken();
 
@@ -459,24 +454,6 @@ public class SectorAcceptanceTest extends AcceptanceTest {
         return sectors.stream()
             .map(SectorResponse::getId)
             .collect(Collectors.toList());
-    }
-
-    private String createAdmin(String email, String nickname, String password) {
-        Map<String, String> params = new HashMap<>();
-        params.put("email", email);
-        params.put("nickname", nickname);
-        params.put("password", password);
-
-        return given()
-            .body(params)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/joinAdmin")
-            .then()
-            .statusCode(HttpStatus.CREATED.value())
-            .extract()
-            .header("Location");
     }
 
     private Long createPostWithoutImageWithSector(String accessToken, Long sectorId) {

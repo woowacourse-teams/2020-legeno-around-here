@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.jdbc.Sql;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 
@@ -27,8 +27,9 @@ public abstract class ServiceTest {
     protected IAuthenticationFacade authenticationFacade;
 
     protected User createUser(String email, String nickname, String password) {
-        UserRequest userRequest = new UserRequest(email, nickname, password, TEST_AREA_ID);
-        Long userId = userService.createUser(userRequest);
+        UserCreateRequest userCreateRequest = new UserCreateRequest(email, nickname, password,
+            TEST_AREA_ID);
+        Long userId = userService.createUser(userCreateRequest);
 
         return userRepository.findById(userId)
             .orElseThrow(() -> new NotExistsException("해당하는 사용자가 존재하지 않습니다."));

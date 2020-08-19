@@ -10,6 +10,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.comment.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.CocommentRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.CommentAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
@@ -31,7 +32,7 @@ public class CommentService {
         User user = (User) authenticationFacade.getPrincipal();
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
-        Comment comment = commentRequest.toComment(user);
+        Comment comment = CommentAssembler.assemble(user, commentRequest);
 
         comment.setPost(post);
 
