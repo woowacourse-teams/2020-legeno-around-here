@@ -56,13 +56,6 @@ public class Area extends BaseEntity {
     }
 
     public boolean isSubAreaOf(Area targetArea) {
-        return equalOrTargetEmpty(this.firstDepthName, targetArea.firstDepthName)
-            && equalOrTargetEmpty(this.secondDepthName, targetArea.secondDepthName)
-            && equalOrTargetEmpty(this.thirdDepthName, targetArea.thirdDepthName)
-            && equalOrTargetEmpty(this.fourthDepthName, targetArea.fourthDepthName);
-    }
-
-    private boolean equalOrTargetEmpty(String name, String targetName) {
-        return targetName.isEmpty() || targetName.equals(name);
+        return this.fullName.startsWith(targetArea.fullName);
     }
 }
