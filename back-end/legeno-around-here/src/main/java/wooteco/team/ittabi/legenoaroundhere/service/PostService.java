@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -97,7 +96,7 @@ public class PostService {
         }
 
         if (postSearch.isAreaFilter()) {
-            List<Area> areas = findAllAreas(postSearch.getAreaIds());
+            List<Area> areas = findAllAreas(postSearch.getAreaId());
             return postRepository.findAllByAreaIn(pageable, areas);
         }
 
@@ -106,31 +105,16 @@ public class PostService {
             return postRepository.findAllBySectorIn(pageable, sectors);
         }
 
-        List<Area> areas = findAllAreas(postSearch.getAreaIds());
+        List<Area> areas = findAllAreas(postSearch.getAreaId());
         List<Sector> sectors = findAllSectors(postSearch.getSectorIds());
         return postRepository.findAllByAreaInAndSectorIn(pageable, areas, sectors);
     }
 
-    private List<Area> findAllAreas(List<Long> areaIds) {
+    private List<Area> findAllAreas(Long areaId) {
         List<Area> allArea = areaRepository.findAll();
-        List<Area> foundArea = findAreas(allArea, areaIds);
-
-        List<Area> areas = new ArrayList<>();
-        for (Area area : foundArea) {
-            areas.addAll(findSubAreas(allArea, area));
-        }
-        return areas;
-    }
-
-    private List<Area> findAreas(List<Area> allArea, List<Long> areaIds) {
-        List<Area> foundArea = allArea.stream()
-            .filter(area -> area.isIncludeId(areaIds))
-            .collect(Collectors.toList());
-
-        if (areaIds.size() != foundArea.size()) {
-            throw new WrongUserInputException("유효하지 않은 Area ID를 사용하셨습니다.");
-        }
-        return foundArea;
+        Area foundArea = areaRepository.findById(areaId)
+            .orElseThrow(() -> new NotExistsException("해당 Area가 없습니다."));
+        return findSubAreas(allArea, foundArea);
     }
 
     private List<Area> findSubAreas(List<Area> areas, Area targetArea) {

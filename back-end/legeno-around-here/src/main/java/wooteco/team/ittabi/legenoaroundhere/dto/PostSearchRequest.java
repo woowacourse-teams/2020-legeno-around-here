@@ -12,12 +12,12 @@ import wooteco.team.ittabi.legenoaroundhere.domain.PostSearch;
 @ToString
 public class PostSearchRequest {
 
-    private String areaIds;
+    private Long areaId;
     private String sectorIds;
 
     public PostSearch toPostSearch() {
         return PostSearch.builder()
-            .areaIds(areaIds)
+            .areaId(areaId)
             .sectorIds(sectorIds)
             .build();
     }
