@@ -16,7 +16,7 @@ import {
 } from '../myProfile/PrivacySection';
 import {AwardsSection, AwardSummary} from '../myProfile/AwardSection';
 import {NavElement, NavSection} from '../myProfile/LinksSection';
-import Typography from "@material-ui/core/Typography";
+import Typography from '@material-ui/core/Typography';
 
 function MyProfile() {
   const [accessToken] = useState(getAccessTokenFromCookie());
