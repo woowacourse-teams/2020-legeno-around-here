@@ -56,7 +56,7 @@ public class UserController {
         UserImageResponse userImage = userService.uploadUserImage(image);
 
         return ResponseEntity
-            .created(URI.create("/user-images" + userImage.getId()))
+            .created(URI.create("/user-images/" + userImage.getId()))
             .body(userImage);
     }
 

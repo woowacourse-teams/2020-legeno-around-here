@@ -99,7 +99,7 @@ public class User extends BaseEntity implements UserDetails {
             return;
         }
         if (userImage.hasNotUser()) {
-            image.setInitUser(this);
+            image.setUser(this);
         }
     }
 

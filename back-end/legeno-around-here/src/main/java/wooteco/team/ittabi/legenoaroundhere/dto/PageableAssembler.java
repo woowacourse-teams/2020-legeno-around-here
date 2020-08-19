@@ -27,7 +27,6 @@ public class PageableAssembler {
             return MINIMUM_PAGE;
         }
         if (page < MINIMUM_PAGE) {
-            System.out.println(page);
             throw new WrongUserInputException("Page를 잘못 [" + page + "] 입력하셨습니다.");
         }
         return page;

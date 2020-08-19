@@ -74,14 +74,18 @@ public class UserAcceptanceTest extends AcceptanceTest {
         assertThat(userResponse.getEmail()).isEqualTo(TEST_USER_EMAIL);
         assertThat(userResponse.getNickname()).isEqualTo(TEST_USER_NICKNAME);
 
+        // 프로필 사진 등록
+        UserImageResponse userImageResponse = createUserImage(accessToken);
+
         // 내 정보 수정
-        updateUserWithoutAreaAndImage(accessToken, "newname", "newpassword");
+        updateUserWithImage(accessToken, "newname", "newpassword", userImageResponse.getId());
         UserResponse updatedUserResponse = findUser(accessToken);
         assertThat(updatedUserResponse.getNickname()).isEqualTo("newname");
         TokenResponse updatedTokenResponse = login(TEST_USER_EMAIL, "newpassword");
         assertThat(updatedTokenResponse).isNotNull();
         assertThat(updatedTokenResponse.getAccessToken())
             .hasSizeGreaterThanOrEqualTo(TOKEN_MIN_SIZE);
+        assertThat(userResponse.getImage()).isNotNull();
 
         // 회원 탈퇴
         deleteUser(updatedTokenResponse.getAccessToken());
@@ -122,15 +126,6 @@ public class UserAcceptanceTest extends AcceptanceTest {
         userResponse = findUser(accessToken);
         assertThat(userResponse.getArea()).isNotNull();
         assertThat(userResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
-
-        // 프로필 사진 등록
-        UserImageResponse userImageResponse = createUserImage(accessToken);
-
-        userResponse = updateUserWithAreaAndImage(accessToken, TEST_USER_NICKNAME,
-            TEST_USER_PASSWORD, userImageResponse.getId());
-        assertThat(userResponse.getArea()).isNotNull();
-        assertThat(userResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
-        assertThat(userResponse.getImage()).isNotNull();
     }
 
     private String createUserWithoutArea(String email, String nickname, String password) {
@@ -219,7 +214,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
         return updateUserBy(accessToken, params);
     }
 
-    private UserResponse updateUserWithAreaAndImage(String accessToken, String nickname,
+    private UserResponse updateUserWithImage(String accessToken, String nickname,
         String password, Long imageId) {
         Map<String, String> params = new HashMap<>();
         params.put("nickname", nickname);

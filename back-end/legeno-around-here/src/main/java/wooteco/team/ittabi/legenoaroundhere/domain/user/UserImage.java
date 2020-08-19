@@ -44,7 +44,7 @@ public class UserImage extends BaseEntity {
         return Objects.isNull(user);
     }
 
-    public void setInitUser(User user) {
+    public void setUser(User user) {
         if (Objects.isNull(this.user)) {
             this.user = user;
             return;
