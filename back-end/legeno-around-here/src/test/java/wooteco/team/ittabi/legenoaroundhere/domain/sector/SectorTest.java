@@ -13,13 +13,9 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
-import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.Nickname;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.Password;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 
 class SectorTest {
@@ -35,11 +31,9 @@ class SectorTest {
 
     private User makeUser(String email, String nickname, String password) {
         return User.builder()
-            .email(new Email(email))
-            .nickname(new Nickname(nickname))
-            .password(new Password(password))
-            .roles(new ArrayList<>())
-            .posts(new ArrayList<>())
+            .email(email)
+            .nickname(nickname)
+            .password(password)
             .build();
     }
 

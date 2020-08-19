@@ -1,6 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.domain;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_NOT_TXT_EXTENSION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_TEXT_CONTENT_TYPE;
 
 import java.io.IOException;
@@ -17,7 +18,7 @@ public class PostImageExtensionTest {
     @Test
     void validateImageExtension_NoneMatchImageExtension_ThrownException() throws IOException {
         MultipartFile multipartFile = FileConverter
-            .convert("not_image_extension.txt", TEST_IMAGE_TEXT_CONTENT_TYPE);
+            .convert(TEST_IMAGE_NOT_TXT_EXTENSION, TEST_IMAGE_TEXT_CONTENT_TYPE);
 
         assertThatThrownBy(() -> ImageExtension.validateImageExtension(multipartFile))
             .isInstanceOf(NotImageExtensionException.class);

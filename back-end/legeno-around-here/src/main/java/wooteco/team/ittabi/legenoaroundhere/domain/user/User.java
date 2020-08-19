@@ -2,7 +2,9 @@ package wooteco.team.ittabi.legenoaroundhere.domain.user;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,7 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,8 +34,6 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
-@AllArgsConstructor
 @Getter
 @Setter
 @ToString(exclude = {"posts", "comments"})
@@ -55,25 +54,54 @@ public class User extends BaseEntity implements UserDetails {
     private Password password;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @Builder.Default
-    private List<String> roles = new ArrayList<>();
+    private List<String> roles
+        = new ArrayList<>(Collections.singletonList(Role.USER.getRoleName()));
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    @Builder.Default
-    private UserImage userImage = null;
+    private UserImage image = null;
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    @Builder.Default
     private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "area_id")
-    @Builder.Default
     private Area area = null;
+
+    @Builder
+    public User(String email, String nickname, String password, Area area, UserImage image) {
+        this.email = makeEmail(email);
+        this.nickname = new Nickname(nickname);
+        this.password = new Password(password);
+        this.area = area;
+        this.image = image;
+    }
+
+    private Email makeEmail(String email) {
+        if (Objects.nonNull(email)) {
+            return new Email(email);
+        }
+        return null;
+    }
+
+    public void update(User user) {
+        this.nickname = user.nickname;
+        this.password = user.password;
+        this.area = user.area;
+        this.image = user.image;
+        setUserAtImage(user.image);
+    }
+
+    private void setUserAtImage(UserImage userImage) {
+        if (Objects.isNull(userImage)) {
+            return;
+        }
+        if (userImage.hasNotUser()) {
+            image.setUser(this);
+        }
+    }
 
     public boolean isNotSame(User user) {
         return !this.equals(user);

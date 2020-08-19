@@ -1,7 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -10,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.PostSearch;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
@@ -17,6 +17,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchRequest;
@@ -26,7 +27,6 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.repository.AreaRepository;
-import wooteco.team.ittabi.legenoaroundhere.repository.CommentRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.ImageUploader;
@@ -38,7 +38,6 @@ import wooteco.team.ittabi.legenoaroundhere.utils.ImageUploader;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
     private final AreaRepository areaRepository;
     private final SectorRepository sectorRepository;
     private final ImageUploader imageUploader;
@@ -55,20 +54,18 @@ public class PostService {
             .filter(Sector::isUsed)
             .orElseThrow(() -> new WrongUserInputException("입력하신 부문이 존재하지 않습니다."));
 
-        Post post = postCreateRequest.toPost(area, sector, user);
-        uploadImages(postCreateRequest).forEach(image -> image.setPost(post));
+        Post post = PostAssembler.assemble(postCreateRequest, area, sector, user);
+        List<PostImage> postImages = uploadPostImages(post, postCreateRequest.getImages());
+        post.setPostImages(postImages);
 
         Post savedPost = postRepository.save(post);
         return PostResponse.of(user, savedPost);
     }
 
-    private List<PostImage> uploadImages(PostCreateRequest postCreateRequest) {
-        if (postCreateRequest.isImagesNull()) {
-            return Collections.emptyList();
-        }
-        return postCreateRequest.getImages().stream()
-            .map(imageUploader::uploadImage)
-            .collect(Collectors.toList());
+    private List<PostImage> uploadPostImages(Post post, List<MultipartFile> images) {
+        List<PostImage> postImages = imageUploader.uploadPostImages(images);
+        postImages.forEach(image -> image.setPost(post));
+        return postImages;
     }
 
     @Transactional(readOnly = true)

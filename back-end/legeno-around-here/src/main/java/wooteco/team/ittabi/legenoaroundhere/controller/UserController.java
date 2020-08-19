@@ -8,10 +8,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 
 @RestController
@@ -24,16 +27,9 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<Void> join(@RequestBody UserRequest userRequest) {
-        Long userId = userService.createUser(userRequest);
-        return ResponseEntity
-            .created(URI.create("/users/" + userId))
-            .build();
-    }
+    public ResponseEntity<Void> join(@RequestBody UserCreateRequest userCreateRequest) {
+        Long userId = userService.createUser(userCreateRequest);
 
-    @PostMapping("/joinAdmin")
-    public ResponseEntity<Void> joinAdmin(@RequestBody UserRequest userRequest) {
-        Long userId = userService.createAdmin(userRequest);
         return ResponseEntity
             .created(URI.create("/users/" + userId))
             .build();
@@ -41,25 +37,42 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
+        TokenResponse token = userService.login(loginRequest);
+
         return ResponseEntity
-            .ok(userService.login(loginRequest));
+            .ok(token);
     }
 
     @GetMapping("/users/myinfo")
     public ResponseEntity<UserResponse> findUser() {
+        UserResponse user = userService.findUser();
+
         return ResponseEntity
-            .ok(userService.findUser());
+            .ok(user);
+    }
+
+    @PostMapping("/user-images")
+    public ResponseEntity<UserImageResponse> uploadUserImage(MultipartFile image) {
+        UserImageResponse userImage = userService.uploadUserImage(image);
+
+        return ResponseEntity
+            .created(URI.create("/user-images/" + userImage.getId()))
+            .body(userImage);
     }
 
     @PutMapping("/users/myinfo")
-    public ResponseEntity<UserResponse> updateUser(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserResponse> updateUser(
+        @RequestBody UserUpdateRequest userUpdateRequest) {
+        UserResponse user = userService.updateUser(userUpdateRequest);
+
         return ResponseEntity
-            .ok(userService.updateUser(userRequest));
+            .ok(user);
     }
 
     @DeleteMapping("/users/myinfo")
     public ResponseEntity<Void> deleteUser() {
         userService.deleteUser();
+
         return ResponseEntity
             .noContent()
             .build();

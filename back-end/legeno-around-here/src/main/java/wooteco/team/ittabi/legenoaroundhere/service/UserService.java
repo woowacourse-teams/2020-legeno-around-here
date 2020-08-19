@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
-import java.util.Collections;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,49 +9,54 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.Nickname;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.Password;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.Role;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
+import wooteco.team.ittabi.legenoaroundhere.domain.user.UserImage;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserAssembler;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
 import wooteco.team.ittabi.legenoaroundhere.repository.AreaRepository;
+import wooteco.team.ittabi.legenoaroundhere.repository.UserImageRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
+import wooteco.team.ittabi.legenoaroundhere.utils.ImageUploader;
 
 @Service
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
 
+    private static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
+
     private final UserRepository userRepository;
+    private final UserImageRepository userImageRepository;
     private final AreaRepository areaRepository;
     private final JwtTokenGenerator jwtTokenGenerator;
     private final IAuthenticationFacade authenticationFacade;
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final ImageUploader imageUploader;
 
     @Transactional
-    public Long createUser(UserRequest userRequest) {
-        User persistUser = createUserBy(userRequest, Role.USER);
-        return persistUser.getId();
-    }
+    public Long createUser(UserCreateRequest userCreateRequest) {
+        // ToDo 삭제 계정과 겹치는 것을 허용할지 추후 고려하기
+        userRepository.findByEmail(new Email(userCreateRequest.getEmail()))
+            .ifPresent(user -> {
+                throw new WrongUserInputException(
+                    "[" + userCreateRequest.getEmail() + "] 이메일은 이미 사용중입니다.");
+            });
 
-    private User createUserBy(UserRequest userCreateRequest, Role userRole) {
         Area area = findAreaBy(userCreateRequest.getAreaId());
+        User user = UserAssembler.assemble(userCreateRequest, area);
+        User createdUser = userRepository.save(user);
 
-        return userRepository.save(User.builder()
-            .email(new Email(userCreateRequest.getEmail()))
-            .nickname(new Nickname(userCreateRequest.getNickname()))
-            .password(new Password(passwordEncoder.encode(userCreateRequest.getPassword())))
-            .roles(Collections.singletonList(userRole.getRoleName()))
-            .area(area)
-            .build());
+        return createdUser.getId();
     }
 
     private Area findAreaBy(Long areaId) {
@@ -64,17 +68,11 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public Long createAdmin(UserRequest userCreateRequest) {
-        User persistUser = createUserBy(userCreateRequest, Role.ADMIN);
-        return persistUser.getId();
-    }
-
-    @Transactional
     public TokenResponse login(LoginRequest loginRequest) {
         User user = userRepository.findByEmail(new Email(loginRequest.getEmail()))
             .orElseThrow(() -> new NotExistsException("가입되지 않은 회원입니다."));
 
-        if (!passwordEncoder.matches(
+        if (!PASSWORD_ENCODER.matches(
             loginRequest.getPassword(), user.getPasswordByString())) {
             throw new WrongUserInputException("잘못된 비밀번호입니다.");
         }
@@ -89,25 +87,24 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public UserResponse updateUser(UserRequest userUpdateRequest) {
+    public UserResponse updateUser(UserUpdateRequest userUpdateRequest) {
         User user = (User) authenticationFacade.getPrincipal();
-        User persistUser = userRepository.findByEmail(user.getEmail())
+        User foundUser = userRepository.findByEmail(user.getEmail())
             .orElseThrow(() -> new NotExistsException("사용자를 찾을 수 없습니다."));
+        Area area = findAreaBy(userUpdateRequest.getAreaId());
+        UserImage userImage = findUserImageBy(userUpdateRequest.getImageId());
 
-        updatePersistUser(persistUser, userUpdateRequest);
+        foundUser.update(UserAssembler.assemble(userUpdateRequest, area, userImage));
 
-        return UserResponse.from(persistUser);
+        return UserResponse.from(foundUser);
     }
 
-    private void updatePersistUser(User persistUser, UserRequest userUpdateRequest) {
-        Nickname newNickname = new Nickname(userUpdateRequest.getNickname());
-        Password newPassword = new Password(
-            passwordEncoder.encode(userUpdateRequest.getPassword()));
-        Area newArea = findAreaBy(userUpdateRequest.getAreaId());
-
-        persistUser.setNickname(newNickname);
-        persistUser.setPassword(newPassword);
-        persistUser.setArea(newArea);
+    private UserImage findUserImageBy(Long userImageId) {
+        if (Objects.isNull(userImageId)) {
+            return null;
+        }
+        return userImageRepository.findById(userImageId)
+            .orElseThrow(() -> new NotExistsException("유효하지 않은 Image입니다."));
     }
 
     @Transactional
@@ -122,5 +119,13 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(new Email(email))
             .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+    }
+
+    @Transactional
+    public UserImageResponse uploadUserImage(MultipartFile userImageFile) {
+        UserImage userImage = imageUploader.uploadUserImage(userImageFile);
+        UserImage savedUserImage = userImageRepository.save(userImage);
+
+        return UserImageResponse.of(savedUserImage);
     }
 }

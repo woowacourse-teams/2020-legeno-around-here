@@ -18,18 +18,15 @@ import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.Nickname;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.Password;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 public class PostTest {
 
     private final User user = User.builder()
-        .email(new Email(TEST_USER_EMAIL))
-        .nickname(new Nickname(TEST_USER_NICKNAME))
-        .password(new Password(TEST_USER_PASSWORD))
+        .email(TEST_USER_EMAIL)
+        .nickname(TEST_USER_NICKNAME)
+        .password(TEST_USER_PASSWORD)
         .build();
 
     private final Sector sector = Sector.builder()
