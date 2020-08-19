@@ -9,6 +9,7 @@ import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.comment.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
+import wooteco.team.ittabi.legenoaroundhere.dto.CocommentRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
@@ -81,5 +82,22 @@ public class CommentService {
 
         Comment comment = findCommentBy(commentId);
         comment.pressZzang(user);
+    }
+
+    @Transactional
+    public CommentResponse updateComment(Long commentId, CommentRequest commentRequest) {
+        User user = (User) authenticationFacade.getPrincipal();
+        Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(() -> new NotExistsException("코멘트가 존재하지 않습니다."));
+
+        comment.setWriting(commentRequest.getWriting());
+
+        return CommentResponse.of(user, comment);
+    }
+
+    public CommentResponse createCocomment(CocommentRequest cocommentRequest) {
+        User user = (User) authenticationFacade.getPrincipal();
+
+        return null;
     }
 }

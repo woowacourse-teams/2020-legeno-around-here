@@ -37,7 +37,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @Where(clause = "deleted_at IS NULL")
 public class Comment extends BaseEntity {
 
-    private static final int MAX_LENGTH = 20;
+    private static final int MAX_LENGTH = 200;
 
     @Lob
     @Column(nullable = false)
@@ -50,6 +50,13 @@ public class Comment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
+
+    @OneToMany(mappedBy = "comment")
+    private List<Comment> cocomments;
 
     @ManyToOne
     @JoinColumn(name = "creator_id")

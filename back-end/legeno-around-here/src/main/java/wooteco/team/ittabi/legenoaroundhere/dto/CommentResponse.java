@@ -25,10 +25,23 @@ public class CommentResponse {
     private String writing;
     private CommentZzangResponse zzang;
     private UserResponse creator;
+    private List<CommentResponse> cocomments;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
     public static CommentResponse of(User user, Comment comment) {
+        return CommentResponse.builder()
+            .id(comment.getId())
+            .writing(comment.getWriting())
+            .zzang(CommentZzangResponse.of(user, comment))
+            .creator(UserResponse.from(comment.getCreator()))
+            .cocomments(cocommentListOf(user, comment.getCocomments()))
+            .createdAt(comment.getCreatedAt())
+            .modifiedAt(comment.getModifiedAt())
+            .build();
+    }
+
+    private static CommentResponse cocommentOf(User user, Comment comment) {
         return CommentResponse.builder()
             .id(comment.getId())
             .writing(comment.getWriting())
@@ -42,6 +55,12 @@ public class CommentResponse {
     public static List<CommentResponse> listOf(User user, List<Comment> comments) {
         return comments.stream()
             .map(comment -> of(user, comment))
+            .collect(Collectors.toList());
+    }
+
+    public static List<CommentResponse> cocommentListOf(User user, List<Comment> comments) {
+        return comments.stream()
+            .map(comment -> cocommentOf(user, comment))
             .collect(Collectors.toList());
     }
 }
