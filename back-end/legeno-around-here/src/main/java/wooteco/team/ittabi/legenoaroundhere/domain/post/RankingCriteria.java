@@ -4,9 +4,35 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 
 public enum RankingCriteria {
-    LAST_DAY("day", LocalDateTime.MIN, LocalDateTime.MAX),
-    LAST_WEEK("week", LocalDateTime.MIN, LocalDateTime.MAX),
-    LAST_MONTH("month", LocalDateTime.MIN, LocalDateTime.MAX),
+    YESTERDAY("yesterday",
+        LocalDateTime.of(
+            LocalDateTime.now().minusDays(1).getYear(),
+            LocalDateTime.now().minusDays(1).getMonth(),
+            LocalDateTime.now().minusDays(1).getDayOfMonth(),
+            0,
+            0),
+        LocalDateTime.of(
+            LocalDateTime.now().getYear(),
+            LocalDateTime.now().getMonth(),
+            LocalDateTime.now().getDayOfMonth(),
+            0,
+            0)),
+    LAST_WEEK("week",
+        LocalDateTime.now().minusDays(7 + LocalDateTime.now().getDayOfWeek().getValue()),
+        LocalDateTime.now().minusDays(LocalDateTime.now().getDayOfWeek().getValue())),
+    LAST_MONTH("month",
+        LocalDateTime.of(
+            LocalDateTime.now().minusMonths(1).getYear(),
+            LocalDateTime.now().minusMonths(1).getMonth(),
+            1,
+            0,
+            0),
+        LocalDateTime.of(
+            LocalDateTime.now().getYear(),
+            LocalDateTime.now().getMonth(),
+            1,
+            0,
+            0)),
     TOTAL("total", LocalDateTime.MIN, LocalDateTime.MAX);
 
     private final String rankingCriteria;

@@ -305,7 +305,7 @@ public class PostAcceptanceTest extends AcceptanceTest {
         // 모든 지역, 모든 부문 필터 설정
         filter = "areaIds=&sectorIds=";
         // 모든 지역, 모든 부문에 대해서 전일 랭킹을 조회
-        searchRanks(accessTokenA, RankingCriteria.LAST_DAY, filter);
+        searchRanks(accessTokenA, RankingCriteria.YESTERDAY, filter);
         // 모든 지역, 모든 부문에 대해서 전주 랭킹을 조회
         searchRanks(accessTokenA, RankingCriteria.LAST_WEEK, filter);
         // 모든 지역, 모든 부문에 대해서 전달 랭킹을 조회
@@ -316,7 +316,7 @@ public class PostAcceptanceTest extends AcceptanceTest {
         // 모든 지역, 특정 부문 필터 설정
         filter = "areaIds=&sectorIds="+sectorAId;
         // 모든 지역, 특정 부문에 대해서 전일 랭킹을 조회
-        searchRanks(accessTokenA, RankingCriteria.LAST_DAY, filter);
+        searchRanks(accessTokenA, RankingCriteria.YESTERDAY, filter);
         // 모든 지역, 특정 부문에 대해서 전주 랭킹을 조회
         searchRanks(accessTokenA, RankingCriteria.LAST_WEEK, filter);
         // 모든 지역, 특정 부문에 대해서 전달 랭킹을 조회
@@ -327,7 +327,7 @@ public class PostAcceptanceTest extends AcceptanceTest {
         // 특정 지역, 모든 부문 필터 설정
         filter = "areaIds="+TEST_AREA_A_ID+"&sectorIds=";
         // 특정 지역, 모든 부문에 대해서 전일 랭킹을 조회
-        searchRanks(accessTokenA, RankingCriteria.LAST_DAY, filter);
+        searchRanks(accessTokenA, RankingCriteria.YESTERDAY, filter);
         // 특정 지역, 모든 부문에 대해서 전주 랭킹을 조회
         searchRanks(accessTokenA, RankingCriteria.LAST_WEEK, filter);
         // 특정 지역, 모든 부문에 대해서 전달 랭킹을 조회
@@ -338,7 +338,7 @@ public class PostAcceptanceTest extends AcceptanceTest {
         // 특정 지역, 특정 부문 필터 설정
         filter = "areaIds="+TEST_AREA_B_ID+"&sectorIds="+sectorBId;
         // 특정 지역, 특정 부문에 대해서 전일 랭킹을 조회
-        searchRanks(accessTokenA, RankingCriteria.LAST_DAY, filter);
+        searchRanks(accessTokenA, RankingCriteria.YESTERDAY, filter);
         // 특정 지역, 특정 부문에 대해서 전주 랭킹을 조회
         searchRanks(accessTokenA, RankingCriteria.LAST_WEEK, filter);
         // 특정 지역, 특정 부문에 대해서 전달 랭킹을 조회

@@ -2,7 +2,10 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static wooteco.team.ittabi.legenoaroundhere.domain.post.RankingCriteria.LAST_MONTH;
+import static wooteco.team.ittabi.legenoaroundhere.domain.post.RankingCriteria.LAST_WEEK;
 import static wooteco.team.ittabi.legenoaroundhere.domain.post.RankingCriteria.TOTAL;
+import static wooteco.team.ittabi.legenoaroundhere.domain.post.RankingCriteria.YESTERDAY;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_OTHER_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_CONTENT_TYPE;
@@ -17,7 +20,9 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Collections;
+import javax.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
@@ -365,7 +371,7 @@ public class PostServiceTest extends ServiceTest {
 
     @DisplayName("모든 부문, 모든 지역 랭킹 조회 - 전체 기간")
     @Test
-    void searchRanking_TotalCriteria_SuccessToFind() {
+    void searchRanking_AllSectorAllAreaTotalCriteria_SuccessToFind() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
             TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
         Long postIdA = postService.createPost(postCreateRequest).getId();
@@ -379,10 +385,11 @@ public class PostServiceTest extends ServiceTest {
             TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
+        //PostA 짱이야2
         //PostB 짱이야4
         //PostC 짱이야3
-        //PostA 짱이야2
         //PostD 짱이야1
+        //누적 랭킹 순서: B -> C -> A -> D
         setAuthentication(userA);
         postService.pressZzang(postIdB);
         postService.pressZzang(postIdC);
@@ -409,5 +416,197 @@ public class PostServiceTest extends ServiceTest {
         assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdC);
         assertThat(posts.getContent().get(2).getId()).isEqualTo(postIdA);
         assertThat(posts.getContent().get(3).getId()).isEqualTo(postIdD);
+    }
+
+    @DisplayName("모든 부문, 모든 지역 랭킹 조회 - 어제")
+    @Test
+    @Transactional
+    void searchRanking_AllSectorAllAreaYesterday_SuccessToFind() {
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+        Long postIdA = postService.createPost(postCreateRequest).getId();
+        postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorOtherId);
+        Long postIdB = postService.createPost(postCreateRequest).getId();
+        postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorId);
+        Long postIdC = postService.createPost(postCreateRequest).getId();
+        postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
+        Long postIdD = postService.createPost(postCreateRequest).getId();
+
+        //PostA 짱이야2 - 어제 1 오늘 1
+        //PostB 짱이야4 - 어제 2 오늘 2
+        //PostC 짱이야3 - 어제 3 오늘 0
+        //PostD 짱이야1 - 어제 0 오늘 1
+        //누적 랭킹 순서: C -> B -> A -> D
+        setAuthentication(userA);
+        postService.pressZzang(postIdB);
+        postService.pressZzang(postIdC);
+        postService.pressZzang(postIdA);
+        postService.pressZzang(postIdD);
+        setAuthentication(userB);
+        postService.pressZzang(postIdB);
+        postService.pressZzang(postIdC);
+        postService.pressZzang(postIdA);
+        setAuthentication(userC);
+        postService.pressZzang(postIdB);
+        postService.pressZzang(postIdC);
+        setAuthentication(userD);
+        postService.pressZzang(postIdB);
+
+        Post postA = postRepository.findById(postIdA)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
+        Post postB = postRepository.findById(postIdB)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
+        Post postC = postRepository.findById(postIdC)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
+        Post postD = postRepository.findById(postIdD)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
+
+        postB.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusDays(1));
+        postB.getZzangs().get(1).setCreatedAt(LocalDateTime.now().minusDays(1));
+        postC.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusDays(1));
+        postC.getZzangs().get(1).setCreatedAt(LocalDateTime.now().minusDays(1));
+        postC.getZzangs().get(2).setCreatedAt(LocalDateTime.now().minusDays(1));
+        postA.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusDays(1));
+
+        PostSearchRequest postSearchRequest = new PostSearchRequest(
+            null, null);
+        Page<PostWithCommentsCountResponse> posts
+            = postService
+            .searchRanking(YESTERDAY.getCriteriaName(), Pageable.unpaged(), postSearchRequest);
+
+        assertThat(posts.getContent()).hasSize(4);
+        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdC);
+        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdB);
+        assertThat(posts.getContent().get(2).getId()).isEqualTo(postIdA);
+        assertThat(posts.getContent().get(3).getId()).isEqualTo(postIdD);
+    }
+
+    @DisplayName("모든 부문, 모든 지역 랭킹 조회 - 지난 주")
+    @Test
+    @Transactional
+    void searchRanking_AllSectorAllAreaLastWeek_SuccessToFind() {
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+        Long postIdA = postService.createPost(postCreateRequest).getId();
+        postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorOtherId);
+        Long postIdB = postService.createPost(postCreateRequest).getId();
+        postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorId);
+        Long postIdC = postService.createPost(postCreateRequest).getId();
+        postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
+        Long postIdD = postService.createPost(postCreateRequest).getId();
+
+        //PostA 짱이야2 - 지난 주 2 오늘 0
+        //PostB 짱이야4 - 지난 주 0 오늘 4
+        //PostC 짱이야3 - 지난 주  2 오늘 1
+        //PostD 짱이야1 - 지난 주 0 오늘 1
+        //누적 랭킹 순서: C -> A -> D -> B (동률일 경우 최신 글이 상위로)
+        setAuthentication(userA);
+        postService.pressZzang(postIdB);
+        postService.pressZzang(postIdC);
+        postService.pressZzang(postIdA);
+        postService.pressZzang(postIdD);
+        setAuthentication(userB);
+        postService.pressZzang(postIdB);
+        postService.pressZzang(postIdC);
+        postService.pressZzang(postIdA);
+        setAuthentication(userC);
+        postService.pressZzang(postIdB);
+        postService.pressZzang(postIdC);
+        setAuthentication(userD);
+        postService.pressZzang(postIdB);
+
+        Post postA = postRepository.findById(postIdA)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
+        Post postB = postRepository.findById(postIdB)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
+        Post postC = postRepository.findById(postIdC)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
+        Post postD = postRepository.findById(postIdD)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
+
+        postC.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusWeeks(1));
+        postC.getZzangs().get(1).setCreatedAt(LocalDateTime.now().minusWeeks(1));
+        postA.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusWeeks(1));
+        postA.getZzangs().get(1).setCreatedAt(LocalDateTime.now().minusWeeks(1));
+
+        PostSearchRequest postSearchRequest = new PostSearchRequest(
+            null, null);
+        Page<PostWithCommentsCountResponse> posts
+            = postService
+            .searchRanking(LAST_WEEK.getCriteriaName(), Pageable.unpaged(), postSearchRequest);
+
+        assertThat(posts.getContent()).hasSize(4);
+        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdC);
+        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdA);
+        assertThat(posts.getContent().get(2).getId()).isEqualTo(postIdD);
+        assertThat(posts.getContent().get(3).getId()).isEqualTo(postIdB);
+    }
+
+    @DisplayName("모든 부문, 모든 지역 랭킹 조회 - 지난 달")
+    @Test
+    @Transactional
+    void searchRanking_AllSectorAllAreaLastMonth_SuccessToFind() {
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+        Long postIdA = postService.createPost(postCreateRequest).getId();
+        postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorOtherId);
+        Long postIdB = postService.createPost(postCreateRequest).getId();
+        postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorId);
+        Long postIdC = postService.createPost(postCreateRequest).getId();
+        postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
+        Long postIdD = postService.createPost(postCreateRequest).getId();
+
+        //PostA 짱이야2 - 지난달 1 오늘 1
+        //PostB 짱이야4 - 지난달 0 오늘 4
+        //PostC 짱이야3 - 지난달 0 오늘 3
+        //PostD 짱이야1 - 지난달 1 오늘 0
+        //누적 랭킹 순서: D -> A -> C -> B (동률일 경우 최신 글이 상위로)
+        setAuthentication(userA);
+        postService.pressZzang(postIdB);
+        postService.pressZzang(postIdC);
+        postService.pressZzang(postIdA);
+        postService.pressZzang(postIdD);
+        setAuthentication(userB);
+        postService.pressZzang(postIdB);
+        postService.pressZzang(postIdC);
+        postService.pressZzang(postIdA);
+        setAuthentication(userC);
+        postService.pressZzang(postIdB);
+        postService.pressZzang(postIdC);
+        setAuthentication(userD);
+        postService.pressZzang(postIdB);
+
+        Post postA = postRepository.findById(postIdA)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
+        Post postB = postRepository.findById(postIdB)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
+        Post postC = postRepository.findById(postIdC)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
+        Post postD = postRepository.findById(postIdD)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
+
+        postA.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusMonths(1));
+        postD.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusMonths(1));
+
+        PostSearchRequest postSearchRequest = new PostSearchRequest(
+            null, null);
+        Page<PostWithCommentsCountResponse> posts
+            = postService
+            .searchRanking(LAST_MONTH.getCriteriaName(), Pageable.unpaged(), postSearchRequest);
+
+        assertThat(posts.getContent()).hasSize(4);
+        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdD);
+        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdA);
+        assertThat(posts.getContent().get(2).getId()).isEqualTo(postIdC);
+        assertThat(posts.getContent().get(3).getId()).isEqualTo(postIdB);
     }
 }
