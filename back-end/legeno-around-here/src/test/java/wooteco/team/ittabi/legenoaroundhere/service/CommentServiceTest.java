@@ -69,6 +69,7 @@ public class CommentServiceTest extends ServiceTest {
         assertThat(createdCommentResponse.getWriting()).isEqualTo(TEST_POST_WRITING);
         assertThat(createdCommentResponse.getCreator()).isEqualTo(UserResponse.from(user));
         assertThat(createdCommentResponse.getZzang()).isNotNull();
+        assertThat(createdCommentResponse.getCocomments()).isNull();
     }
 
     @DisplayName("댓글 조회 - 성공")
@@ -211,6 +212,20 @@ public class CommentServiceTest extends ServiceTest {
     }
 
     @Test
-    void createCocomment() {
+    void createCocomment_Success() {
+        CommentRequest commentRequest = new CommentRequest(TEST_COMMENT_WRITING);
+        Long commentId = commentService.createComment(postResponse.getId(), commentRequest).getId();
+
+        CommentRequest commentUpdateRequest = new CommentRequest(TEST_COMMENT_OTHER_WRITING);
+        commentService.createCocomment(commentId, commentUpdateRequest);
+
+        CommentResponse commentResponse = commentService.findComment(commentId);
+
+        assertThat(commentResponse.getWriting()).isEqualTo(TEST_COMMENT_WRITING);
+        assertThat(commentResponse.getCocomments()).hasSize(1);
+
+        CommentResponse cocommentResponse = commentResponse.getCocomments().get(0);
+        assertThat(cocommentResponse.getWriting()).isEqualTo(TEST_COMMENT_OTHER_WRITING);
+        assertThat(cocommentResponse.getCocomments()).isNull();
     }
 }

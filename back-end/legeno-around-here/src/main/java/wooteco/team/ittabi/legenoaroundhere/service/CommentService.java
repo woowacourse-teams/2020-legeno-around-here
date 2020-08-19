@@ -95,6 +95,7 @@ public class CommentService {
         return CommentResponse.of(user, comment);
     }
 
+    @Transactional
     public CommentResponse createCocomment(Long commentId, CommentRequest commentRequest) {
         User user = (User) authenticationFacade.getPrincipal();
 
