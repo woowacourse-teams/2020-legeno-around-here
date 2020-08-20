@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import Typography from "@material-ui/core/Typography";
-import {makeStyles} from "@material-ui/core/styles";
+import Typography from '@material-ui/core/Typography';
+import {makeStyles} from '@material-ui/core/styles';
 
 export const AwardsSection = styled.div`
   width: 90%;
@@ -35,7 +35,9 @@ export const AwardSummary = ({ awardName, awardCount }) => {
 
   return (
     <AwardSummaryStyle>
-      <Typography component="h4" variant="h4" className={classes.awardCount}>{awardCount}</Typography>
+      <Typography component="h4" variant="h4" className={classes.awardCount}>
+        {awardCount}
+      </Typography>
       <Typography className={classes.awardName}>{awardName}</Typography>
     </AwardSummaryStyle>
   );

@@ -76,6 +76,12 @@ const PostingForm = () => {
   const submitPost = (e) => {
     e.preventDefault();
 
+    try {
+      validateForm();
+    } catch (e) {
+      alert(e.message);
+      return;
+    }
     const formData = new FormData();
     if (images.length > 0) {
       Array.from(images).forEach((image) => {
@@ -93,6 +99,19 @@ const PostingForm = () => {
     };
     sendPost();
   };
+
+  const validateForm = () => {
+    if (area.id === null) {
+      throw new Error('지역을 선택해주세요!');
+    }
+    if (writing === '' && images.length === 0) {
+      throw new Error('아무것도 안 쓴 글을 올릴 수 없습니다! 뭔가 써주세요 :)');
+    }
+    if (sector.id === null) {
+      throw new Error('부문을 선택해주세요!');
+    }
+  };
+
   if (loading) {
     return <Loading />;
   }

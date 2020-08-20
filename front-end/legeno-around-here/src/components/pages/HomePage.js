@@ -11,7 +11,7 @@ import PostItem from '../post/PostItem';
 import Loading from '../Loading';
 import BottomBlank from '../BottomBlank';
 
-const Home = () => {
+const HomePage = () => {
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
@@ -21,19 +21,13 @@ const Home = () => {
 
   /* 처음에 보여줄 최근글 목록을 가져옴 */
   useEffect(() => {
-    findCurrentPostsFromPage(mainAreaId, 0, accessToken)
-      .then((firstPosts) => {
-        if (firstPosts.length === 0) {
-          setHasMore(false);
-          return;
-        }
-        setPosts(firstPosts);
-      })
-      .catch((errorResponse) => {
-        if (errorResponse.status === 403) {
-          document.location.href = '/login';
-        }
-      });
+    findCurrentPostsFromPage(mainAreaId, 0, accessToken).then((firstPosts) => {
+      if (firstPosts.length === 0) {
+        setHasMore(false);
+        return;
+      }
+      setPosts(firstPosts);
+    });
     setPage(1);
   }, [mainAreaId, accessToken]);
 
@@ -73,4 +67,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;
