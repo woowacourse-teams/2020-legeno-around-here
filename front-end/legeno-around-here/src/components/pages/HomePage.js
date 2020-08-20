@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import AppBar from '../AppBar';
 import Bottom from '../Bottom';
 
-import {findCurrentPostsFromPage} from '../api/API';
-import {getAccessTokenFromCookie} from '../../util/TokenUtils';
-import {HOME} from '../../constants/BottomItems';
+import { findCurrentPostsFromPage } from '../api/API';
+import { getAccessTokenFromCookie } from '../../util/TokenUtils';
+import { HOME } from '../../constants/BottomItems';
 import PostItem from '../post/PostItem';
 import Loading from '../Loading';
 

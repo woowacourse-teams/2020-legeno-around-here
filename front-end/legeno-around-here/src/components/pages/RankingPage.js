@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 
 import Bottom from '../Bottom';
-import {RANKING} from '../../constants/BottomItems';
-import {MAIN_COLOR} from '../../constants/Color';
+import { RANKING } from '../../constants/BottomItems';
+import { MAIN_COLOR } from '../../constants/Color';
 
 const Card = styled.div`
   width: 95%;
