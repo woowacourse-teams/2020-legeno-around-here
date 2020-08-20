@@ -45,7 +45,7 @@ const SectorPage = () => {
           hasMore={hasMore}
           loader={<Loading />}
           dataLength={sectors.length}
-          endMessage={<Typography>모든 부문을 읽으셨습니다!</Typography>}
+          endMessage={<Typography>모든 부문을 확인하셨습니다!</Typography>}
         >
           {sectors && <Sectors sectors={sectors} />}
         </InfiniteScroll>
