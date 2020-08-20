@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { setAccessTokenCookie } from '../../util/TokenUtils';
 
+const HTTP_STATUS_OK = 200;
+const HTTP_STATUS_CREATED = 201;
+const HTTP_STATUS_NO_CONTENT = 204;
 const DEFAULT_SIZE = 10;
 const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
@@ -49,7 +52,7 @@ export const createPost = async (formData, accessToken) => {
   };
   try {
     const response = await axios.post(DEFAULT_URL + '/posts', formData, config);
-    if (response.status === 201) {
+    if (response.status === HTTP_STATUS_CREATED) {
       alert('전송에 성공했습니다!');
       document.location.href = response.headers.location;
     }
@@ -70,7 +73,7 @@ export const createComment = async (postId, writing, accessToken) => {
       { writing },
       config,
     );
-    if (response.status === 201) {
+    if (response.status === HTTP_STATUS_CREATED) {
       alert('댓글이 성공적으로 전송되었습니다!');
       return true;
     }
@@ -89,7 +92,7 @@ export const createPendingSector = async (sector, accessToken) => {
   };
   try {
     const response = await axios.post(DEFAULT_URL + `/sectors`, sector, config);
-    if (response.status === 201) {
+    if (response.status === HTTP_STATUS_CREATED) {
       alert(
         '신청이 완료됐습니다! 신청한 부문은 프로필에서 확인하실 수 있습니다!',
       );
@@ -113,7 +116,7 @@ export const pressPostZzang = async (postId, accessToken) => {
       {},
       config,
     );
-    if (response.status === 204) {
+    if (response.status === HTTP_STATUS_NO_CONTENT) {
       return true;
     }
   } catch (error) {
@@ -230,7 +233,7 @@ export const findAllMySector = async (accessToken) => {
   return await axios
     .get(DEFAULT_URL + '/sectors/me', config)
     .then((response) => {
-      if (response.status === 200) {
+      if (response.status === HTTP_STATUS_OK) {
         return response.data.content;
       }
     })
@@ -249,7 +252,7 @@ export const findPost = async (accessToken, postId) => {
   return await axios
     .get(DEFAULT_URL + '/posts/' + postId, config)
     .then((response) => {
-      if (response.status === 200) {
+      if (response.status === HTTP_STATUS_OK) {
         return response.data;
       }
     })
@@ -269,7 +272,7 @@ export const findCommentsByPostId = async (accessToken, postId) => {
   return await axios
     .get(DEFAULT_URL + `/posts/${postId}/comments`, config)
     .then((response) => {
-      if (response.status === 200) {
+      if (response.status === HTTP_STATUS_OK) {
         console.log('findCommentsByPostId : ' + response.data);
         return response.data;
       }
