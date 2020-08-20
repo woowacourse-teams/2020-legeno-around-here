@@ -26,6 +26,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.RankingRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
@@ -186,11 +187,11 @@ public class PostService {
     }
 
     @Transactional
-    public Page<PostWithCommentsCountResponse> searchRanking(String criteria, Pageable pageable,
-        PostSearchRequest postSearchFilter) {
+    public Page<PostWithCommentsCountResponse> searchRanking(RankingRequest rankingRequest,
+        Pageable pageable, PostSearchRequest postSearchFilter) {
         Page<Post> allDateZzangPosts = getPostByFilter(pageable, postSearchFilter.toPostSearch());
-        List<Post> filteredDateZzangPosts = getPostsThatZzangFilteredByDate(criteria,
-            allDateZzangPosts);
+        List<Post> filteredDateZzangPosts
+            = getPostsThatZzangFilteredByDate(rankingRequest.getCriteria(), allDateZzangPosts);
         Collections.reverse(filteredDateZzangPosts);
 
         User user = (User) authenticationFacade.getPrincipal();

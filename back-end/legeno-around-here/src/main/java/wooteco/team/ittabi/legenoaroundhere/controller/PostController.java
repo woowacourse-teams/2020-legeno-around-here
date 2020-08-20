@@ -17,6 +17,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.RankingRequest;
 import wooteco.team.ittabi.legenoaroundhere.service.PostService;
 
 @RestController
@@ -72,13 +73,11 @@ public class PostController {
             .build();
     }
 
-    @GetMapping("/ranking/{criteria}")
+    @GetMapping("/ranking")
     public ResponseEntity<Page<PostWithCommentsCountResponse>> searchAllRanking(
-        @PathVariable String criteria,
-        PageRequest pageRequest, PostSearchRequest postSearchRequest) {
+        PageRequest pageRequest, RankingRequest rankingRequest, PostSearchRequest postSearchRequest) {
         Page<PostWithCommentsCountResponse> posts
-            = postService.searchRanking(criteria, pageRequest.getPageable(), postSearchRequest);
-
+            = postService.searchRanking(rankingRequest, pageRequest.getPageable(), postSearchRequest);
         return ResponseEntity
             .ok()
             .body(posts);

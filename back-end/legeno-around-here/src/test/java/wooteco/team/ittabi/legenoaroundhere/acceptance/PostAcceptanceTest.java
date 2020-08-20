@@ -298,53 +298,52 @@ public class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void searchRanking() {
         String filter;
+        List<PostWithCommentsCountResponse> rankingPostResponse;
 
         //랭킹 조회를 위한 글 생성
         makePosts();
 
         // 모든 지역, 모든 부문 필터 설정
         filter = "areaIds=&sectorIds=";
-        // 모든 지역, 모든 부문에 대해서 전일 랭킹을 조회
-        searchRanks(accessTokenA, RankingCriteria.YESTERDAY, filter);
-        // 모든 지역, 모든 부문에 대해서 전주 랭킹을 조회
-        searchRanks(accessTokenA, RankingCriteria.LAST_WEEK, filter);
-        // 모든 지역, 모든 부문에 대해서 전달 랭킹을 조회
-        searchRanks(accessTokenA, RankingCriteria.LAST_MONTH, filter);
-        // 모든 지역, 모든 부문에 대해서 누적 랭킹을 조회
-        searchRanks(accessTokenA, RankingCriteria.TOTAL, filter);
+        // 모든 지역, 모든 부문에 대해서 랭킹을 조회
+        rankingPostResponse = searchRanks(accessToken, RankingCriteria.TOTAL, filter);
+        assertThat(rankingPostResponse).hasSize(4);
+        assertThat(rankingPostResponse.get(0).getId()).isEqualTo(firstPostId);
+        assertThat(rankingPostResponse.get(0).getZzang().getCount()).isEqualTo(3);
+        assertThat(rankingPostResponse.get(1).getId()).isEqualTo(secondPostId);
+        assertThat(rankingPostResponse.get(1).getZzang().getCount()).isEqualTo(2);
+        assertThat(rankingPostResponse.get(2).getId()).isEqualTo(thirdPostId);
+        assertThat(rankingPostResponse.get(2).getZzang().getCount()).isEqualTo(1);
+        assertThat(rankingPostResponse.get(3).getId()).isEqualTo(fourthPostId);
+        assertThat(rankingPostResponse.get(3).getZzang().getCount()).isEqualTo(0);
 
         // 모든 지역, 특정 부문 필터 설정
-        filter = "areaIds=&sectorIds="+sectorAId;
-        // 모든 지역, 특정 부문에 대해서 전일 랭킹을 조회
-        searchRanks(accessTokenA, RankingCriteria.YESTERDAY, filter);
-        // 모든 지역, 특정 부문에 대해서 전주 랭킹을 조회
-        searchRanks(accessTokenA, RankingCriteria.LAST_WEEK, filter);
-        // 모든 지역, 특정 부문에 대해서 전달 랭킹을 조회
-        searchRanks(accessTokenA, RankingCriteria.LAST_MONTH, filter);
-        // 모든 지역, 특정 부문에 대해서 누적 랭킹을 조회
-        searchRanks(accessTokenA, RankingCriteria.TOTAL, filter);
+        filter = "areaIds=&sectorIds=" + sectorAId;
+        // 모든 지역, 특정 부문에 대해서 랭킹을 조회
+        rankingPostResponse = searchRanks(accessToken, RankingCriteria.TOTAL, filter);
+        assertThat(rankingPostResponse).hasSize(2);
+        assertThat(rankingPostResponse.get(0).getId()).isEqualTo(firstPostId);
+        assertThat(rankingPostResponse.get(0).getZzang().getCount()).isEqualTo(3);
+        assertThat(rankingPostResponse.get(1).getId()).isEqualTo(thirdPostId);
+        assertThat(rankingPostResponse.get(1).getZzang().getCount()).isEqualTo(1);
 
         // 특정 지역, 모든 부문 필터 설정
-        filter = "areaIds="+TEST_AREA_A_ID+"&sectorIds=";
-        // 특정 지역, 모든 부문에 대해서 전일 랭킹을 조회
-        searchRanks(accessTokenA, RankingCriteria.YESTERDAY, filter);
-        // 특정 지역, 모든 부문에 대해서 전주 랭킹을 조회
-        searchRanks(accessTokenA, RankingCriteria.LAST_WEEK, filter);
-        // 특정 지역, 모든 부문에 대해서 전달 랭킹을 조회
-        searchRanks(accessTokenA, RankingCriteria.LAST_MONTH, filter);
-        // 특정 지역, 모든 부문에 대해서 누적 랭킹을 조회
-        searchRanks(accessTokenA, RankingCriteria.TOTAL, filter);
+        filter = "areaIds=" + TEST_AREA_A_ID + "&sectorIds=";
+        // 특정 지역, 모든 부문에 대해서 랭킹을 조회
+        rankingPostResponse = searchRanks(accessToken, RankingCriteria.TOTAL, filter);
+        assertThat(rankingPostResponse).hasSize(2);
+        assertThat(rankingPostResponse.get(0).getId()).isEqualTo(firstPostId);
+        assertThat(rankingPostResponse.get(0).getZzang().getCount()).isEqualTo(3);
+        assertThat(rankingPostResponse.get(1).getId()).isEqualTo(secondPostId);
+        assertThat(rankingPostResponse.get(1).getZzang().getCount()).isEqualTo(2);
 
         // 특정 지역, 특정 부문 필터 설정
-        filter = "areaIds="+TEST_AREA_B_ID+"&sectorIds="+sectorBId;
-        // 특정 지역, 특정 부문에 대해서 전일 랭킹을 조회
-        searchRanks(accessTokenA, RankingCriteria.YESTERDAY, filter);
-        // 특정 지역, 특정 부문에 대해서 전주 랭킹을 조회
-        searchRanks(accessTokenA, RankingCriteria.LAST_WEEK, filter);
-        // 특정 지역, 특정 부문에 대해서 전달 랭킹을 조회
-        searchRanks(accessTokenA, RankingCriteria.LAST_MONTH, filter);
-        // 특정 지역, 특정 부문에 대해서 누적 랭킹을 조회
-        searchRanks(accessTokenA, RankingCriteria.TOTAL, filter);
+        filter = "areaIds=" + TEST_AREA_B_ID + "&sectorIds=" + sectorBId;
+        // 특정 지역, 특정 부문에 대해서 랭킹을 조회
+        rankingPostResponse = searchRanks(accessToken, RankingCriteria.TOTAL, filter);
+        assertThat(rankingPostResponse).hasSize(1);
+        assertThat(rankingPostResponse.get(0).getId()).isEqualTo(fourthPostId);
+        assertThat(rankingPostResponse.get(0).getZzang().getCount()).isEqualTo(0);
     }
 
     private void makePosts() {
@@ -352,37 +351,37 @@ public class PostAcceptanceTest extends AcceptanceTest {
         sectorBId = createSector(adminToken, "TEST_B");
 
         //좋아요를 3개 받은 TEST_AREA_A 지역 TEST_A 부문 글 생성
-        String firstPostLocation = createPostWithoutImageWithAreaAndSector(accessTokenA,
+        String firstPostLocation = createPostWithoutImageWithAreaAndSector(accessToken,
             TEST_AREA_A_ID,
             sectorAId);
         firstPostId = getIdFromUrl(firstPostLocation);
-        PostResponse firstPost = findPost(accessTokenA, firstPostId);
+        PostResponse firstPost = findPost(accessToken, firstPostId);
 
         pressPostZzang(accessTokenA, firstPost.getId());
         pressPostZzang(accessTokenB, firstPost.getId());
         pressPostZzang(accessTokenC, firstPost.getId());
 
         //좋아요를 2개 받은 TEST_AREA_A 지역 TEST_B 부문 글 생성
-        String secondPostLocation = createPostWithoutImageWithAreaAndSector(accessTokenA,
+        String secondPostLocation = createPostWithoutImageWithAreaAndSector(accessToken,
             TEST_AREA_A_ID,
             sectorBId);
         secondPostId = getIdFromUrl(secondPostLocation);
-        PostResponse secondPost = findPost(accessTokenA, secondPostId);
+        PostResponse secondPost = findPost(accessToken, secondPostId);
 
         pressPostZzang(accessTokenA, secondPost.getId());
         pressPostZzang(accessTokenB, secondPost.getId());
 
-        //좋아요를 1개 받은 TEST_AREA_B 지역 TEST_B 부문 글 생성
-        String thirdPostLocation = createPostWithoutImageWithAreaAndSector(accessTokenA,
+        //좋아요를 1개 받은 TEST_AREA_B 지역 TEST_A 부문 글 생성
+        String thirdPostLocation = createPostWithoutImageWithAreaAndSector(accessToken,
             TEST_AREA_B_ID,
-            sectorBId);
+            sectorAId);
         thirdPostId = getIdFromUrl(thirdPostLocation);
-        PostResponse thirdPost = findPost(accessTokenA, thirdPostId);
+        PostResponse thirdPost = findPost(accessToken, thirdPostId);
 
         pressPostZzang(accessTokenA, thirdPost.getId());
 
         //좋아요를 0개 받은 TEST_AREA_B 지역 TEST_B 부문 글 생성
-        String fourthPostLocation = createPostWithoutImageWithAreaAndSector(accessTokenA,
+        String fourthPostLocation = createPostWithoutImageWithAreaAndSector(accessToken,
             TEST_AREA_B_ID,
             sectorBId);
         fourthPostId = getIdFromUrl(fourthPostLocation);
@@ -580,17 +579,19 @@ public class PostAcceptanceTest extends AcceptanceTest {
             .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    private List<PostResponse> searchRanks(String accessToken, RankingCriteria rankingCriteria,
+    private List<PostWithCommentsCountResponse> searchRanks(String accessToken,
+        RankingCriteria rankingCriteria,
         String filter) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
             .when()
-            .get("/ranks/" + rankingCriteria.getCriteriaName() + "&" + filter)
+            .get("/posts/ranking?page=0&size=50&sortedBy=id&direction=asc&criteria="
+                + rankingCriteria.getCriteriaName() + "&" + filter)
             .then()
             .statusCode(HttpStatus.OK.value())
             .extract()
             .jsonPath()
-            .getList("content", PostResponse.class);
+            .getList("content", PostWithCommentsCountResponse.class);
     }
 }

@@ -38,6 +38,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostZzangResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.RankingRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
@@ -410,11 +411,11 @@ public class PostServiceTest extends ServiceTest {
         postService.pressZzang(postIdA);
         postService.pressZzang(postIdA);
 
+        RankingRequest rankingRequest = new RankingRequest(TOTAL.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             null, null);
         Page<PostWithCommentsCountResponse> posts
-            = postService
-            .searchRanking(TOTAL.getCriteriaName(), Pageable.unpaged(), postSearchRequest);
+            = postService.searchRanking(rankingRequest, Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(4);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdB);
@@ -479,11 +480,11 @@ public class PostServiceTest extends ServiceTest {
         postC.getZzangs().get(1).setCreatedAt(LocalDateTime.now().minusDays(1));
         postC.getZzangs().get(2).setCreatedAt(LocalDateTime.now().minusDays(1));
 
+        RankingRequest rankingRequest = new RankingRequest(YESTERDAY.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             null, null);
         Page<PostWithCommentsCountResponse> posts
-            = postService
-            .searchRanking(YESTERDAY.getCriteriaName(), Pageable.unpaged(), postSearchRequest);
+            = postService.searchRanking(rankingRequest, Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(4);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdC);
@@ -546,11 +547,11 @@ public class PostServiceTest extends ServiceTest {
         postC.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusWeeks(1));
         postC.getZzangs().get(1).setCreatedAt(LocalDateTime.now().minusWeeks(1));
 
+        RankingRequest rankingRequest = new RankingRequest(LAST_WEEK.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             null, null);
         Page<PostWithCommentsCountResponse> posts
-            = postService
-            .searchRanking(LAST_WEEK.getCriteriaName(), Pageable.unpaged(), postSearchRequest);
+            = postService.searchRanking(rankingRequest, Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(4);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdC);
@@ -611,11 +612,11 @@ public class PostServiceTest extends ServiceTest {
         postA.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusMonths(1));
         postD.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusMonths(1));
 
+        RankingRequest rankingRequest = new RankingRequest(LAST_MONTH.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             null, null);
         Page<PostWithCommentsCountResponse> posts
-            = postService
-            .searchRanking(LAST_MONTH.getCriteriaName(), Pageable.unpaged(), postSearchRequest);
+            = postService.searchRanking(rankingRequest, Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(4);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdD);
@@ -663,11 +664,11 @@ public class PostServiceTest extends ServiceTest {
         postService.pressZzang(postIdA);
         postService.pressZzang(postIdA);
 
+        RankingRequest rankingRequest = new RankingRequest(TOTAL.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             null, String.valueOf(sectorId));
         Page<PostWithCommentsCountResponse> posts
-            = postService
-            .searchRanking(TOTAL.getCriteriaName(), Pageable.unpaged(), postSearchRequest);
+            = postService.searchRanking(rankingRequest, Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdC);
@@ -735,11 +736,11 @@ public class PostServiceTest extends ServiceTest {
         postC.getZzangs().get(1).setCreatedAt(LocalDateTime.now().minusDays(1));
         postC.getZzangs().get(2).setCreatedAt(LocalDateTime.now().minusDays(1));
 
+        RankingRequest rankingRequest = new RankingRequest(YESTERDAY.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             null, String.valueOf(sectorId));
         Page<PostWithCommentsCountResponse> posts
-            = postService
-            .searchRanking(YESTERDAY.getCriteriaName(), Pageable.unpaged(), postSearchRequest);
+            = postService.searchRanking(rankingRequest, Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
@@ -800,11 +801,11 @@ public class PostServiceTest extends ServiceTest {
         postA.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusWeeks(1));
         postA.getZzangs().get(1).setCreatedAt(LocalDateTime.now().minusWeeks(1));
 
+        RankingRequest rankingRequest = new RankingRequest(LAST_WEEK.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             null, String.valueOf(sectorId));
         Page<PostWithCommentsCountResponse> posts
-            = postService
-            .searchRanking(LAST_WEEK.getCriteriaName(), Pageable.unpaged(), postSearchRequest);
+            = postService.searchRanking(rankingRequest, Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdC);
@@ -863,11 +864,11 @@ public class PostServiceTest extends ServiceTest {
         postA.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusMonths(1));
         postD.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusMonths(1));
 
+        RankingRequest rankingRequest = new RankingRequest(LAST_MONTH.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             null, String.valueOf(sectorId));
         Page<PostWithCommentsCountResponse> posts
-            = postService
-            .searchRanking(LAST_MONTH.getCriteriaName(), Pageable.unpaged(), postSearchRequest);
+            = postService.searchRanking(rankingRequest, Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
@@ -913,11 +914,11 @@ public class PostServiceTest extends ServiceTest {
         postService.pressZzang(postIdA);
         postService.pressZzang(postIdA);
 
+        RankingRequest rankingRequest = new RankingRequest(TOTAL.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             String.valueOf(TEST_AREA_ID), null);
         Page<PostWithCommentsCountResponse> posts
-            = postService
-            .searchRanking(TOTAL.getCriteriaName(), Pageable.unpaged(), postSearchRequest);
+            = postService.searchRanking(rankingRequest, Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdB);
@@ -980,11 +981,11 @@ public class PostServiceTest extends ServiceTest {
         postC.getZzangs().get(1).setCreatedAt(LocalDateTime.now().minusDays(1));
         postC.getZzangs().get(2).setCreatedAt(LocalDateTime.now().minusDays(1));
 
+        RankingRequest rankingRequest = new RankingRequest(YESTERDAY.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             String.valueOf(TEST_AREA_ID), null);
         Page<PostWithCommentsCountResponse> posts
-            = postService
-            .searchRanking(YESTERDAY.getCriteriaName(), Pageable.unpaged(), postSearchRequest);
+            = postService.searchRanking(rankingRequest, Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdB);
@@ -1045,11 +1046,11 @@ public class PostServiceTest extends ServiceTest {
         postC.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusWeeks(1));
         postC.getZzangs().get(1).setCreatedAt(LocalDateTime.now().minusWeeks(1));
 
+        RankingRequest rankingRequest = new RankingRequest(LAST_WEEK.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             String.valueOf(TEST_AREA_ID), null);
         Page<PostWithCommentsCountResponse> posts
-            = postService
-            .searchRanking(LAST_WEEK.getCriteriaName(), Pageable.unpaged(), postSearchRequest);
+            = postService.searchRanking(rankingRequest, Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
@@ -1108,11 +1109,11 @@ public class PostServiceTest extends ServiceTest {
         postA.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusMonths(1));
         postD.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusMonths(1));
 
+        RankingRequest rankingRequest = new RankingRequest(LAST_MONTH.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             String.valueOf(TEST_AREA_ID), null);
         Page<PostWithCommentsCountResponse> posts
-            = postService
-            .searchRanking(LAST_MONTH.getCriteriaName(), Pageable.unpaged(), postSearchRequest);
+            = postService.searchRanking(rankingRequest, Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
@@ -1158,11 +1159,11 @@ public class PostServiceTest extends ServiceTest {
         postService.pressZzang(postIdA);
         postService.pressZzang(postIdA);
 
+        RankingRequest rankingRequest = new RankingRequest(TOTAL.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             String.valueOf(TEST_AREA_ID), String.valueOf(sectorId));
         Page<PostWithCommentsCountResponse> posts
-            = postService
-            .searchRanking(TOTAL.getCriteriaName(), Pageable.unpaged(), postSearchRequest);
+            = postService.searchRanking(rankingRequest, Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
@@ -1225,11 +1226,11 @@ public class PostServiceTest extends ServiceTest {
         postC.getZzangs().get(1).setCreatedAt(LocalDateTime.now().minusDays(1));
         postC.getZzangs().get(2).setCreatedAt(LocalDateTime.now().minusDays(1));
 
+        RankingRequest rankingRequest = new RankingRequest(YESTERDAY.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             String.valueOf(TEST_AREA_ID), String.valueOf(sectorId));
         Page<PostWithCommentsCountResponse> posts
-            = postService
-            .searchRanking(YESTERDAY.getCriteriaName(), Pageable.unpaged(), postSearchRequest);
+            = postService.searchRanking(rankingRequest, Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
@@ -1290,11 +1291,11 @@ public class PostServiceTest extends ServiceTest {
         postC.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusWeeks(1));
         postC.getZzangs().get(1).setCreatedAt(LocalDateTime.now().minusWeeks(1));
 
+        RankingRequest rankingRequest = new RankingRequest(LAST_WEEK.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             String.valueOf(TEST_AREA_ID), String.valueOf(sectorId));
         Page<PostWithCommentsCountResponse> posts
-            = postService
-            .searchRanking(LAST_WEEK.getCriteriaName(), Pageable.unpaged(), postSearchRequest);
+            = postService.searchRanking(rankingRequest, Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
@@ -1353,11 +1354,11 @@ public class PostServiceTest extends ServiceTest {
         postA.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusMonths(1));
         postD.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusMonths(1));
 
+        RankingRequest rankingRequest = new RankingRequest(LAST_MONTH.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             String.valueOf(TEST_AREA_ID), String.valueOf(sectorId));
         Page<PostWithCommentsCountResponse> posts
-            = postService
-            .searchRanking(LAST_MONTH.getCriteriaName(), Pageable.unpaged(), postSearchRequest);
+            = postService.searchRanking(rankingRequest, Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdD);
