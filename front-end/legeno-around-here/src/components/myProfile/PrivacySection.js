@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import {Link} from "react-router-dom";
 
 import {MAIN_COLOR} from '../../constants/Color';
 
@@ -38,7 +39,7 @@ export const PrivacyBox = styled.div`
   text-align: left;
 `;
 
-export const PrivacyEditBox = styled.div`
+export const PrivacyEditBox = styled(Link)`
   margin-left: auto;
   padding-right: 10px;
   font-size: 15px;
