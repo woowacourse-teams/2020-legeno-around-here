@@ -4,7 +4,7 @@ import { setAccessTokenCookie } from '../../util/TokenUtils';
 const DEFAULT_SIZE = 10;
 const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
-const DEFAULT_URL = 'https://back.capzzang.co.kr';
+const DEFAULT_URL = 'http://localhost:8080';
 
 export const loginUser = (email, password, handleReset) => {
   axios
@@ -103,25 +103,19 @@ export const pressPostZzang = async (postId, accessToken) => {
   return false;
 };
 
-export const findMyInfo = ({
-  accessToken,
-  setEmail,
-  setNickname,
-  setProfilePhotoUrl,
-}) => {
+export const findMyInfo = async (accessToken) => {
   const config = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       'X-Auth-Token': accessToken,
     },
   };
-  axios
+  return await axios
     .get(DEFAULT_URL + '/users/myinfo', config)
-    .then(async (response) => {
-      const userResponse = await response.data;
-      setEmail(userResponse.email);
-      setNickname(userResponse.nickname);
-      setProfilePhotoUrl(userResponse.image.url);
+    .then((response) => {
+      if (response.status === 200) {
+        return response.data;
+      }
     })
     .catch((error) => {
       alert(`회원정보를 가져올 수 없습니다.${error}`);
