@@ -11,21 +11,21 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PageableAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.RankingRequest;
-import wooteco.team.ittabi.legenoaroundhere.service.PostService;
+import wooteco.team.ittabi.legenoaroundhere.service.RankingService;
 
 @RestController
 @RequestMapping("/ranking")
 @AllArgsConstructor
 public class RankingController {
 
-    private final PostService postService;
+    private final RankingService rankingService;
 
     @GetMapping
     public ResponseEntity<Page<PostWithCommentsCountResponse>> searchAllRanking(
         PageRequest pageRequest, RankingRequest rankingRequest,
         PostSearchRequest postSearchRequest) {
         Page<PostWithCommentsCountResponse> posts
-            = postService.searchRanking(PageableAssembler.assemble(pageRequest), rankingRequest,
+            = rankingService.searchRanking(PageableAssembler.assemble(pageRequest), rankingRequest,
             postSearchRequest);
 
         return ResponseEntity
