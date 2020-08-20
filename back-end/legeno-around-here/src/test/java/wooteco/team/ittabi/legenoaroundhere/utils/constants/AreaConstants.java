@@ -8,7 +8,7 @@ public class AreaConstants {
     public static final String TEST_AREA_SECOND_DEPTH_NAME = "AreaSecondDepthName";
     public static final String TEST_AREA_THIRD_DEPTH_NAME = "AreaThirdDepthName";
     public static final String TEST_AREA_FOURTH_DEPTH_NAME = "AreaFourthDepthName";
-    public static final Boolean TEST_AREA_USED = true;
 
-    public static final Long TEST_AREA_OTHER_ID = 2L;
+    public static final Long TEST_AREA_SUB_ID = 2L;
+    public static final Long TEST_AREA_OTHER_ID = 493L;
 }

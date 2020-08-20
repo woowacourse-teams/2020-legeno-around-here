@@ -11,10 +11,10 @@ import lombok.ToString;
 @Setter
 @EqualsAndHashCode
 @ToString
-public class PageRequest {
+public class UserUpdateRequest {
 
-    private Integer page;
-    private Integer size;
-    private String sortedBy;
-    private String direction;
+    private String nickname;
+    private String password;
+    private Long areaId;
+    private Long imageId;
 }

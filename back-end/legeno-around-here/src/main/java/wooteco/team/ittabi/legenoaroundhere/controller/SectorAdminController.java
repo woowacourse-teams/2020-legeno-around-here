@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PageRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PageableAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorUpdateStateRequest;
@@ -29,6 +30,7 @@ public class SectorAdminController {
     @PostMapping
     public ResponseEntity<Void> createSector(@RequestBody SectorRequest sectorRequest) {
         SectorResponse sector = sectorService.createSector(sectorRequest);
+
         return ResponseEntity
             .created(URI.create("/sectors/" + sector.getId()))
             .build();
@@ -37,13 +39,15 @@ public class SectorAdminController {
     @GetMapping("/{id}")
     public ResponseEntity<AdminSectorResponse> findSector(@PathVariable Long id) {
         AdminSectorResponse sector = sectorService.findSector(id);
+
         return ResponseEntity
             .ok(sector);
     }
 
     @GetMapping
     public ResponseEntity<Page<AdminSectorResponse>> findAllSector(PageRequest pageRequest) {
-        Page<AdminSectorResponse> sectors = sectorService.findAllSector(pageRequest.getPageable());
+        Page<AdminSectorResponse> sectors
+            = sectorService.findAllSector(PageableAssembler.assemble(pageRequest));
 
         return ResponseEntity
             .ok(sectors);
@@ -53,6 +57,7 @@ public class SectorAdminController {
     public ResponseEntity<Void> updateSector(@PathVariable Long id,
         @RequestBody SectorRequest sectorRequest) {
         sectorService.updateSector(id, sectorRequest);
+
         return ResponseEntity
             .ok()
             .build();
@@ -61,6 +66,7 @@ public class SectorAdminController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSector(@PathVariable Long id) {
         sectorService.deleteSector(id);
+
         return ResponseEntity
             .noContent()
             .build();
