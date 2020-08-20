@@ -27,11 +27,6 @@ const Home = () => {
           return;
         }
         setPosts(firstPosts);
-      })
-      .catch((errorResponse) => {
-        if (errorResponse.status === 403) {
-          document.location.href = '/login';
-        }
       });
     setPage(1);
   }, [mainAreaId, accessToken]);

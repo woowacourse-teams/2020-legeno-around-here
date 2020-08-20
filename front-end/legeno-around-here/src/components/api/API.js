@@ -160,9 +160,6 @@ export const findCurrentPostsFromPage = async (
     .catch((error) => {
       redirectLoginWhenUnauthorized(error);
       console.log(`## 최근 글을 가져올 수 없습니다.`);
-      console.log(`status code : ${error.response.status}`);
-      console.log(`response 전체 : ${error.response}`);
-      throw error.response;
     });
 };
 

@@ -1,9 +1,9 @@
 import React from 'react';
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import {BrowserRouter, Redirect, Route, Switch} from 'react-router-dom';
 import Join from './components/pages/Join';
 import Login from './components/pages/Login';
 import PostingPage from './components/pages/posting/PostingPage';
-import MyProfile from './components/pages/MyProfile';
+import MyProfilePage from './components/pages/myProfile/MyProfilePage';
 import SectorPage from './components/pages/sector/SectorPage';
 import PostDetailPage from './components/pages/post/PostDetailPage';
 import Home from './components/pages/Home';
@@ -23,7 +23,7 @@ function App() {
         <Route path="/" exact component={Home} />
         <Route path="/join" exact component={Join} />
         <Route path="/login" exact component={Login} />
-        <Route path="/myProfile" exact component={MyProfile} />
+        <Route path="/myProfile" exact component={MyProfilePage} />
         <Route path="/posting" exact component={PostingPage} />
         <Route path="/sector" exact component={SectorPage} />
         <Route path="/posts/:postId" exact component={PostDetailPage} />
