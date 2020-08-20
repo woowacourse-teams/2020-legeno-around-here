@@ -104,8 +104,8 @@ public class Post extends BaseEntity {
 
     private boolean isDateBetween(LocalDateTime targetDate, LocalDateTime startDate,
         LocalDateTime endDate) {
-        return ((targetDate.isAfter(startDate))
-            && (targetDate.isBefore(endDate)));
+        return targetDate.isAfter(startDate)
+            && targetDate.isBefore(endDate);
     }
 
     public PostZzang findPostZzangBy(User user) {
