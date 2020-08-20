@@ -18,7 +18,7 @@ export const loginUser = (email, password, handleReset) => {
       alert('로그인되었습니다.');
       document.location.href = '/home';
     })
-    .catch(() => {
+    .catch((error) => {
       alert('로그인에 실패하였습니다.');
       handleReset();
     });
@@ -35,7 +35,7 @@ export const createUser = (email, nickname, password, handleReset) => {
       alert('회원가입을 축하드립니다.');
       document.location.href = '/login';
     })
-    .catch(() => {
+    .catch((error) => {
       alert('회원가입에 실패하였습니다.');
       handleReset();
     });
@@ -124,12 +124,13 @@ export const findMyInfo = ({
       const userResponse = await response.data;
       setEmail(userResponse.email);
       setNickname(userResponse.nickname);
-      setProfilePhotoUrl(userResponse.image.url);
+      if (userResponse.image) {
+        setProfilePhotoUrl(userResponse.image.url);
+      }
     })
     .catch((error) => {
       redirectLoginWhenUnauthorized(error);
       alert(`회원정보를 가져올 수 없습니다.${error}`);
-      document.location.href = '/';
     });
 };
 
@@ -250,7 +251,7 @@ export const findCommentsByPostId = async (accessToken, postId) => {
 };
 
 const redirectLoginWhenUnauthorized = (error) => {
-  if (error.response.status === 403) {
+  if (error.response && error.response.status === 403) {
     document.location.href = '/login';
   }
 };
