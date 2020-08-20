@@ -6,7 +6,7 @@ import {PROFILE} from '../../../constants/BottomItems';
 import {findMyInfo} from '../../api/API';
 import Loading from '../../Loading';
 import {getAccessTokenFromCookie} from '../../../util/TokenUtils';
-import {Email, Nickname, PrivacyBox,} from '../../myProfile/PrivacySection';
+import {Email, Nickname, PrivacyBox} from '../../myProfile/PrivacySection';
 import Typography from '@material-ui/core/Typography';
 import PhotoEditSection from './PhotoEditSection';
 
