@@ -21,7 +21,7 @@ export const loginUser = (email, password, handleReset) => {
       alert('로그인되었습니다.');
       document.location.href = '/home';
     })
-    .catch(() => {
+    .catch((error) => {
       alert('로그인에 실패하였습니다.');
       handleReset();
     });
@@ -38,7 +38,7 @@ export const createUser = (email, nickname, password, handleReset) => {
       alert('회원가입을 축하드립니다.');
       document.location.href = '/login';
     })
-    .catch(() => {
+    .catch((error) => {
       alert('회원가입에 실패하였습니다.');
       handleReset();
     });
@@ -56,8 +56,9 @@ export const createPost = async (formData, accessToken) => {
       alert('전송에 성공했습니다!');
       document.location.href = response.headers.location;
     }
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
+    redirectLoginWhenUnauthorized(error);
+    console.log(error);
   }
 };
 
@@ -78,6 +79,7 @@ export const createComment = async (postId, writing, accessToken) => {
       return true;
     }
   } catch (error) {
+    redirectLoginWhenUnauthorized(error);
     alert('댓글이 작성되지 않았습니다! 다시 작성해주세요!');
     console.log(error);
   }
@@ -120,6 +122,7 @@ export const pressPostZzang = async (postId, accessToken) => {
       return true;
     }
   } catch (error) {
+    redirectLoginWhenUnauthorized(error);
     alert('짱이 눌러지지 않았습니다! 다시 작성해주세요!');
     console.log(error);
   }
@@ -145,11 +148,13 @@ export const findMyInfo = ({
       console.log(userResponse);
       setEmail(userResponse.email);
       setNickname(userResponse.nickname);
-      setProfilePhotoUrl(userResponse.image);
+      if (userResponse.image) {
+        setProfilePhotoUrl(userResponse.image.url);
+      }
     })
     .catch((error) => {
+      redirectLoginWhenUnauthorized(error);
       alert(`회원정보를 가져올 수 없습니다.${error}`);
-      document.location.href = '/';
     });
 };
 
@@ -177,10 +182,8 @@ export const findCurrentPostsFromPage = async (
     )
     .then((response) => response.data.content)
     .catch((error) => {
+      redirectLoginWhenUnauthorized(error);
       console.log(`## 최근 글을 가져올 수 없습니다.`);
-      console.log(`status code : ${error.response.status}`);
-      console.log(`response 전체 : ${error.response}`);
-      throw error.response;
     });
 };
 
@@ -205,6 +208,7 @@ export const findAllAreas = async (page, accessToken, keyword) => {
       return response.data.content;
     })
     .catch((error) => {
+      redirectLoginWhenUnauthorized(error);
       throw error.response;
     });
 };
@@ -219,6 +223,7 @@ export const findAllSectors = async (accessToken) => {
   const response = await axios
     .get(DEFAULT_URL + '/sectors?size=50', config)
     .catch((error) => {
+      redirectLoginWhenUnauthorized(error);
       alert(`부문정보를 가져올 수 없습니다.${error}`);
     });
   return response.data.content;
@@ -257,6 +262,7 @@ export const findPost = async (accessToken, postId) => {
       }
     })
     .catch((error) => {
+      redirectLoginWhenUnauthorized(error);
       alert(`자랑글을 가져올 수 없습니다.${error}`);
       document.location.href = '/';
     });
@@ -278,6 +284,13 @@ export const findCommentsByPostId = async (accessToken, postId) => {
       }
     })
     .catch((error) => {
+      redirectLoginWhenUnauthorized(error);
       alert(`해당 글의 댓글을 가져올 수 없습니다.${error}`);
     });
+};
+
+const redirectLoginWhenUnauthorized = (error) => {
+  if (error.response && error.response.status === 403) {
+    document.location.href = '/login';
+  }
 };
