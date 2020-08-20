@@ -4,7 +4,7 @@ import { setAccessTokenCookie } from '../../util/TokenUtils';
 const DEFAULT_SIZE = 10;
 const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
-const DEFAULT_URL = 'http://localhost:8080';
+const DEFAULT_URL = 'https://back.capzzang.co.kr';
 
 export const loginUser = (email, password, handleReset) => {
   axios
@@ -90,8 +90,9 @@ export const createPendingSector = async (sector, accessToken) => {
   try {
     const response = await axios.post(DEFAULT_URL + `/sectors`, sector, config);
     if (response.status === 201) {
-      console.log(response);
-      alert('신청이 완료됐습니다!');
+      alert(
+        '신청이 완료됐습니다! 신청한 부문은 프로필에서 확인하실 수 있습니다!',
+      );
       return response.data;
     }
   } catch (error) {
@@ -218,6 +219,24 @@ export const findAllSectors = async (accessToken) => {
       alert(`부문정보를 가져올 수 없습니다.${error}`);
     });
   return response.data.content;
+};
+
+export const findAllMySector = async (accessToken) => {
+  const config = {
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
+  };
+  return await axios
+    .get(DEFAULT_URL + '/sectors/me', config)
+    .then((response) => {
+      if (response.status === 200) {
+        return response.data.content;
+      }
+    })
+    .catch((error) => {
+      alert(`유저의 부문을 가져올 수 없습니다.${error}`);
+    });
 };
 
 export const findPost = async (accessToken, postId) => {
