@@ -103,7 +103,7 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void createPostWithImage_SuccessToCreate() throws IOException {
         MultipartFile multipartFile
-            = FileConverter.convert("right_image1.jpg", TEST_IMAGE_CONTENT_TYPE);
+            = FileConverter.convert("image1.jpg", TEST_IMAGE_CONTENT_TYPE);
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
             Collections.singletonList(multipartFile), TEST_AREA_ID, sectorId);
 

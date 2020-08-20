@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import wooteco.team.ittabi.legenoaroundhere.dto.AreaResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PageRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PageableAssembler;
 import wooteco.team.ittabi.legenoaroundhere.service.AreaService;
 
 @RestController
@@ -21,7 +22,9 @@ public class AreaController {
     @GetMapping
     public ResponseEntity<Page<AreaResponse>> searchAllArea(PageRequest pageRequest,
         @RequestParam(defaultValue = "") String keyword) {
-        Page<AreaResponse> areas = areaService.searchAllArea(pageRequest.getPageable(), keyword);
+        Page<AreaResponse> areas
+            = areaService.searchAllArea(PageableAssembler.assemble(pageRequest), keyword);
+
         return ResponseEntity
             .ok(areas);
     }

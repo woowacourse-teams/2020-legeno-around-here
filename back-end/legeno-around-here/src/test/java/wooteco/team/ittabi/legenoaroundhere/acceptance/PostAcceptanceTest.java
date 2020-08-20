@@ -8,11 +8,12 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_OTHER_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_SUB_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_DIR;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_OTHER_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_PASSWORD;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
@@ -408,25 +409,8 @@ public class PostAcceptanceTest extends AcceptanceTest {
     }
 
     private String getCreateAdminToken() {
-        createAdmin();
         TokenResponse tokenResponse = login(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD);
         return tokenResponse.getAccessToken();
-    }
-
-    private void createAdmin() {
-        Map<String, String> params = new HashMap<>();
-        params.put("email", TEST_ADMIN_EMAIL);
-        params.put("nickname", TEST_ADMIN_NICKNAME);
-        params.put("password", TEST_ADMIN_PASSWORD);
-
-        given()
-            .body(params)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/joinAdmin")
-            .then()
-            .statusCode(HttpStatus.CREATED.value());
     }
 
     private SectorResponse findAvailableSector(String accessToken, Long id) {
@@ -554,8 +538,8 @@ public class PostAcceptanceTest extends AcceptanceTest {
         return given()
             .log().all()
             .formParam("writing", TEST_POST_WRITING)
-            .multiPart("images", new File(TEST_IMAGE_DIR + "right_image1.jpg"))
-            .multiPart("images", new File(TEST_IMAGE_DIR + "right_image2.jpg"))
+            .multiPart("images", new File(TEST_IMAGE_DIR + TEST_IMAGE_NAME))
+            .multiPart("images", new File(TEST_IMAGE_DIR + TEST_IMAGE_OTHER_NAME))
             .formParam("areaId", TEST_AREA_ID)
             .formParam("sectorId", sectorId)
             .header("X-AUTH-TOKEN", accessToken)
