@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Loading from '../../Loading';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
@@ -15,8 +15,8 @@ import {
 } from '@material-ui/core';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 
-import {createPost, findAllSectors} from '../../api/API';
-import {getAccessTokenFromCookie} from '../../../util/TokenUtils';
+import { createPost, findAllSectors } from '../../api/API';
+import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import useStyles from './PostingFormStyles';
 import SectorApplyButton from '../sector/SectorApplyButton';
 
@@ -102,15 +102,13 @@ const PostingForm = () => {
 
   const validateForm = () => {
     if (area.id === null) {
-      throw { message: '지역을 선택해주세요!' };
+      throw new Error('지역을 선택해주세요!');
     }
     if (writing === '' && images.length === 0) {
-      throw {
-        message: '아무것도 안 쓴 글을 올릴 수 없습니다! 뭔가 써주세요 :)',
-      };
+      throw new Error('아무것도 안 쓴 글을 올릴 수 없습니다! 뭔가 써주세요 :)');
     }
     if (sector.id === null) {
-      throw { message: '부문을 선택해주세요!' };
+      throw new Error('부문을 선택해주세요!');
     }
   };
 

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import {Link} from "react-router-dom";
+import { Link } from 'react-router-dom';
 
-import {MAIN_COLOR} from '../../constants/Color';
+import { MAIN_COLOR } from '../../constants/Color';
 
 export const ProfilePhoto = styled.div`
   width: 100px;

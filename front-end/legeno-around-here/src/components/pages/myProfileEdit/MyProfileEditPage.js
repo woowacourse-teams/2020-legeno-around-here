@@ -1,12 +1,12 @@
-import React, {useMemo, useState} from 'react';
+import React, { useMemo, useState } from 'react';
 
 import TopBar from '../myProfile/myProfileTopBar';
 import Bottom from '../../Bottom';
-import {PROFILE} from '../../../constants/BottomItems';
-import {findMyInfo} from '../../api/API';
+import { PROFILE } from '../../../constants/BottomItems';
+import { findMyInfo } from '../../api/API';
 import Loading from '../../Loading';
-import {getAccessTokenFromCookie} from '../../../util/TokenUtils';
-import {Email, Nickname, PrivacyBox,} from '../../myProfile/PrivacySection';
+import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
+import { Email, Nickname, PrivacyBox } from '../../myProfile/PrivacySection';
 import Typography from '@material-ui/core/Typography';
 import PhotoEditSection from './PhotoEditSection';
 
