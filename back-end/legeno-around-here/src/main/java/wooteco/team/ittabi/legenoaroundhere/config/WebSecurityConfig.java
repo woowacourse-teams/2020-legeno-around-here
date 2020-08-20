@@ -61,7 +61,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/swagger-ui.html",
                 "/webjars/**").permitAll()
             .antMatchers("/join").permitAll()
-            .antMatchers("/joinAdmin").permitAll()
             .antMatchers("/login").permitAll()
             .antMatchers("/profile").permitAll()
             .antMatchers("/admin/**").hasRole("ADMIN")

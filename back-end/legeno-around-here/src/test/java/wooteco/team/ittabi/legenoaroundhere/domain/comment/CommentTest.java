@@ -19,9 +19,6 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.Nickname;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.Password;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAvailableException;
 
@@ -34,15 +31,14 @@ class CommentTest {
     @BeforeEach
     void setUp() {
         creator = User.builder()
-            .email(new Email(TEST_USER_EMAIL))
-            .nickname(new Nickname(TEST_USER_NICKNAME))
-            .password(new Password(TEST_USER_PASSWORD))
+            .email(TEST_USER_EMAIL)
+            .nickname(TEST_USER_NICKNAME)
+            .password(TEST_USER_PASSWORD)
             .build();
 
         post = Post.builder()
             .writing(TEST_POST_WRITING)
             .creator(creator)
-            .area(null)
             .sector(Sector.builder()
                 .state(SectorState.PUBLISHED)
                 .name(TEST_SECTOR_NAME)
