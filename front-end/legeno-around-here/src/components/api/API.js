@@ -4,7 +4,7 @@ import { setAccessTokenCookie } from '../../util/TokenUtils';
 const DEFAULT_SIZE = 10;
 const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
-const DEFAULT_URL = 'https://back.capzzang.co.kr';
+const DEFAULT_URL = 'http://localhost:8080';
 
 export const loginUser = (email, password, handleReset) => {
   axios
@@ -81,6 +81,25 @@ export const createComment = async (postId, writing, accessToken) => {
   return false;
 };
 
+export const createPendingSector = async (sector, accessToken) => {
+  const config = {
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
+  };
+  try {
+    const response = await axios.post(DEFAULT_URL + `/sectors`, sector, config);
+    if (response.status === 201) {
+      console.log(response);
+      alert('신청이 완료됐습니다!');
+      return response.data;
+    }
+  } catch (error) {
+    alert('부문 신청 중 오류가 발생했습니다! 다시 신청해주세요!');
+    console.log(error);
+  }
+};
+
 export const pressPostZzang = async (postId, accessToken) => {
   const config = {
     headers: {
@@ -119,9 +138,10 @@ export const findMyInfo = ({
     .get(DEFAULT_URL + '/users/myinfo', config)
     .then(async (response) => {
       const userResponse = await response.data;
+      console.log(userResponse);
       setEmail(userResponse.email);
       setNickname(userResponse.nickname);
-      setProfilePhotoUrl(userResponse.image.url);
+      setProfilePhotoUrl(userResponse.image);
     })
     .catch((error) => {
       alert(`회원정보를 가져올 수 없습니다.${error}`);
