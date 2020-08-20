@@ -1,4 +1,6 @@
 import React, { useMemo, useState } from 'react';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
 
 import TopBar from '../myProfile/myProfileTopBar';
 import Bottom from '../../Bottom';
@@ -7,7 +9,6 @@ import { findMyInfo } from '../../api/API';
 import Loading from '../../Loading';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import { Email, Nickname, PrivacyBox } from '../../myProfile/PrivacySection';
-import Typography from '@material-ui/core/Typography';
 import PhotoEditSection from './PhotoEditSection';
 
 function MyProfileEditPage() {
@@ -41,6 +42,13 @@ function MyProfileEditPage() {
       <PrivacyBox>
         <Typography component="h1" variant="h5">
           <Nickname>{nickname}</Nickname>
+          <TextField
+            required
+            id="standard-required"
+            label="Required"
+            label="새 닉네임"
+            onChange={(e) => setNickname(e.target.value)}
+          />
         </Typography>
         <Email>{email}</Email>
       </PrivacyBox>
