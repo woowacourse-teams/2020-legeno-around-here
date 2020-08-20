@@ -31,7 +31,6 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.repository.AreaRepository;
-import wooteco.team.ittabi.legenoaroundhere.repository.CommentRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.ImageUploader;
@@ -43,7 +42,6 @@ import wooteco.team.ittabi.legenoaroundhere.utils.ImageUploader;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
     private final AreaRepository areaRepository;
     private final SectorRepository sectorRepository;
     private final ImageUploader imageUploader;

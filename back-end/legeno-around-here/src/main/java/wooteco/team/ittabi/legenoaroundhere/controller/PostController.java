@@ -75,9 +75,11 @@ public class PostController {
 
     @GetMapping("/ranking")
     public ResponseEntity<Page<PostWithCommentsCountResponse>> searchAllRanking(
-        PageRequest pageRequest, RankingRequest rankingRequest, PostSearchRequest postSearchRequest) {
+        PageRequest pageRequest, RankingRequest rankingRequest,
+        PostSearchRequest postSearchRequest) {
         Page<PostWithCommentsCountResponse> posts
-            = postService.searchRanking(rankingRequest, pageRequest.getPageable(), postSearchRequest);
+            = postService
+            .searchRanking(rankingRequest, pageRequest.getPageable(), postSearchRequest);
         return ResponseEntity
             .ok()
             .body(posts);

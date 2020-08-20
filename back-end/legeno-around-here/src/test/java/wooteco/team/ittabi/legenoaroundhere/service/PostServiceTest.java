@@ -470,8 +470,6 @@ public class PostServiceTest extends ServiceTest {
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
         Post postC = postRepository.findById(postIdC)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
-        Post postD = postRepository.findById(postIdD)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
 
         postA.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusDays(1));
         postB.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusDays(1));
@@ -535,11 +533,7 @@ public class PostServiceTest extends ServiceTest {
 
         Post postA = postRepository.findById(postIdA)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
-        Post postB = postRepository.findById(postIdB)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
         Post postC = postRepository.findById(postIdC)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
-        Post postD = postRepository.findById(postIdD)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
 
         postA.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusWeeks(1));
@@ -601,10 +595,6 @@ public class PostServiceTest extends ServiceTest {
         postService.pressZzang(postIdA);
 
         Post postA = postRepository.findById(postIdA)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
-        Post postB = postRepository.findById(postIdB)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
-        Post postC = postRepository.findById(postIdC)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
         Post postD = postRepository.findById(postIdD)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
@@ -723,8 +713,6 @@ public class PostServiceTest extends ServiceTest {
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
         Post postC = postRepository.findById(postIdC)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
-        Post postD = postRepository.findById(postIdD)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
 
         postA.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusDays(1));
         postA.getZzangs().get(1).setCreatedAt(LocalDateTime.now().minusDays(1));
@@ -789,11 +777,7 @@ public class PostServiceTest extends ServiceTest {
 
         Post postA = postRepository.findById(postIdA)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
-        Post postB = postRepository.findById(postIdB)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
         Post postC = postRepository.findById(postIdC)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
-        Post postD = postRepository.findById(postIdD)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
 
         postC.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusWeeks(1));
@@ -853,10 +837,6 @@ public class PostServiceTest extends ServiceTest {
         postService.pressZzang(postIdA);
 
         Post postA = postRepository.findById(postIdA)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
-        Post postB = postRepository.findById(postIdB)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
-        Post postC = postRepository.findById(postIdC)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
         Post postD = postRepository.findById(postIdD)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
@@ -971,8 +951,6 @@ public class PostServiceTest extends ServiceTest {
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
         Post postC = postRepository.findById(postIdC)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
-        Post postD = postRepository.findById(postIdD)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
 
         postA.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusDays(1));
         postB.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusDays(1));
@@ -1034,11 +1012,7 @@ public class PostServiceTest extends ServiceTest {
 
         Post postA = postRepository.findById(postIdA)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
-        Post postB = postRepository.findById(postIdB)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
         Post postC = postRepository.findById(postIdC)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
-        Post postD = postRepository.findById(postIdD)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
 
         postA.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusWeeks(1));
@@ -1098,10 +1072,6 @@ public class PostServiceTest extends ServiceTest {
         postService.pressZzang(postIdA);
 
         Post postA = postRepository.findById(postIdA)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
-        Post postB = postRepository.findById(postIdB)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
-        Post postC = postRepository.findById(postIdC)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
         Post postD = postRepository.findById(postIdD)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
@@ -1216,8 +1186,6 @@ public class PostServiceTest extends ServiceTest {
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
         Post postC = postRepository.findById(postIdC)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
-        Post postD = postRepository.findById(postIdD)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
 
         postA.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusDays(1));
         postB.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusDays(1));
@@ -1279,11 +1247,7 @@ public class PostServiceTest extends ServiceTest {
 
         Post postA = postRepository.findById(postIdA)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
-        Post postB = postRepository.findById(postIdB)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
         Post postC = postRepository.findById(postIdC)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
-        Post postD = postRepository.findById(postIdD)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
 
         postA.getZzangs().get(0).setCreatedAt(LocalDateTime.now().minusWeeks(1));
@@ -1343,10 +1307,6 @@ public class PostServiceTest extends ServiceTest {
         postService.pressZzang(postIdA);
 
         Post postA = postRepository.findById(postIdA)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
-        Post postB = postRepository.findById(postIdB)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
-        Post postC = postRepository.findById(postIdC)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
         Post postD = postRepository.findById(postIdD)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 입니다."));
