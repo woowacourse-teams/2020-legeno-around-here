@@ -151,13 +151,38 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         commentResponses = findAllCommentBy(postId, accessToken);
         assertThat(commentResponses).isEmpty();
 
-//        // 댓글 및 대댓글 재생성
-//        commentLocation = createComment(postId, accessToken);
-//        commentId = getIdFromUrl(commentLocation);
-//
-//        cocommentLocation = createCocomment(accessToken, commentId, TEST_COMMENT_OTHER_WRITING);
-//        cocommentId = getIdFromUrl(cocommentLocation);
+        // 댓글 및 대댓글 재생성
+        commentLocation = createComment(postId, accessToken);
+        commentId = getIdFromUrl(commentLocation);
 
+        cocommentLocation = createCocomment(accessToken, commentId, TEST_COMMENT_OTHER_WRITING);
+        cocommentId = getIdFromUrl(cocommentLocation);
+
+        cocommentLocation = createCocomment(accessToken, commentId, TEST_COMMENT_OTHER_WRITING);
+        Long cocommentOtherId = getIdFromUrl(cocommentLocation);
+
+        // 댓글 삭제
+        deleteComment(accessToken, commentId);
+        commentResponse = findComment(accessToken, commentId);
+        assertThat(commentResponse.getWriting()).isNull();
+        assertThat(commentResponse.getCocomments()).hasSize(2);
+        commentResponses = findAllCommentBy(postId, accessToken);
+        assertThat(commentResponses).hasSize(1);
+
+        // 대댓글 삭제 - 다 지우는 경우 댓글도 삭제됨
+        deleteComment(accessToken, cocommentId);
+        findNotExistsComment(accessToken, cocommentId);
+        commentResponse = findComment(accessToken, commentId);
+        assertThat(commentResponse.getCocomments()).hasSize(1);
+        commentResponses = findAllCommentBy(postId, accessToken);
+        assertThat(commentResponses).hasSize(1);
+
+        System.out.println(">>>>>>>>>>>THIRD DELETE>>>>>>>>>>>>" + cocommentOtherId);
+        deleteComment(accessToken, cocommentOtherId);
+        findNotExistsComment(accessToken, cocommentOtherId);
+        findNotExistsComment(accessToken, commentId);
+        commentResponses = findAllCommentBy(postId, accessToken);
+        assertThat(commentResponses).isEmpty();
     }
 
     /**
@@ -261,6 +286,7 @@ public class CommentAcceptanceTest extends AcceptanceTest {
             .when()
             .delete("/comments/" + commentId)
             .then()
+            .log().all()
             .statusCode(HttpStatus.NO_CONTENT.value());
     }
 

@@ -22,7 +22,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAvailableException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
@@ -30,7 +29,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString(exclude = {"post"})
+@ToString(exclude = {"post", "superComment", "cocomments"})
 @SQLDelete(sql = "UPDATE comment SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class Comment extends BaseEntity {
@@ -43,18 +42,18 @@ public class Comment extends BaseEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private State state;
+    private CommentState state;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_id")
-    private Comment comment;
+    @JoinColumn(name = "super_comment_id")
+    private Comment superComment;
 
-    @OneToMany(mappedBy = "comment")
-    private List<Comment> cocomments;
+    @OneToMany(mappedBy = "superComment")
+    private List<Comment> cocomments = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "creator_id")
@@ -66,7 +65,7 @@ public class Comment extends BaseEntity {
     public Comment(User creator, String writing) {
         validateLength(writing);
         this.writing = writing;
-        this.state = State.PUBLISHED;
+        this.state = CommentState.PUBLISHED;
         this.creator = creator;
     }
 
@@ -112,25 +111,43 @@ public class Comment extends BaseEntity {
         return zzangs.size();
     }
 
+    public String getWriting() {
+        return state.changeWriting(writing);
+    }
+
     public boolean hasZzangCreator(User user) {
         return zzangs.stream()
             .anyMatch(zzang -> zzang.isSameCreator(user));
+    }
+
+    public boolean hasCocoments() {
+        return !cocomments.isEmpty();
     }
 
     public boolean isAvailable() {
         return state.isAvailable();
     }
 
+    public boolean isSuperComment() {
+        return Objects.isNull(superComment);
+    }
+
     public void setWriting(String writing) {
         this.writing = writing;
     }
 
-    public void setState(State state) {
+    public void setSuperComment(Comment comment) {
+        this.superComment = comment;
+        this.post = comment.post;
+        comment.cocomments.add(this);
+    }
+
+    public void setState(CommentState state) {
         this.state = state;
     }
 
-    public void setComment(Comment comment) {
-        this.comment = comment;
-        comment.cocomments.add(this);
+    public boolean isOnlyCocommentOfSuperComment() {
+        return Objects.nonNull(superComment)
+            && superComment.cocomments.size() == 1;
     }
 }

@@ -1,12 +1,14 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.comment.Comment;
+import wooteco.team.ittabi.legenoaroundhere.domain.comment.CommentState;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentAssembler;
@@ -51,7 +53,10 @@ public class CommentService {
     public List<CommentResponse> findAllCommentBy(Long postId) {
         User user = (User) authenticationFacade.getPrincipal();
 
-        List<Comment> comments = commentRepository.findAllByPostId(postId);
+        List<Comment> comments = commentRepository.findAllByPostId(postId)
+            .stream()
+            .filter(Comment::isSuperComment)
+            .collect(Collectors.toList());
 
         return CommentResponse.listOf(user, comments);
     }
@@ -60,6 +65,13 @@ public class CommentService {
     public void deleteComment(Long commentId) {
         Comment comment = findCommentBy(commentId);
         validateIsCreator(comment);
+        if (comment.hasCocoments()) {
+            comment.setState(CommentState.DELETED);
+            return;
+        }
+        if (comment.isOnlyCocommentOfSuperComment()) {
+            commentRepository.delete(comment.getSuperComment());
+        }
         commentRepository.delete(comment);
     }
 
@@ -104,7 +116,7 @@ public class CommentService {
             .orElseThrow(() -> new NotExistsException("해당 도메인이 없습니다."));
 
         Comment cocomment = commentRepository.save(CommentAssembler.assemble(user, commentRequest));
-        cocomment.setComment(comment);
+        cocomment.setSuperComment(comment);
         return CommentResponse.of(user, cocomment);
     }
 }

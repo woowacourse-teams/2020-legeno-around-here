@@ -55,7 +55,7 @@ class CommentTest {
     @DisplayName("Zzang을 눌렀을 때, 예외 발생 - Comment가 유효한 상태가 아닐 경우")
     @Test
     void pressZzang_CommentNotAvailable_ThrownException() {
-        comment.setState(State.DELETED);
+        comment.setState(CommentState.DELETED);
 
         assertThatThrownBy(() -> comment.pressZzang(creator))
             .isInstanceOf(NotAvailableException.class);

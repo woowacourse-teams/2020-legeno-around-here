@@ -44,6 +44,7 @@ public class CommentController {
     public ResponseEntity<CommentResponse> updateComment(@PathVariable Long commentId,
         @RequestBody CommentRequest commentRequest) {
         CommentResponse commentResponse = commentService.updateComment(commentId, commentRequest);
+
         return ResponseEntity
             .ok()
             .body(commentResponse);
