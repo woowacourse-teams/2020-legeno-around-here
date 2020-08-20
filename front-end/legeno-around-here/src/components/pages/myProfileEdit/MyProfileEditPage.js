@@ -6,21 +6,15 @@ import {PROFILE} from '../../../constants/BottomItems';
 import {findMyInfo} from '../../api/API';
 import Loading from '../../Loading';
 import {getAccessTokenFromCookie} from '../../../util/TokenUtils';
-import {
-  Email,
-  Nickname,
-  PrivacyBox,
-  PrivacyEditBox,
-  ProfilePhoto,
-  TopSection,
-} from '../../myProfile/PrivacySection';
+import {Email, Nickname, PrivacyBox,} from '../../myProfile/PrivacySection';
 import Typography from '@material-ui/core/Typography';
+import PhotoEditSection from './PhotoEditSection';
 
 function MyProfileEditPage() {
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
-  const [profilePhotoUrl, setProfilePhotoUrl] = useState(
+  const [originalProfilePhotoUrl, setProfilePhotoUrl] = useState(
     '/default-profile.png',
   );
   const [loading, setLoading] = useState(false);
@@ -43,16 +37,13 @@ function MyProfileEditPage() {
   return (
     <>
       <TopBar backButtonLink="/myProfile" />
-      <TopSection>
-        <ProfilePhoto photoUrl={profilePhotoUrl} />
-        <PrivacyBox>
-          <Typography component="h1" variant="h5">
-            <Nickname>{nickname}</Nickname>
-          </Typography>
-          <Email>{email}</Email>
-        </PrivacyBox>
-        <PrivacyEditBox>수정</PrivacyEditBox>
-      </TopSection>
+      <PhotoEditSection originalPhotoUrl={originalProfilePhotoUrl} />
+      <PrivacyBox>
+        <Typography component="h1" variant="h5">
+          <Nickname>{nickname}</Nickname>
+        </Typography>
+        <Email>{email}</Email>
+      </PrivacyBox>
       <Bottom selected={PROFILE} />
     </>
   );
