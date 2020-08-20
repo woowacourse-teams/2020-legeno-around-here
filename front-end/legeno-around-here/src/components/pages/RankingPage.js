@@ -38,7 +38,7 @@ const TopSection = styled.div`
   padding-bottom: 30px;
 `;
 
-const Ranking = () => {
+const RankingPage = () => {
   return (
     <>
       <TopSection>
@@ -56,4 +56,4 @@ const Ranking = () => {
   );
 };
 
-export default Ranking;
+export default RankingPage;
