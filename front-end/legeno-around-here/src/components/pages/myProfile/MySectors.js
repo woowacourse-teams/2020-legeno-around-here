@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import MySectorItem from './MySectorItem';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  list: {
     width: '100%',
     backgroundColor: theme.palette.background.paper,
   },
@@ -14,7 +14,7 @@ const MySectors = ({ mySectors }) => {
   const classes = useStyles();
 
   return (
-    <List className={classes.root}>
+    <List className={classes.list}>
       {mySectors.map((mySector) => (
         <MySectorItem key={mySector.id} mySector={mySector} />
       ))}
