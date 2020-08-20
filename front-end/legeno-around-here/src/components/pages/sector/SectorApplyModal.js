@@ -124,7 +124,8 @@ const SectorApplyModal = ({ open, handleClose }) => {
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="caption" color="secondary" noWrap>
-                  부문은 관리자가 결정합니다. 결정되기까지 하루정도 소요됩니다.
+                  부문은 관리자 승인 후 등록됩니다. 승인까지 하루 정도
+                  소요됩니다.
                 </Typography>
               </Grid>
               <Grid item xs={12}>
