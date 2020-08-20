@@ -10,7 +10,7 @@ import {HOME} from '../../constants/BottomItems';
 import PostItem from '../post/PostItem';
 import Loading from '../Loading';
 
-const Home = () => {
+const HomePage = () => {
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
@@ -70,4 +70,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;

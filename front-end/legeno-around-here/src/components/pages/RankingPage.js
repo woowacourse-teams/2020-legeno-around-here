@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 
 import Bottom from '../Bottom';
-import { RANKING } from '../../constants/BottomItems';
-import { MAIN_COLOR } from '../../constants/Color';
+import {RANKING} from '../../constants/BottomItems';
+import {MAIN_COLOR} from '../../constants/Color';
 
 const Card = styled.div`
   width: 95%;
@@ -38,7 +38,7 @@ const TopSection = styled.div`
   padding-bottom: 30px;
 `;
 
-const Ranking = () => {
+const RankingPage = () => {
   return (
     <>
       <TopSection>
@@ -56,4 +56,4 @@ const Ranking = () => {
   );
 };
 
-export default Ranking;
+export default RankingPage;
