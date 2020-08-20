@@ -1,14 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import AppBar from '../AppBar';
 import Bottom from '../Bottom';
 
-import {findCurrentPostsFromPage} from '../api/API';
-import {getAccessTokenFromCookie} from '../../util/TokenUtils';
-import {HOME} from '../../constants/BottomItems';
+import { findCurrentPostsFromPage } from '../api/API';
+import { getAccessTokenFromCookie } from '../../util/TokenUtils';
+import { HOME } from '../../constants/BottomItems';
 import PostItem from '../post/PostItem';
 import Loading from '../Loading';
+import BottomBlank from '../BottomBlank';
 
 const Home = () => {
   const [page, setPage] = useState(0);
@@ -66,10 +67,7 @@ const Home = () => {
           <PostItem key={post.id} post={post} />
         ))}
       </InfiniteScroll>
-      <br />
-      <br />
-      <br />
-      <br />
+      <BottomBlank />
       <Bottom selected={HOME} />
     </>
   );

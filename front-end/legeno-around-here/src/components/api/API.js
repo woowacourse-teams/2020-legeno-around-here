@@ -185,18 +185,30 @@ export const findAllAreas = async (page, accessToken, keyword) => {
     });
 };
 
-export const findAllSectors = async (accessToken) => {
+export const findSectorsFromPage = async (page, accessToken) => {
   const config = {
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
       'X-Auth-Token': accessToken,
     },
   };
   const response = await axios
-    .get(DEFAULT_URL + '/sectors?size=50', config)
+    .get(
+      DEFAULT_URL +
+        `/sectors?` +
+        `page=${page}&` +
+        `size=${DEFAULT_SIZE}&` +
+        `sortedBy=${DEFAULT_SORTED_BY}&` +
+        `direction=${DEFAULT_DIRECTION}`,
+      config,
+    )
     .catch((error) => {
-      alert(`부문정보를 가져올 수 없습니다.${error}`);
+      if (error.status === 403) {
+        alert(`부문정보를 가져올 수 없습니다. ${error}`);
+        document.location.href = '/login';
+      }
+      throw error;
     });
+  console.log(response.data.content);
   return response.data.content;
 };
 

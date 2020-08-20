@@ -15,9 +15,9 @@ const Sectors = ({ sectors }) => {
 
   return (
     <List className={classes.root}>
-      {sectors.map((sector) => (
-        <SectorItem key={sector.id} sector={sector} />
-      ))}
+      {sectors.map((sector) => {
+        return <SectorItem key={sector.id} sector={sector} />;
+      })}
     </List>
   );
 };

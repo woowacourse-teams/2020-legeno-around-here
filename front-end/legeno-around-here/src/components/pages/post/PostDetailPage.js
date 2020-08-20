@@ -5,17 +5,10 @@ import { findPost } from '../../api/API';
 import PostDetailTopBar from './PostDetailTopBar';
 import PostDetail from './PostDetail';
 import Loading from '../../Loading';
-import { makeStyles, Container } from '@material-ui/core';
-
-const useStyles = makeStyles(() => ({
-  blankMargin: {
-    marginBottom: 60,
-  },
-}));
+import { Container } from '@material-ui/core';
+import BottomBlank from '../../BottomBlank';
 
 const PostDetailPage = ({ match }) => {
-  const classes = useStyles();
-
   const postId = match.params.postId;
   const accessToken = getAccessTokenFromCookie();
   const [post, setPost] = useState(null);
@@ -38,7 +31,7 @@ const PostDetailPage = ({ match }) => {
       <PostDetailTopBar />
       <Container>
         {post && <PostDetail post={post} />}
-        <div className={classes.blankMargin}></div>
+        <BottomBlank />
       </Container>
       <Bottom />
     </>
