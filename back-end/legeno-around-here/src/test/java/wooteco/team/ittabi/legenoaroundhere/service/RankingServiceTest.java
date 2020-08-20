@@ -1,10 +1,10 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wooteco.team.ittabi.legenoaroundhere.domain.post.RankingCriteria.LAST_MONTH;
-import static wooteco.team.ittabi.legenoaroundhere.domain.post.RankingCriteria.LAST_WEEK;
-import static wooteco.team.ittabi.legenoaroundhere.domain.post.RankingCriteria.TOTAL;
-import static wooteco.team.ittabi.legenoaroundhere.domain.post.RankingCriteria.YESTERDAY;
+import static wooteco.team.ittabi.legenoaroundhere.domain.ranking.RankingCriteria.LAST_MONTH;
+import static wooteco.team.ittabi.legenoaroundhere.domain.ranking.RankingCriteria.LAST_WEEK;
+import static wooteco.team.ittabi.legenoaroundhere.domain.ranking.RankingCriteria.TOTAL;
+import static wooteco.team.ittabi.legenoaroundhere.domain.ranking.RankingCriteria.YESTERDAY;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_OTHER_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_EMPTY_MULTIPART_FILES;
@@ -188,7 +188,7 @@ public class RankingServiceTest extends ServiceTest {
         assertThat(posts.getContent().get(3).getId()).isEqualTo(postIdD);
     }
 
-    @DisplayName("모든 부문, 모든 지역 랭킹 조회 - 지난 주")
+    @DisplayName("모든 부문, 모든 지역 랭킹 조회 - 지난주")
     @Test
     @Transactional
     void searchRanking_AllSectorAllAreaLastWeek_SuccessToFind() {
@@ -205,10 +205,10 @@ public class RankingServiceTest extends ServiceTest {
             TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
-        //PostA 짱이야2 - 지난 주 2 오늘 0
-        //PostB 짱이야4 - 지난 주 0 오늘 4
-        //PostC 짱이야3 - 지난 주  2 오늘 1
-        //PostD 짱이야1 - 지난 주 0 오늘 1
+        //PostA 짱이야2 - 지난주 2 오늘 0
+        //PostB 짱이야4 - 지난주 0 오늘 4
+        //PostC 짱이야3 - 지난주  2 오늘 1
+        //PostD 짱이야1 - 지난주 0 오늘 1
         //랭킹 순서: C -> A -> D -> B (동률일 경우 최신 글이 상위로)
         setAuthentication(userA);
         postService.pressZzang(postIdA);
@@ -251,7 +251,7 @@ public class RankingServiceTest extends ServiceTest {
         assertThat(posts.getContent().get(3).getId()).isEqualTo(postIdB);
     }
 
-    @DisplayName("모든 부문, 모든 지역 랭킹 조회 - 지난 달")
+    @DisplayName("모든 부문, 모든 지역 랭킹 조회 - 지난달")
     @Test
     @Transactional
     void searchRanking_AllSectorAllAreaLastMonth_SuccessToFind() {
@@ -432,7 +432,7 @@ public class RankingServiceTest extends ServiceTest {
         assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdC);
     }
 
-    @DisplayName("특정 부문, 모든 지역 랭킹 조회 - 지난 주")
+    @DisplayName("특정 부문, 모든 지역 랭킹 조회 - 지난주")
     @Test
     @Transactional
     void searchRanking_SpecificSectorAllAreaLastWeek_SuccessToFind() {
@@ -449,10 +449,10 @@ public class RankingServiceTest extends ServiceTest {
             TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
-        //PostA 짱이야2 - 지난 주 2 오늘 0 -> 선택 부문
-        //PostB 짱이야4 - 지난 주 0 오늘 4
-        //PostC 짱이야3 - 지난 주  2 오늘 1 -> 선택 부문
-        //PostD 짱이야1 - 지난 주 0 오늘 1
+        //PostA 짱이야2 - 지난주 2 오늘 0 -> 선택 부문
+        //PostB 짱이야4 - 지난주 0 오늘 4
+        //PostC 짱이야3 - 지난주  2 오늘 1 -> 선택 부문
+        //PostD 짱이야1 - 지난주 0 오늘 1
         //랭킹 순서: C -> A (동률일 경우 최신 글이 상위로)
         setAuthentication(userA);
         postService.pressZzang(postIdB);
@@ -493,7 +493,7 @@ public class RankingServiceTest extends ServiceTest {
         assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdA);
     }
 
-    @DisplayName("특정 부문, 모든 지역 랭킹 조회 - 지난 달")
+    @DisplayName("특정 부문, 모든 지역 랭킹 조회 - 지난달")
     @Test
     @Transactional
     void searchRanking_SpecificSectorAllAreaLastMonth_SuccessToFind() {
@@ -667,7 +667,7 @@ public class RankingServiceTest extends ServiceTest {
         assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdA);
     }
 
-    @DisplayName("모든 부문, 특정 지역 랭킹 조회 - 지난 주")
+    @DisplayName("모든 부문, 특정 지역 랭킹 조회 - 지난주")
     @Test
     @Transactional
     void searchRanking_AllSectorSpecificAreaLastWeek_SuccessToFind() {
@@ -684,10 +684,10 @@ public class RankingServiceTest extends ServiceTest {
             TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
-        //PostA 짱이야2 - 지난 주 2 오늘 0 -> 선택 지역
-        //PostB 짱이야4 - 지난 주 0 오늘 4 -> 선택 지역
-        //PostC 짱이야3 - 지난 주  2 오늘 1
-        //PostD 짱이야1 - 지난 주 0 오늘 1
+        //PostA 짱이야2 - 지난주 2 오늘 0 -> 선택 지역
+        //PostB 짱이야4 - 지난주 0 오늘 4 -> 선택 지역
+        //PostC 짱이야3 - 지난주  2 오늘 1
+        //PostD 짱이야1 - 지난주 0 오늘 1
         //랭킹 순서: A -> B
         setAuthentication(userA);
         postService.pressZzang(postIdA);
@@ -728,7 +728,7 @@ public class RankingServiceTest extends ServiceTest {
         assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdB);
     }
 
-    @DisplayName("모든 부문, 특정 지역 랭킹 조회 - 지난 달")
+    @DisplayName("모든 부문, 특정 지역 랭킹 조회 - 지난달")
     @Test
     @Transactional
     void searchRanking_AllSectorSpecificAreaLastMonth_SuccessToFind() {
@@ -902,7 +902,7 @@ public class RankingServiceTest extends ServiceTest {
         assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdD);
     }
 
-    @DisplayName("특정 부문, 특정 지역 랭킹 조회 - 지난 주")
+    @DisplayName("특정 부문, 특정 지역 랭킹 조회 - 지난주")
     @Test
     @Transactional
     void searchRanking_SpecificSectorSpecificAreaLastWeek_SuccessToFind() {
@@ -919,10 +919,10 @@ public class RankingServiceTest extends ServiceTest {
             TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
-        //PostA 짱이야2 - 지난 주 2 오늘 0 -> 선택 부문, 선택 지역
-        //PostB 짱이야4 - 지난 주 0 오늘 4
-        //PostC 짱이야3 - 지난 주  2 오늘 1
-        //PostD 짱이야1 - 지난 주 0 오늘 1 -> 선택 부문, 선택 지역
+        //PostA 짱이야2 - 지난주 2 오늘 0 -> 선택 부문, 선택 지역
+        //PostB 짱이야4 - 지난주 0 오늘 4
+        //PostC 짱이야3 - 지난주  2 오늘 1
+        //PostD 짱이야1 - 지난주 0 오늘 1 -> 선택 부문, 선택 지역
         //랭킹 순서: A -> D
         setAuthentication(userA);
         postService.pressZzang(postIdA);
@@ -963,7 +963,7 @@ public class RankingServiceTest extends ServiceTest {
         assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdD);
     }
 
-    @DisplayName("특정 부문, 특정 지역 랭킹 조회 - 지난 달")
+    @DisplayName("특정 부문, 특정 지역 랭킹 조회 - 지난달")
     @Test
     @Transactional
     void searchRanking_SpecificSectorSpecificAreaLastMonth_SuccessToFind() {

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.RankingCriteria;
+import wooteco.team.ittabi.legenoaroundhere.domain.ranking.RankingCriteria;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;

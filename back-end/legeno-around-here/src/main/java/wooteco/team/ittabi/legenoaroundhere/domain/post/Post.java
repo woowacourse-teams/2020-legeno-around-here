@@ -96,10 +96,16 @@ public class Post extends BaseEntity {
     }
 
     public int getPostZzangCountByDate(LocalDateTime startDate, LocalDateTime endDate) {
-        return (int) zzangs.stream()
-            .filter(postZzang -> (postZzang.getCreatedAt().isAfter(startDate))
-                && (postZzang.getCreatedAt().isBefore(endDate)))
+        long zzangCount = zzangs.stream()
+            .filter(postZzang -> isDateBetween(postZzang.getCreatedAt(), startDate, endDate))
             .count();
+        return Math.toIntExact(zzangCount);
+    }
+
+    private boolean isDateBetween(LocalDateTime targetDate, LocalDateTime startDate,
+        LocalDateTime endDate) {
+        return ((targetDate.isAfter(startDate))
+            && (targetDate.isBefore(endDate)));
     }
 
     public PostZzang findPostZzangBy(User user) {

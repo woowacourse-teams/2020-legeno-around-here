@@ -1,4 +1,4 @@
-package wooteco.team.ittabi.legenoaroundhere.domain.post;
+package wooteco.team.ittabi.legenoaroundhere.domain.ranking;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -48,9 +48,13 @@ public enum RankingCriteria {
 
     public static RankingCriteria of(String criteria) {
         return Arrays.stream(values())
-            .filter(rc -> rc.rankingCriteria.equals(criteria))
+            .filter(rc -> rc.isSameRankingCriteria(criteria))
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 랭킹 기준입니다."));
+    }
+
+    private boolean isSameRankingCriteria(String criteria) {
+        return this.rankingCriteria.equals(criteria);
     }
 
     public String getCriteriaName() {

@@ -22,7 +22,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.RankingCriteria;
+import wooteco.team.ittabi.legenoaroundhere.domain.ranking.RankingCriteria;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
