@@ -10,6 +10,7 @@ import Loading from '../../Loading';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import { Email, Nickname, PrivacyBox } from '../../myProfile/PrivacySection';
 import PhotoEditSection from './PhotoEditSection';
+import useStyle from './MyProfileEditStyles';
 
 function MyProfileEditPage() {
   const [accessToken] = useState(getAccessTokenFromCookie());
@@ -19,6 +20,8 @@ function MyProfileEditPage() {
     '/default-profile.png',
   );
   const [loading, setLoading] = useState(false);
+
+  const classes = useStyle();
 
   useMemo(() => {
     setLoading(true);
@@ -39,19 +42,16 @@ function MyProfileEditPage() {
     <>
       <TopBar backButtonLink="/myProfile" />
       <PhotoEditSection originalPhotoUrl={originalProfilePhotoUrl} />
-      <PrivacyBox>
+      <div className={classes.infoEditSection}>
+        <Typography component="div">{email}</Typography>
         <Typography component="h1" variant="h5">
-          <Nickname>{nickname}</Nickname>
           <TextField
-            required
-            id="standard-required"
-            label="Required"
+            id="standard-basic"
             label="새 닉네임"
-            onChange={(e) => setNickname(e.target.value)}
+            className={classes.newNicknameInput}
           />
         </Typography>
-        <Email>{email}</Email>
-      </PrivacyBox>
+      </div>
       <Bottom selected={PROFILE} />
     </>
   );
