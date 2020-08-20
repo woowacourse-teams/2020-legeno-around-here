@@ -102,15 +102,13 @@ const PostingForm = () => {
 
   const validateForm = () => {
     if (area.id === null) {
-      throw { message: '지역을 선택해주세요!' };
+      throw new Error('지역을 선택해주세요!');
     }
     if (writing === '' && images.length === 0) {
-      throw {
-        message: '아무것도 안 쓴 글을 올릴 수 없습니다! 뭔가 써주세요 :)',
-      };
+      throw new Error('아무것도 안 쓴 글을 올릴 수 없습니다! 뭔가 써주세요 :)');
     }
     if (sector.id === null) {
-      throw { message: '부문을 선택해주세요!' };
+      throw new Error('부문을 선택해주세요!');
     }
   };
 
