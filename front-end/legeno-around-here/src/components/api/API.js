@@ -179,7 +179,7 @@ export const findMyInfo = ({
       'X-Auth-Token': accessToken,
     },
   };
-  axios
+  return axios
     .get(DEFAULT_URL + '/users/me', config)
     .then(async (response) => {
       const userResponse = await response.data;
@@ -189,6 +189,7 @@ export const findMyInfo = ({
       if (userResponse.image) {
         setProfilePhotoUrl(userResponse.image.url);
       }
+      return userResponse;
     })
     .catch((error) => {
       redirectLoginWhenUnauthorized(error);

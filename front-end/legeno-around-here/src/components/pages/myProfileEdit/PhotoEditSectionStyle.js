@@ -9,7 +9,7 @@ const useStyle = makeStyles({
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     borderRadius: '300px',
-    backgroundImage: `url('${props.photoUrl}')`,
+    backgroundImage: `url('${props.profilePhoto.url}')`,
     border: '1px solid' + MAIN_COLOR,
   }),
   photoEditSection: {

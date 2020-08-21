@@ -5,12 +5,12 @@ import Typography from '@material-ui/core/Typography';
 import useStyle from './PhotoEditSectionStyle';
 
 const PhotoEditSection = ({
-  originalPhotoUrl,
+  profilePhoto,
   setProfilePhoto,
   accessToken,
 }) => {
   const props = {
-    photoUrl: originalPhotoUrl,
+    profilePhoto: profilePhoto,
   };
   const classes = useStyle(props);
 

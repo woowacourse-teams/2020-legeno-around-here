@@ -16,7 +16,7 @@ function MyProfileEditPage() {
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
-  const [originalProfilePhotoUrl, setProfilePhotoUrl] = useState(
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState(
     '/default-profile.png',
   );
   const [profilePhoto, setProfilePhoto] = useState({
@@ -34,6 +34,12 @@ function MyProfileEditPage() {
       setEmail: setEmail,
       setNickname: setNickname,
       setProfilePhotoUrl: setProfilePhotoUrl,
+    }).then(userResponse => {
+      if (userResponse.image)
+      setProfilePhoto({
+        id: userResponse.image.id,
+        url: userResponse.image.url
+      })
     });
     setLoading(false);
   }, [accessToken]);
@@ -55,7 +61,7 @@ function MyProfileEditPage() {
       <TopBar backButtonLink="/myProfile" />
       <form className={classes.basicLayout} onSubmit={onSubmit}>
         <PhotoEditSection
-          originalPhotoUrl={originalProfilePhotoUrl}
+          profilePhoto={profilePhoto}
           setProfilePhoto={setProfilePhoto}
           accessToken={accessToken}
         />
