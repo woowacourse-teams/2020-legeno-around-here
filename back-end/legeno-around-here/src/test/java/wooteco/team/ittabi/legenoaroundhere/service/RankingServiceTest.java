@@ -593,7 +593,7 @@ public class RankingServiceTest extends ServiceTest {
 
         RankingRequest rankingRequest = new RankingRequest(TOTAL.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
-            String.valueOf(TEST_AREA_ID), null);
+            TEST_AREA_ID, null);
         Page<PostWithCommentsCountResponse> posts
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
@@ -658,7 +658,7 @@ public class RankingServiceTest extends ServiceTest {
 
         RankingRequest rankingRequest = new RankingRequest(YESTERDAY.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
-            String.valueOf(TEST_AREA_ID), null);
+            TEST_AREA_ID, null);
         Page<PostWithCommentsCountResponse> posts
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
@@ -719,7 +719,7 @@ public class RankingServiceTest extends ServiceTest {
 
         RankingRequest rankingRequest = new RankingRequest(LAST_WEEK.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
-            String.valueOf(TEST_AREA_ID), null);
+            TEST_AREA_ID, null);
         Page<PostWithCommentsCountResponse> posts
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
@@ -778,7 +778,7 @@ public class RankingServiceTest extends ServiceTest {
 
         RankingRequest rankingRequest = new RankingRequest(LAST_MONTH.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
-            String.valueOf(TEST_AREA_ID), null);
+            TEST_AREA_ID, null);
         Page<PostWithCommentsCountResponse> posts
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
@@ -828,7 +828,7 @@ public class RankingServiceTest extends ServiceTest {
 
         RankingRequest rankingRequest = new RankingRequest(TOTAL.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
-            String.valueOf(TEST_AREA_ID), String.valueOf(sectorId));
+            TEST_AREA_ID, String.valueOf(sectorId));
         Page<PostWithCommentsCountResponse> posts
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
@@ -893,7 +893,7 @@ public class RankingServiceTest extends ServiceTest {
 
         RankingRequest rankingRequest = new RankingRequest(YESTERDAY.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
-            String.valueOf(TEST_AREA_ID), String.valueOf(sectorId));
+            TEST_AREA_ID, String.valueOf(sectorId));
         Page<PostWithCommentsCountResponse> posts
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
@@ -954,7 +954,7 @@ public class RankingServiceTest extends ServiceTest {
 
         RankingRequest rankingRequest = new RankingRequest(LAST_WEEK.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
-            String.valueOf(TEST_AREA_ID), String.valueOf(sectorId));
+            TEST_AREA_ID, String.valueOf(sectorId));
         Page<PostWithCommentsCountResponse> posts
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
@@ -1013,7 +1013,7 @@ public class RankingServiceTest extends ServiceTest {
 
         RankingRequest rankingRequest = new RankingRequest(LAST_MONTH.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(
-            String.valueOf(TEST_AREA_ID), String.valueOf(sectorId));
+            TEST_AREA_ID, String.valueOf(sectorId));
         Page<PostWithCommentsCountResponse> posts
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
