@@ -46,12 +46,16 @@ export const createUser = (email, nickname, password, handleReset) => {
 
 export const saveProfilePhoto = async (formData, accessToken) => {
   const config = {
-      headers: {
-        'X-Auth-Token': accessToken,
-      },
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
   };
   try {
-    const response = await axios.post(DEFAULT_URL + '/user-images', formData, config);
+    const response = await axios.post(
+      DEFAULT_URL + '/user-images',
+      formData,
+      config,
+    );
     if (response.status === HTTP_STATUS_CREATED) {
       alert('전송에 성공했습니다!');
       return response.data;
@@ -69,15 +73,19 @@ export const updateUser = async (nickname, imageId, accessToken) => {
     },
   };
   try {
-    await axios.put(DEFAULT_URL + '/users/me', {
-      nickname,
-      imageId
-    }, config);
-    alert("내 정보가 성공적으로 바뀌었습니다!");
-    document.location.href = "/myProfile";
+    await axios.put(
+      DEFAULT_URL + '/users/me',
+      {
+        nickname,
+        imageId,
+      },
+      config,
+    );
+    alert('내 정보가 성공적으로 바뀌었습니다!');
+    document.location.href = '/myProfile';
   } catch (error) {
     redirectLoginWhenUnauthorized(error);
-    alert(error.response? error.response.status : error.request);
+    alert(error.response ? error.response.status : error.request);
     console.log(error);
   }
 };
@@ -167,12 +175,7 @@ export const pressPostZzang = async (postId, accessToken) => {
   return false;
 };
 
-export const findMyInfo = ({
-  accessToken,
-  setEmail,
-  setNickname,
-  setProfilePhotoUrl,
-}) => {
+export const findMyInfo = ({ accessToken }) => {
   const config = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -184,11 +187,6 @@ export const findMyInfo = ({
     .then(async (response) => {
       const userResponse = await response.data;
       console.log(userResponse);
-      setEmail(userResponse.email);
-      setNickname(userResponse.nickname);
-      if (userResponse.image) {
-        setProfilePhotoUrl(userResponse.image.url);
-      }
       return userResponse;
     })
     .catch((error) => {

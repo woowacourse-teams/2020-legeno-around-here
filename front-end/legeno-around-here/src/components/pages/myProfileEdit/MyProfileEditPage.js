@@ -16,15 +16,12 @@ function MyProfileEditPage() {
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
-  const [profilePhotoUrl, setProfilePhotoUrl] = useState(
-    '/default-profile.png',
-  );
   const [profilePhoto, setProfilePhoto] = useState({
     id: null,
-    url: '',
+    url: '/default-profile.png',
   });
 
-  const [originalNickname, setOriginalNickname] = useState();
+  const [originalNickname, setOriginalNickname] = useState('');
   const [loading, setLoading] = useState(false);
 
   const classes = useStyle();
@@ -33,15 +30,15 @@ function MyProfileEditPage() {
     setLoading(true);
     findMyInfo({
       accessToken: accessToken,
-      setEmail: setEmail,
-      setNickname: setNickname,
-      setProfilePhotoUrl: setProfilePhotoUrl,
     }).then((userResponse) => {
-      if (userResponse.image)
+      setEmail(userResponse.email);
+      setNickname(userResponse.nickname);
+      if (userResponse.image) {
         setProfilePhoto({
           id: userResponse.image.id,
           url: userResponse.image.url,
         });
+      }
       setOriginalNickname(userResponse.nickname);
     });
     setLoading(false);

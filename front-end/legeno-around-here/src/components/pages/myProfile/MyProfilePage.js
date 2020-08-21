@@ -24,9 +24,7 @@ function MyProfilePage() {
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
   const [mySectors, setMySectors] = useState([]);
-  const [profilePhotoUrl, setProfilePhotoUrl] = useState(
-    '/default-profile.png',
-  );
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -46,6 +44,12 @@ function MyProfilePage() {
       setEmail: setEmail,
       setNickname: setNickname,
       setProfilePhotoUrl: setProfilePhotoUrl,
+    }).then((userResponse) => {
+      setEmail(userResponse.email);
+      setNickname(userResponse.nickname);
+      setProfilePhotoUrl(
+        userResponse.image ? userResponse.image.url : '/default-profile.png',
+      );
     });
     setLoading(false);
   }, [accessToken]);
