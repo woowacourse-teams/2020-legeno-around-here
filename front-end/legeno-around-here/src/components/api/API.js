@@ -44,6 +44,28 @@ export const createUser = (email, nickname, password, handleReset) => {
     });
 };
 
+export const saveProfilePhoto = async (formData, accessToken) => {
+  const config = {
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
+  };
+  try {
+    const response = await axios.post(DEFAULT_URL + '/user-images', formData, config);
+    if (response.status === HTTP_STATUS_CREATED) {
+      alert('전송에 성공했습니다!');
+      document.location.href = response.headers.location;
+    }
+  } catch (error) {
+    redirectLoginWhenUnauthorized(error);
+    console.log(error);
+  }
+};
+
+export const updateUser = (nickname, imageUrl) => {
+
+};
+
 export const createPost = async (formData, accessToken) => {
   const config = {
     headers: {
