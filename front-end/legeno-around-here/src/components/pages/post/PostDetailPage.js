@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import Bottom from '../../Bottom';
-import { findPost } from '../../api/API';
+import { findMyInfo, findPost } from '../../api/API';
 import PostDetailTopBar from './PostDetailTopBar';
 import PostDetail from './PostDetail';
 import Loading from '../../Loading';
-import { makeStyles, Container } from '@material-ui/core';
+import { Container, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   blankMargin: {
@@ -20,8 +20,16 @@ const PostDetailPage = ({ match }) => {
   const accessToken = getAccessTokenFromCookie();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [myInfo, setMyInfo] = useState(null);
 
   useEffect(() => {
+    const loadMyInfo = async () => {
+      setLoading(true);
+      const foundMyInfo = await findMyInfo(accessToken);
+      setMyInfo(foundMyInfo);
+      setLoading(false);
+    };
+
     const loadPost = async () => {
       setLoading(true);
       const post = await findPost(accessToken, postId);
@@ -29,6 +37,7 @@ const PostDetailPage = ({ match }) => {
       setPost(post);
       setLoading(false);
     };
+    loadMyInfo();
     loadPost();
   }, [accessToken, postId]);
 
@@ -37,7 +46,7 @@ const PostDetailPage = ({ match }) => {
     <>
       <PostDetailTopBar />
       <Container>
-        {post && <PostDetail post={post} />}
+        {post && <PostDetail post={post} myInfo={myInfo} />}
         <div className={classes.blankMargin}></div>
       </Container>
       <Bottom />
