@@ -247,11 +247,11 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .extract().as(UserResponse.class);
     }
 
-    private UserResponse changeMyPassword(String accessToken, String password) {
+    private void changeMyPassword(String accessToken, String password) {
         Map<String, String> params = new HashMap<>();
         params.put("password", password);
 
-        return given()
+        given()
             .header("X-AUTH-TOKEN", accessToken)
             .body(params)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -259,8 +259,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .when()
             .put("/users/me/password")
             .then()
-            .statusCode(HttpStatus.NO_CONTENT.value())
-            .extract().as(UserResponse.class);
+            .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     private void deleteUser(String accessToken) {
