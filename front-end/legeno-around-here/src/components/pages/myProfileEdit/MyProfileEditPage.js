@@ -36,12 +36,12 @@ function MyProfileEditPage() {
       setEmail: setEmail,
       setNickname: setNickname,
       setProfilePhotoUrl: setProfilePhotoUrl,
-    }).then(userResponse => {
+    }).then((userResponse) => {
       if (userResponse.image)
-      setProfilePhoto({
-        id: userResponse.image.id,
-        url: userResponse.image.url
-      });
+        setProfilePhoto({
+          id: userResponse.image.id,
+          url: userResponse.image.url,
+        });
       setOriginalNickname(userResponse.nickname);
     });
     setLoading(false);
@@ -52,7 +52,7 @@ function MyProfileEditPage() {
   }
 
   const handleNicknameInputChanging = (e) => {
-    if (!e.target.value || e.target.value === "") {
+    if (!e.target.value || e.target.value === '') {
       setNickname(originalNickname);
       return;
     }
@@ -81,10 +81,11 @@ function MyProfileEditPage() {
             </Typography>
             <Typography component="h1" variant="h5">
               <TextField
-                id="standard-basic"
+                id="standard-helperText"
                 label="새 닉네임"
                 className={classes.newNicknameInput}
                 onChange={handleNicknameInputChanging}
+                helperText="공란이면 닉네임이 바뀌지 않습니다."
               />
             </Typography>
           </div>
