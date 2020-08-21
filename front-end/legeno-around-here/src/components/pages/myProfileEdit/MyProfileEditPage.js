@@ -42,7 +42,7 @@ function MyProfileEditPage() {
     <>
       <TopBar backButtonLink="/myProfile" />
       <div className={classes.basicLayout}>
-        <PhotoEditSection originalPhotoUrl={originalProfilePhotoUrl} />
+        <PhotoEditSection originalPhotoUrl={originalProfilePhotoUrl} accessToken={accessToken} />
         <div className={classes.infoEditSection}>
           <Typography component="div">{email}</Typography>
           <Typography component="h1" variant="h5">

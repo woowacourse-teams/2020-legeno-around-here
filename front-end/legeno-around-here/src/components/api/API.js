@@ -54,7 +54,7 @@ export const saveProfilePhoto = async (formData, accessToken) => {
     const response = await axios.post(DEFAULT_URL + '/user-images', formData, config);
     if (response.status === HTTP_STATUS_CREATED) {
       alert('전송에 성공했습니다!');
-      document.location.href = response.headers.location;
+      return response.data.url;
     }
   } catch (error) {
     redirectLoginWhenUnauthorized(error);
