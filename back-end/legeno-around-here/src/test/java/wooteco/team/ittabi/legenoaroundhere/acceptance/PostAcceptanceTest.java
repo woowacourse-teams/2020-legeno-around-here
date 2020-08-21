@@ -5,9 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_OTHER_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_SUB_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_EMPTY_IMAGES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_DIR;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_NAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_OTHER_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
@@ -28,10 +28,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
+import wooteco.team.ittabi.legenoaroundhere.utils.TestConverterUtils;
 
 public class PostAcceptanceTest extends AcceptanceTest {
 
@@ -82,7 +85,8 @@ public class PostAcceptanceTest extends AcceptanceTest {
         assertThat(postWithoutImageResponse.getSector()).isEqualTo(sector);
 
         // 이미지가 포함된 글 등록
-        String postWithImageLocation = createPostWithImage(accessToken);
+        List<PostImageResponse> postImages = uploadPostImages(accessToken);
+        String postWithImageLocation = createPostWithImage(accessToken, postImages);
         Long postWithImageId = getIdFromUrl(postWithImageLocation);
 
         PostResponse postWithImageResponse = findPost(accessToken, postWithImageId);
@@ -338,14 +342,14 @@ public class PostAcceptanceTest extends AcceptanceTest {
     }
 
     private String createPostWithoutImage(String accessToken) {
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
+
         return given()
             .log().all()
-            .formParam("writing", TEST_POST_WRITING)
-            .formParam("areaId", TEST_AREA_ID)
-            .formParam("sectorId", sectorId)
             .header("X-AUTH-TOKEN", accessToken)
-            .config(RestAssuredConfig.config()
-                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+            .body(postCreateRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .post("/posts")
             .then()
@@ -356,14 +360,14 @@ public class PostAcceptanceTest extends AcceptanceTest {
 
     private String createPostWithoutImageWithAreaAndSector(String accessToken, Long areaId,
         Long sectorId) {
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_EMPTY_IMAGES, areaId, sectorId);
+
         return given()
             .log().all()
-            .formParam("writing", TEST_POST_WRITING)
-            .formParam("areaId", areaId)
-            .formParam("sectorId", sectorId)
             .header("X-AUTH-TOKEN", accessToken)
-            .config(RestAssuredConfig.config()
-                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+            .body(postCreateRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .post("/posts")
             .then()
@@ -372,19 +376,34 @@ public class PostAcceptanceTest extends AcceptanceTest {
             .header("Location");
     }
 
-    private String createPostWithImage(String accessToken) {
-        // TODO: 2020/07/28 이미지를 포함했을 때 한글이 안 나오는 문제
-
+    private List<PostImageResponse> uploadPostImages(String accessToken) {
         return given()
             .log().all()
-            .formParam("writing", TEST_POST_WRITING)
             .multiPart("images", new File(TEST_IMAGE_DIR + TEST_IMAGE_NAME))
-            .multiPart("images", new File(TEST_IMAGE_DIR + TEST_IMAGE_OTHER_NAME))
-            .formParam("areaId", TEST_AREA_ID)
-            .formParam("sectorId", sectorId)
+            .multiPart("images", new File(TEST_IMAGE_DIR + TEST_IMAGE_NAME))
             .header("X-AUTH-TOKEN", accessToken)
             .config(RestAssuredConfig.config()
                 .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+            .when()
+            .post("/posts/images")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract()
+            .jsonPath()
+            .getList(".", PostImageResponse.class);
+    }
+
+    private String createPostWithImage(String accessToken,
+        List<PostImageResponse> postImageResponses) {
+        List<Long> postImageIds = TestConverterUtils.convertImageIds(postImageResponses);
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING, postImageIds,
+            TEST_AREA_ID, sectorId);
+
+        return given()
+            .log().all()
+            .header("X-AUTH-TOKEN", accessToken)
+            .body(postCreateRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .post("/posts")
             .then()
