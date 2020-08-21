@@ -159,12 +159,10 @@ public class PostServiceTest extends ServiceTest {
         postService.createPost(postCreateRequest);
 
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES,
-            TEST_AREA_OTHER_ID, sectorOtherId);
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
         postService.createPost(postCreateRequest);
 
-        PostSearchRequest postSearchRequest = new PostSearchRequest(
-            String.valueOf(TEST_AREA_OTHER_ID), null);
+        PostSearchRequest postSearchRequest = new PostSearchRequest(TEST_AREA_OTHER_ID, null);
         Page<PostWithCommentsCountResponse> posts
             = postService.searchAllPost(Pageable.unpaged(), postSearchRequest);
 
@@ -197,8 +195,8 @@ public class PostServiceTest extends ServiceTest {
             TEST_AREA_OTHER_ID, sectorOtherId);
         postService.createPost(postCreateRequest);
 
-        PostSearchRequest postSearchRequest = new PostSearchRequest(
-            String.valueOf(TEST_AREA_OTHER_ID), String.valueOf(sectorOtherId));
+        PostSearchRequest postSearchRequest
+            = new PostSearchRequest(TEST_AREA_OTHER_ID, String.valueOf(sectorOtherId));
         Page<PostWithCommentsCountResponse> posts
             = postService.searchAllPost(Pageable.unpaged(), postSearchRequest);
 

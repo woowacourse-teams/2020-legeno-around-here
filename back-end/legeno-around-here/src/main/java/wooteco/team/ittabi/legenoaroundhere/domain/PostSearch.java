@@ -18,12 +18,12 @@ public class PostSearch {
 
     protected static final String DELIMITER = ",";
 
-    private List<Long> areaIds;
+    private Long areaId;
     private List<Long> sectorIds;
 
     @Builder
-    public PostSearch(String areaIds, String sectorIds) {
-        this.areaIds = makeUniqueIds("areaID", areaIds);
+    public PostSearch(Long areaId, String sectorIds) {
+        this.areaId = areaId;
         this.sectorIds = makeUniqueIds("sectorId", sectorIds);
     }
 
@@ -42,14 +42,14 @@ public class PostSearch {
     }
 
     public boolean isAreaFilter() {
-        return !areaIds.isEmpty() && sectorIds.isEmpty();
+        return Objects.nonNull(areaId) && sectorIds.isEmpty();
     }
 
     public boolean isSectorFilter() {
-        return areaIds.isEmpty() && !sectorIds.isEmpty();
+        return Objects.isNull(areaId) && !sectorIds.isEmpty();
     }
 
     public boolean isNotExistsFilter() {
-        return areaIds.isEmpty() && sectorIds.isEmpty();
+        return Objects.isNull(areaId) && sectorIds.isEmpty();
     }
 }

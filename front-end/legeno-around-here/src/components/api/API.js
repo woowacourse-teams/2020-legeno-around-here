@@ -152,7 +152,7 @@ export const findCurrentPostsFromPage = async (
         `size=${DEFAULT_SIZE}&` +
         `sortedBy=${DEFAULT_SORTED_BY}&` +
         `direction=${DEFAULT_DIRECTION}&` +
-        `areaIds=${mainAreaId}&` +
+        `areaId=${mainAreaId}&` +
         `sectorIds=`,
       config,
     )
