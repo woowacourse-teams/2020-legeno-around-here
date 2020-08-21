@@ -3,7 +3,7 @@ package wooteco.team.ittabi.legenoaroundhere.utils;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -40,7 +40,7 @@ public class ImageUploader {
 
     public List<PostImage> uploadPostImages(List<MultipartFile> multipartFiles) {
         if (Objects.isNull(multipartFiles) || multipartFiles.isEmpty()) {
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
         return multipartFiles.stream()
             .map(this::uploadPostImage)
