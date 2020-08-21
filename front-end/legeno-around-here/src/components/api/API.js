@@ -142,7 +142,7 @@ export const findMyInfo = ({
     },
   };
   axios
-    .get(DEFAULT_URL + '/users/myinfo', config)
+    .get(DEFAULT_URL + '/users/me', config)
     .then(async (response) => {
       const userResponse = await response.data;
       console.log(userResponse);
