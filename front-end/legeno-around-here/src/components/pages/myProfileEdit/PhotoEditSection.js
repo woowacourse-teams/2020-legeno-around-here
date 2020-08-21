@@ -1,8 +1,9 @@
 import React from 'react';
-import IconButton from '@material-ui/core/IconButton';
 import { saveProfilePhoto } from '../../api/API';
 import Typography from '@material-ui/core/Typography';
 import useStyle from './PhotoEditSectionStyle';
+import Button from '@material-ui/core/Button'
+import { DEFAULT_IMAGE_URL } from './MyProfileEditPage'
 
 const PhotoEditSection = ({
   profilePhoto,
@@ -13,6 +14,13 @@ const PhotoEditSection = ({
     profilePhoto: profilePhoto,
   };
   const classes = useStyle(props);
+
+  const applyDefaultImage = () => {
+    setProfilePhoto({
+      id: null,
+      url: DEFAULT_IMAGE_URL
+    });
+  }
 
   const onImagesChanged = (e) => {
     const formData = new FormData();
@@ -31,11 +39,16 @@ const PhotoEditSection = ({
     <div className={classes.photoEditSection}>
       <div className={classes.photo} />
       <div>
-        <IconButton className={classes.button}>
+        <Button className={classes.button}>
           <label htmlFor="upload-photo">
             <Typography className={classes.photoEditButton}>수정</Typography>
           </label>
-        </IconButton>
+        </Button>
+        <Button className={classes.button} onClick={applyDefaultImage}>
+          <label>
+            <Typography className={classes.usingDefaultPhotoButton}>기본이미지 사용</Typography>
+          </label>
+        </Button>
         <input
           type="file"
           name="photo"

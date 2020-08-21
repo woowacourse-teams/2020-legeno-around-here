@@ -18,6 +18,7 @@ import {
 import { AwardsSection, AwardSummary } from '../../myProfile/AwardSection';
 import { NavElement, NavSection } from '../../myProfile/LinksSection';
 import MySectors from './MySectors';
+import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
 
 function MyProfilePage() {
   const [accessToken] = useState(getAccessTokenFromCookie());
@@ -48,7 +49,7 @@ function MyProfilePage() {
       setEmail(userResponse.email);
       setNickname(userResponse.nickname);
       setProfilePhotoUrl(
-        userResponse.image ? userResponse.image.url : '/default-profile.png',
+        userResponse.image ? userResponse.image.url : DEFAULT_IMAGE_URL,
       );
     });
     setLoading(false);

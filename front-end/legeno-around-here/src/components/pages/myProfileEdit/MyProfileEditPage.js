@@ -12,13 +12,15 @@ import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import PhotoEditSection from './PhotoEditSection';
 import useStyle from './MyProfileEditStyles';
 
+export const DEFAULT_IMAGE_URL = '/default-profile.png';
+
 function MyProfileEditPage() {
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
   const [profilePhoto, setProfilePhoto] = useState({
     id: null,
-    url: '/default-profile.png',
+    url: DEFAULT_IMAGE_URL,
   });
 
   const [originalNickname, setOriginalNickname] = useState('');

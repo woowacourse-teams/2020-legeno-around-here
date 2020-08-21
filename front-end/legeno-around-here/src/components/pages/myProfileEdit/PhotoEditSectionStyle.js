@@ -15,6 +15,7 @@ const useStyle = makeStyles({
   photoEditSection: {
     width: '90%',
     display: 'flex',
+    flexDirection: 'row',
     alignItems: 'center',
     margin: '20px auto',
   },
@@ -27,6 +28,9 @@ const useStyle = makeStyles({
   photoEditButton: {
     color: 'black',
   },
+  usingDefaultPhotoButton: {
+    color: '#888888',
+  }
 });
 
 export default useStyle;
