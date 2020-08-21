@@ -69,7 +69,7 @@ export const updateUser = async (nickname, imageId, accessToken) => {
     },
   };
   try {
-    await axios.put(DEFAULT_URL + '/users/myinfo', {
+    await axios.put(DEFAULT_URL + '/users/me', {
       nickname,
       imageId
     }, config);
