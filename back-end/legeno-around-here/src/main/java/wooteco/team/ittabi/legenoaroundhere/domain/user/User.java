@@ -70,6 +70,9 @@ public class User extends BaseEntity implements UserDetails {
     @JoinColumn(name = "area_id")
     private Area area = null;
 
+    @Column(nullable = false, columnDefinition = "tinyint(1) default 0")
+    private boolean isAuthenticatedByEmail;
+
     @Builder
     public User(String email, String nickname, String password, Area area, UserImage image) {
         this.email = makeEmail(email);
@@ -122,6 +125,10 @@ public class User extends BaseEntity implements UserDetails {
 
     public String getPasswordByString() {
         return this.password.getPassword();
+    }
+
+    public boolean isNotAuthenticatedByEmail(){
+        return isAuthenticatedByEmail == false;
     }
 
     @Override

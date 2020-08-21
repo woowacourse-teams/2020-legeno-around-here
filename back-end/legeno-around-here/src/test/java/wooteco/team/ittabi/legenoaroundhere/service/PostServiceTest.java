@@ -57,8 +57,10 @@ public class PostServiceTest extends ServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
-        another = createUser(TEST_USER_OTHER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        user = createUser("post_" + TEST_USER_EMAIL, TEST_USER_NICKNAME,
+            TEST_USER_PASSWORD);
+        another = createUser("post_" + TEST_USER_OTHER_EMAIL, TEST_USER_NICKNAME,
+            TEST_USER_PASSWORD);
         setAuthentication(user);
 
         sector = sectorService.createSector(TEST_SECTOR_REQUEST);

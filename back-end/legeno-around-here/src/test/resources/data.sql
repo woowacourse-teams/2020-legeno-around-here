@@ -10,15 +10,33 @@ SELECT id
      , NOW()
 FROM CSVRead('src/test/resources/area.csv');
 
-INSERT INTO User(id, email, nickname, password, created_at, modified_at)
+INSERT INTO User(id, email, nickname, password, is_authenticated_by_email, area_id, created_at, modified_at)
 VALUES (1, 'admin@test.com', 'adminName',
-        '$2a$10$3tWu7vV57AaV4m96qwTkieQbY8R5TWhDE401ff7XGlSmRC/ItL0F.', now(), now()),
-       (2, 'user@email.com', '유저씨',
-        '$2a$10$dEcia20EDmjecE7dlxmSJeb6pHk/cKixUxVdFDKfdABSovUxySFgK', now(), now());
+        '$2a$10$3tWu7vV57AaV4m96qwTkieQbY8R5TWhDE401ff7XGlSmRC/ItL0F.', true, null, now(), now()),
+       (2, 'user@test.com', 'userName',
+        '$2a$10$jDX7aPOqQ8Z2D9mNvka72OyUOOIfy6bJKq4cqL3RXCfiIt4wYSev.', true, null, now(), now()),
+       (3, 'another@test.com', 'userName',
+        '$2a$10$jDX7aPOqQ8Z2D9mNvka72OyUOOIfy6bJKq4cqL3RXCfiIt4wYSev.', true, 1, now(), now()),
+       (4, 'theother@test.com', 'userName',
+        '$2a$10$jDX7aPOqQ8Z2D9mNvka72OyUOOIfy6bJKq4cqL3RXCfiIt4wYSev.', true, null, now(), now()),
+       (5, 'update@test.com', 'userName',
+        '$2a$10$jDX7aPOqQ8Z2D9mNvka72OyUOOIfy6bJKq4cqL3RXCfiIt4wYSev.', true, null, now(), now()),
+       (6, 'a@capzzang.co.kr', 'userName',
+        '$2a$10$jDX7aPOqQ8Z2D9mNvka72OyUOOIfy6bJKq4cqL3RXCfiIt4wYSev.', true, null, now(), now()),
+       (7, 'b@capzzang.co.kr', 'userName',
+        '$2a$10$jDX7aPOqQ8Z2D9mNvka72OyUOOIfy6bJKq4cqL3RXCfiIt4wYSev.', true, null, now(), now()),
+       (8, 'c@capzzang.co.kr', 'userName',
+        '$2a$10$jDX7aPOqQ8Z2D9mNvka72OyUOOIfy6bJKq4cqL3RXCfiIt4wYSev.', true, null, now(), now());
 
 INSERT INTO User_roles(user_id, roles)
 VALUES (1, 'ROLE_ADMIN'),
-       (2, 'ROLE_USER');
+       (2, 'ROLE_USER'),
+       (3, 'ROLE_USER'),
+       (4, 'ROLE_USER'),
+       (5, 'ROLE_USER'),
+       (6, 'ROLE_USER'),
+       (7, 'ROLE_USER'),
+       (8, 'ROLE_USER');
 
 INSERT INTO Sector(id, name, description, state, reason,
                    creator_id, last_modifier_id, created_at, modified_at)

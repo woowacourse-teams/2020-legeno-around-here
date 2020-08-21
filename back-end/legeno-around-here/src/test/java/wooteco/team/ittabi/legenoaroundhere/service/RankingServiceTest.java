@@ -56,7 +56,7 @@ public class RankingServiceTest extends ServiceTest {
 
     @BeforeEach
     void setUp() {
-        User user = createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        User user = createUser("ranking_"+TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         userA = createUser(TEST_USER_EMAIL + "A", TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         userB = createUser(TEST_USER_EMAIL + "B", TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         userC = createUser(TEST_USER_EMAIL + "C", TEST_USER_NICKNAME, TEST_USER_PASSWORD);

@@ -43,7 +43,6 @@ public class PostAcceptanceTest extends AcceptanceTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         TokenResponse tokenResponse = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
         accessToken = tokenResponse.getAccessToken();
 
