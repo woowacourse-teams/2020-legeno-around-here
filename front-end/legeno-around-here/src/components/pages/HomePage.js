@@ -9,6 +9,7 @@ import { getAccessTokenFromCookie } from '../../util/TokenUtils';
 import { HOME } from '../../constants/BottomItems';
 import PostItem from '../post/PostItem';
 import Loading from '../Loading';
+import BottomBlank from '../BottomBlank';
 
 const HomePage = () => {
   const [page, setPage] = useState(0);
@@ -60,10 +61,7 @@ const HomePage = () => {
           <PostItem key={post.id} post={post} />
         ))}
       </InfiniteScroll>
-      <br />
-      <br />
-      <br />
-      <br />
+      <BottomBlank />
       <Bottom selected={HOME} />
     </>
   );

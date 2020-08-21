@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Loading from '../../Loading';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
@@ -15,8 +15,8 @@ import {
 } from '@material-ui/core';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 
-import {createPost, findAllSectors} from '../../api/API';
-import {getAccessTokenFromCookie} from '../../../util/TokenUtils';
+import { createPost, findSectorsFromPage } from '../../api/API';
+import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import useStyles from './PostingFormStyles';
 import SectorApplyButton from '../sector/SectorApplyButton';
 
@@ -42,7 +42,7 @@ const PostingForm = () => {
   useEffect(() => {
     const loadSectors = async () => {
       setLoading(true);
-      const allSectors = await findAllSectors(accessToken);
+      const allSectors = await findSectorsFromPage(0, accessToken);
       setSectors(allSectors);
       setLoading(false);
     };

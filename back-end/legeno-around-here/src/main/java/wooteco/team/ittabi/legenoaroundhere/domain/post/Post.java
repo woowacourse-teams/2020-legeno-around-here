@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.post;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -95,6 +96,18 @@ public class Post extends BaseEntity {
         return zzangs.size();
     }
 
+    public int getPostZzangCountByDate(LocalDateTime startDate, LocalDateTime endDate) {
+        long zzangCount = zzangs.stream()
+            .filter(postZzang -> isDateBetween(postZzang.getCreatedAt(), startDate, endDate))
+            .count();
+        return Math.toIntExact(zzangCount);
+    }
+
+    private boolean isDateBetween(LocalDateTime targetDate, LocalDateTime startDate,
+        LocalDateTime endDate) {
+        return targetDate.isAfter(startDate)
+            && targetDate.isBefore(endDate);
+    }
 
     public PostZzang findPostZzangBy(User user) {
         return zzangs.stream()
