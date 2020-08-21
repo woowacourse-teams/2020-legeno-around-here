@@ -1,4 +1,4 @@
-package wooteco.team.ittabi.legenoaroundhere.domain.post;
+package wooteco.team.ittabi.legenoaroundhere.domain;
 
 public enum State {
     PUBLISHED(true),

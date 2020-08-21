@@ -2,6 +2,7 @@ package wooteco.team.ittabi.legenoaroundhere.domain.comment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static wooteco.team.ittabi.legenoaroundhere.domain.State.DELETED;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.CommentConstants.TEST_COMMENT_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
@@ -16,7 +17,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
@@ -55,7 +55,7 @@ class CommentTest {
     @DisplayName("Zzang을 눌렀을 때, 예외 발생 - Comment가 유효한 상태가 아닐 경우")
     @Test
     void pressZzang_CommentNotAvailable_ThrownException() {
-        comment.setState(CommentState.DELETED);
+        comment.setState(DELETED);
 
         assertThatThrownBy(() -> comment.pressZzang(creator))
             .isInstanceOf(NotAvailableException.class);
@@ -64,7 +64,7 @@ class CommentTest {
     @DisplayName("Zzang을 눌렀을 때, 예외 발생 - Post가 유효한 상태가 아닐 경우")
     @Test
     void pressZzang_PostNotAvailable_ThrownException() {
-        post.setState(State.DELETED);
+        post.setState(DELETED);
 
         assertThatThrownBy(() -> comment.pressZzang(creator))
             .isInstanceOf(NotAvailableException.class);
@@ -93,5 +93,33 @@ class CommentTest {
             .collect(Collectors.toList());
 
         assertThat(zzangCreators).doesNotContain(creator);
+    }
+
+
+    @DisplayName("하위 코멘트가 한 개인지, True - 한 개인 경우")
+    @Test
+    void hasOnlyCocomment_Only_True() {
+        Comment cocomment = new Comment(creator, TEST_COMMENT_WRITING);
+        cocomment.setSuperComment(comment);
+
+        assertThat(comment.hasOnlyCocomment()).isTrue();
+    }
+
+    @DisplayName("하위 코멘트가 한 개인지, False - 하위 코멘트가 없는 경우")
+    @Test
+    void hasOnlyCocomment_NoCocomment_False() {
+        assertThat(comment.hasOnlyCocomment()).isFalse();
+    }
+
+    @DisplayName("하위 코멘트가 한 개인지, False - 하위 코멘트가 2개인 경우")
+    @Test
+    void hasOnlyCocommentOfSuperComment_TwoCocomment_False() {
+        Comment cocomment = new Comment(creator, TEST_COMMENT_WRITING);
+        cocomment.setSuperComment(comment);
+
+        Comment otherCocomment = new Comment(creator, TEST_COMMENT_WRITING);
+        otherCocomment.setSuperComment(comment);
+
+        assertThat(comment.hasOnlyCocomment()).isFalse();
     }
 }

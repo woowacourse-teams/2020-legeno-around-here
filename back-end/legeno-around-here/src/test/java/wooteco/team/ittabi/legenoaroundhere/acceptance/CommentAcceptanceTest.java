@@ -177,7 +177,6 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         commentResponses = findAllCommentBy(postId, accessToken);
         assertThat(commentResponses).hasSize(1);
 
-        System.out.println(">>>>>>>>>>>THIRD DELETE>>>>>>>>>>>>" + cocommentOtherId);
         deleteComment(accessToken, cocommentOtherId);
         findNotExistsComment(accessToken, cocommentOtherId);
         findNotExistsComment(accessToken, commentId);

@@ -1,5 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.comment;
 
+import static wooteco.team.ittabi.legenoaroundhere.domain.State.PUBLISHED;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -21,6 +23,7 @@ import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
+import wooteco.team.ittabi.legenoaroundhere.domain.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAvailableException;
@@ -42,7 +45,7 @@ public class Comment extends BaseEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private CommentState state;
+    private State state;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
@@ -65,7 +68,7 @@ public class Comment extends BaseEntity {
     public Comment(User creator, String writing) {
         validateLength(writing);
         this.writing = writing;
-        this.state = CommentState.PUBLISHED;
+        this.state = PUBLISHED;
         this.creator = creator;
     }
 
@@ -95,6 +98,39 @@ public class Comment extends BaseEntity {
         }
     }
 
+    public boolean isAvailable() {
+        return state.isAvailable();
+    }
+
+    public boolean hasZzangCreator(User user) {
+        return zzangs.stream()
+            .anyMatch(zzang -> zzang.isSameCreator(user));
+    }
+
+    public boolean hasPost() {
+        return Objects.nonNull(this.post);
+    }
+
+    public boolean hasSuperComment() {
+        return Objects.isNull(superComment);
+    }
+
+    public boolean hasCocoments() {
+        return !cocomments.isEmpty();
+    }
+
+    public boolean hasOnlyCocomment() {
+        return cocomments.size() == 1;
+    }
+
+    public int getZzangCounts() {
+        return zzangs.size();
+    }
+
+    public void setWriting(String writing) {
+        this.writing = writing;
+    }
+
     public void setPost(Post post) {
         if (Objects.nonNull(this.post)) {
             this.post.removeComments(this);
@@ -103,51 +139,17 @@ public class Comment extends BaseEntity {
         post.addComment(this);
     }
 
-    public boolean hasPost() {
-        return Objects.nonNull(this.post);
-    }
-
-    public int getZzangCounts() {
-        return zzangs.size();
-    }
-
-    public String getWriting() {
-        return state.changeWriting(writing);
-    }
-
-    public boolean hasZzangCreator(User user) {
-        return zzangs.stream()
-            .anyMatch(zzang -> zzang.isSameCreator(user));
-    }
-
-    public boolean hasCocoments() {
-        return !cocomments.isEmpty();
-    }
-
-    public boolean isAvailable() {
-        return state.isAvailable();
-    }
-
-    public boolean isSuperComment() {
-        return Objects.isNull(superComment);
-    }
-
-    public void setWriting(String writing) {
-        this.writing = writing;
-    }
-
     public void setSuperComment(Comment comment) {
         this.superComment = comment;
         this.post = comment.post;
         comment.cocomments.add(this);
     }
 
-    public void setState(CommentState state) {
+    public void setState(State state) {
         this.state = state;
     }
 
-    public boolean isOnlyCocommentOfSuperComment() {
-        return Objects.nonNull(superComment)
-            && superComment.cocomments.size() == 1;
+    public boolean isNotAvailable() {
+        return !state.isAvailable();
     }
 }
