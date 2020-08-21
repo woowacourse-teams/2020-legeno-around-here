@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Objects;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
@@ -56,11 +57,12 @@ public class S3Uploader {
     }
 
     private void removeNewFile(File targetFile) {
-        if (targetFile.delete()) {
+        try {
+            Files.delete(targetFile.toPath());
             log.info("파일이 삭제되었습니다.");
-            return;
+        } catch (IOException e) {
+            log.info("파일이 삭제되지 못했습니다.");
         }
-        log.info("파일이 삭제되지 못했습니다.");
     }
 
     private File convert(MultipartFile multipartFile) {
