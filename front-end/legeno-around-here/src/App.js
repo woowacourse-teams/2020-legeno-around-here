@@ -7,9 +7,10 @@ import SectorPage from './components/pages/sector/SectorPage';
 import PostDetailPage from './components/pages/post/PostDetailPage';
 import MyProfileEditPage
   from './components/pages/myProfileEdit/MyProfileEditPage';
-import Home from './components/pages/Home';
-import Ranking from './components/pages/Ranking';
 import PostingUpdatePage from './components/pages/posting/PostingUpdatePage';
+import MyProfilePage from './components/pages/myProfile/MyProfilePage';
+import HomePage from './components/pages/HomePage';
+import RankingPage from './components/pages/RankingPage';
 
 function App() {
   const mainArea = localStorage.getItem('mainAreaName');
@@ -22,21 +23,17 @@ function App() {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path='/' exact component={Home} />
+        <Route path='/' exact component={HomePage} />
         <Route path='/join' exact component={Join} />
         <Route path='/login' exact component={Login} />
-        <Route path='/myProfile' exact component={MyProfile} />
+        <Route path='/myProfile' exact component={MyProfilePage} />
         <Route path='/posting' exact component={PostingPage} />
-        <Route
-          path='/posts/:postId/update'
-          exact
-          component={PostingUpdatePage}
-        />
+        <Route path='/posts/:postId/update' exact component={PostingUpdatePage} />
         <Route path='/sector' exact component={SectorPage} />
         <Route path='/posts/:postId' exact component={PostDetailPage} />
-        <Route path='/home' exact component={Home} />
-        <Route path='/ranking' exact component={Ranking} />
-        <Route path="/myProfileEdit" exact component={MyProfileEditPage} />
+        <Route path='/home' exact component={HomePage} />
+        <Route path='/ranking' exact component={RankingPage} />
+        <Route path='/myProfileEdit' exact component={MyProfileEditPage} />
         <Redirect path='*' to='/' />
       </Switch>
     </BrowserRouter>
