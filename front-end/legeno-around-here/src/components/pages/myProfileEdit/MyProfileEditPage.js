@@ -23,6 +23,8 @@ function MyProfileEditPage() {
     id: null,
     url: '',
   });
+
+  const [originalNickname, setOriginalNickname] = useState();
   const [loading, setLoading] = useState(false);
 
   const classes = useStyle();
@@ -39,7 +41,8 @@ function MyProfileEditPage() {
       setProfilePhoto({
         id: userResponse.image.id,
         url: userResponse.image.url
-      })
+      });
+      setOriginalNickname(userResponse.nickname);
     });
     setLoading(false);
   }, [accessToken]);
@@ -49,10 +52,15 @@ function MyProfileEditPage() {
   }
 
   const handleNicknameInputChanging = (e) => {
+    if (!e.target.value || e.target.value === "") {
+      setNickname(originalNickname);
+      return;
+    }
     setNickname(e.target.value);
   };
 
   const onSubmit = (event) => {
+    event.preventDefault();
     updateUser(nickname, profilePhoto.id, accessToken);
   };
 
@@ -69,7 +77,7 @@ function MyProfileEditPage() {
           <Typography component="div">{email}</Typography>
           <div className={classes.nicknameEditSection}>
             <Typography component="h1" variant="h5">
-              {nickname}
+              {originalNickname}
             </Typography>
             <Typography component="h1" variant="h5">
               <TextField
