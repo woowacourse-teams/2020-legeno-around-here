@@ -65,7 +65,7 @@ public class AwardAcceptanceTest extends AcceptanceTest {
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
             .when()
-            .get("/awards/my")
+            .get("/awards/me")
             .then()
             .log().all()
             .statusCode(HttpStatus.OK.value())

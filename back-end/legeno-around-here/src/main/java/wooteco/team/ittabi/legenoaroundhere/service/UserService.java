@@ -21,6 +21,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
@@ -85,16 +86,33 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public UserResponse updateUser(UserUpdateRequest userUpdateRequest) {
+    public UserResponse updateMyInfo(UserUpdateRequest userUpdateRequest) {
         User user = (User) authenticationFacade.getPrincipal();
         User foundUser = userRepository.findByEmail(user.getEmail())
             .orElseThrow(() -> new NotExistsException("사용자를 찾을 수 없습니다."));
         Area area = findAreaBy(userUpdateRequest.getAreaId());
         UserImage userImage = findUserImageBy(userUpdateRequest.getImageId());
 
-        foundUser.update(UserAssembler.assemble(userUpdateRequest, area, userImage));
+        foundUser.setNickname(userUpdateRequest.getNickname());
+        foundUser.setArea(area);
+        foundUser.setImage(userImage);
 
         return UserResponse.from(foundUser);
+    }
+
+    @Transactional
+    public void changeMyPassword(UserPasswordUpdateRequest userPasswordUpdateRequest) {
+        User user = (User) authenticationFacade.getPrincipal();
+        User foundUser = userRepository.findByEmail(user.getEmail())
+            .orElseThrow(() -> new NotExistsException("사용자를 찾을 수 없습니다."));
+
+        String password = userPasswordUpdateRequest.getPassword();
+        if (PASSWORD_ENCODER.matches(password, user.getPasswordByString())) {
+            throw new WrongUserInputException("기존의 비밀번호와 동일한 비밀번호입니다.");
+        }
+
+        String encodePassword = PASSWORD_ENCODER.encode(password);
+        foundUser.setPassword(encodePassword);
     }
 
     private UserImage findUserImageBy(Long userImageId) {

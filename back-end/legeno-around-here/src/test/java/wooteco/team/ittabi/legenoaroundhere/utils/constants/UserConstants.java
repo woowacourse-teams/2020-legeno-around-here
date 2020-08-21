@@ -13,4 +13,5 @@ public class UserConstants {
     public static final String TEST_USER_PASSWORD = "testPassword";
 
     public static final String TEST_USER_OTHER_EMAIL = "another@test.com";
+    public static final String TEST_USER_OTHER_PASSWORD = "Password";
 }

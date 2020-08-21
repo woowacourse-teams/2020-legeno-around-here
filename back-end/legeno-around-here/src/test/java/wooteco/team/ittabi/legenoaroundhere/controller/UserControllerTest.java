@@ -152,7 +152,7 @@ class UserControllerTest {
 
         String expectedJson = objectMapper.writeValueAsString(expected);
 
-        String actual = this.mockMvc.perform(get("/users/myinfo")
+        String actual = this.mockMvc.perform(get("/users/me")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -165,17 +165,17 @@ class UserControllerTest {
 
     @Test
     @DisplayName("내 정보 수정")
-    void updateUser() throws Exception {
+    void updateMyUser_Success() throws Exception {
         UserResponse expected = UserResponse.builder()
             .id(TEST_USER_ID)
             .email(TEST_USER_EMAIL)
             .nickname(TEST_USER_NICKNAME)
             .build();
-        given(userService.updateUser(any())).willReturn(expected);
+        given(userService.updateMyInfo(any())).willReturn(expected);
 
         String expectedJson = objectMapper.writeValueAsString(expected);
 
-        String actual = this.mockMvc.perform(put("/users/myinfo")
+        String actual = this.mockMvc.perform(put("/users/me")
             .content(expectedJson)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON))
@@ -190,7 +190,7 @@ class UserControllerTest {
     @Test
     @DisplayName("회원 탈퇴")
     void deleteUser() throws Exception {
-        this.mockMvc.perform(delete("/users/myinfo")
+        this.mockMvc.perform(delete("/users/me")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
