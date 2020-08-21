@@ -14,9 +14,7 @@ import lombok.ToString;
 @Setter
 @EqualsAndHashCode
 @ToString
-public class UserUpdateRequest {
+public class UserPasswordUpdateRequest {
 
-    private String nickname;
-    private Long areaId;
-    private Long imageId;
+    private String password;
 }
