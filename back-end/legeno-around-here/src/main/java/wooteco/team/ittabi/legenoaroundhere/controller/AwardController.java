@@ -41,7 +41,7 @@ public class AwardController {
             .ok(awards);
     }
 
-    @GetMapping("/awards/my")
+    @GetMapping("/awards/me")
     public ResponseEntity<List<AwardResponse>> findMyAwards() {
         return ResponseEntity
             .ok(awards);

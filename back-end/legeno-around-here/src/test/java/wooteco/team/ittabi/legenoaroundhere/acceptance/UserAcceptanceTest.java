@@ -2,12 +2,14 @@ package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
 import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_DIR;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_OTHER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_OTHER_PASSWORD;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import io.restassured.RestAssured;
@@ -80,18 +82,25 @@ public class UserAcceptanceTest extends AcceptanceTest {
         UserImageResponse userImageResponse = createUserImage(accessToken);
 
         // 내 정보 수정 - 프로필 사진 포함
-        updateUserWithImage(accessToken, "newname", "newpassword", userImageResponse.getId());
+        updateMyInfoWithImage(accessToken, "newname", userImageResponse.getId());
         UserResponse updatedUserResponse = findUser(accessToken);
         assertThat(updatedUserResponse.getNickname()).isEqualTo("newname");
         assertThat(updatedUserResponse.getImage()).isNotNull();
-        login(TEST_USER_EMAIL, "newpassword");
+        login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
 
         // 내 정보 수정 - 프로필 사진 사용 안함(기본 이미지)
-        updateUserWithImage(accessToken, TEST_USER_NICKNAME, TEST_USER_PASSWORD, null);
+        updateMyInfoWithImage(accessToken, TEST_USER_NICKNAME, null);
         updatedUserResponse = findUser(accessToken);
         assertThat(updatedUserResponse.getNickname()).isEqualTo(TEST_USER_NICKNAME);
         assertThat(updatedUserResponse.getImage()).isNull();
         login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
+
+        // 비밀번호 수정
+        changeMyPassword(accessToken, TEST_USER_OTHER_PASSWORD);
+        login(TEST_USER_EMAIL, TEST_USER_OTHER_PASSWORD);
+
+        // 비밀번호 수정 실패 - 동일한 비밀번호로 수정
+        assertThatThrownBy(() -> changeMyPassword(accessToken, TEST_USER_OTHER_PASSWORD));
 
         // 회원 탈퇴
         deleteUser(accessToken);
@@ -124,11 +133,11 @@ public class UserAcceptanceTest extends AcceptanceTest {
         assertThat(userResponse.getArea()).isNotNull();
         assertThat(userResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
 
-        updateUserWithoutAreaAndImage(accessToken, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        updateMyInfoWithoutAreaAndImage(accessToken, TEST_USER_NICKNAME);
         userResponse = findUser(accessToken);
         assertThat(userResponse.getArea()).isNull();
 
-        updateUserWithAreaAndWithoutImage(accessToken, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        updateMyInfoWithAreaAndWithoutImage(accessToken, TEST_USER_NICKNAME);
         userResponse = findUser(accessToken);
         assertThat(userResponse.getArea()).isNotNull();
         assertThat(userResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
@@ -171,7 +180,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .header("X-AUTH-TOKEN", accessToken)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when()
-            .get("/users/myinfo")
+            .get("/users/me")
             .then()
             .statusCode(HttpStatus.OK.value())
             .extract().as(UserResponse.class);
@@ -182,7 +191,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .header("X-AUTH-TOKEN", accessToken)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when()
-            .get("/users/myinfo")
+            .get("/users/me")
             .then()
             .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
@@ -201,30 +210,24 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .extract().as(UserImageResponse.class);
     }
 
-    private UserResponse updateUserWithoutAreaAndImage(String accessToken, String nickname,
-        String password) {
+    private UserResponse updateMyInfoWithoutAreaAndImage(String accessToken, String nickname) {
         Map<String, String> params = new HashMap<>();
         params.put("nickname", nickname);
-        params.put("password", password);
 
         return updateUserBy(accessToken, params);
     }
 
-    private UserResponse updateUserWithAreaAndWithoutImage(String accessToken, String nickname,
-        String password) {
+    private UserResponse updateMyInfoWithAreaAndWithoutImage(String accessToken, String nickname) {
         Map<String, String> params = new HashMap<>();
         params.put("nickname", nickname);
-        params.put("password", password);
         params.put("areaId", String.valueOf(TEST_AREA_ID));
 
         return updateUserBy(accessToken, params);
     }
 
-    private UserResponse updateUserWithImage(String accessToken, String nickname,
-        String password, Long imageId) {
+    private UserResponse updateMyInfoWithImage(String accessToken, String nickname, Long imageId) {
         Map<String, String> params = new HashMap<>();
         params.put("nickname", nickname);
-        params.put("password", password);
         params.put("areaId", String.valueOf(TEST_AREA_ID));
         params.put("imageId", String.valueOf(imageId));
 
@@ -238,9 +241,25 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when()
-            .put("/users/myinfo")
+            .put("/users/me")
             .then()
             .statusCode(HttpStatus.OK.value())
+            .extract().as(UserResponse.class);
+    }
+
+    private UserResponse changeMyPassword(String accessToken, String password) {
+        Map<String, String> params = new HashMap<>();
+        params.put("password", password);
+
+        return given()
+            .header("X-AUTH-TOKEN", accessToken)
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .put("/users/me/password")
+            .then()
+            .statusCode(HttpStatus.NO_CONTENT.value())
             .extract().as(UserResponse.class);
     }
 
@@ -248,7 +267,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
         given()
             .header("X-AUTH-TOKEN", accessToken)
             .when()
-            .delete("/users/myinfo")
+            .delete("/users/me")
             .then()
             .statusCode(HttpStatus.NO_CONTENT.value());
     }

@@ -13,6 +13,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
@@ -43,7 +44,7 @@ public class UserController {
             .ok(token);
     }
 
-    @GetMapping("/users/myinfo")
+    @GetMapping("/users/me")
     public ResponseEntity<UserResponse> findUser() {
         UserResponse user = userService.findUser();
 
@@ -60,18 +61,28 @@ public class UserController {
             .body(userImage);
     }
 
-    @PutMapping("/users/myinfo")
-    public ResponseEntity<UserResponse> updateUser(
+    @PutMapping("/users/me")
+    public ResponseEntity<UserResponse> updateMyInfo(
         @RequestBody UserUpdateRequest userUpdateRequest) {
-        UserResponse user = userService.updateUser(userUpdateRequest);
+        UserResponse user = userService.updateMyInfo(userUpdateRequest);
 
         return ResponseEntity
             .ok(user);
     }
 
-    @DeleteMapping("/users/myinfo")
+    @DeleteMapping("/users/me")
     public ResponseEntity<Void> deleteUser() {
         userService.deleteUser();
+
+        return ResponseEntity
+            .noContent()
+            .build();
+    }
+
+    @PutMapping("/users/me/password")
+    public ResponseEntity<Void> changeMyPassword(
+        @RequestBody UserPasswordUpdateRequest userPasswordUpdateRequest) {
+        userService.changeMyPassword(userPasswordUpdateRequest);
 
         return ResponseEntity
             .noContent()
