@@ -3,6 +3,7 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_EMPTY_IMAGES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ANOTHER_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ANOTHER_NAME;
@@ -333,12 +334,14 @@ class SectorServiceTest extends ServiceTest {
             sectorIds.add(sectorId);
             for (int j = 0; j <= i; j++) {
                 PostCreateRequest postCreateRequest
-                    = new PostCreateRequest(TEST_POST_WRITING, null, TEST_AREA_ID, sectorId);
+                    = new PostCreateRequest(TEST_POST_WRITING, TEST_EMPTY_IMAGES, TEST_AREA_ID,
+                    sectorId);
                 postService.createPost(postCreateRequest);
             }
             for (int k = 0; k < 8 - (2 * i); k++) {
                 PostCreateRequest postCreateRequest
-                    = new PostCreateRequest(TEST_POST_WRITING, null, TEST_AREA_ID, sectorId);
+                    = new PostCreateRequest(TEST_POST_WRITING, TEST_EMPTY_IMAGES, TEST_AREA_ID,
+                    sectorId);
                 Long postId = postService.createPost(postCreateRequest).getId();
                 postService.deletePost(postId);
             }

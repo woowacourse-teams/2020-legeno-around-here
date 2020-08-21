@@ -1,9 +1,9 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
-import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_EMPTY_IMAGES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ANOTHER_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ANOTHER_NAME;
@@ -17,7 +17,6 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import io.restassured.RestAssured;
-import io.restassured.config.RestAssuredConfig;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,6 +31,7 @@ import org.springframework.http.MediaType;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.ErrorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
@@ -457,14 +457,14 @@ public class SectorAcceptanceTest extends AcceptanceTest {
     }
 
     private Long createPostWithoutImageWithSector(String accessToken, Long sectorId) {
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
+
         String location = given()
             .log().all()
-            .formParam("writing", TEST_POST_WRITING)
-            .formParam("areaId", TEST_AREA_ID)
-            .formParam("sectorId", sectorId)
             .header("X-AUTH-TOKEN", accessToken)
-            .config(RestAssuredConfig.config()
-                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+            .body(postCreateRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .post("/posts")
             .then()

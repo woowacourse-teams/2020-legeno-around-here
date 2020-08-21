@@ -12,10 +12,12 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
+import java.util.Collections;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
@@ -52,7 +54,8 @@ public class PostTest {
         for (int i = 0; i <= 2000; i++) {
             overLengthInput.append("a");
         }
-        assertThatThrownBy(() -> new Post(overLengthInput.toString(), area, sector, user))
+        assertThatThrownBy(() -> new Post(overLengthInput.toString(),
+            Collections.singletonList(PostImage.builder().build()), area, sector, user))
             .isInstanceOf(WrongUserInputException.class);
     }
 }

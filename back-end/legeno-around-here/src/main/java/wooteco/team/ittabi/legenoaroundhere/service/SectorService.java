@@ -26,8 +26,8 @@ import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
 @AllArgsConstructor
 public class SectorService {
 
-    private static final String DB_LIKE_FORMAT = "%%%s%%";
     protected static final int DEFAULT_PAGING_NUMBER = 0;
+    private static final String DB_LIKE_FORMAT = "%%%s%%";
     private final SectorRepository sectorRepository;
     private final IAuthenticationFacade authenticationFacade;
 
