@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import TopBar from '../myProfile/myProfileTopBar';
 import Bottom from '../../Bottom';
 import { PROFILE } from '../../../constants/BottomItems';
-import { findMyInfo, updateUser } from '../../api/API'
+import { findMyInfo, updateUser } from '../../api/API';
 import Loading from '../../Loading';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import PhotoEditSection from './PhotoEditSection';
@@ -21,7 +21,7 @@ function MyProfileEditPage() {
   );
   const [profilePhoto, setProfilePhoto] = useState({
     id: null,
-    url: ""
+    url: '',
   });
   const [loading, setLoading] = useState(false);
 
@@ -44,7 +44,7 @@ function MyProfileEditPage() {
 
   const handleNicknameInputChanging = (e) => {
     setNickname(e.target.value);
-  }
+  };
 
   const onSubmit = (event) => {
     updateUser(nickname, profilePhoto.id, accessToken);
@@ -54,17 +54,26 @@ function MyProfileEditPage() {
     <>
       <TopBar backButtonLink="/myProfile" />
       <form className={classes.basicLayout} onSubmit={onSubmit}>
-        <PhotoEditSection originalPhotoUrl={originalProfilePhotoUrl} setProfilePhoto={setProfilePhoto} accessToken={accessToken} />
+        <PhotoEditSection
+          originalPhotoUrl={originalProfilePhotoUrl}
+          setProfilePhoto={setProfilePhoto}
+          accessToken={accessToken}
+        />
         <div className={classes.infoEditSection}>
           <Typography component="div">{email}</Typography>
-          <Typography component="h1" variant="h5">
-            <TextField
-              id="standard-basic"
-              label="새 닉네임"
-              className={classes.newNicknameInput}
-              onChange={handleNicknameInputChanging}
-            />
-          </Typography>
+          <div className={classes.nicknameEditSection}>
+            <Typography component="h1" variant="h5">
+              {nickname}
+            </Typography>
+            <Typography component="h1" variant="h5">
+              <TextField
+                id="standard-basic"
+                label="새 닉네임"
+                className={classes.newNicknameInput}
+                onChange={handleNicknameInputChanging}
+              />
+            </Typography>
+          </div>
         </div>
         <Button
           type="submit"

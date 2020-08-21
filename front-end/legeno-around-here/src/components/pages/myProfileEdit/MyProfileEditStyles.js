@@ -12,9 +12,11 @@ const useStyle = makeStyles({
     width: '98%',
     margin: 'auto',
   },
+  nicknameEditSection: {
+    marginTop: '10px',
+  },
   newNicknameInput: {
     margin: 'auto',
-    marginTop: '10px',
     width: '98%',
   },
   submit: {
