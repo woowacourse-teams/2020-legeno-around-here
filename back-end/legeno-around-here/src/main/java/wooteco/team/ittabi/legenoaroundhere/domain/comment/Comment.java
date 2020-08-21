@@ -139,10 +139,10 @@ public class Comment extends BaseEntity {
         post.addComment(this);
     }
 
-    public void setSuperComment(Comment comment) {
-        this.superComment = comment;
-        this.post = comment.post;
-        comment.cocomments.add(this);
+    public void setSuperComment(Comment superComment) {
+        this.superComment = superComment;
+        superComment.cocomments.add(this);
+        setPost(superComment.getPost());
     }
 
     public void setState(State state) {

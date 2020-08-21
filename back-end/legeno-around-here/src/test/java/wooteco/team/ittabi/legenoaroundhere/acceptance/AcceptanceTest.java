@@ -22,7 +22,6 @@ public abstract class AcceptanceTest {
         return RestAssured.given().log().all();
     }
 
-
     protected String createUser(String email, String nickname, String password) {
         Map<String, String> params = new HashMap<>();
         params.put("email", email);

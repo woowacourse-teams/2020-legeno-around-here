@@ -123,10 +123,11 @@ public class CommentService {
         User user = (User) authenticationFacade.getPrincipal();
 
         Comment comment = findAvailableCommentBy(commentId);
-
-        Comment cocomment = commentRepository.save(CommentAssembler.assemble(user, commentRequest));
+        Comment cocomment = CommentAssembler.assemble(user, commentRequest);
         cocomment.setSuperComment(comment);
-        return CommentResponseAssembler.of(user, cocomment);
+
+        Comment savedCocomment = commentRepository.save(cocomment);
+        return CommentResponseAssembler.of(user, savedCocomment);
     }
 
     private Comment findAvailableCommentBy(Long commentId) {

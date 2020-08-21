@@ -2,6 +2,7 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import java.util.Objects;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -45,18 +46,15 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public Long createUser(UserCreateRequest userCreateRequest) {
-        // ToDo 삭제 계정과 겹치는 것을 허용할지 추후 고려하기
-        userRepository.findByEmail(new Email(userCreateRequest.getEmail()))
-            .ifPresent(user -> {
-                throw new WrongUserInputException(
-                    "[" + userCreateRequest.getEmail() + "] 이메일은 이미 사용중입니다.");
-            });
-
         Area area = findAreaBy(userCreateRequest.getAreaId());
         User user = UserAssembler.assemble(userCreateRequest, area);
-        User createdUser = userRepository.save(user);
-
-        return createdUser.getId();
+        try {
+            User createdUser = userRepository.save(user);
+            return createdUser.getId();
+        } catch (DataIntegrityViolationException e) {
+            throw new WrongUserInputException(
+                "[" + userCreateRequest.getEmail() + "] 이메일은 이미 사용중입니다.");
+        }
     }
 
     private Area findAreaBy(Long areaId) {

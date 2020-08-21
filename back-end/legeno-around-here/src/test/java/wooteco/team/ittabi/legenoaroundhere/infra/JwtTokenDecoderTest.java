@@ -2,10 +2,8 @@ package wooteco.team.ittabi.legenoaroundhere.infra;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_PASSWORD;
 
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,10 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class JwtTokenDecoderTest {
 
     @Autowired
@@ -36,16 +33,13 @@ class JwtTokenDecoderTest {
     @BeforeEach
     void setUp() {
         token = jwtTokenGenerator
-            .createToken(TEST_USER_EMAIL, Collections.singletonList("ROLE_USER"));
+            .createToken(TEST_ADMIN_EMAIL, Collections.singletonList("ROLE_USER"));
     }
 
     @Test
     @DisplayName("토큰으로부터 Authentication 얻기")
     void getAuthentication() {
-        userService.createUser(
-            new UserCreateRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD,
-                TEST_AREA_ID));
-        userService.login(new LoginRequest(TEST_USER_EMAIL, TEST_USER_PASSWORD));
+        userService.login(new LoginRequest(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD));
 
         assertThat(jwtTokenDecoder.getAuthentication(token))
             .isInstanceOf(Authentication.class);
@@ -54,6 +48,9 @@ class JwtTokenDecoderTest {
     @Test
     @DisplayName("토큰으로부터 Authentication 얻기 - 존재하지 않는 사용자 예외처리")
     void getAuthentication_IfNotExistUser_ThrowException() {
+        String token = jwtTokenGenerator
+            .createToken("notUsed@email.com", Collections.singletonList("ROLE_USER"));
+
         assertThatThrownBy(() -> jwtTokenDecoder.getAuthentication(token))
             .isInstanceOf(UsernameNotFoundException.class);
     }
