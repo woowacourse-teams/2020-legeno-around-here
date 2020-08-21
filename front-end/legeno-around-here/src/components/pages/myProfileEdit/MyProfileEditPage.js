@@ -19,7 +19,10 @@ function MyProfileEditPage() {
   const [originalProfilePhotoUrl, setProfilePhotoUrl] = useState(
     '/default-profile.png',
   );
-  const [profilePhotoId, setProfilePhotoId] = useState(null);
+  const [profilePhoto, setProfilePhoto] = useState({
+    id: null,
+    url: ""
+  });
   const [loading, setLoading] = useState(false);
 
   const classes = useStyle();
@@ -44,14 +47,14 @@ function MyProfileEditPage() {
   }
 
   const onSubmit = (event) => {
-    updateUser(nickname, profilePhotoId, accessToken);
+    updateUser(nickname, profilePhoto.id, accessToken);
   };
 
   return (
     <>
       <TopBar backButtonLink="/myProfile" />
       <form className={classes.basicLayout} onSubmit={onSubmit}>
-        <PhotoEditSection originalPhotoUrl={originalProfilePhotoUrl} setProfilePhotoId={setProfilePhotoId} accessToken={accessToken} />
+        <PhotoEditSection originalPhotoUrl={originalProfilePhotoUrl} setProfilePhoto={setProfilePhoto} accessToken={accessToken} />
         <div className={classes.infoEditSection}>
           <Typography component="div">{email}</Typography>
           <Typography component="h1" variant="h5">

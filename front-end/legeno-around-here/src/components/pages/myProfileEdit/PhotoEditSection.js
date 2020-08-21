@@ -33,7 +33,7 @@ const useStyle = makeStyles({
   }
 });
 
-const PhotoEditSection = ({ originalPhotoUrl, setProfilePhotoId, accessToken }) => {
+const PhotoEditSection = ({ originalPhotoUrl, setProfilePhoto, accessToken }) => {
   const [photoUrl, setPhotoUrl] = useState(originalPhotoUrl);
 
   const props = {
@@ -47,7 +47,10 @@ const PhotoEditSection = ({ originalPhotoUrl, setProfilePhotoId, accessToken }) 
     saveProfilePhoto(formData, accessToken)
       .then(responseData => {
         setPhotoUrl(responseData.url);
-        setProfilePhotoId(responseData.id);
+        setProfilePhoto({
+          id: responseData.id,
+          url: responseData.url
+        });
         alert(responseData.url + ", id: " + responseData.id);
       });
   };
