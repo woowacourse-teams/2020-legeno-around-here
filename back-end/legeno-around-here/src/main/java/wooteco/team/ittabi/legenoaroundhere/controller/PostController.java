@@ -78,17 +78,6 @@ public class PostController {
             .build();
     }
 
-    @GetMapping("/ranking")
-    public ResponseEntity<Page<PostWithCommentsCountResponse>> searchAllRanking(
-        PageRequest pageRequest, PostSearchRequest postSearchRequest) {
-        Page<PostWithCommentsCountResponse> posts
-            = postService.searchAllPost(PageableAssembler.assemble(pageRequest), postSearchRequest);
-
-        return ResponseEntity
-            .ok()
-            .body(posts);
-    }
-
     @PostMapping("/{postId}/zzangs")
     public ResponseEntity<Void> pressPostZzang(@PathVariable Long postId) {
         postService.pressZzang(postId);

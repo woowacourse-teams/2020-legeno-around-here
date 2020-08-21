@@ -1,11 +1,12 @@
 import React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-import Join from './components/pages/Join';
-import Login from './components/pages/Login';
+import Join from './components/pages/JoinPage';
+import Login from './components/pages/LoginPage';
 import PostingPage from './components/pages/posting/PostingPage';
-import MyProfile from './components/pages/MyProfile';
 import SectorPage from './components/pages/sector/SectorPage';
 import PostDetailPage from './components/pages/post/PostDetailPage';
+import MyProfileEditPage
+  from './components/pages/myProfileEdit/MyProfileEditPage';
 import Home from './components/pages/Home';
 import Ranking from './components/pages/Ranking';
 import PostingUpdatePage from './components/pages/posting/PostingUpdatePage';
@@ -35,6 +36,7 @@ function App() {
         <Route path='/posts/:postId' exact component={PostDetailPage} />
         <Route path='/home' exact component={Home} />
         <Route path='/ranking' exact component={Ranking} />
+        <Route path="/myProfileEdit" exact component={MyProfileEditPage} />
         <Redirect path='*' to='/' />
       </Switch>
     </BrowserRouter>

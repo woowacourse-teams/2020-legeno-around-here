@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -91,13 +90,13 @@ public class PostService {
         return posts.map(post -> PostWithCommentsCountResponse.of(user, post));
     }
 
-    private Page<Post> getPostByFilter(Pageable pageable, PostSearch postSearch) {
+    Page<Post> getPostByFilter(Pageable pageable, PostSearch postSearch) {
         if (postSearch.isNotExistsFilter()) {
             return postRepository.findAllBy(pageable);
         }
 
         if (postSearch.isAreaFilter()) {
-            List<Area> areas = findAllAreas(postSearch.getAreaIds());
+            List<Area> areas = findAllAreas(postSearch.getAreaId());
             return postRepository.findAllByAreaIn(pageable, areas);
         }
 
@@ -106,31 +105,17 @@ public class PostService {
             return postRepository.findAllBySectorIn(pageable, sectors);
         }
 
-        List<Area> areas = findAllAreas(postSearch.getAreaIds());
+        List<Area> areas = findAllAreas(postSearch.getAreaId());
         List<Sector> sectors = findAllSectors(postSearch.getSectorIds());
         return postRepository.findAllByAreaInAndSectorIn(pageable, areas, sectors);
     }
 
-    private List<Area> findAllAreas(List<Long> areaIds) {
-        List<Area> allArea = areaRepository.findAll();
-        List<Area> foundArea = findAreas(allArea, areaIds);
-
-        List<Area> areas = new ArrayList<>();
-        for (Area area : foundArea) {
-            areas.addAll(findSubAreas(allArea, area));
+    private List<Area> findAllAreas(Long areaId) {
+        List<Area> subAreas = areaRepository.findSubAreasById(areaId);
+        if (subAreas.isEmpty()) {
+            throw new NotExistsException("해당 Area가 존재하지 않습니다.");
         }
-        return areas;
-    }
-
-    private List<Area> findAreas(List<Area> allArea, List<Long> areaIds) {
-        List<Area> foundArea = allArea.stream()
-            .filter(area -> area.isIncludeId(areaIds))
-            .collect(Collectors.toList());
-
-        if (areaIds.size() != foundArea.size()) {
-            throw new WrongUserInputException("유효하지 않은 Area ID를 사용하셨습니다.");
-        }
-        return foundArea;
+        return subAreas;
     }
 
     private List<Area> findSubAreas(List<Area> areas, Area targetArea) {
