@@ -57,6 +57,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({Exception.class, NotFoundAlgorithmException.class})
     public ResponseEntity<ErrorResponse> handleInternalServerError(Exception e) {
         log.info(e.getMessage());
+
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(new ErrorResponse("예기치 않은 오류가 발생하였습니다."));

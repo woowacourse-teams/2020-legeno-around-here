@@ -28,6 +28,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 class UserServiceTest extends ServiceTest {
 
+    private static final String TEST_PREFIX = "user_";
     private static final int TOKEN_MIN_SIZE = 1;
 
     @Autowired
@@ -38,7 +39,8 @@ class UserServiceTest extends ServiceTest {
 
     @BeforeEach
     void setUp() {
-        User user = createUser("user_" + TEST_USER_EMAIL, TEST_USER_NICKNAME,
+        User user = createUser(TEST_PREFIX + TEST_USER_EMAIL,
+            TEST_USER_NICKNAME,
             TEST_USER_PASSWORD);
         setAuthentication(user);
     }
@@ -62,7 +64,7 @@ class UserServiceTest extends ServiceTest {
     @Test
     void createUser_DuplicatedEmail_ThrownException() {
         UserCreateRequest userCreateRequest = new UserCreateRequest(
-            "user_" + TEST_USER_EMAIL,
+            TEST_PREFIX + TEST_USER_EMAIL,
             TEST_USER_NICKNAME,
             TEST_USER_PASSWORD,
             TEST_AREA_ID
@@ -106,9 +108,8 @@ class UserServiceTest extends ServiceTest {
 
     @DisplayName("내 정보 찾기")
     @Test
-
-    void findUser_Success() {
-        assertThat(userService.findUser().getEmail()).isEqualTo("user_" + TEST_USER_EMAIL);
+        void findUser_Success() {
+        assertThat(userService.findUser().getEmail()).isEqualTo(TEST_PREFIX + TEST_USER_EMAIL);
         assertThat(userService.findUser().getNickname()).isEqualTo(TEST_USER_NICKNAME);
     }
 

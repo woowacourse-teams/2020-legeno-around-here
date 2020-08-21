@@ -27,9 +27,8 @@ public abstract class ServiceTest {
     protected IAuthenticationFacade authenticationFacade;
 
     protected User createUser(String email, String nickname, String password) {
-        UserCreateRequest userCreateRequest = new UserCreateRequest(email, nickname,
-            password,
-            TEST_AREA_ID);
+        UserCreateRequest userCreateRequest
+            = new UserCreateRequest(email, nickname, password, TEST_AREA_ID);
         Long userId = userService.createUser(userCreateRequest);
 
         return userRepository.findById(userId)

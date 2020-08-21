@@ -55,7 +55,6 @@ public class UserController {
     @PostMapping("/user-images")
     public ResponseEntity<UserImageResponse> uploadUserImage(MultipartFile image) {
         UserImageResponse userImage = userService.uploadUserImage(image);
-        System.out.println(image + "<<<<<<<<<<< image");
 
         return ResponseEntity
             .created(URI.create("/user-images/" + userImage.getId()))

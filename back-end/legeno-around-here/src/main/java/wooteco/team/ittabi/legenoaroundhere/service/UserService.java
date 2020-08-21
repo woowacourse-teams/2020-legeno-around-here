@@ -70,7 +70,6 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public TokenResponse login(LoginRequest loginRequest) {
-        List<User> a = userRepository.findAll();
         User user = userRepository.findByEmail(new Email(loginRequest.getEmail()))
             .orElseThrow(() -> new NotExistsException("가입되지 않은 회원입니다."));
         checkEmailAuth(user);

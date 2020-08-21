@@ -19,5 +19,4 @@ public class AuthNumber {
     public AuthNumber(int authNumber) {
         AuthNumber = authNumber;
     }
-
 }
