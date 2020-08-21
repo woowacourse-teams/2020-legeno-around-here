@@ -116,7 +116,7 @@ public class RankingAcceptanceTest extends AcceptanceTest {
         makePosts();
 
         // 모든 지역, 모든 부문 필터 설정
-        filter = "areaIds=&sectorIds=";
+        filter = "areaId=&sectorIds=";
         // 모든 지역, 모든 부문에 대해서 랭킹을 조회
         rankingPostResponse = searchRanks(accessToken, RankingCriteria.TOTAL, filter);
         assertThat(rankingPostResponse).hasSize(4);
@@ -130,7 +130,7 @@ public class RankingAcceptanceTest extends AcceptanceTest {
         assertThat(rankingPostResponse.get(3).getZzang().getCount()).isEqualTo(0);
 
         // 모든 지역, 특정 부문 필터 설정
-        filter = "areaIds=&sectorIds=" + sectorAId;
+        filter = "areaId=&sectorIds=" + sectorAId;
         // 모든 지역, 특정 부문에 대해서 랭킹을 조회
         rankingPostResponse = searchRanks(accessToken, RankingCriteria.TOTAL, filter);
         assertThat(rankingPostResponse).hasSize(2);
@@ -140,7 +140,7 @@ public class RankingAcceptanceTest extends AcceptanceTest {
         assertThat(rankingPostResponse.get(1).getZzang().getCount()).isEqualTo(1);
 
         // 특정 지역, 모든 부문 필터 설정
-        filter = "areaIds=" + TEST_AREA_A_ID + "&sectorIds=";
+        filter = "areaId=" + TEST_AREA_A_ID + "&sectorIds=";
         // 특정 지역, 모든 부문에 대해서 랭킹을 조회
         rankingPostResponse = searchRanks(accessToken, RankingCriteria.TOTAL, filter);
         assertThat(rankingPostResponse).hasSize(2);
@@ -150,7 +150,7 @@ public class RankingAcceptanceTest extends AcceptanceTest {
         assertThat(rankingPostResponse.get(1).getZzang().getCount()).isEqualTo(2);
 
         // 특정 지역, 특정 부문 필터 설정
-        filter = "areaIds=" + TEST_AREA_B_ID + "&sectorIds=" + sectorBId;
+        filter = "areaId=" + TEST_AREA_B_ID + "&sectorIds=" + sectorBId;
         // 특정 지역, 특정 부문에 대해서 랭킹을 조회
         rankingPostResponse = searchRanks(accessToken, RankingCriteria.TOTAL, filter);
         assertThat(rankingPostResponse).hasSize(1);
