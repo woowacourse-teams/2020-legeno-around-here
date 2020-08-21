@@ -1,6 +1,9 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.PostSearch;
@@ -18,6 +22,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
@@ -26,6 +31,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.repository.AreaRepository;
+import wooteco.team.ittabi.legenoaroundhere.repository.PostImageRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.ImageUploader;
@@ -37,13 +43,14 @@ import wooteco.team.ittabi.legenoaroundhere.utils.ImageUploader;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final PostImageRepository postImageRepository;
     private final AreaRepository areaRepository;
     private final SectorRepository sectorRepository;
     private final ImageUploader imageUploader;
     private final IAuthenticationFacade authenticationFacade;
 
     @Transactional
-    public PostResponse createPost(PostCreateRequest postCreateRequest) {
+    public PostResponse createPost(@RequestBody PostCreateRequest postCreateRequest) {
         User user = (User) authenticationFacade.getPrincipal();
 
         Area area = areaRepository.findById(postCreateRequest.getAreaId())
@@ -52,19 +59,22 @@ public class PostService {
         Sector sector = sectorRepository.findById(postCreateRequest.getSectorId())
             .filter(Sector::isUsed)
             .orElseThrow(() -> new WrongUserInputException("입력하신 부문이 존재하지 않습니다."));
+        List<PostImage> postImages = findAllPostImagesByIds(postCreateRequest);
 
-        Post post = PostAssembler.assemble(postCreateRequest, area, sector, user);
-        List<PostImage> postImages = uploadPostImages(post, postCreateRequest.getImages());
-        post.setPostImages(postImages);
+        Post post = PostAssembler.assemble(postCreateRequest, postImages, area, sector, user);
+        new CopyOnWriteArrayList<>(postImages).forEach(postImage -> postImage.setPost(post));
 
         Post savedPost = postRepository.save(post);
         return PostResponse.of(user, savedPost);
     }
 
-    private List<PostImage> uploadPostImages(Post post, List<MultipartFile> images) {
-        List<PostImage> postImages = imageUploader.uploadPostImages(images);
-        postImages.forEach(image -> image.setPost(post));
-        return postImages;
+    private List<PostImage> findAllPostImagesByIds(PostCreateRequest postCreateRequest) {
+        final List<Long> imageIds = postCreateRequest.getImageIds();
+
+        if (Objects.isNull(imageIds)) {
+            return Collections.emptyList();
+        }
+        return postImageRepository.findAllById(imageIds);
     }
 
     @Transactional(readOnly = true)
@@ -161,5 +171,12 @@ public class PostService {
 
         Post post = findPostBy(postId);
         post.pressZzang(user);
+    }
+
+    public List<PostImageResponse> uploadPostImages(List<MultipartFile> images) {
+        List<PostImage> postImages = imageUploader.uploadPostImages(images);
+        List<PostImage> savedPostImages = postImageRepository.saveAll(postImages);
+
+        return PostImageResponse.listOf(savedPostImages);
     }
 }

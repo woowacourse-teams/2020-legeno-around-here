@@ -72,9 +72,11 @@ public class Post extends BaseEntity {
     private User creator;
 
     @Builder
-    public Post(String writing, Area area, Sector sector, User creator) {
+    public Post(String writing, List<PostImage> postImages, Area area, Sector sector,
+        User creator) {
         validateLength(writing);
         this.writing = writing;
+        this.postImages = postImages;
         this.area = area;
         this.sector = sector;
         this.state = State.PUBLISHED;

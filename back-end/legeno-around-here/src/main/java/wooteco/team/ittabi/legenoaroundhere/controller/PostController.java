@@ -1,7 +1,9 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
 import java.net.URI;
+import java.util.List;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,9 +13,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.dto.PageRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PageableAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
@@ -31,12 +35,21 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createPost(PostCreateRequest postCreateRequest) {
+    public ResponseEntity<Void> createPost(@RequestBody PostCreateRequest postCreateRequest) {
         Long postId = postService.createPost(postCreateRequest).getId();
 
         return ResponseEntity
             .created(URI.create("/posts/" + postId))
             .build();
+    }
+
+    @PostMapping("/images")
+    public ResponseEntity<List<PostImageResponse>> uploadPostImages(List<MultipartFile> images) {
+        List<PostImageResponse> postImageResponses = postService.uploadPostImages(images);
+
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(postImageResponses);
     }
 
     @GetMapping("/{id}")
