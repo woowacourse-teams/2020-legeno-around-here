@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { setAccessTokenCookie } from '../../util/TokenUtils';
 
+const HTTP_STATUS_OK = 200;
+const HTTP_STATUS_CREATED = 201;
+const HTTP_STATUS_NO_CONTENT = 204;
 const DEFAULT_SIZE = 10;
 const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
@@ -49,7 +52,7 @@ export const createPost = async (formData, accessToken) => {
   };
   try {
     const response = await axios.post(DEFAULT_URL + '/posts', formData, config);
-    if (response.status === 201) {
+    if (response.status === HTTP_STATUS_CREATED) {
       alert('전송에 성공했습니다!');
       document.location.href = response.headers.location;
     }
@@ -71,7 +74,7 @@ export const createComment = async (postId, writing, accessToken) => {
       { writing },
       config,
     );
-    if (response.status === 201) {
+    if (response.status === HTTP_STATUS_CREATED) {
       alert('댓글이 성공적으로 전송되었습니다!');
       return true;
     }
@@ -81,6 +84,26 @@ export const createComment = async (postId, writing, accessToken) => {
     console.log(error);
   }
   return false;
+};
+
+export const createPendingSector = async (sector, accessToken) => {
+  const config = {
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
+  };
+  try {
+    const response = await axios.post(DEFAULT_URL + `/sectors`, sector, config);
+    if (response.status === HTTP_STATUS_CREATED) {
+      alert(
+        '신청이 완료됐습니다! 신청한 부문은 프로필에서 확인하실 수 있습니다!',
+      );
+      return response.data;
+    }
+  } catch (error) {
+    alert('부문 신청 중 오류가 발생했습니다! 다시 신청해주세요!');
+    console.log(error);
+  }
 };
 
 export const pressPostZzang = async (postId, accessToken) => {
@@ -95,7 +118,7 @@ export const pressPostZzang = async (postId, accessToken) => {
       {},
       config,
     );
-    if (response.status === 204) {
+    if (response.status === HTTP_STATUS_NO_CONTENT) {
       return true;
     }
   } catch (error) {
@@ -122,6 +145,7 @@ export const findMyInfo = ({
     .get(DEFAULT_URL + '/users/myinfo', config)
     .then(async (response) => {
       const userResponse = await response.data;
+      console.log(userResponse);
       setEmail(userResponse.email);
       setNickname(userResponse.nickname);
       if (userResponse.image) {
@@ -205,6 +229,24 @@ export const findAllSectors = async (accessToken) => {
   return response.data.content;
 };
 
+export const findAllMySector = async (accessToken) => {
+  const config = {
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
+  };
+  return await axios
+    .get(DEFAULT_URL + '/sectors/me', config)
+    .then((response) => {
+      if (response.status === HTTP_STATUS_OK) {
+        return response.data.content;
+      }
+    })
+    .catch((error) => {
+      alert(`유저의 부문을 가져올 수 없습니다.${error}`);
+    });
+};
+
 export const findPost = async (accessToken, postId) => {
   const config = {
     headers: {
@@ -215,7 +257,7 @@ export const findPost = async (accessToken, postId) => {
   return await axios
     .get(DEFAULT_URL + '/posts/' + postId, config)
     .then((response) => {
-      if (response.status === 200) {
+      if (response.status === HTTP_STATUS_OK) {
         return response.data;
       }
     })
@@ -236,7 +278,7 @@ export const findCommentsByPostId = async (accessToken, postId) => {
   return await axios
     .get(DEFAULT_URL + `/posts/${postId}/comments`, config)
     .then((response) => {
-      if (response.status === 200) {
+      if (response.status === HTTP_STATUS_OK) {
         console.log('findCommentsByPostId : ' + response.data);
         return response.data;
       }
