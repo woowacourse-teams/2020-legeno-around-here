@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.frameoptions.WhiteListedAllowFromStrategy;
+import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -55,6 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
+            .antMatchers("/h2-console/**").permitAll()
             .antMatchers(
                 "/v2/api-docs",
                 "/swagger-resources/**",
@@ -66,6 +69,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .anyRequest().hasAnyRole("USER", "ADMIN")
             .and()
             .cors()
+            .and()
+            .headers()
+            .addHeaderWriter(
+                new XFrameOptionsHeaderWriter(
+                    new WhiteListedAllowFromStrategy(Collections.singletonList("localhost"))
+                )
+            ).frameOptions().sameOrigin()
             .and()
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenDecoder, authenticationFacade),
                 UsernamePasswordAuthenticationFilter.class);
