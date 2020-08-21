@@ -70,6 +70,7 @@ public class S3Uploader {
             if (convertFile.createNewFile()) {
                 FileOutputStream fileOutputStream = new FileOutputStream(convertFile);
                 fileOutputStream.write(multipartFile.getBytes());
+                fileOutputStream.close();
                 return convertFile;
             }
         } catch (IOException e) {
