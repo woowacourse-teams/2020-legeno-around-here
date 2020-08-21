@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import TopBar from '../myProfile/myProfileTopBar';
 import Bottom from '../../Bottom';
 import { PROFILE } from '../../../constants/BottomItems';
-import { findMyInfo } from '../../api/API';
+import { findMyInfo, updateUser } from '../../api/API'
 import Loading from '../../Loading';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import PhotoEditSection from './PhotoEditSection';
@@ -19,6 +19,7 @@ function MyProfileEditPage() {
   const [originalProfilePhotoUrl, setProfilePhotoUrl] = useState(
     '/default-profile.png',
   );
+  const [profilePhotoId, setProfilePhotoId] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const classes = useStyle();
@@ -38,11 +39,19 @@ function MyProfileEditPage() {
     return <Loading />;
   }
 
+  const handleNicknameInputChanging = (e) => {
+    setNickname(e.target.value);
+  }
+
+  const onSubmit = (event) => {
+    updateUser(nickname, profilePhotoId, accessToken);
+  };
+
   return (
     <>
       <TopBar backButtonLink="/myProfile" />
-      <div className={classes.basicLayout}>
-        <PhotoEditSection originalPhotoUrl={originalProfilePhotoUrl} accessToken={accessToken} />
+      <form className={classes.basicLayout} onSubmit={onSubmit}>
+        <PhotoEditSection originalPhotoUrl={originalProfilePhotoUrl} setProfilePhotoId={setProfilePhotoId} accessToken={accessToken} />
         <div className={classes.infoEditSection}>
           <Typography component="div">{email}</Typography>
           <Typography component="h1" variant="h5">
@@ -50,6 +59,7 @@ function MyProfileEditPage() {
               id="standard-basic"
               label="새 닉네임"
               className={classes.newNicknameInput}
+              onChange={handleNicknameInputChanging}
             />
           </Typography>
         </div>
@@ -61,7 +71,7 @@ function MyProfileEditPage() {
         >
           저장
         </Button>
-      </div>
+      </form>
       <Bottom selected={PROFILE} />
     </>
   );

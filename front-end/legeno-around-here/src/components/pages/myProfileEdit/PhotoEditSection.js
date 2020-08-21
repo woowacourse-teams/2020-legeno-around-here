@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import {MAIN_COLOR} from '../../../constants/Color';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import AddPhotoAlternateIcon from '@material-ui/core/SvgIcon/SvgIcon'
 import IconButton from '@material-ui/core/IconButton'
 import { saveProfilePhoto } from '../../api/API'
 import Typography from '@material-ui/core/Typography'
@@ -34,7 +33,7 @@ const useStyle = makeStyles({
   }
 });
 
-const PhotoEditSection = ({ originalPhotoUrl, accessToken }) => {
+const PhotoEditSection = ({ originalPhotoUrl, setProfilePhotoId, accessToken }) => {
   const [photoUrl, setPhotoUrl] = useState(originalPhotoUrl);
 
   const props = {
@@ -46,9 +45,10 @@ const PhotoEditSection = ({ originalPhotoUrl, accessToken }) => {
     const formData = new FormData();
     formData.append('image', e.target.files[0]);
     saveProfilePhoto(formData, accessToken)
-      .then(newPhotoUrl => {
-        setPhotoUrl(newPhotoUrl);
-        alert(newPhotoUrl);
+      .then(responseData => {
+        setPhotoUrl(responseData.url);
+        setProfilePhotoId(responseData.id);
+        alert(responseData.url + ", id: " + responseData.id);
       });
   };
 

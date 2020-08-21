@@ -46,15 +46,15 @@ export const createUser = (email, nickname, password, handleReset) => {
 
 export const saveProfilePhoto = async (formData, accessToken) => {
   const config = {
-    headers: {
-      'X-Auth-Token': accessToken,
-    },
+      headers: {
+        'X-Auth-Token': accessToken,
+      },
   };
   try {
     const response = await axios.post(DEFAULT_URL + '/user-images', formData, config);
     if (response.status === HTTP_STATUS_CREATED) {
       alert('전송에 성공했습니다!');
-      return response.data.url;
+      return response.data;
     }
   } catch (error) {
     redirectLoginWhenUnauthorized(error);
@@ -62,8 +62,24 @@ export const saveProfilePhoto = async (formData, accessToken) => {
   }
 };
 
-export const updateUser = (nickname, imageUrl) => {
-
+export const updateUser = async (nickname, imageId, accessToken) => {
+  const config = {
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
+  };
+  try {
+    await axios.put(DEFAULT_URL + '/users/myinfo', {
+      nickname,
+      imageId
+    }, config);
+    alert("내 정보가 성공적으로 바뀌었습니다!");
+    document.location.href = "/myProfile";
+  } catch (error) {
+    redirectLoginWhenUnauthorized(error);
+    alert(error.response? error.response.status : error.request);
+    console.log(error);
+  }
 };
 
 export const createPost = async (formData, accessToken) => {
