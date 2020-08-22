@@ -115,7 +115,7 @@ public class Comment extends BaseEntity {
         return Objects.isNull(superComment);
     }
 
-    public boolean hasCocoments() {
+    public boolean hasCocomments() {
         return !cocomments.isEmpty();
     }
 
