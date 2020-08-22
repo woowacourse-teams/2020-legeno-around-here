@@ -42,15 +42,12 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 public class User extends BaseEntity implements UserDetails {
 
     @Embedded
-    @Column(nullable = false, unique = true)
     private Email email;
 
     @Embedded
-    @Column(nullable = false)
     private Nickname nickname;
 
     @Embedded
-    @Column(nullable = false)
     private Password password;
 
     @ElementCollection(fetch = FetchType.EAGER)
