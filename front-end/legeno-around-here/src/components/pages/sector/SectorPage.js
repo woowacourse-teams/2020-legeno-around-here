@@ -33,7 +33,6 @@ const SectorPage = () => {
   useEffect(() => {
     setHasMore(true);
     loadNextSectors();
-    // eslint-disable-next-line
   }, []);
 
   return (
