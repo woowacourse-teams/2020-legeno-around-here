@@ -56,14 +56,14 @@ public class Comment extends BaseEntity {
     private Comment superComment;
 
     @OneToMany(mappedBy = "superComment")
-    private List<Comment> cocomments = new ArrayList<>();
+    private final List<Comment> cocomments = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "creator_id")
     private User creator;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<CommentZzang> zzangs = new ArrayList<>();
+    private final List<CommentZzang> zzangs = new ArrayList<>();
 
     public Comment(User creator, String writing) {
         validateLength(writing);

@@ -17,10 +17,6 @@ public class MailAuthController {
 
     private final MailAuthService mailAuthService;
 
-    public MailAuthController(MailAuthService mailAuthService) {
-        this.mailAuthService = mailAuthService;
-    }
-
     @PostMapping("/send")
     public ResponseEntity<Void> mailAuth(@RequestBody MailAuthCreateRequest mailAuthCreateRequest) {
         mailAuthService.publishAuth(mailAuthCreateRequest);

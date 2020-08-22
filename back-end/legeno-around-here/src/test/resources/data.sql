@@ -10,7 +10,7 @@ SELECT id
      , NOW()
 FROM CSVRead('src/test/resources/area.csv');
 
-INSERT INTO User(id, email, nickname, password, is_authenticated_by_email, area_id, created_at, modified_at)
+INSERT INTO User(id, email, nickname, password, authenticated_by_email, area_id, created_at, modified_at)
 VALUES (1, 'admin@test.com', 'adminName',
         '$2a$10$3tWu7vV57AaV4m96qwTkieQbY8R5TWhDE401ff7XGlSmRC/ItL0F.', true, null, now(), now()),
        (2, 'user@test.com', 'userName',

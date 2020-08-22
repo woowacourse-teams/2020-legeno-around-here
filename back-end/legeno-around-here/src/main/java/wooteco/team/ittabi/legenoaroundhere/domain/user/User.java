@@ -127,7 +127,7 @@ public class User extends BaseEntity implements UserDetails {
         return this.password.getPassword();
     }
 
-    public boolean isNotAuthenticatedByEmail(){
+    public boolean isNotAuthenticatedByEmail() {
         return authenticatedByEmail == false;
     }
 

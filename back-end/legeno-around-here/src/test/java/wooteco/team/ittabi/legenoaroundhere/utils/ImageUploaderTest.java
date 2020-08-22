@@ -33,7 +33,7 @@ public class ImageUploaderTest extends ServiceTest {
 
     @BeforeEach
     void setUp() {
-        User user = createUser("image_"+TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        User user = createUser("image_" + TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         setAuthentication(user);
     }
 

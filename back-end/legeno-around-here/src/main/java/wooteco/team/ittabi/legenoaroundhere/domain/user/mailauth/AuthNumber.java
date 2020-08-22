@@ -18,10 +18,6 @@ public class AuthNumber {
 
     private Integer authNumber;
 
-    public AuthNumber(Integer authNumber) {
-        authNumber = authNumber;
-    }
-
     public boolean isSame(Integer authNumber) {
         return this.authNumber.equals(authNumber);
     }

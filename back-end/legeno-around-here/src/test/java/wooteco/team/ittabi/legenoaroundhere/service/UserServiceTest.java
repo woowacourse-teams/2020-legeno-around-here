@@ -110,7 +110,7 @@ class UserServiceTest extends ServiceTest {
 
     @DisplayName("내 정보 찾기")
     @Test
-        void findUser_Success() {
+    void findUser_Success() {
         assertThat(userService.findUser().getEmail()).isEqualTo(TEST_PREFIX + TEST_USER_EMAIL);
         assertThat(userService.findUser().getNickname()).isEqualTo(TEST_USER_NICKNAME);
     }

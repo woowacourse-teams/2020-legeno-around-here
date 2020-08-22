@@ -48,7 +48,7 @@ public class Sector extends BaseEntity {
     private String reason = DEFAULT_REASON;
 
     @OneToMany(mappedBy = "sector", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<Post> posts = new ArrayList<>();
+    private final List<Post> posts = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)
