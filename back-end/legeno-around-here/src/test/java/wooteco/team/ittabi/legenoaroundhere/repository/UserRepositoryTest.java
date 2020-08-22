@@ -14,6 +14,8 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserRepositoryTest {
 
+    private static final String TEST_PREFIX = "userrepository_";
+
     @Autowired
     private UserRepository userRepository;
 
@@ -21,7 +23,7 @@ public class UserRepositoryTest {
     @Test
     void save() {
         User notSavedUser = User.builder()
-            .email(TEST_USER_EMAIL)
+            .email(TEST_PREFIX + TEST_USER_EMAIL)
             .nickname(TEST_USER_NICKNAME)
             .password(TEST_USER_PASSWORD)
             .build();
