@@ -71,7 +71,7 @@ public class User extends BaseEntity implements UserDetails {
     private Area area = null;
 
     @Column(nullable = false, columnDefinition = "tinyint(1) default 0")
-    private boolean isAuthenticatedByEmail;
+    private boolean authenticatedByEmail;
 
     @Builder
     public User(String email, String nickname, String password, Area area, UserImage image) {
@@ -128,7 +128,7 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     public boolean isNotAuthenticatedByEmail(){
-        return isAuthenticatedByEmail == false;
+        return authenticatedByEmail == false;
     }
 
     @Override

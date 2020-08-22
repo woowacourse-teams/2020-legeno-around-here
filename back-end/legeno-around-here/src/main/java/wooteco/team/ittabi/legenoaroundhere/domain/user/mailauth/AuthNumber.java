@@ -2,11 +2,13 @@ package wooteco.team.ittabi.legenoaroundhere.domain.user.mailauth;
 
 import javax.persistence.Embeddable;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@AllArgsConstructor
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -14,9 +16,14 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class AuthNumber {
 
-    private int AuthNumber;
+    private Integer authNumber;
 
-    public AuthNumber(int authNumber) {
-        AuthNumber = authNumber;
+    public AuthNumber(Integer authNumber) {
+        authNumber = authNumber;
+    }
+
+    public boolean isSame(Integer authNumber) {
+        return this.authNumber.equals(authNumber);
     }
 }
+

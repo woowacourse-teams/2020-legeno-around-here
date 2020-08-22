@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +12,7 @@ import wooteco.team.ittabi.legenoaroundhere.service.MailAuthService;
 
 @RestController
 @RequestMapping("/mail-auth")
+@AllArgsConstructor
 public class MailAuthController {
 
     private final MailAuthService mailAuthService;

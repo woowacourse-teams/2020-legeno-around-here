@@ -23,8 +23,8 @@ public class AwardAcceptanceTest extends AcceptanceTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        TokenResponse token = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
         userId = TEST_USER_ID;
+        TokenResponse token = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
         accessToken = token.getAccessToken();
     }
 

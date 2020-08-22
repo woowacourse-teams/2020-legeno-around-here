@@ -15,5 +15,5 @@ import lombok.ToString;
 public class MailAuthCheckRequest {
 
     private String email;
-    private int authNumber;
+    private Integer authNumber;
 }

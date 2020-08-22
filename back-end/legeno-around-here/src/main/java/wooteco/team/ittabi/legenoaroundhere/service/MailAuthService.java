@@ -1,6 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import javax.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +26,12 @@ import wooteco.team.ittabi.legenoaroundhere.utils.MailHandler;
 @AllArgsConstructor
 public class MailAuthService {
 
-    private static final int AUTH_NUMBER_MIN = 100000;
+    private static final int AUTH_NUMBER_MIN = 100_000;
+    private static final int AUTH_NUMBER_RANGE = 900_000;
 
-    JavaMailSender javaMailSender;
-    MailAuthRepository mailAuthRepository;
-    UserRepository userRepository;
+    private final JavaMailSender javaMailSender;
+    private final MailAuthRepository mailAuthRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public void publishAuth(MailAuthCreateRequest mailAuthCreateRequest) {
@@ -65,7 +67,7 @@ public class MailAuthService {
         Random random = new Random();
         random.setSeed(System.currentTimeMillis());
 
-        return AUTH_NUMBER_MIN + random.nextInt(900000);
+        return AUTH_NUMBER_MIN + ThreadLocalRandom.current().nextInt(AUTH_NUMBER_RANGE);
     }
 
     @Transactional
@@ -75,13 +77,13 @@ public class MailAuthService {
             .orElseThrow(() -> new NotExistsException("올바르지 않은 이메일입니다."));
 
         if (mailAuth.isSameAuthNumber(mailAuthCheckRequest.getAuthNumber())) {
-            updateUserEmailAuthTrue(email);
+            updateUserEmailAuthPassed(email);
             return;
         }
         throw new WrongUserInputException("인증 정보가 일치하지 않습니다.");
     }
 
-    private void updateUserEmailAuthTrue(Email email) {
+    private void updateUserEmailAuthPassed(Email email) {
         User foundUser = userRepository.findByEmail(email)
             .orElseThrow(() -> new NotExistsException("존재하지 않는 회원입니다."));
         foundUser.setAuthenticatedByEmail(true);

@@ -29,6 +29,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 class UserServiceTest extends ServiceTest {
 
     private static final String TEST_PREFIX = "user_";
+    private static final String NOT_EXIST_PREFIX = "notexist_";
     private static final int TOKEN_MIN_SIZE = 1;
 
     @Autowired
@@ -86,8 +87,9 @@ class UserServiceTest extends ServiceTest {
     @DisplayName("로그인 - 존재하지 않는 이메일")
     @Test
     void login_IfEmailNotExist_ThrowException() {
-        assertThatThrownBy(() -> userService.login(new LoginRequest("notexist_" + TEST_USER_EMAIL,
-            TEST_USER_PASSWORD)))
+        assertThatThrownBy(
+            () -> userService.login(new LoginRequest(NOT_EXIST_PREFIX + TEST_USER_EMAIL,
+                TEST_USER_PASSWORD)))
             .isInstanceOf(NotExistsException.class);
     }
 

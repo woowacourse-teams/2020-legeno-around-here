@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
-import java.util.List;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -74,8 +73,8 @@ public class UserService implements UserDetailsService {
             .orElseThrow(() -> new NotExistsException("가입되지 않은 회원입니다."));
         checkEmailAuth(user);
         checkPassword(loginRequest, user);
-        return new TokenResponse(
-            jwtTokenGenerator.createToken(user.getEmailByString(), user.getRoles()));
+        String token = jwtTokenGenerator.createToken(user.getEmailByString(), user.getRoles());
+        return new TokenResponse(token);
     }
 
     private void checkEmailAuth(User user) {
