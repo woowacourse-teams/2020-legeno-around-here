@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.user.mailauth;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class AuthNumber {
 
+    @Column(nullable = false)
     private Integer authNumber;
 
     public boolean isSame(Integer authNumber) {

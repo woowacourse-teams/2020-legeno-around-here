@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.user.mailauth;
 
-import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import lombok.AccessLevel;
@@ -18,11 +17,9 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
 public class MailAuth extends BaseEntity {
 
     @Embedded
-    @Column(nullable = false, unique = true)
     private Email email;
 
     @Embedded
-    @Column(nullable = false)
     private AuthNumber authNumber;
 
     @Builder
