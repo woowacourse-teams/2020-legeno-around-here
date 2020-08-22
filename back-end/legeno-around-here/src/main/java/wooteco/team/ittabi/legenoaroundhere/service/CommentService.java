@@ -1,6 +1,10 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
+import static wooteco.team.ittabi.legenoaroundhere.domain.State.DELETED;
+
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,7 +16,9 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponseAssembler;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotAvailableException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.CommentRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
@@ -36,7 +42,7 @@ public class CommentService {
         comment.setPost(post);
 
         Comment savedComment = commentRepository.save(comment);
-        return CommentResponse.of(user, savedComment);
+        return CommentResponseAssembler.of(user, savedComment);
     }
 
     @Transactional(readOnly = true)
@@ -44,22 +50,40 @@ public class CommentService {
         User user = (User) authenticationFacade.getPrincipal();
 
         Comment comment = findCommentBy(commentId);
-        return CommentResponse.of(user, comment);
+        return CommentResponseAssembler.of(user, comment);
     }
 
     @Transactional(readOnly = true)
     public List<CommentResponse> findAllCommentBy(Long postId) {
         User user = (User) authenticationFacade.getPrincipal();
 
-        List<Comment> comments = commentRepository.findAllByPostId(postId);
-        return CommentResponse.listOf(user, comments);
+        List<Comment> comments = commentRepository.findAllByPostId(postId)
+            .stream()
+            .filter(Comment::hasSuperComment)
+            .collect(Collectors.toList());
+
+        return CommentResponseAssembler.listOf(user, comments);
     }
 
     @Transactional
     public void deleteComment(Long commentId) {
-        Comment comment = findCommentBy(commentId);
+        Comment comment = findAvailableCommentBy(commentId);
         validateIsCreator(comment);
+        if (comment.hasCocomments()) {
+            comment.setState(DELETED);
+            return;
+        }
+        if (isSuperCommentNotAvailableAndOnlyCocomment(comment)) {
+            commentRepository.delete(comment.getSuperComment());
+        }
         commentRepository.delete(comment);
+    }
+
+    private boolean isSuperCommentNotAvailableAndOnlyCocomment(Comment comment) {
+        Comment superComment = comment.getSuperComment();
+        return Objects.nonNull(superComment)
+            && superComment.isNotAvailable()
+            && superComment.hasOnlyCocomment();
     }
 
     private Comment findCommentBy(Long commentId) {
@@ -80,7 +104,38 @@ public class CommentService {
     public void pressZzang(Long commentId) {
         User user = (User) authenticationFacade.getPrincipal();
 
-        Comment comment = findCommentBy(commentId);
+        Comment comment = findAvailableCommentBy(commentId);
         comment.pressZzang(user);
+    }
+
+    @Transactional
+    public CommentResponse updateComment(Long commentId, CommentRequest commentRequest) {
+        User user = (User) authenticationFacade.getPrincipal();
+        Comment comment = findAvailableCommentBy(commentId);
+
+        comment.setWriting(commentRequest.getWriting());
+
+        return CommentResponseAssembler.of(user, comment);
+    }
+
+    @Transactional
+    public CommentResponse createCocomment(Long commentId, CommentRequest commentRequest) {
+        User user = (User) authenticationFacade.getPrincipal();
+
+        Comment comment = findAvailableCommentBy(commentId);
+        Comment cocomment = CommentAssembler.assemble(user, commentRequest);
+        cocomment.setSuperComment(comment);
+
+        Comment savedCocomment = commentRepository.save(cocomment);
+        return CommentResponseAssembler.of(user, savedCocomment);
+    }
+
+    private Comment findAvailableCommentBy(Long commentId) {
+        Comment comment = findCommentBy(commentId);
+        if (comment.isNotAvailable()) {
+            throw new NotAvailableException(
+                "Comment ID : " + comment.getId() + " 에 해당하는 Comment가 유효하지 않습니다!");
+        }
+        return comment;
     }
 }

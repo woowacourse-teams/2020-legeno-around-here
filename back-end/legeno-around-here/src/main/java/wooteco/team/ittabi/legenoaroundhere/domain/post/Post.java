@@ -23,6 +23,7 @@ import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
+import wooteco.team.ittabi.legenoaroundhere.domain.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.comment.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;

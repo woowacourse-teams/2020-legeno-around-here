@@ -1,5 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.comment;
 
+import static wooteco.team.ittabi.legenoaroundhere.domain.State.PUBLISHED;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,13 +19,12 @@ import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
+import wooteco.team.ittabi.legenoaroundhere.domain.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAvailableException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
@@ -31,13 +32,12 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
-@ToString(exclude = {"post"})
+@ToString(exclude = {"post", "superComment", "cocomments"})
 @SQLDelete(sql = "UPDATE comment SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class Comment extends BaseEntity {
 
-    private static final int MAX_LENGTH = 20;
+    private static final int MAX_LENGTH = 200;
 
     @Lob
     @Column(nullable = false)
@@ -51,6 +51,13 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "super_comment_id")
+    private Comment superComment;
+
+    @OneToMany(mappedBy = "superComment")
+    private List<Comment> cocomments = new ArrayList<>();
+
     @ManyToOne
     @JoinColumn(name = "creator_id")
     private User creator;
@@ -61,7 +68,7 @@ public class Comment extends BaseEntity {
     public Comment(User creator, String writing) {
         validateLength(writing);
         this.writing = writing;
-        this.state = State.PUBLISHED;
+        this.state = PUBLISHED;
         this.creator = creator;
     }
 
@@ -91,6 +98,39 @@ public class Comment extends BaseEntity {
         }
     }
 
+    public boolean isAvailable() {
+        return state.isAvailable();
+    }
+
+    public boolean hasZzangCreator(User user) {
+        return zzangs.stream()
+            .anyMatch(zzang -> zzang.isSameCreator(user));
+    }
+
+    public boolean hasPost() {
+        return Objects.nonNull(this.post);
+    }
+
+    public boolean hasSuperComment() {
+        return Objects.isNull(superComment);
+    }
+
+    public boolean hasCocomments() {
+        return !cocomments.isEmpty();
+    }
+
+    public boolean hasOnlyCocomment() {
+        return cocomments.size() == 1;
+    }
+
+    public int getZzangCounts() {
+        return zzangs.size();
+    }
+
+    public void setWriting(String writing) {
+        this.writing = writing;
+    }
+
     public void setPost(Post post) {
         if (Objects.nonNull(this.post)) {
             this.post.removeComments(this);
@@ -99,20 +139,17 @@ public class Comment extends BaseEntity {
         post.addComment(this);
     }
 
-    public boolean hasPost() {
-        return Objects.nonNull(this.post);
+    public void setSuperComment(Comment superComment) {
+        this.superComment = superComment;
+        superComment.cocomments.add(this);
+        setPost(superComment.getPost());
     }
 
-    public int getZzangCounts() {
-        return zzangs.size();
+    public void setState(State state) {
+        this.state = state;
     }
 
-    public boolean hasZzangCreator(User user) {
-        return zzangs.stream()
-            .anyMatch(zzang -> zzang.isSameCreator(user));
-    }
-
-    public boolean isAvailable() {
-        return state.isAvailable();
+    public boolean isNotAvailable() {
+        return !state.isAvailable();
     }
 }
