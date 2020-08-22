@@ -36,10 +36,6 @@ public class MailHandler {
     }
 
     public void send() {
-        try {
-            javaMailSender.send(mimeMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        javaMailSender.send(mimeMessage);
     }
 }

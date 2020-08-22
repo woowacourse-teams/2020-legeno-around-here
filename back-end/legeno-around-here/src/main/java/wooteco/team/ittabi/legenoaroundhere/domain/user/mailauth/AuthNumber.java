@@ -20,8 +20,8 @@ public class AuthNumber {
     @Column(nullable = false)
     private Integer authNumber;
 
-    public boolean isSame(Integer authNumber) {
-        return this.authNumber.equals(authNumber);
+    public boolean isNotSame(Integer authNumber) {
+        return !this.authNumber.equals(authNumber);
     }
 }
 

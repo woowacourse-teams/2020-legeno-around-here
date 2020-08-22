@@ -28,7 +28,7 @@ public class MailAuth extends BaseEntity {
         this.authNumber = new AuthNumber(authNumber);
     }
 
-    public boolean isSameAuthNumber(int authNumber) {
-        return this.authNumber.isSame(authNumber);
+    public boolean isDifferentAuthNumber(int authNumber) {
+        return this.authNumber.isNotSame(authNumber);
     }
 }

@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.mail.MessagingException;
 import lombok.AllArgsConstructor;
@@ -64,9 +63,6 @@ public class MailAuthService {
     }
 
     private int makeRandomAuthNumber() {
-        Random random = new Random();
-        random.setSeed(System.currentTimeMillis());
-
         return AUTH_NUMBER_MIN + ThreadLocalRandom.current().nextInt(AUTH_NUMBER_RANGE);
     }
 
@@ -76,11 +72,14 @@ public class MailAuthService {
         MailAuth mailAuth = mailAuthRepository.findByEmail(email)
             .orElseThrow(() -> new NotExistsException("올바르지 않은 이메일입니다."));
 
-        if (mailAuth.isSameAuthNumber(mailAuthCheckRequest.getAuthNumber())) {
-            updateUserEmailAuthPassed(email);
-            return;
+        validateAuthNumber(mailAuth, mailAuthCheckRequest.getAuthNumber());
+        updateUserEmailAuthPassed(email);
+    }
+
+    private void validateAuthNumber(MailAuth mailAuth, Integer AuthNumber) {
+        if (mailAuth.isDifferentAuthNumber(AuthNumber)) {
+            throw new WrongUserInputException("인증 정보가 일치하지 않습니다.");
         }
-        throw new WrongUserInputException("인증 정보가 일치하지 않습니다.");
     }
 
     private void updateUserEmailAuthPassed(Email email) {

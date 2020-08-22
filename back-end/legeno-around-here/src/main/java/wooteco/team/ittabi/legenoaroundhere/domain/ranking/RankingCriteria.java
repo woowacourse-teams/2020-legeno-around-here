@@ -18,8 +18,8 @@ public enum RankingCriteria {
             0,
             0)),
     LAST_WEEK("week",
-        LocalDateTime.now().minusDays(7 + LocalDateTime.now().getDayOfWeek().getValue()),
-        LocalDateTime.now().minusDays(LocalDateTime.now().getDayOfWeek().getValue())),
+        LocalDateTime.now().minusDays(7 + (LocalDateTime.now().getDayOfWeek().getValue() % 7)),
+        LocalDateTime.now().minusDays(LocalDateTime.now().getDayOfWeek().getValue() % 7)),
     LAST_MONTH("month",
         LocalDateTime.of(
             LocalDateTime.now().minusMonths(1).getYear(),
