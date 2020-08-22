@@ -69,7 +69,7 @@ public class CommentService {
     public void deleteComment(Long commentId) {
         Comment comment = findAvailableCommentBy(commentId);
         validateIsCreator(comment);
-        if (comment.hasCocoments()) {
+        if (comment.hasCocomments()) {
             comment.setState(DELETED);
             return;
         }
