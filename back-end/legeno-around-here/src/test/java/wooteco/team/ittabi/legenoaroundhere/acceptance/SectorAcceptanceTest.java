@@ -237,7 +237,6 @@ public class SectorAcceptanceTest extends AcceptanceTest {
     }
 
     private String getCreateUserToken(String email, String nickname, String password) {
-        createUser(email, nickname, password);
         TokenResponse tokenResponse = login(email, password);
         return tokenResponse.getAccessToken();
     }

@@ -24,6 +24,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
+import wooteco.team.ittabi.legenoaroundhere.exception.NeedEmailAuthException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
@@ -70,13 +71,23 @@ public class UserService implements UserDetailsService {
     public TokenResponse login(LoginRequest loginRequest) {
         User user = userRepository.findByEmail(new Email(loginRequest.getEmail()))
             .orElseThrow(() -> new NotExistsException("가입되지 않은 회원입니다."));
+        checkEmailAuth(user);
+        checkPassword(loginRequest, user);
+        String token = jwtTokenGenerator.createToken(user.getEmailByString(), user.getRoles());
+        return new TokenResponse(token);
+    }
 
+    private void checkEmailAuth(User user) {
+        if (user.isNotAuthenticatedByEmail()) {
+            throw new NeedEmailAuthException("메일 인증이 필요합니다.");
+        }
+    }
+
+    private void checkPassword(LoginRequest loginRequest, User user) {
         if (!PASSWORD_ENCODER.matches(
             loginRequest.getPassword(), user.getPasswordByString())) {
             throw new WrongUserInputException("잘못된 비밀번호입니다.");
         }
-        return new TokenResponse(
-            jwtTokenGenerator.createToken(user.getEmailByString(), user.getRoles()));
     }
 
     @Transactional(readOnly = true)

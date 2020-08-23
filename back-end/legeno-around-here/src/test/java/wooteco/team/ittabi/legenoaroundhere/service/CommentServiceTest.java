@@ -32,6 +32,8 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 
 public class CommentServiceTest extends ServiceTest {
 
+    private static final String TEST_PREFIX = "comment_";
+
     private User user;
     private User another;
     private Long postId;
@@ -47,8 +49,9 @@ public class CommentServiceTest extends ServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
-        another = createUser(TEST_USER_OTHER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        user = createUser(TEST_PREFIX + TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        another = createUser(TEST_PREFIX + TEST_USER_OTHER_EMAIL, TEST_USER_NICKNAME,
+            TEST_USER_PASSWORD);
         setAuthentication(user);
 
         Long sectorId = sectorService.createSector(TEST_SECTOR_REQUEST).getId();

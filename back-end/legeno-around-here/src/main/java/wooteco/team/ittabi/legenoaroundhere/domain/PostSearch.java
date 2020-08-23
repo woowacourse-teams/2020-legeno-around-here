@@ -18,8 +18,8 @@ public class PostSearch {
 
     protected static final String DELIMITER = ",";
 
-    private Long areaId;
-    private List<Long> sectorIds;
+    private final Long areaId;
+    private final List<Long> sectorIds;
 
     @Builder
     public PostSearch(Long areaId, String sectorIds) {

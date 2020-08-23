@@ -42,15 +42,12 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 public class User extends BaseEntity implements UserDetails {
 
     @Embedded
-    @Column(nullable = false, unique = true)
     private Email email;
 
     @Embedded
-    @Column(nullable = false)
     private Nickname nickname;
 
     @Embedded
-    @Column(nullable = false)
     private Password password;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -69,6 +66,9 @@ public class User extends BaseEntity implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "area_id")
     private Area area = null;
+
+    @Column(nullable = false, columnDefinition = "tinyint(1) default 0")
+    private boolean authenticatedByEmail;
 
     @Builder
     public User(String email, String nickname, String password, Area area, UserImage image) {
@@ -122,6 +122,10 @@ public class User extends BaseEntity implements UserDetails {
 
     public String getPasswordByString() {
         return this.password.getPassword();
+    }
+
+    public boolean isNotAuthenticatedByEmail() {
+        return authenticatedByEmail == false;
     }
 
     @Override

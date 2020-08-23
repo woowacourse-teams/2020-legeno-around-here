@@ -1,6 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.user;
 
 import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -20,6 +21,7 @@ public class Nickname {
 
     private static final int MAX_LENGTH = 10;
 
+    @Column(nullable = false)
     private String nickname;
 
     public Nickname(String nickname) {

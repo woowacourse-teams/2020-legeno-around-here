@@ -22,24 +22,6 @@ public abstract class AcceptanceTest {
         return RestAssured.given().log().all();
     }
 
-    protected String createUser(String email, String nickname, String password) {
-        Map<String, String> params = new HashMap<>();
-        params.put("email", email);
-        params.put("nickname", nickname);
-        params.put("password", password);
-
-        return given()
-            .body(params)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/join")
-            .then()
-            .statusCode(HttpStatus.CREATED.value())
-            .extract()
-            .header("Location");
-    }
-
     protected TokenResponse login(String email, String password) {
         Map<String, String> params = new HashMap<>();
         params.put("email", email);
@@ -54,6 +36,21 @@ public abstract class AcceptanceTest {
             .then()
             .statusCode(HttpStatus.OK.value())
             .extract().as(TokenResponse.class);
+    }
+
+    protected void loginWithoutEmailAuth(String email, String password) {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("password", password);
+
+        given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/login")
+            .then()
+            .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
     protected Long getIdFromUrl(String location) {
