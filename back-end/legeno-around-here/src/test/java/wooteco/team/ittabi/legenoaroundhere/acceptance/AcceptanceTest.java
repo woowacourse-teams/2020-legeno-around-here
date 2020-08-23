@@ -50,7 +50,7 @@ public abstract class AcceptanceTest {
             .when()
             .post("/login")
             .then()
-            .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
     protected Long getIdFromUrl(String location) {

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import wooteco.team.ittabi.legenoaroundhere.dto.ErrorResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.FileIOException;
 import wooteco.team.ittabi.legenoaroundhere.exception.MultipartFileConvertException;
+import wooteco.team.ittabi.legenoaroundhere.exception.NeedEmailAuthException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotFoundAlgorithmException;
@@ -22,6 +23,15 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @Slf4j
 @RestControllerAdvice(annotations = RestController.class)
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(NeedEmailAuthException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorized(NeedEmailAuthException e) {
+        log.info(e.getMessage());
+
+        return ResponseEntity
+            .status(HttpStatus.UNAUTHORIZED)
+            .body(new ErrorResponse(e.getMessage()));
+    }
 
     @ExceptionHandler(NotExistsException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(NotExistsException e) {
