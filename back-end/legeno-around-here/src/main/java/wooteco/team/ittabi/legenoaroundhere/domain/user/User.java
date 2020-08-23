@@ -79,14 +79,6 @@ public class User extends BaseEntity implements UserDetails {
         this.image = image;
     }
 
-    public User(String email, String nickname, Area area, UserImage image) {
-        this.email = makeEmail(email);
-        this.nickname = new Nickname(nickname);
-        this.password = null;
-        this.area = area;
-        this.image = image;
-    }
-
     private Email makeEmail(String email) {
         if (Objects.nonNull(email)) {
             return new Email(email);
@@ -125,7 +117,7 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     public boolean isNotAuthenticatedByEmail() {
-        return authenticatedByEmail == false;
+        return !authenticatedByEmail;
     }
 
     @Override

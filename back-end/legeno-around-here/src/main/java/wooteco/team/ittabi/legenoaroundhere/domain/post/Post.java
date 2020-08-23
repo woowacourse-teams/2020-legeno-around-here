@@ -88,10 +88,6 @@ public class Post extends BaseEntity {
         }
     }
 
-    public boolean isAvailable() {
-        return this.state.isAvailable();
-    }
-
     public int getPostZzangCount() {
         return zzangs.size();
     }
@@ -107,13 +103,6 @@ public class Post extends BaseEntity {
         LocalDateTime endDate) {
         return targetDate.isAfter(startDate)
             && targetDate.isBefore(endDate);
-    }
-
-    public PostZzang findPostZzangBy(User user) {
-        return zzangs.stream()
-            .filter(postZzang -> postZzang.isSameCreator(user))
-            .findFirst()
-            .orElseGet(() -> new PostZzang(this, user));
     }
 
     public boolean hasZzangCreator(User user) {

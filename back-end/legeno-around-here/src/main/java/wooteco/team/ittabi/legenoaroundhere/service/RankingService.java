@@ -26,7 +26,7 @@ public class RankingService {
     private final IAuthenticationFacade authenticationFacade;
     private final PostService postService;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Page<PostWithCommentsCountResponse> searchRanking(Pageable pageable,
         RankingRequest rankingRequest, PostSearchRequest postSearchFilter) {
         Page<Post> allDateZzangPosts = postService

@@ -20,8 +20,8 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotImageMimeTypeException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotUniqueException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
-@Slf4j
 @RestControllerAdvice(annotations = RestController.class)
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(NeedEmailAuthException.class)

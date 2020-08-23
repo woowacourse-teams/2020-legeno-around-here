@@ -143,6 +143,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(new Email(email))
             .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));

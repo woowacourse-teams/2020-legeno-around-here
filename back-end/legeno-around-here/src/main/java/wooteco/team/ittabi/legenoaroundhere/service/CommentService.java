@@ -23,9 +23,9 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.CommentRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 
-@Slf4j
 @Service
 @AllArgsConstructor
+@Slf4j
 public class CommentService {
 
     private final PostRepository postRepository;

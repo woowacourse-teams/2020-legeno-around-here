@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Objects;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +18,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.MultipartFileConvertExcept
 
 @Slf4j
 @Component
+@AllArgsConstructor
 public class S3Uploader {
 
     public static final String DIR_DELIMITER = "/";
@@ -24,11 +26,6 @@ public class S3Uploader {
 
     private final AmazonS3 amazonS3Client;
     private final String bucket;
-
-    public S3Uploader(AmazonS3 amazonS3Client, String bucket) {
-        this.amazonS3Client = amazonS3Client;
-        this.bucket = bucket;
-    }
 
     public String upload(MultipartFile multipartFile, String dirName) {
         File uploadFile = convert(multipartFile);

@@ -1,13 +1,14 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import wooteco.team.ittabi.legenoaroundhere.domain.PostSearch;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-@Setter
 @EqualsAndHashCode
 @ToString
 public class PostSearchRequest {

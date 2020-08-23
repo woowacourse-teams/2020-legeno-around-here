@@ -2,9 +2,12 @@ package wooteco.team.ittabi.legenoaroundhere.dto;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import wooteco.team.ittabi.legenoaroundhere.domain.comment.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommentResponseAssembler {
 
     public static CommentResponse of(User user, Comment comment) {

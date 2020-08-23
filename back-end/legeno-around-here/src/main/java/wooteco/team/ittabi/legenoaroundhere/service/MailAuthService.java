@@ -19,10 +19,9 @@ import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.MailHandler;
 
-@Slf4j
-@Transactional
 @Service
 @AllArgsConstructor
+@Slf4j
 public class MailAuthService {
 
     private static final int AUTH_NUMBER_MIN = 100_000;

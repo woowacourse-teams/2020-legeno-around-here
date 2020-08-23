@@ -27,7 +27,7 @@ import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
 public class SectorService {
 
     private static final String DB_LIKE_FORMAT = "%%%s%%";
-    protected static final int DEFAULT_PAGING_NUMBER = 0;
+    private static final int DEFAULT_PAGING_NUMBER = 0;
     private final SectorRepository sectorRepository;
     private final IAuthenticationFacade authenticationFacade;
 
@@ -138,6 +138,7 @@ public class SectorService {
             sectorUpdateStateRequest.getReason(), user);
     }
 
+    @Transactional(readOnly = true)
     public List<SectorResponse> findBestSectors(int count) {
         List<Sector> sectors = sectorRepository
             .findAllByStateInAndOrderByPostsCountDesc(PageRequest.of(DEFAULT_PAGING_NUMBER, count),
