@@ -40,12 +40,7 @@ function MyProfilePage() {
 
   useMemo(() => {
     setLoading(true);
-    findMyInfo({
-      accessToken: accessToken,
-      setEmail: setEmail,
-      setNickname: setNickname,
-      setProfilePhotoUrl: setProfilePhotoUrl,
-    }).then((userResponse) => {
+    findMyInfo({ accessToken: accessToken }).then((userResponse) => {
       setEmail(userResponse.email);
       setNickname(userResponse.nickname);
       setProfilePhotoUrl(
