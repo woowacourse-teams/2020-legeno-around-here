@@ -22,6 +22,12 @@ export const loginUser = (email, password, handleReset) => {
       document.location.href = '/home';
     })
     .catch((error) => {
+      const errorResponse = error.response.data;
+      if (errorResponse.errorMessage === '메일 인증이 필요합니다.') {
+        alert('인증 메일을 발송했습니다.\n메일 인증을 완료해주세요!');
+        sendAuthMail(email);
+        return;
+      }
       alert('로그인에 실패하였습니다.');
       handleReset();
     });
@@ -41,6 +47,18 @@ export const createUser = (email, nickname, password, handleReset) => {
     .catch((error) => {
       alert('회원가입에 실패하였습니다.');
       handleReset();
+    });
+};
+
+const sendAuthMail = (email) => {
+  axios
+    .post(DEFAULT_URL + '/mail-auth/send', {
+      email,
+    })
+    .then((response) => {})
+    .catch((error) => {
+      alert('인증 메일 발송 실패하였습니다.');
+      console.log(error);
     });
 };
 

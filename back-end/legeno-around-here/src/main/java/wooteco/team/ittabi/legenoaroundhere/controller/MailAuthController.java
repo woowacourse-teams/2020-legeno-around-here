@@ -2,6 +2,7 @@ package wooteco.team.ittabi.legenoaroundhere.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,12 +27,10 @@ public class MailAuthController {
             .build();
     }
 
-    @PostMapping("/check")
-    public ResponseEntity<Void> checkAuth(@RequestBody MailAuthCheckRequest mailAuthCheckRequest) {
+    @GetMapping("/check")
+    public String checkAuth(MailAuthCheckRequest mailAuthCheckRequest) {
         mailAuthService.checkAuth(mailAuthCheckRequest);
 
-        return ResponseEntity
-            .ok()
-            .build();
+        return "메일 인증을 완료했습니다. 창을 닫아주세요!";
     }
 }
