@@ -161,7 +161,6 @@ public class UserAcceptanceTest extends AcceptanceTest {
         params.put("password", password);
         params.put("authNumber", String.valueOf(TEST_AUTH_NUMBER));
 
-
         return createUserBy(params);
     }
 
