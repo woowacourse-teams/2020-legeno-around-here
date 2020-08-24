@@ -1,58 +1,66 @@
-import React from 'react';
-import styled from 'styled-components';
-import Typography from '@material-ui/core/Typography';
+import React, { useEffect, useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
-import Bottom from '../../Bottom';
-import { RANKING } from '../../../constants/BottomItems';
-import { MAIN_COLOR } from '../../../constants/Color';
 import TopBar from './RankingTopBar';
-
-const Card = styled.div`
-  width: 95%;
-  height: 140px;
-  background-color: #f6f6f6;
-  margin: auto;
-  margin-top: 7px;
-  margin-bottom: 7px;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-`;
-
-const Rank = styled.div`
-  width: 70px;
-  height: 70px;
-  border: 1px solid ${MAIN_COLOR};
-  border-radius: 500px;
-  margin: auto;
-  margin-left: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  text-align: center;
-`;
-
-const TopSection = styled.div`
-  width: 98%;
-  padding-top: 30px;
-  padding-bottom: 30px;
-`;
+import Bottom from '../../Bottom'
+import BottomBlank from '../../BottomBlank'
+import PostItem from '../../post/PostItem'
+import Loading from '../../Loading'
+import { findCurrentPostsFromPage } from '../../api/API'
+import { getAccessTokenFromCookie } from '../../../util/TokenUtils'
+import { RANKING } from '../../../constants/BottomItems'
 
 const RankingPage = () => {
+  const [page, setPage] = useState(0);
+  const [posts, setPosts] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+
+  const accessToken = getAccessTokenFromCookie();
+  const mainAreaId = localStorage.getItem('mainAreaId');
+
+  /* 처음에 보여줄 최근글 목록을 가져옴 */
+  useEffect(() => {
+    findCurrentPostsFromPage(mainAreaId, 0, accessToken).then((firstPosts) => {
+      if (firstPosts.length === 0) {
+        setHasMore(false);
+        return;
+      }
+      setPosts(firstPosts);
+    });
+    setPage(1);
+  }, [mainAreaId, accessToken]);
+
+  const fetchNextPosts = () => {
+    findCurrentPostsFromPage(mainAreaId, page, accessToken)
+      .then((nextPosts) => {
+        if (nextPosts.length === 0) {
+          setHasMore(false);
+          return;
+        }
+        setPosts(posts.concat(nextPosts));
+        setPage(page + 1);
+      })
+      .catch((e) => {
+        console.log(e);
+        setHasMore(false);
+      });
+  };
+
   return (
     <>
-      <TopBar/>
-      <TopSection>
-        <Typography>대한민국</Typography>
-        <Typography>캡짱은 누구?</Typography>
-      </TopSection>
-      <Card>
-        <Rank>1</Rank>
-      </Card>
-      <Card>
-        <Rank>2</Rank>
-      </Card>
+      <TopBar />
+      <InfiniteScroll
+        next={fetchNextPosts}
+        hasMore={hasMore}
+        loader={<Loading />}
+        dataLength={posts.length}
+        endMessage={<h3>모두 읽으셨습니다!</h3>}
+      >
+        {posts.map((post) => (
+          <PostItem key={post.id} post={post} />
+        ))}
+      </InfiniteScroll>
+      <BottomBlank />
       <Bottom selected={RANKING} />
     </>
   );
