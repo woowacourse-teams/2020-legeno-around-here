@@ -88,8 +88,11 @@ const PostingForm = () => {
       return;
     }
 
+    const imageIds = images.map((image) => image.id);
+
     const postData = {
       writing: writing,
+      imageIds: imageIds,
       areaId: area.id,
       sectorId: sector.id,
     };
