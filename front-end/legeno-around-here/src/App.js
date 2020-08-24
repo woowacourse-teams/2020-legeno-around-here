@@ -7,7 +7,7 @@ import MyProfilePage from './components/pages/myProfile/MyProfilePage';
 import SectorPage from './components/pages/sector/SectorPage';
 import PostDetailPage from './components/pages/post/PostDetailPage';
 import HomePage from './components/pages/HomePage';
-import RankingPage from './components/pages/RankingPage';
+import RankingPage from './components/pages/ranking/RankingPage';
 import MyProfileEditPage
   from "./components/pages/myProfileEdit/MyProfileEditPage";
 

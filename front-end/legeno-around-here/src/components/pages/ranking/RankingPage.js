@@ -2,9 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 
-import Bottom from '../Bottom';
-import { RANKING } from '../../constants/BottomItems';
-import { MAIN_COLOR } from '../../constants/Color';
+import Bottom from '../../Bottom';
+import { RANKING } from '../../../constants/BottomItems';
+import { MAIN_COLOR } from '../../../constants/Color';
+import TopBar from './RankingTopBar';
 
 const Card = styled.div`
   width: 95%;
@@ -41,6 +42,7 @@ const TopSection = styled.div`
 const RankingPage = () => {
   return (
     <>
+      <TopBar/>
       <TopSection>
         <Typography>대한민국</Typography>
         <Typography>캡짱은 누구?</Typography>
