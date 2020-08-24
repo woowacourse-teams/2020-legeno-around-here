@@ -105,9 +105,33 @@ public class UserAcceptanceTest extends AcceptanceTest {
         // 비밀번호 수정 실패 - 동일한 비밀번호로 수정
         assertThatThrownBy(() -> changeMyPassword(accessToken, TEST_USER_OTHER_PASSWORD));
 
+        // 토큰을 가진 유저가 정상적으로 로그인 한 유저인지 확인
+        assertThat(validateUserExists(accessToken)).isTrue();
+
         // 회원 탈퇴
         deleteUser(accessToken);
         findNotExistUser(accessToken);
+
+        // 토큰을 가진 유저가 정상적으로 로그인 한 유저가 아님을 확인
+        assertThat(validateUserExists(accessToken)).isFalse();
+    }
+
+    private boolean validateUserExists(String accessToken) {
+        Integer statusCode = given()
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .get("/auth")
+            .then()
+            .extract()
+            .statusCode();
+        if (statusCode.equals(HttpStatus.NO_CONTENT.value())) {
+            return true;
+        }
+        if (statusCode.equals(HttpStatus.INTERNAL_SERVER_ERROR.value())) {
+            // Todo: 추후 FORBIDDEN 응답하도록 수정하면 좋을것같음
+            return false;
+        }
+        throw new IllegalStateException("예상 응답코드에서 벗어났습니다.");
     }
 
     /**

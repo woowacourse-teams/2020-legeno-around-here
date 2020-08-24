@@ -5,6 +5,7 @@ const HTTP_STATUS_OK = 200;
 const HTTP_STATUS_CREATED = 201;
 const HTTP_STATUS_NO_CONTENT = 204;
 const HTTP_STATUS_FORBIDDEN = 403;
+const HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
 const DEFAULT_SIZE = 10;
 const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
@@ -347,13 +348,15 @@ export const isLoggedIn = async (accessToken) => {
     .then((response) => {
       if (response.status === HTTP_STATUS_NO_CONTENT) {
         return true;
+      } else {
+        throw new Error("인증 오류");
       }
     })
     .catch((error) => {
-      if (error.response && error.response.status === HTTP_STATUS_FORBIDDEN) {
+      if (error.response && (error.response.status === HTTP_STATUS_INTERNAL_SERVER_ERROR)) {
         return false;
       }
-    })
+    });
 };
 
 const redirectLoginWhenUnauthorized = (error) => {
