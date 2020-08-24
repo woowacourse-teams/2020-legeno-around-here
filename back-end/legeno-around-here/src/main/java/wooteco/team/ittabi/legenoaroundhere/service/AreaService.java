@@ -21,6 +21,7 @@ public class AreaService {
     public Page<AreaResponse> searchAllArea(Pageable pageable, String keyword) {
         String likeKeyword = String.format(DB_LIKE_FORMAT, keyword);
         Page<Area> areas = areaRepository.findAllByFullNameIsLike(pageable, likeKeyword);
+
         return areas.map(AreaResponse::of);
     }
 }

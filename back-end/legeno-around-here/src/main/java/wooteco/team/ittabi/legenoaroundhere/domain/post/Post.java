@@ -18,7 +18,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -35,7 +34,6 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
 @ToString(exclude = {"comments", "postImages", "zzangs"})
 @SQLDelete(sql = "UPDATE post SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
@@ -151,5 +149,17 @@ public class Post extends BaseEntity {
             throw new NotAvailableException(
                 "ID [" + this.getId() + "]에 해당하는 Post가 유효하지 않습니다.");
         }
+    }
+
+    public void setWriting(String writing) {
+        this.writing = writing;
+    }
+
+    public void setPostImages(List<PostImage> postImages) {
+        this.postImages = postImages;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 }

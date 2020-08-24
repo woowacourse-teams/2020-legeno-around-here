@@ -49,8 +49,4 @@ public class Area extends BaseEntity {
         }
         return firstDepthName;
     }
-
-    public boolean isSubAreaOf(Area targetArea) {
-        return this.fullName.startsWith(targetArea.fullName);
-    }
 }

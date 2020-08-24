@@ -73,39 +73,4 @@ class AreaTest {
     void getLastDepthName_ExistsFourthDepthName_FourthDepthName() {
         assertThat(FOURTH_DEPTH_AREA.getLastDepthName()).isEqualTo(TEST_AREA_FOURTH_DEPTH_NAME);
     }
-
-    @DisplayName("SubArea인지 판단, True - 자기 자신")
-    @Test
-    void isSubAreaOf_MySelf_returnTrue() {
-        assertThat(FIRST_DEPTH_AREA.isSubAreaOf(FIRST_DEPTH_AREA)).isTrue();
-        assertThat(SECOND_DEPTH_AREA.isSubAreaOf(SECOND_DEPTH_AREA)).isTrue();
-        assertThat(THIRD_DEPTH_AREA.isSubAreaOf(THIRD_DEPTH_AREA)).isTrue();
-        assertThat(FOURTH_DEPTH_AREA.isSubAreaOf(FOURTH_DEPTH_AREA)).isTrue();
-    }
-
-    @DisplayName("SubArea인지 판단, False - 하위 지역이 아님")
-    @Test
-    void isSubAreaOf_NotSubArea_returnFalse() {
-        assertThat(FIRST_DEPTH_AREA.isSubAreaOf(SECOND_DEPTH_AREA)).isFalse();
-        assertThat(FIRST_DEPTH_AREA.isSubAreaOf(THIRD_DEPTH_AREA)).isFalse();
-        assertThat(FIRST_DEPTH_AREA.isSubAreaOf(FOURTH_DEPTH_AREA)).isFalse();
-
-        assertThat(SECOND_DEPTH_AREA.isSubAreaOf(THIRD_DEPTH_AREA)).isFalse();
-        assertThat(SECOND_DEPTH_AREA.isSubAreaOf(FOURTH_DEPTH_AREA)).isFalse();
-
-        assertThat(THIRD_DEPTH_AREA.isSubAreaOf(FOURTH_DEPTH_AREA)).isFalse();
-    }
-
-    @DisplayName("SubArea인지 판단, True - 하위 지역")
-    @Test
-    void isSubAreaOf_SubArea_returnTrue() {
-        assertThat(SECOND_DEPTH_AREA.isSubAreaOf(FIRST_DEPTH_AREA)).isTrue();
-
-        assertThat(THIRD_DEPTH_AREA.isSubAreaOf(FIRST_DEPTH_AREA)).isTrue();
-        assertThat(THIRD_DEPTH_AREA.isSubAreaOf(SECOND_DEPTH_AREA)).isTrue();
-
-        assertThat(FOURTH_DEPTH_AREA.isSubAreaOf(FIRST_DEPTH_AREA)).isTrue();
-        assertThat(FOURTH_DEPTH_AREA.isSubAreaOf(SECOND_DEPTH_AREA)).isTrue();
-        assertThat(FOURTH_DEPTH_AREA.isSubAreaOf(THIRD_DEPTH_AREA)).isTrue();
-    }
 }

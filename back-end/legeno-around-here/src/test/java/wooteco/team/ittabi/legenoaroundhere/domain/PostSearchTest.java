@@ -9,7 +9,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 class PostSearchTest {
 
-    protected static final long AREA_ID = 1L;
+    private static final long AREA_ID = 1L;
 
     @DisplayName("생성자에 null 또는 empty가 들어가는 경우 빈 List 필드 생성")
     @Test

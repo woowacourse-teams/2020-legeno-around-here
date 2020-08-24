@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-public class WebController {
+public class ProfileController {
+
+    private static final String PROFILE_NONE = "none";
 
     private final Environment env;
 
@@ -16,6 +18,6 @@ public class WebController {
     public String getProfile() {
         return Arrays.stream(env.getActiveProfiles())
             .findFirst()
-            .orElse("none");
+            .orElse(PROFILE_NONE);
     }
 }

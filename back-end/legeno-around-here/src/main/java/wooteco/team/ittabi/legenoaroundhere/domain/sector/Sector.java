@@ -32,7 +32,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @Where(clause = "deleted_at IS NULL")
 public class Sector extends BaseEntity {
 
-    protected static final String DEFAULT_REASON = "";
+    private static final String DEFAULT_REASON = "";
 
     @Embedded
     private Name name;

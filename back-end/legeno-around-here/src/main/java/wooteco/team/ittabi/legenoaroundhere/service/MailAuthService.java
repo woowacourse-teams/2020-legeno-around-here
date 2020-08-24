@@ -84,6 +84,6 @@ public class MailAuthService {
     private void updateUserEmailAuthPassed(Email email) {
         User foundUser = userRepository.findByEmail(email)
             .orElseThrow(() -> new NotExistsException("존재하지 않는 회원입니다."));
-        foundUser.setAuthenticatedByEmail(true);
+        foundUser.setAuthenticatedByEmail(Boolean.TRUE);
     }
 }

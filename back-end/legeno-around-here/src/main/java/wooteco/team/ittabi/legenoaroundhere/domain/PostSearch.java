@@ -16,7 +16,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @ToString
 public class PostSearch {
 
-    protected static final String DELIMITER = ",";
+    private static final String DELIMITER = ",";
 
     private final Long areaId;
     private final List<Long> sectorIds;

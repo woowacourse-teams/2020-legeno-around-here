@@ -2,6 +2,7 @@ package wooteco.team.ittabi.legenoaroundhere.domain.ranking;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 
 public enum RankingCriteria {
     YESTERDAY("yesterday",
@@ -50,7 +51,7 @@ public enum RankingCriteria {
         return Arrays.stream(values())
             .filter(rc -> rc.isSameRankingCriteria(criteria))
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 랭킹 기준입니다."));
+            .orElseThrow(() -> new NotExistsException("존재하지 않는 랭킹 기준입니다."));
     }
 
     private boolean isSameRankingCriteria(String criteria) {

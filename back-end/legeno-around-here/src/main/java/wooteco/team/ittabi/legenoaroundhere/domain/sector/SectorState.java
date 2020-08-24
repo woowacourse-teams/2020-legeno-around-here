@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 public enum SectorState {
-
     PUBLISHED("등록", "사용", true, true),
     PENDING("승인 신청", "승인 신청", false, true),
     APPROVED("승인", "사용", true, true),

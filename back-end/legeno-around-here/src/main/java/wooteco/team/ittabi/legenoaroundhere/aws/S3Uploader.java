@@ -21,7 +21,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.MultipartFileConvertExcept
 @Slf4j
 public class S3Uploader {
 
-    public static final String FILE_NAME_DELIMITER = "_";
+    private static final String FILE_NAME_DELIMITER = "_";
 
     private final AmazonS3 amazonS3Client;
     private final String bucket;

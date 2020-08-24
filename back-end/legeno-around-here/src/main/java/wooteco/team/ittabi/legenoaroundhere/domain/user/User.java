@@ -20,7 +20,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -35,7 +34,6 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
 @ToString(exclude = {"posts", "comments"})
 @SQLDelete(sql = "UPDATE user SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
@@ -68,7 +66,7 @@ public class User extends BaseEntity implements UserDetails {
     private Area area = null;
 
     @Column(nullable = false, columnDefinition = "tinyint(1) default 0")
-    private boolean authenticatedByEmail;
+    private Boolean authenticatedByEmail;
 
     @Builder
     public User(String email, String nickname, String password, Area area, UserImage image) {
@@ -77,6 +75,7 @@ public class User extends BaseEntity implements UserDetails {
         this.password = new Password(password);
         this.area = area;
         this.image = image;
+        this.authenticatedByEmail = Boolean.FALSE;
     }
 
     private Email makeEmail(String email) {
@@ -106,6 +105,14 @@ public class User extends BaseEntity implements UserDetails {
         if (userImage.hasNotUser()) {
             image.setUser(this);
         }
+    }
+
+    public void setArea(Area area) {
+        this.area = area;
+    }
+
+    public void setAuthenticatedByEmail(Boolean authenticatedByEmail) {
+        this.authenticatedByEmail = authenticatedByEmail;
     }
 
     public boolean isNotSame(User user) {

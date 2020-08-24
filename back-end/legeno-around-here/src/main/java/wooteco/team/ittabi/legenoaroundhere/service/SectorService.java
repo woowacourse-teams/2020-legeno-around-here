@@ -28,6 +28,7 @@ public class SectorService {
 
     private static final String DB_LIKE_FORMAT = "%%%s%%";
     private static final int DEFAULT_PAGING_NUMBER = 0;
+
     private final SectorRepository sectorRepository;
     private final IAuthenticationFacade authenticationFacade;
 
