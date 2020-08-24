@@ -10,20 +10,36 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
 import { convertDateFormat } from '../../../util/TimeUtils';
+import { MAIN_COLOR } from '../../../constants/Color'
 
 const useStyles = makeStyles(() => ({
   grow: {
     flexGrow: 1,
   },
-  root: {
+  card: {
     display: 'flex',
+  },
+  rank: {
+    width: '65px',
+    height: '65px',
+    borderRadius: '300px',
+    border: `1px solid ${MAIN_COLOR}`,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignContent: 'center',
+    textAlign: 'center',
+    margin: 'auto 8px',
   },
   details: {
     display: 'flex',
     flexDirection: 'column',
+    width: '80%',
   },
   content: {
     flex: '1 0 auto',
+    // border: '1px solid red',
+    padding: '5px',
   },
   cover: {
     flex: '1 0 auto',
@@ -34,9 +50,20 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
     marginTop: 100,
   },
+  reactions: {
+    paddingTop: 0,
+  },
+  reactionIconSpace: {
+    margin: 0,
+    padding: 0,
+  },
+  reactionIcon: {
+    width: '20px',
+    height: '20px',
+  },
 }));
 
-const RankingItem = ({ post }) => {
+const RankingItem = ({ post, rank }) => {
   const classes = useStyles();
 
   const {
@@ -48,15 +75,17 @@ const RankingItem = ({ post }) => {
     id,
     zzang,
     sector,
-    writing,
   } = post;
 
   return (
     <Card
-      className={classes.root}
+      className={classes.card}
       data-id={id}
       onClick={() => (document.location.href = `/posts/${id}`)}
     >
+      <div className={classes.rank}>
+        <Typography component="h5" variant="h5">{rank}</Typography>
+      </div>
       <div className={classes.details}>
         <CardContent className={classes.content}>
           <Typography component="h6" variant="h5">
@@ -65,19 +94,6 @@ const RankingItem = ({ post }) => {
           <Typography variant="subtitle1" color="textSecondary">
             {convertDateFormat(createdAt)}
           </Typography>
-
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            component="p"
-            style={{
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              width: '190px',
-            }}
-          >
-            {writing}
-          </Typography>
           <Typography variant="subtitle1" color="textSecondary">
             작성자 : {creator.nickname}
           </Typography>
@@ -85,17 +101,17 @@ const RankingItem = ({ post }) => {
             작성 지역 : {area.fullName}
           </Typography>
         </CardContent>
-        <CardActions disableSpacing>
-          <IconButton>
+        <CardActions className={classes.reactions} disableSpacing>
+          <IconButton className={classes.reactionIconSpace}>
             {zzang.activated === true ? (
-              <FavoriteIcon />
+              <FavoriteIcon className={classes.reactionIcon} />
             ) : (
               <FavoriteBorderIcon />
             )}
             {zzang.count}
           </IconButton>
           <IconButton>
-            <CommentIcon />
+            <CommentIcon className={classes.reactionIcon}/>
             {commentsCount}
           </IconButton>
         </CardActions>

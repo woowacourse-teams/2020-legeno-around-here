@@ -19,7 +19,7 @@ const RankingPage = () => {
   const accessToken = getAccessTokenFromCookie();
   const mainAreaId = localStorage.getItem('mainAreaId');
 
-  /* 처음에 보여줄 최근글 목록을 가져옴 */
+  /* 처음에 보여줄 글 목록을 가져옴 */
   useEffect(() => {
     findRankedPostsFromPage(mainAreaId, criteria,0, accessToken).then((firstPosts) => {
       console.log(firstPosts)
@@ -48,6 +48,9 @@ const RankingPage = () => {
       });
   };
 
+  let zzangCountOfBeforePost = 0;
+  let rankOfBeforePost = 0;
+
   return (
     <>
       <TopBar />
@@ -58,9 +61,14 @@ const RankingPage = () => {
         dataLength={posts.length}
         endMessage={<h3>모두 읽으셨습니다!</h3>}
       >
-        {posts.map((post) => (
-          <RankingItem key={post.id} post={post} />
-        ))}
+        {posts.map((post, index) => {
+          const rank = (post.zzang.count === zzangCountOfBeforePost)? rankOfBeforePost : (index + 1);
+          console.log(post.zzang.count === zzangCountOfBeforePost)
+          zzangCountOfBeforePost = post.zzang.count;
+          rankOfBeforePost = rank;
+          console.log("###")
+          return <RankingItem key={post.id} post={post} rank={rank} />;
+        })}
       </InfiniteScroll>
       <BottomBlank />
       <Bottom selected={RANKING} />
