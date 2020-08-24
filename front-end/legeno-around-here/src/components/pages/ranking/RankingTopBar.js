@@ -104,7 +104,7 @@ export default function PrimarySearchAppBar() {
           >
             <ExpandMoreIcon />
             <Typography className={classes.title} variant="h6" noWrap>
-              {mainArea}
+              {mainArea} 캡짱은 누구?
             </Typography>
           </IconButton>
           <Modal
