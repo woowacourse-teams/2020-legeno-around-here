@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import Bottom from '../../Bottom';
-import { findPost } from '../../api/API';
+import { findPost, findMyInfo } from '../../api/API';
 import PostDetailTopBar from './PostDetailTopBar';
 import PostDetail from './PostDetail';
 import Loading from '../../Loading';
@@ -9,8 +9,6 @@ import { Container } from '@material-ui/core';
 import BottomBlank from '../../BottomBlank';
 
 const PostDetailPage = ({ match }) => {
-  const classes = useStyles();
-
   const postId = match.params.postId;
   const accessToken = getAccessTokenFromCookie();
   const [post, setPost] = useState(null);

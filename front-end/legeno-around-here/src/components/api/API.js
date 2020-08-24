@@ -7,7 +7,7 @@ const HTTP_STATUS_NO_CONTENT = 204;
 const DEFAULT_SIZE = 10;
 const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
-const DEFAULT_URL = 'https://back.capzzang.co.kr';
+const DEFAULT_URL = 'http://localhost:8080';
 
 export const loginUser = (email, password, handleReset) => {
   axios
@@ -25,6 +25,43 @@ export const loginUser = (email, password, handleReset) => {
       alert('로그인에 실패하였습니다.');
       handleReset();
     });
+};
+
+export const savePostImages = async (formData, accessToken) => {
+  const config = {
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
+  };
+  try {
+    return await axios.post(DEFAULT_URL + '/posts/images', formData, config).then((response) => {
+      if (response.status === HTTP_STATUS_CREATED) {
+        console.log('이미지 전송에 성공했습니다!');
+        return response;
+      }
+    });
+  } catch (error) {
+    redirectLoginWhenUnauthorized(error);
+    console.log(error);
+  }
+};
+
+export const createPost = async (formData, accessToken) => {
+  const config = {
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
+  };
+  try {
+    const response = await axios.post(DEFAULT_URL + '/posts', formData, config);
+    if (response.status === HTTP_STATUS_CREATED) {
+      alert('전송에 성공했습니다!');
+      document.location.href = response.headers.location;
+    }
+  } catch (error) {
+    redirectLoginWhenUnauthorized(error);
+    console.log(error);
+  }
 };
 
 export const createUser = (email, nickname, password, handleReset) => {
@@ -51,11 +88,7 @@ export const saveProfilePhoto = async (formData, accessToken) => {
     },
   };
   try {
-    const response = await axios.post(
-      DEFAULT_URL + '/user-images',
-      formData,
-      config,
-    );
+    const response = await axios.post(DEFAULT_URL + '/user-images', formData, config);
     if (response.status === HTTP_STATUS_CREATED) {
       alert('전송에 성공했습니다!');
       return response.data;
@@ -90,24 +123,6 @@ export const updateUser = async (nickname, imageId, accessToken) => {
   }
 };
 
-export const createPost = async (formData, accessToken) => {
-  const config = {
-    headers: {
-      'X-Auth-Token': accessToken,
-    },
-  };
-  try {
-    const response = await axios.post(DEFAULT_URL + '/posts', formData, config);
-    if (response.status === HTTP_STATUS_CREATED) {
-      alert('전송에 성공했습니다!');
-      document.location.href = response.headers.location;
-    }
-  } catch (error) {
-    redirectLoginWhenUnauthorized(error);
-    console.log(error);
-  }
-};
-
 export const createComment = async (postId, writing, accessToken) => {
   const config = {
     headers: {
@@ -115,11 +130,7 @@ export const createComment = async (postId, writing, accessToken) => {
     },
   };
   try {
-    const response = await axios.post(
-      DEFAULT_URL + `/posts/${postId}/comments`,
-      { writing },
-      config,
-    );
+    const response = await axios.post(DEFAULT_URL + `/posts/${postId}/comments`, { writing }, config);
     if (response.status === HTTP_STATUS_CREATED) {
       alert('댓글이 성공적으로 전송되었습니다!');
       return true;
@@ -141,9 +152,7 @@ export const createPendingSector = async (sector, accessToken) => {
   try {
     const response = await axios.post(DEFAULT_URL + `/sectors`, sector, config);
     if (response.status === HTTP_STATUS_CREATED) {
-      alert(
-        '신청이 완료됐습니다! 신청한 부문은 프로필에서 확인하실 수 있습니다!',
-      );
+      alert('신청이 완료됐습니다! 신청한 부문은 프로필에서 확인하실 수 있습니다!');
       return response.data;
     }
   } catch (error) {
@@ -159,11 +168,7 @@ export const pressPostZzang = async (postId, accessToken) => {
     },
   };
   try {
-    const response = await axios.post(
-      DEFAULT_URL + `/posts/${postId}/zzangs`,
-      {},
-      config,
-    );
+    const response = await axios.post(DEFAULT_URL + `/posts/${postId}/zzangs`, {}, config);
     if (response.status === HTTP_STATUS_NO_CONTENT) {
       return true;
     }
@@ -195,11 +200,7 @@ export const findMyInfo = ({ accessToken }) => {
     });
 };
 
-export const findCurrentPostsFromPage = async (
-  mainAreaId,
-  page,
-  accessToken,
-) => {
+export const findCurrentPostsFromPage = async (mainAreaId, page, accessToken) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -336,6 +337,7 @@ export const findCommentsByPostId = async (accessToken, postId) => {
 
 const redirectLoginWhenUnauthorized = (error) => {
   if (error.response && error.response.status === 403) {
+    console.log(error);
     document.location.href = '/login';
   }
 };
