@@ -68,8 +68,8 @@ public class MailAuthService {
         validateAuthNumber(mailAuth, mailAuthCheckRequest.getAuthNumber());
     }
 
-    private void validateAuthNumber(MailAuth mailAuth, Integer AuthNumber) {
-        if (mailAuth.isDifferentAuthNumber(AuthNumber)) {
+    private void validateAuthNumber(MailAuth mailAuth, Integer authNumber) {
+        if (mailAuth.isDifferentAuthNumber(authNumber)) {
             throw new WrongUserInputException("인증 정보가 일치하지 않습니다.");
         }
     }

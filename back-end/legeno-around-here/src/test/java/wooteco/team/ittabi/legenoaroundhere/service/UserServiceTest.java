@@ -2,7 +2,10 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AUTH_NUMBER;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_UPDATE_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
@@ -13,10 +16,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
+import wooteco.team.ittabi.legenoaroundhere.domain.user.mailauth.MailAuth;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
@@ -25,6 +30,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
+import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
 
 class UserServiceTest extends ServiceTest {
 
@@ -38,8 +44,14 @@ class UserServiceTest extends ServiceTest {
     @Autowired
     private IAuthenticationFacade authenticationFacade;
 
+    @MockBean
+    private MailAuthRepository mailAuthRepository;
+
     @BeforeEach
     void setUp() {
+        MailAuth mailAuth = new MailAuth(TEST_USER_EMAIL, TEST_AUTH_NUMBER);
+        when(mailAuthRepository.findByEmail(any())).thenReturn(java.util.Optional.of(mailAuth));
+
         User user = createUser(TEST_PREFIX + TEST_USER_EMAIL,
             TEST_USER_NICKNAME,
             TEST_USER_PASSWORD);
@@ -54,7 +66,8 @@ class UserServiceTest extends ServiceTest {
                 "createuser_" + TEST_USER_EMAIL,
                 TEST_USER_NICKNAME,
                 TEST_USER_PASSWORD,
-                TEST_AREA_ID
+                TEST_AREA_ID,
+                TEST_AUTH_NUMBER
             );
         Long userId = userService.createUser(userCreateRequest);
 
@@ -68,7 +81,8 @@ class UserServiceTest extends ServiceTest {
             TEST_PREFIX + TEST_USER_EMAIL,
             TEST_USER_NICKNAME,
             TEST_USER_PASSWORD,
-            TEST_AREA_ID
+            TEST_AREA_ID,
+            TEST_AUTH_NUMBER
         );
 
         assertThatThrownBy(() -> userService.createUser(userCreateRequest))

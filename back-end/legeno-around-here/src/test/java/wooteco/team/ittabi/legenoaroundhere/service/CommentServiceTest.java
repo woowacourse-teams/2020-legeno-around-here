@@ -2,7 +2,10 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AUTH_NUMBER;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.CommentConstants.TEST_COMMENT_OTHER_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.CommentConstants.TEST_COMMENT_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_EMPTY_MULTIPART_FILES;
@@ -19,7 +22,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
+import wooteco.team.ittabi.legenoaroundhere.domain.user.mailauth.MailAuth;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentZzangResponse;
@@ -29,6 +34,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAvailableException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
+import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
 
 public class CommentServiceTest extends ServiceTest {
 
@@ -47,8 +53,14 @@ public class CommentServiceTest extends ServiceTest {
     @Autowired
     private CommentService commentService;
 
+    @MockBean
+    MailAuthRepository mailAuthRepository;
+
     @BeforeEach
     void setUp() {
+        MailAuth mailAuth = new MailAuth(TEST_USER_EMAIL, TEST_AUTH_NUMBER);
+        when(mailAuthRepository.findByEmail(any())).thenReturn(java.util.Optional.of(mailAuth));
+
         user = createUser(TEST_PREFIX + TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         another = createUser(TEST_PREFIX + TEST_USER_OTHER_EMAIL, TEST_USER_NICKNAME,
             TEST_USER_PASSWORD);
