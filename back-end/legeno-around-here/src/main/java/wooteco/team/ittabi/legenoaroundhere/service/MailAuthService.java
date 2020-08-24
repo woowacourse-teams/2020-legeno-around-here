@@ -8,7 +8,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.mailauth.MailAuth;
 import wooteco.team.ittabi.legenoaroundhere.dto.MailAuthCheckRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.MailAuthCreateRequest;
@@ -16,7 +15,6 @@ import wooteco.team.ittabi.legenoaroundhere.exception.FailedSendMailException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
-import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.MailHandler;
 
 @Service
@@ -29,7 +27,6 @@ public class MailAuthService {
 
     private final JavaMailSender javaMailSender;
     private final MailAuthRepository mailAuthRepository;
-    private final UserRepository userRepository;
 
     @Transactional
     public void publishAuth(MailAuthCreateRequest mailAuthCreateRequest) {
@@ -51,10 +48,7 @@ public class MailAuthService {
             mailHandler.setTo(email);
             mailHandler.setSubject("우리동네캡짱 회원 가입 인증 메일");
             mailHandler.setText(
-                "<a href='https://www.capzzang.co.kr/mail-auth/check?"
-                    + "email=" + email
-                    + "&authNumber=" + authNumber
-                    + "'>인증하기</a>");
+                "<p> 인증번호: " + authNumber + "</p>");
             mailHandler.send();
         } catch (MessagingException e) {
             throw new FailedSendMailException("인증 메일 전송에 실패하였습니다.");
@@ -72,18 +66,11 @@ public class MailAuthService {
             .orElseThrow(() -> new NotExistsException("올바르지 않은 이메일입니다."));
 
         validateAuthNumber(mailAuth, mailAuthCheckRequest.getAuthNumber());
-        updateUserEmailAuthPassed(email);
     }
 
     private void validateAuthNumber(MailAuth mailAuth, Integer AuthNumber) {
         if (mailAuth.isDifferentAuthNumber(AuthNumber)) {
             throw new WrongUserInputException("인증 정보가 일치하지 않습니다.");
         }
-    }
-
-    private void updateUserEmailAuthPassed(Email email) {
-        User foundUser = userRepository.findByEmail(email)
-            .orElseThrow(() -> new NotExistsException("존재하지 않는 회원입니다."));
-        foundUser.setAuthenticatedByEmail(Boolean.TRUE);
     }
 }

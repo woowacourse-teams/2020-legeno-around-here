@@ -27,10 +27,12 @@ public class MailAuthController {
             .build();
     }
 
-    @GetMapping("/check")
-    public String checkAuth(MailAuthCheckRequest mailAuthCheckRequest) {
+    @PostMapping("/check")
+    public ResponseEntity<Void> checkAuth(@RequestBody MailAuthCheckRequest mailAuthCheckRequest) {
         mailAuthService.checkAuth(mailAuthCheckRequest);
 
-        return "메일 인증을 완료했습니다. 창을 닫아주세요!";
+        return ResponseEntity
+            .ok()
+            .build();
     }
 }

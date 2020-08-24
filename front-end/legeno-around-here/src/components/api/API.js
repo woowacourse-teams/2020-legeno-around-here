@@ -22,23 +22,24 @@ export const loginUser = (email, password, handleReset) => {
       document.location.href = '/home';
     })
     .catch((error) => {
-      const errorResponse = error.response.data;
-      if (errorResponse.errorMessage === '메일 인증이 필요합니다.') {
-        alert('인증 메일을 발송했습니다.\n메일 인증을 완료해주세요!');
-        sendAuthMail(email);
-        return;
-      }
       alert('로그인에 실패하였습니다.');
       handleReset();
     });
 };
 
-export const createUser = (email, nickname, password, handleReset) => {
+export const createUser = (
+  email,
+  nickname,
+  password,
+  authNumber,
+  handleReset,
+) => {
   axios
     .post(DEFAULT_URL + '/join', {
       email,
       nickname,
       password,
+      authNumber,
     })
     .then((response) => {
       alert('회원가입을 축하드립니다.');
@@ -50,18 +51,34 @@ export const createUser = (email, nickname, password, handleReset) => {
     });
 };
 
-const sendAuthMail = (email) => {
+export const sendAuthMail = (email) => {
   axios
     .post(DEFAULT_URL + '/mail-auth/send', {
       email,
     })
-    .then((response) => {})
+    .then((response) => {
+      alert('인증 메일을 전송했습니다.');
+    })
     .catch((error) => {
       alert('인증 메일 발송 실패하였습니다.');
       console.log(error);
     });
 };
 
+export const checkAuthNumber = (email, authNumber) => {
+  axios
+    .post(DEFAULT_URL + '/mail-auth/check', {
+      email,
+      authNumber,
+    })
+    .then((response) => {
+      alert('인증되었습니다.');
+    })
+    .catch((error) => {
+      alert('인증 실패했습니다.');
+      console.log(error);
+    });
+};
 export const saveProfilePhoto = async (formData, accessToken) => {
   const config = {
     headers: {
@@ -145,7 +162,6 @@ export const createComment = async (postId, writing, accessToken) => {
   } catch (error) {
     redirectLoginWhenUnauthorized(error);
     alert('댓글이 작성되지 않았습니다! 다시 작성해주세요!');
-    console.log(error);
   }
   return false;
 };

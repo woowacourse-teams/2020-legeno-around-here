@@ -11,7 +11,15 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { createUser } from '../api/API';
+import { createUser, sendAuthMail, checkAuthNumber } from '../api/API';
+
+const authInputStyle = {
+  width: '70%',
+};
+
+const authCheckStyle = {
+  width: '30%',
+};
 
 const Copyright = () => {
   return (
@@ -60,6 +68,7 @@ function JoinForm() {
   const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   const [email, setEmail] = useState('');
+  const [authNumber, setAuthNumber] = useState('');
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
   const [passwordRepeat, setPasswordRepeat] = useState('');
@@ -119,6 +128,10 @@ function JoinForm() {
     setEmail(value);
   }, []);
 
+  const handleChangeAuthNumber = useCallback(({ target: { value } }) => {
+    setAuthNumber(value);
+  }, []);
+
   const handleChangeNickname = useCallback(({ target: { value } }) => {
     setNickname(value);
   }, []);
@@ -133,14 +146,23 @@ function JoinForm() {
 
   const handleReset = useCallback(() => {
     setEmail('');
+    setAuthNumber('');
     setNickname('');
     setPassword('');
     setPasswordRepeat('');
   }, []);
 
+  const sendMail = useCallback(() => {
+    sendAuthMail(email);
+  }, [email]);
+
+  const checkNumber = useCallback(() => {
+    checkAuthNumber(email, authNumber);
+  }, [email, authNumber]);
+
   const join = useCallback(() => {
-    createUser(email, nickname, password, handleReset);
-  }, [email, nickname, password, handleReset]);
+    createUser(email, nickname, password, authNumber, handleReset);
+  }, [email, nickname, password, authNumber, handleReset]);
 
   const handleSubmit = useCallback(
     (event) => {
@@ -179,6 +201,7 @@ function JoinForm() {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
+                style={authInputStyle}
                 variant="outlined"
                 required
                 fullWidth
@@ -190,11 +213,35 @@ function JoinForm() {
                 value={email}
                 onChange={handleChangeEmail}
               />
+              <Button style={authCheckStyle} onClick={sendMail}>
+                인증 메일 전송
+              </Button>
             </Grid>
             <Grid item xs={12}>
               <Typography variant="caption" color="error">
                 {emailCheck}
               </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                style={authInputStyle}
+                variant="outlined"
+                required
+                fullWidth
+                id="authNumber"
+                label="인증 번호"
+                name="authNumber"
+                autoComplete="authNumber"
+                type="authNumber"
+                value={authNumber}
+                onChange={handleChangeAuthNumber}
+              />
+              <Button style={authCheckStyle} onClick={checkNumber}>
+                인증 번호 확인
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="caption" color="error"></Typography>
             </Grid>
             <Grid item xs={12}>
               <TextField
