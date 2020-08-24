@@ -86,4 +86,11 @@ public class UserController {
             .noContent()
             .build();
     }
+
+    @GetMapping("/auth")
+    public ResponseEntity<Void> validateUserExists() {
+        return ResponseEntity
+            .noContent()
+            .build();
+    }
 }

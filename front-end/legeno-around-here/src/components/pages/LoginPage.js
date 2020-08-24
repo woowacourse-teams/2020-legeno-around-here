@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
-import { loginUser } from '../api/API';
+import { loginUser, isLoggedIn } from '../api/API';
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -12,6 +12,7 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { getAccessTokenFromCookie } from '../../util/TokenUtils'
 
 const Copyright = () => {
   return (
@@ -45,6 +46,14 @@ function LoginForm() {
   const classes = useStyles();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    const accessToken = getAccessTokenFromCookie();
+    if (accessToken && isLoggedIn(accessToken)) {
+      alert("이미 로그인되어 있습니다.");
+      document.location.href = "/";
+    }
+  }, []);
 
   const handleChangeEmail = useCallback(({ target: { value } }) => {
     setEmail(value);

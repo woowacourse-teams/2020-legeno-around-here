@@ -4,6 +4,7 @@ import { setAccessTokenCookie } from '../../util/TokenUtils';
 const HTTP_STATUS_OK = 200;
 const HTTP_STATUS_CREATED = 201;
 const HTTP_STATUS_NO_CONTENT = 204;
+const HTTP_STATUS_FORBIDDEN = 403;
 const DEFAULT_SIZE = 10;
 const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
@@ -334,8 +335,29 @@ export const findCommentsByPostId = async (accessToken, postId) => {
     });
 };
 
+export const isLoggedIn = async (accessToken) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-Auth-Token': accessToken,
+    },
+  };
+  await axios
+    .get(DEFAULT_URL + `/auth`, config)
+    .then((response) => {
+      if (response.status === HTTP_STATUS_NO_CONTENT) {
+        return true;
+      }
+    })
+    .catch((error) => {
+      if (error.response && error.response.status === HTTP_STATUS_FORBIDDEN) {
+        return false;
+      }
+    })
+};
+
 const redirectLoginWhenUnauthorized = (error) => {
-  if (error.response && error.response.status === 403) {
+  if (error.response && error.response.status === HTTP_STATUS_FORBIDDEN) {
     document.location.href = '/login';
   }
 };
