@@ -7,7 +7,7 @@ const HTTP_STATUS_NO_CONTENT = 204;
 const DEFAULT_SIZE = 10;
 const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
-const DEFAULT_URL = 'http://localhost:8080';
+const DEFAULT_URL = 'https://back.capzzang.co.kr';
 
 export const loginUser = (email, password, handleReset) => {
   axios
@@ -42,6 +42,52 @@ export const createUser = (email, nickname, password, handleReset) => {
       alert('회원가입에 실패하였습니다.');
       handleReset();
     });
+};
+
+export const saveProfilePhoto = async (formData, accessToken) => {
+  const config = {
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
+  };
+  try {
+    const response = await axios.post(
+      DEFAULT_URL + '/user-images',
+      formData,
+      config,
+    );
+    if (response.status === HTTP_STATUS_CREATED) {
+      alert('전송에 성공했습니다!');
+      return response.data;
+    }
+  } catch (error) {
+    redirectLoginWhenUnauthorized(error);
+    console.log(error);
+  }
+};
+
+export const updateUser = async (nickname, imageId, accessToken) => {
+  const config = {
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
+  };
+  try {
+    await axios.put(
+      DEFAULT_URL + '/users/me',
+      {
+        nickname,
+        imageId,
+      },
+      config,
+    );
+    alert('내 정보가 성공적으로 바뀌었습니다!');
+    document.location.href = '/myProfile';
+  } catch (error) {
+    redirectLoginWhenUnauthorized(error);
+    alert(error.response ? error.response.status : error.request);
+    console.log(error);
+  }
 };
 
 export const createPost = async (formData, accessToken) => {
@@ -129,24 +175,23 @@ export const pressPostZzang = async (postId, accessToken) => {
   return false;
 };
 
-export const findMyInfo = async (accessToken) => {
+export const findMyInfo = ({ accessToken }) => {
   const config = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       'X-Auth-Token': accessToken,
     },
   };
-  return await axios
-    .get(DEFAULT_URL + '/users/myinfo', config)
-    .then((response) => {
-      if (response.status === 200) {
-        return response.data;
-      }
+  return axios
+    .get(DEFAULT_URL + '/users/me', config)
+    .then(async (response) => {
+      const userResponse = await response.data;
+      console.log(userResponse);
+      return userResponse;
     })
     .catch((error) => {
       redirectLoginWhenUnauthorized(error);
       alert(`회원정보를 가져올 수 없습니다.${error}`);
-      document.location.href = '/';
     });
 };
 

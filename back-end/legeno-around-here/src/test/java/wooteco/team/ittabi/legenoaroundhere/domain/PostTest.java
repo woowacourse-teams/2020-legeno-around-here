@@ -25,27 +25,31 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
 public class PostTest {
 
-    private final User user = User.builder()
-        .email(TEST_USER_EMAIL)
-        .nickname(TEST_USER_NICKNAME)
-        .password(TEST_USER_PASSWORD)
-        .build();
+    private static final User USER;
+    private static final Sector SECTOR;
+    private static final Area AREA;
 
-    private final Sector sector = Sector.builder()
-        .name(TEST_SECTOR_NAME)
-        .description(TEST_SECTOR_DESCRIPTION)
-        .creator(user)
-        .lastModifier(user)
-        .state(SectorState.PUBLISHED)
-        .build();
-
-    private final Area area = Area.builder()
-        .fullName(TEST_AREA_FULL_NAME)
-        .firstDepthName(TEST_AREA_FIRST_DEPTH_NAME)
-        .secondDepthName(TEST_AREA_SECOND_DEPTH_NAME)
-        .thirdDepthName(TEST_AREA_THIRD_DEPTH_NAME)
-        .fourthDepthName(TEST_AREA_FOURTH_DEPTH_NAME)
-        .build();
+    static {
+        USER = User.builder()
+            .email(TEST_USER_EMAIL)
+            .nickname(TEST_USER_NICKNAME)
+            .password(TEST_USER_PASSWORD)
+            .build();
+        SECTOR = Sector.builder()
+            .name(TEST_SECTOR_NAME)
+            .description(TEST_SECTOR_DESCRIPTION)
+            .creator(USER)
+            .lastModifier(USER)
+            .state(SectorState.PUBLISHED)
+            .build();
+        AREA = Area.builder()
+            .fullName(TEST_AREA_FULL_NAME)
+            .firstDepthName(TEST_AREA_FIRST_DEPTH_NAME)
+            .secondDepthName(TEST_AREA_SECOND_DEPTH_NAME)
+            .thirdDepthName(TEST_AREA_THIRD_DEPTH_NAME)
+            .fourthDepthName(TEST_AREA_FOURTH_DEPTH_NAME)
+            .build();
+    }
 
     @DisplayName("길이 검증 - 예외 발생")
     @Test
@@ -54,8 +58,8 @@ public class PostTest {
         for (int i = 0; i <= 2000; i++) {
             overLengthInput.append("a");
         }
-        assertThatThrownBy(() -> new Post(overLengthInput.toString(),
-            Collections.singletonList(PostImage.builder().build()), area, sector, user))
+        assertThatThrownBy(() -> new Post(overLengthInput.toString(), Collections
+            .singletonList(PostImage.builder().build()), AREA, SECTOR, USER))
             .isInstanceOf(WrongUserInputException.class);
     }
 }

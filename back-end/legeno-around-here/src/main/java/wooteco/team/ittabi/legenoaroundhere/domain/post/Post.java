@@ -19,11 +19,11 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
+import wooteco.team.ittabi.legenoaroundhere.domain.State;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.comment.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
@@ -36,7 +36,6 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
 @ToString(exclude = {"comments", "postImages", "zzangs"})
 @SQLDelete(sql = "UPDATE post SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
@@ -91,42 +90,15 @@ public class Post extends BaseEntity {
         }
     }
 
-    public boolean isAvailable() {
-        return this.state.isAvailable();
-    }
-
-    public int getPostZzangCount() {
-        return zzangs.size();
-    }
-
-    public int getPostZzangCountByDate(LocalDateTime startDate, LocalDateTime endDate) {
-        long zzangCount = zzangs.stream()
-            .filter(postZzang -> isDateBetween(postZzang.getCreatedAt(), startDate, endDate))
-            .count();
-        return Math.toIntExact(zzangCount);
-    }
-
-    private boolean isDateBetween(LocalDateTime targetDate, LocalDateTime startDate,
-        LocalDateTime endDate) {
-        return targetDate.isAfter(startDate)
-            && targetDate.isBefore(endDate);
-    }
-
-    public PostZzang findPostZzangBy(User user) {
-        return zzangs.stream()
-            .filter(postZzang -> postZzang.isSameCreator(user))
-            .findFirst()
-            .orElseGet(() -> new PostZzang(this, user));
-    }
-
-    public boolean hasZzangCreator(User user) {
-        return zzangs.stream()
-            .anyMatch(zzang -> zzang.isSameCreator(user));
+    public void addPostImages(PostImage postImage) {
+        if (!this.postImages.contains(postImage)) {
+            this.postImages.add(postImage);
+        }
     }
 
     public void addPostImage(PostImage postImage) {
-        if (!postImages.contains(postImage)) {
-            postImages.add(postImage);
+        if (!this.postImages.contains(postImage)) {
+            this.postImages.add(postImage);
         }
         if (!postImage.hasPost()) {
             postImage.setPost(this);
@@ -134,12 +106,12 @@ public class Post extends BaseEntity {
     }
 
     public void removePostImage(PostImage postImage) {
-        postImages.remove(postImage);
+        this.postImages.remove(postImage);
     }
 
     public void addComment(Comment comment) {
-        if (!comments.contains(comment)) {
-            comments.add(comment);
+        if (!this.comments.contains(comment)) {
+            this.comments.add(comment);
         }
         if (!comment.hasPost()) {
             comment.setPost(this);
@@ -147,22 +119,18 @@ public class Post extends BaseEntity {
     }
 
     public void removeComments(Comment comment) {
-        comments.remove(comment);
-    }
-
-    public List<Comment> getComments() {
-        return Collections.unmodifiableList(comments);
+        this.comments.remove(comment);
     }
 
     public int getAvailableCommentsSize() {
-        return (int) comments.stream()
+        return (int) this.comments.stream()
             .filter(Comment::isAvailable)
             .count();
     }
 
     public void pressZzang(User user) {
         validateAvailable();
-        Optional<PostZzang> foundZzang = zzangs.stream()
+        Optional<PostZzang> foundZzang = this.zzangs.stream()
             .filter(PostZzang -> PostZzang.isSameCreator(user))
             .findFirst();
 
@@ -170,7 +138,7 @@ public class Post extends BaseEntity {
             this.zzangs.remove(foundZzang.get());
             return;
         }
-        zzangs.add(new PostZzang(this, user));
+        this.zzangs.add(new PostZzang(this, user));
     }
 
     public void validateAvailable() {
@@ -196,5 +164,51 @@ public class Post extends BaseEntity {
 
     public void update(PostUpdateRequest postUpdateRequest) {
         this.writing = postUpdateRequest.getWriting();
+    }
+
+    public int getPostZzangCount() {
+        return this.zzangs.size();
+    }
+
+    public int getPostZzangCountByDate(LocalDateTime startDate, LocalDateTime endDate) {
+        long zzangCount = this.zzangs.stream()
+            .filter(postZzang -> isDateBetween(postZzang.getCreatedAt(), startDate, endDate))
+            .count();
+        return Math.toIntExact(zzangCount);
+    }
+
+    private boolean isDateBetween(LocalDateTime targetDate, LocalDateTime startDate,
+        LocalDateTime endDate) {
+        return targetDate.isAfter(startDate)
+            && targetDate.isBefore(endDate);
+    }
+
+    public boolean hasZzangCreator(User user) {
+        return this.zzangs.stream()
+            .anyMatch(zzang -> zzang.isSameCreator(user));
+    }
+
+    public void setWriting(String writing) {
+        this.writing = writing;
+    }
+
+    public List<PostImage> getPostImages() {
+        return Collections.unmodifiableList(this.postImages);
+    }
+
+    public void setPostImages(List<PostImage> postImages) {
+        this.postImages = postImages;
+    }
+
+    public List<PostZzang> getZzangs() {
+        return Collections.unmodifiableList(this.zzangs);
+    }
+
+    public List<Comment> getComments() {
+        return Collections.unmodifiableList(this.comments);
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 }

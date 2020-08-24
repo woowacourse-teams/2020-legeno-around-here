@@ -27,8 +27,8 @@ public abstract class ServiceTest {
     protected IAuthenticationFacade authenticationFacade;
 
     protected User createUser(String email, String nickname, String password) {
-        UserCreateRequest userCreateRequest = new UserCreateRequest(email, nickname, password,
-            TEST_AREA_ID);
+        UserCreateRequest userCreateRequest
+            = new UserCreateRequest(email, nickname, password, TEST_AREA_ID);
         Long userId = userService.createUser(userCreateRequest);
 
         return userRepository.findById(userId)
@@ -36,7 +36,7 @@ public abstract class ServiceTest {
     }
 
     protected void setAuthentication(User user) {
-        UserDetails userDetails = userService.loadUserByUsername(user.getEmailByString());
+        UserDetails userDetails = userService.loadUserByUsername(user.getUsername());
         org.springframework.security.core.Authentication authToken = new UsernamePasswordAuthenticationToken(
             user, "TestCredentials", userDetails.getAuthorities());
         authenticationFacade.setAuthentication(authToken);

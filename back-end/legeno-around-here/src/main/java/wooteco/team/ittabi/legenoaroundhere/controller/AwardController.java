@@ -3,6 +3,7 @@ package wooteco.team.ittabi.legenoaroundhere.controller;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import wooteco.team.ittabi.legenoaroundhere.dto.AwardResponse;
 
 @RestController
+@AllArgsConstructor
 public class AwardController {
 
     private final static List<AwardResponse> awards = new ArrayList<>();
@@ -41,7 +43,7 @@ public class AwardController {
             .ok(awards);
     }
 
-    @GetMapping("/awards/my")
+    @GetMapping("/awards/me")
     public ResponseEntity<List<AwardResponse>> findMyAwards() {
         return ResponseEntity
             .ok(awards);

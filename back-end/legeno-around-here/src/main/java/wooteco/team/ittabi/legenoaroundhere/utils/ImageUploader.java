@@ -24,10 +24,9 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotFoundAlgorithmException
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageMimeTypeException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
-@Slf4j
-@Transactional
 @Component
 @AllArgsConstructor
+@Slf4j
 public class ImageUploader {
 
     public static final String IMAGE_TYPE = "image";
@@ -38,6 +37,7 @@ public class ImageUploader {
     private final S3Uploader s3Uploader;
     private final IAuthenticationFacade authenticationFacade;
 
+    @Transactional
     public List<PostImage> uploadPostImages(List<MultipartFile> multipartFiles) {
         if (Objects.isNull(multipartFiles) || multipartFiles.isEmpty()) {
             return Collections.emptyList();
@@ -47,6 +47,7 @@ public class ImageUploader {
             .collect(Collectors.toList());
     }
 
+    @Transactional
     public PostImage uploadPostImage(MultipartFile multipartFile) {
         if (Objects.isNull(multipartFile)) {
             return null;

@@ -51,7 +51,7 @@ const SectorPage = () => {
         </InfiniteScroll>
         <BottomBlank />
       </Container>
-      <Bottom />
+      <Bottom selected="sector"/>
     </>
   );
 };

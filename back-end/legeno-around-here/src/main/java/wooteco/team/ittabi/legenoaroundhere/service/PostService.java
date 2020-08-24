@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -36,10 +35,9 @@ import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.ImageUploader;
 
-@Slf4j
-@Transactional
 @Service
 @AllArgsConstructor
+@Slf4j
 public class PostService {
 
     private final PostRepository postRepository;
@@ -128,12 +126,6 @@ public class PostService {
         return subAreas;
     }
 
-    private List<Area> findSubAreas(List<Area> areas, Area targetArea) {
-        return areas.stream()
-            .filter(area -> area.isSubAreaOf(targetArea))
-            .collect(Collectors.toList());
-    }
-
     private List<Sector> findAllSectors(List<Long> sectorIds) {
         List<Sector> sectors = sectorRepository.findAllById(sectorIds);
         if (sectors.size() != sectorIds.size()) {
@@ -184,7 +176,7 @@ public class PostService {
     private void validateIsCreator(Post post) {
         User user = (User) authenticationFacade.getPrincipal();
 
-        if (user.isNotSame(post.getCreator())) {
+        if (user.isNotEquals(post.getCreator())) {
             throw new NotAuthorizedException("권한이 없습니다.");
         }
     }

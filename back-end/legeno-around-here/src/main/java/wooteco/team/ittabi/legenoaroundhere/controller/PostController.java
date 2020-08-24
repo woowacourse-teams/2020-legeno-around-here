@@ -2,6 +2,7 @@ package wooteco.team.ittabi.legenoaroundhere.controller;
 
 import java.net.URI;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,13 +27,10 @@ import wooteco.team.ittabi.legenoaroundhere.service.PostService;
 
 @RestController
 @RequestMapping("/posts")
+@AllArgsConstructor
 public class PostController {
 
     private final PostService postService;
-
-    public PostController(PostService postService) {
-        this.postService = postService;
-    }
 
     @PostMapping
     public ResponseEntity<Void> createPost(@RequestBody PostCreateRequest postCreateRequest) {

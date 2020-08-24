@@ -9,30 +9,53 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Objects;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.exception.FileIOException;
 import wooteco.team.ittabi.legenoaroundhere.exception.MultipartFileConvertException;
 
-@Slf4j
 @Component
+@AllArgsConstructor
+@Slf4j
 public class S3Uploader {
 
-    public static final String DIR_DELIMITER = "/";
-    public static final String FILE_NAME_DELIMITER = "_";
+    private static final String FILE_NAME_DELIMITER = "_";
 
     private final AmazonS3 amazonS3Client;
     private final String bucket;
 
-    public S3Uploader(AmazonS3 amazonS3Client, String bucket) {
-        this.amazonS3Client = amazonS3Client;
-        this.bucket = bucket;
-    }
-
     public String upload(MultipartFile multipartFile, String dirName) {
         File uploadFile = convert(multipartFile);
         return upload(uploadFile, dirName);
+    }
+
+    private File convert(MultipartFile multipartFile) {
+        String originalFileName = Objects.requireNonNull(multipartFile.getOriginalFilename());
+        try {
+            return convertToCreateFile(multipartFile, originalFileName);
+        } catch (IOException e) {
+            log.error("File 읽기 실패, originalFileName = {}", originalFileName);
+            throw new FileIOException("File을 읽고 쓰는데 실패했습니다!");
+        }
+    }
+
+    private File convertToCreateFile(MultipartFile multipartFile, String originalFileName)
+        throws IOException {
+        File convertFile = new File(originalFileName);
+        if (convertFile.createNewFile()) {
+            return createFile(multipartFile, convertFile);
+        }
+        log.debug("File 전환 실패, originalFileName = {}", originalFileName);
+        throw new MultipartFileConvertException("MultipartFile -> File로 전환이 실패했습니다.");
+    }
+
+    private File createFile(MultipartFile multipartFile, File convertFile) throws IOException {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(convertFile)) {
+            fileOutputStream.write(multipartFile.getBytes());
+            return convertFile;
+        }
     }
 
     private String upload(File uploadFile, String dirName) {
@@ -44,7 +67,7 @@ public class S3Uploader {
 
     private String generateFileName(File uploadFile, String dirName) {
         return dirName
-            + DIR_DELIMITER
+            + File.separator
             + UUID.randomUUID().toString()
             + FILE_NAME_DELIMITER
             + uploadFile.getName();
@@ -63,23 +86,5 @@ public class S3Uploader {
         } catch (IOException e) {
             log.info("파일이 삭제되지 못했습니다.");
         }
-    }
-
-    private File convert(MultipartFile multipartFile) {
-        String originalFileName = Objects.requireNonNull(multipartFile.getOriginalFilename());
-        File convertFile = new File(originalFileName);
-        try {
-            if (convertFile.createNewFile()) {
-                FileOutputStream fileOutputStream = new FileOutputStream(convertFile);
-                fileOutputStream.write(multipartFile.getBytes());
-                fileOutputStream.close();
-                return convertFile;
-            }
-        } catch (IOException e) {
-            log.error("File 읽기 실패, originalFileName = {}", originalFileName);
-            throw new FileIOException("File을 읽고 쓰는데 실패했습니다!");
-        }
-        log.debug("File 전환 실패, originalFileName = {}", originalFileName);
-        throw new MultipartFileConvertException("MultipartFile -> File로 전환이 실패했습니다.");
     }
 }

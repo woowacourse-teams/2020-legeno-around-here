@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
+import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
@@ -17,6 +18,7 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import io.restassured.RestAssured;
+import io.restassured.config.RestAssuredConfig;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -237,7 +239,6 @@ public class SectorAcceptanceTest extends AcceptanceTest {
     }
 
     private String getCreateUserToken(String email, String nickname, String password) {
-        createUser(email, nickname, password);
         TokenResponse tokenResponse = login(email, password);
         return tokenResponse.getAccessToken();
     }
@@ -461,7 +462,6 @@ public class SectorAcceptanceTest extends AcceptanceTest {
             TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
 
         String location = given()
-            .log().all()
             .header("X-AUTH-TOKEN", accessToken)
             .body(postCreateRequest)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
