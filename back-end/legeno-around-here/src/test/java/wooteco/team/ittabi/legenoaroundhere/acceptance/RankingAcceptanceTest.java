@@ -33,7 +33,6 @@ public class RankingAcceptanceTest extends AcceptanceTest {
 
     private String adminToken;
     private String accessToken;
-
     private String accessTokenA;
     private String accessTokenB;
     private String accessTokenC;

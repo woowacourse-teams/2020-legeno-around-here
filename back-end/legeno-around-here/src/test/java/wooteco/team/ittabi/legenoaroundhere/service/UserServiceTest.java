@@ -29,7 +29,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 class UserServiceTest extends ServiceTest {
 
     private static final String TEST_PREFIX = "user_";
-    private static final String NOT_EXIST_PREFIX = "notexist_";
+    private static final String NOT_EXIST_PREFIX = "notExist_";
     private static final int TOKEN_MIN_SIZE = 1;
 
     @Autowired

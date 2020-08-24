@@ -33,10 +33,10 @@ public class PostControllerTest {
     private static final String ANY_ID = "1";
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private MockMvc mockMvc;
 
     @MockBean
     private PostService postService;
-    private MockMvc mockMvc;
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext) {

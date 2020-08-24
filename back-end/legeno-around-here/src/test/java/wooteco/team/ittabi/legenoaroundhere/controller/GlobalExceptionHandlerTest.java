@@ -31,10 +31,10 @@ import wooteco.team.ittabi.legenoaroundhere.service.SectorService;
 @AutoConfigureMockMvc
 class GlobalExceptionHandlerTest {
 
+    private MockMvc mockMvc;
+
     @MockBean
     private SectorService sectorService;
-
-    private MockMvc mockMvc;
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext) {
