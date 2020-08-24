@@ -72,6 +72,8 @@ function JoinForm() {
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
   const [passwordRepeat, setPasswordRepeat] = useState('');
+  const [isEmailDisabled, setIsEmailDisabled] = useState(false);
+  const [isAuthNumberDisabled, setIsAuthNumberDisabled] = useState(false);
 
   const validateEmail = useMemo(() => {
     return email && !EMAIL_REGEX.test(String(email).toLowerCase());
@@ -153,11 +155,11 @@ function JoinForm() {
   }, []);
 
   const sendMail = useCallback(() => {
-    sendAuthMail(email);
+    sendAuthMail(email, setIsEmailDisabled);
   }, [email]);
 
   const checkNumber = useCallback(() => {
-    checkAuthNumber(email, authNumber);
+    checkAuthNumber(email, authNumber, setIsAuthNumberDisabled);
   }, [email, authNumber]);
 
   const join = useCallback(() => {
@@ -211,6 +213,7 @@ function JoinForm() {
                 autoComplete="email"
                 type="email"
                 value={email}
+                disabled={isEmailDisabled}
                 onChange={handleChangeEmail}
               />
               <Button style={authCheckStyle} onClick={sendMail}>
@@ -234,6 +237,7 @@ function JoinForm() {
                 autoComplete="authNumber"
                 type="authNumber"
                 value={authNumber}
+                disabled={isAuthNumberDisabled}
                 onChange={handleChangeAuthNumber}
               />
               <Button style={authCheckStyle} onClick={checkNumber}>

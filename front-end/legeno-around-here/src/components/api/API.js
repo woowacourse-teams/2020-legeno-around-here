@@ -51,21 +51,23 @@ export const createUser = (
     });
 };
 
-export const sendAuthMail = (email) => {
+export const sendAuthMail = (email, setIsEmailDisabled) => {
   axios
     .post(DEFAULT_URL + '/mail-auth/send', {
       email,
     })
     .then((response) => {
       alert('인증 메일을 전송했습니다.');
+      setIsEmailDisabled(true);
     })
     .catch((error) => {
       alert('인증 메일 발송 실패하였습니다.');
+      setIsEmailDisabled(false);
       console.log(error);
     });
 };
 
-export const checkAuthNumber = (email, authNumber) => {
+export const checkAuthNumber = (email, authNumber, setIsAuthNumberDisabled) => {
   axios
     .post(DEFAULT_URL + '/mail-auth/check', {
       email,
@@ -73,9 +75,11 @@ export const checkAuthNumber = (email, authNumber) => {
     })
     .then((response) => {
       alert('인증되었습니다.');
+      setIsAuthNumberDisabled(true);
     })
     .catch((error) => {
       alert('인증 실패했습니다.');
+      setIsAuthNumberDisabled(false);
       console.log(error);
     });
 };
@@ -162,6 +166,7 @@ export const createComment = async (postId, writing, accessToken) => {
   } catch (error) {
     redirectLoginWhenUnauthorized(error);
     alert('댓글이 작성되지 않았습니다! 다시 작성해주세요!');
+    console.log(error);
   }
   return false;
 };
