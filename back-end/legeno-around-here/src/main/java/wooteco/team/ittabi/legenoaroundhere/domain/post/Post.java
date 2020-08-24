@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,6 +29,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.comment.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAvailableException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
@@ -122,6 +124,19 @@ public class Post extends BaseEntity {
             .anyMatch(zzang -> zzang.isSameCreator(user));
     }
 
+    public void addPostImage(PostImage postImage) {
+        if (!postImages.contains(postImage)) {
+            postImages.add(postImage);
+        }
+        if (!postImage.hasPost()) {
+            postImage.setPost(this);
+        }
+    }
+
+    public void removePostImage(PostImage postImage) {
+        postImages.remove(postImage);
+    }
+
     public void addComment(Comment comment) {
         if (!comments.contains(comment)) {
             comments.add(comment);
@@ -163,5 +178,23 @@ public class Post extends BaseEntity {
             throw new NotAvailableException(
                 "ID [" + this.getId() + "]에 해당하는 Post가 유효하지 않습니다.");
         }
+    }
+
+    public List<Long> getDeletePostImageIds(List<Long> updatePostImageIds) {
+        List<Long> originPostImageIds = this.postImages.stream()
+            .map(PostImage::getId)
+            .collect(Collectors.toList());
+        originPostImageIds.removeAll(updatePostImageIds);
+        return originPostImageIds;
+    }
+
+    public List<PostImage> getDeletePostImages(List<Long> deletePostImageIds) {
+        return this.postImages.stream()
+            .filter(postImage -> postImage.isDeleteId(deletePostImageIds))
+            .collect(Collectors.toList());
+    }
+
+    public void update(PostUpdateRequest postUpdateRequest) {
+        this.writing = postUpdateRequest.getWriting();
     }
 }

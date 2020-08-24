@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,7 @@ import org.springframework.http.MediaType;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
@@ -101,19 +103,23 @@ public class PostAcceptanceTest extends AcceptanceTest {
         List<PostWithCommentsCountResponse> postResponses = searchAllPost(accessToken);
         assertThat(postResponses).hasSize(2);
 
-        // 수정
+        // 이미지가 포함된 글 수정
         String updatedWriting = "BingBong and Jamie";
-        updatePost(postWithoutImageId, updatedWriting, accessToken);
+        List<PostImageResponse> newPostImages = uploadPostImages(accessToken);
+        List<Long> updatePostImageIds = makeUpdatePostImageIds(postImages, newPostImages);
 
-        PostResponse updatedPostResponse = findPost(accessToken, postWithoutImageId);
+        updatePost(postWithImageId, updatedWriting, updatePostImageIds, accessToken);
 
-        assertThat(updatedPostResponse.getId()).isEqualTo(postWithoutImageId);
+        PostResponse updatedPostResponse = findPost(accessToken, postWithImageId);
+
+        assertThat(updatedPostResponse.getId()).isEqualTo(postWithImageId);
         assertThat(updatedPostResponse.getWriting()).isEqualTo(updatedWriting);
+        assertThat(updatedPostResponse.getImages()).hasSize(3);
 
         // 조회
-        PostResponse postFindResponse = findPost(accessToken, postWithoutImageId);
+        PostResponse postFindResponse = findPost(accessToken, postWithImageId);
 
-        assertThat(postFindResponse.getId()).isEqualTo(postWithoutImageId);
+        assertThat(postFindResponse.getId()).isEqualTo(postWithImageId);
         assertThat(postFindResponse.getWriting()).isEqualTo(updatedWriting);
 
         // 삭제
@@ -288,12 +294,12 @@ public class PostAcceptanceTest extends AcceptanceTest {
             .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    private void updatePost(Long id, String writing, String accessToken) {
-        Map<String, String> params = new HashMap<>();
-        params.put("writing", writing);
+    private void updatePost(Long id, String writing,
+        List<Long> updatePostImageIds, String accessToken) {
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(writing, updatePostImageIds);
 
         given()
-            .body(params)
+            .body(postUpdateRequest)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
             .when()
@@ -420,5 +426,22 @@ public class PostAcceptanceTest extends AcceptanceTest {
             .post("/posts/" + postId + "/zzangs")
             .then()
             .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    private List<Long> makeUpdatePostImageIds(List<PostImageResponse> postImages,
+        List<PostImageResponse> newPostImages) {
+        // 기존 이미지들
+        List<Long> postImageIds = postImages.stream()
+            .map(PostImageResponse::getId)
+            .collect(Collectors.toList());
+        // 새로 추가한 이미지들
+        List<Long> newPostImageIds = newPostImages.stream()
+            .map(PostImageResponse::getId)
+            .collect(Collectors.toList());
+        // 기존 이미지들에서 마지막 이미지를 삭제
+        postImageIds.remove(postImageIds.size() - 1);
+        postImageIds.addAll(newPostImageIds);
+
+        return postImageIds;
     }
 }

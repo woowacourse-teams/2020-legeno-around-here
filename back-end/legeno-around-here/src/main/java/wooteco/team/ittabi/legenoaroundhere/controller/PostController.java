@@ -62,13 +62,13 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updatePost(@PathVariable Long id,
+    public ResponseEntity<PostResponse> updatePost(@PathVariable Long id,
         @RequestBody PostUpdateRequest postUpdateRequest) {
-        postService.updatePost(id, postUpdateRequest);
+        PostResponse postResponse = postService.updatePost(id, postUpdateRequest);
 
         return ResponseEntity
             .ok()
-            .build();
+            .body(postResponse);
     }
 
     @GetMapping

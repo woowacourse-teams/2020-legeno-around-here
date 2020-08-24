@@ -143,11 +143,35 @@ public class PostService {
     }
 
     @Transactional
-    public void updatePost(Long id, PostUpdateRequest postUpdateRequest) {
+    public PostResponse updatePost(Long id, PostUpdateRequest postUpdateRequest) {
+        User user = (User) authenticationFacade.getPrincipal();
+
         Post post = postRepository.findById(id)
             .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
         validateIsCreator(post);
-        post.setWriting(postUpdateRequest.getWriting());
+
+        updatePostImages(postUpdateRequest, post);
+        post.update(postUpdateRequest);
+
+        return PostResponse.of(user, post);
+    }
+
+    private void updatePostImages(PostUpdateRequest postUpdateRequest, Post post) {
+        List<PostImage> postImages = postImageRepository
+            .findAllById(postUpdateRequest.getImageIds());
+        deleteNotExistPostImage(post, postUpdateRequest.getImageIds());
+        addNewPostImage(post, postImages);
+    }
+
+    private void addNewPostImage(Post post, List<PostImage> postImages) {
+        postImages.forEach(post::addPostImage);
+    }
+
+    private void deleteNotExistPostImage(Post post, List<Long> updatePostImageIds) {
+        List<Long> deletePostImageIds = post.getDeletePostImageIds(updatePostImageIds);
+        List<PostImage> deletePostImages = post.getDeletePostImages(deletePostImageIds);
+
+        deletePostImages.forEach(post::removePostImage);
     }
 
     @Transactional

@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.post.image;
 
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,6 +41,14 @@ public class PostImage extends BaseEntity {
     public PostImage(String name, String url) {
         this.name = name;
         this.url = url;
+    }
+
+    public boolean hasPost() {
+        return Objects.nonNull(this.post);
+    }
+
+    public boolean isDeleteId(List<Long> deletePostImageIds) {
+        return deletePostImageIds.contains(this.getId());
     }
 
     public void setPost(Post post) {
