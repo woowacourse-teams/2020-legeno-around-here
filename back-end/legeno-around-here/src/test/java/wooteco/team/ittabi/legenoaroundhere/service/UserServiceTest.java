@@ -105,7 +105,7 @@ class UserServiceTest extends ServiceTest {
     void loadUserByUsername_Success() {
         User user = (User) userService.loadUserByUsername(TEST_USER_EMAIL);
 
-        assertThat(user.getEmailByString()).isEqualTo(TEST_USER_EMAIL);
+        assertThat(user.getUsername()).isEqualTo(TEST_USER_EMAIL);
     }
 
     @DisplayName("내 정보 찾기")
@@ -163,7 +163,7 @@ class UserServiceTest extends ServiceTest {
 
         User authUser = (User) authenticationFacade.getAuthentication()
             .getPrincipal();
-        assertThatThrownBy(() -> userService.loadUserByUsername(authUser.getEmailByString()))
+        assertThatThrownBy(() -> userService.loadUserByUsername(authUser.getUsername()))
             .isInstanceOf(UsernameNotFoundException.class);
     }
 }

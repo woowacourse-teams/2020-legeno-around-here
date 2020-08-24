@@ -23,31 +23,31 @@ public enum SectorState {
     }
 
     public static SectorState of(String name) {
-        return Arrays.stream(SectorState.values())
+        return Arrays.stream(values())
             .filter(sectorState -> sectorState.getName().equals(name))
             .findFirst()
             .orElseThrow(() -> new WrongUserInputException("Sector 상태를 잘못 입력하셨습니다."));
     }
 
     public static Iterable<SectorState> getAllAvailable() {
-        return Arrays.stream(SectorState.values())
+        return Arrays.stream(values())
             .filter(sector -> sector.used)
             .collect(Collectors.toList());
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public String getExceptionName() {
-        return exceptionName;
+        return this.exceptionName;
     }
 
     public boolean isUsed() {
-        return used;
+        return this.used;
     }
 
     public boolean isUnique() {
-        return unique;
+        return this.unique;
     }
 }

@@ -85,46 +85,8 @@ public class User extends BaseEntity implements UserDetails {
         return null;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = new Nickname(nickname);
-    }
-
-    public void setPassword(String password) {
-        this.password = new Password(password);
-    }
-
-    public void setImage(UserImage image) {
-        this.image = image;
-        setUserAtImage(image);
-    }
-
-    private void setUserAtImage(UserImage userImage) {
-        if (Objects.isNull(userImage)) {
-            return;
-        }
-        if (userImage.hasNotUser()) {
-            image.setUser(this);
-        }
-    }
-
-    public void setArea(Area area) {
-        this.area = area;
-    }
-
-    public void setAuthenticatedByEmail(Boolean authenticatedByEmail) {
-        this.authenticatedByEmail = authenticatedByEmail;
-    }
-
-    public boolean isNotSame(User user) {
+    public boolean isNotEquals(User user) {
         return !this.equals(user);
-    }
-
-    public String getPasswordByString() {
-        return this.password.getPassword();
-    }
-
-    public boolean isNotAuthenticatedByEmail() {
-        return !authenticatedByEmail;
     }
 
     @Override
@@ -134,14 +96,8 @@ public class User extends BaseEntity implements UserDetails {
             .collect(Collectors.toList());
     }
 
-    @Override
-    public String getUsername() {
-        return email.getEmail();
-    }
-
-    @Override
-    public String getPassword() {
-        return password.getPassword();
+    public boolean isNotAuthenticatedByEmail() {
+        return !this.authenticatedByEmail;
     }
 
     @Override
@@ -164,11 +120,59 @@ public class User extends BaseEntity implements UserDetails {
         return true;
     }
 
-    public String getEmailByString() {
+    @Override
+    public String getUsername() {
         return this.email.getEmail();
     }
 
-    public String getNicknameByString() {
-        return getNickname().getNickname();
+    public String getNickname() {
+        return this.nickname.getNickname();
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = new Nickname(nickname);
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password.getPassword();
+    }
+
+    public void setPassword(String password) {
+        this.password = new Password(password);
+    }
+
+    public List<String> getRoles() {
+        return Collections.unmodifiableList(this.roles);
+    }
+
+    public void setImage(UserImage image) {
+        this.image = image;
+        setUserAtImage(image);
+    }
+
+    private void setUserAtImage(UserImage userImage) {
+        if (Objects.isNull(userImage)) {
+            return;
+        }
+        if (userImage.hasNotUser()) {
+            image.setUser(this);
+        }
+    }
+
+    public List<Post> getPosts() {
+        return Collections.unmodifiableList(this.posts);
+    }
+
+    public List<Comment> getComments() {
+        return Collections.unmodifiableList(comments);
+    }
+
+    public void setArea(Area area) {
+        this.area = area;
+    }
+
+    public void setAuthenticatedByEmail(Boolean authenticatedByEmail) {
+        this.authenticatedByEmail = authenticatedByEmail;
     }
 }

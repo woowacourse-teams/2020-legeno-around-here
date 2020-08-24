@@ -95,7 +95,7 @@ public class CommentService {
     private void validateIsCreator(Comment comment) {
         User user = (User) authenticationFacade.getPrincipal();
 
-        if (user.isNotSame(comment.getCreator())) {
+        if (user.isNotEquals(comment.getCreator())) {
             throw new NotAuthorizedException("권한이 없습니다.");
         }
     }

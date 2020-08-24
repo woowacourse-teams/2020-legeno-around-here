@@ -46,14 +46,14 @@ public class PostSearch {
     }
 
     public boolean isAreaFilter() {
-        return Objects.nonNull(areaId) && sectorIds.isEmpty();
+        return Objects.nonNull(this.areaId) && this.sectorIds.isEmpty();
     }
 
     public boolean isSectorFilter() {
-        return Objects.isNull(areaId) && !sectorIds.isEmpty();
+        return Objects.isNull(this.areaId) && !this.sectorIds.isEmpty();
     }
 
     public boolean isNotExistsFilter() {
-        return Objects.isNull(areaId) && sectorIds.isEmpty();
+        return Objects.isNull(this.areaId) && this.sectorIds.isEmpty();
     }
 }

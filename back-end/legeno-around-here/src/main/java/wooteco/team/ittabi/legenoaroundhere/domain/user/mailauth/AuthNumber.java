@@ -18,7 +18,7 @@ public class AuthNumber {
     @Column(nullable = false)
     private Integer authNumber;
 
-    public boolean isNotSame(Integer authNumber) {
+    public boolean isDifferent(Integer authNumber) {
         return !this.authNumber.equals(authNumber);
     }
 }

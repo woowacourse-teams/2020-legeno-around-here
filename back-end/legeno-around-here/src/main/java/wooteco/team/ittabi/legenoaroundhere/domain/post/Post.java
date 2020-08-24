@@ -86,12 +86,57 @@ public class Post extends BaseEntity {
         }
     }
 
+    public void addPostImages(PostImage postImage) {
+        if (!this.postImages.contains(postImage)) {
+            this.postImages.add(postImage);
+        }
+    }
+
+    public void addComment(Comment comment) {
+        if (!this.comments.contains(comment)) {
+            this.comments.add(comment);
+        }
+        if (!comment.hasPost()) {
+            comment.setPost(this);
+        }
+    }
+
+    public void removeComments(Comment comment) {
+        this.comments.remove(comment);
+    }
+
+    public int getAvailableCommentsSize() {
+        return (int) this.comments.stream()
+            .filter(Comment::isAvailable)
+            .count();
+    }
+
+    public void pressZzang(User user) {
+        validateAvailable();
+        Optional<PostZzang> foundZzang = this.zzangs.stream()
+            .filter(PostZzang -> PostZzang.isSameCreator(user))
+            .findFirst();
+
+        if (foundZzang.isPresent()) {
+            this.zzangs.remove(foundZzang.get());
+            return;
+        }
+        this.zzangs.add(new PostZzang(this, user));
+    }
+
+    public void validateAvailable() {
+        if (!this.state.isAvailable()) {
+            throw new NotAvailableException(
+                "ID [" + this.getId() + "]에 해당하는 Post가 유효하지 않습니다.");
+        }
+    }
+
     public int getPostZzangCount() {
-        return zzangs.size();
+        return this.zzangs.size();
     }
 
     public int getPostZzangCountByDate(LocalDateTime startDate, LocalDateTime endDate) {
-        long zzangCount = zzangs.stream()
+        long zzangCount = this.zzangs.stream()
             .filter(postZzang -> isDateBetween(postZzang.getCreatedAt(), startDate, endDate))
             .count();
         return Math.toIntExact(zzangCount);
@@ -104,59 +149,28 @@ public class Post extends BaseEntity {
     }
 
     public boolean hasZzangCreator(User user) {
-        return zzangs.stream()
+        return this.zzangs.stream()
             .anyMatch(zzang -> zzang.isSameCreator(user));
-    }
-
-    public void addComment(Comment comment) {
-        if (!comments.contains(comment)) {
-            comments.add(comment);
-        }
-        if (!comment.hasPost()) {
-            comment.setPost(this);
-        }
-    }
-
-    public void removeComments(Comment comment) {
-        comments.remove(comment);
-    }
-
-    public List<Comment> getComments() {
-        return Collections.unmodifiableList(comments);
-    }
-
-    public int getAvailableCommentsSize() {
-        return (int) comments.stream()
-            .filter(Comment::isAvailable)
-            .count();
-    }
-
-    public void pressZzang(User user) {
-        validateAvailable();
-        Optional<PostZzang> foundZzang = zzangs.stream()
-            .filter(PostZzang -> PostZzang.isSameCreator(user))
-            .findFirst();
-
-        if (foundZzang.isPresent()) {
-            this.zzangs.remove(foundZzang.get());
-            return;
-        }
-        zzangs.add(new PostZzang(this, user));
-    }
-
-    public void validateAvailable() {
-        if (!this.state.isAvailable()) {
-            throw new NotAvailableException(
-                "ID [" + this.getId() + "]에 해당하는 Post가 유효하지 않습니다.");
-        }
     }
 
     public void setWriting(String writing) {
         this.writing = writing;
     }
 
+    public List<PostImage> getPostImages() {
+        return Collections.unmodifiableList(this.postImages);
+    }
+
     public void setPostImages(List<PostImage> postImages) {
         this.postImages = postImages;
+    }
+
+    public List<PostZzang> getZzangs() {
+        return Collections.unmodifiableList(this.zzangs);
+    }
+
+    public List<Comment> getComments() {
+        return Collections.unmodifiableList(this.comments);
     }
 
     public void setState(State state) {

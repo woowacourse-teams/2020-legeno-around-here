@@ -142,7 +142,7 @@ public class PostService {
     private void validateIsCreator(Post post) {
         User user = (User) authenticationFacade.getPrincipal();
 
-        if (user.isNotSame(post.getCreator())) {
+        if (user.isNotEquals(post.getCreator())) {
             throw new NotAuthorizedException("권한이 없습니다.");
         }
     }

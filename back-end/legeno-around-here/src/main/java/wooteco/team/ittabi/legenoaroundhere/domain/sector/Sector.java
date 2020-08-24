@@ -100,7 +100,7 @@ public class Sector extends BaseEntity {
     }
 
     public boolean isUniqueState() {
-        return state.isUnique();
+        return this.state.isUnique();
     }
 
     public String getName() {
@@ -112,11 +112,11 @@ public class Sector extends BaseEntity {
     }
 
     public String getState() {
-        return state.getName();
+        return this.state.getName();
     }
 
     public String getStateExceptionName() {
-        return state.getExceptionName();
+        return this.state.getExceptionName();
     }
 
     public List<Post> getPosts() {
