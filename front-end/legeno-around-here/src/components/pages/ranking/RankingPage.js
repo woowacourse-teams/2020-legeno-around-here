@@ -6,7 +6,7 @@ import Bottom from '../../Bottom'
 import BottomBlank from '../../BottomBlank'
 import PostItem from '../../post/PostItem'
 import Loading from '../../Loading'
-import { findCurrentPostsFromPage } from '../../api/API'
+import { findRankedPostsFromPage } from '../../api/API'
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils'
 import { RANKING } from '../../../constants/BottomItems'
 
@@ -14,13 +14,15 @@ const RankingPage = () => {
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
+  const [criteria] = useState('total');
 
   const accessToken = getAccessTokenFromCookie();
   const mainAreaId = localStorage.getItem('mainAreaId');
 
   /* 처음에 보여줄 최근글 목록을 가져옴 */
   useEffect(() => {
-    findCurrentPostsFromPage(mainAreaId, 0, accessToken).then((firstPosts) => {
+    findRankedPostsFromPage(mainAreaId, criteria,0, accessToken).then((firstPosts) => {
+      console.log(firstPosts)
       if (firstPosts.length === 0) {
         setHasMore(false);
         return;
@@ -31,7 +33,7 @@ const RankingPage = () => {
   }, [mainAreaId, accessToken]);
 
   const fetchNextPosts = () => {
-    findCurrentPostsFromPage(mainAreaId, page, accessToken)
+    findRankedPostsFromPage(mainAreaId, criteria, page, accessToken)
       .then((nextPosts) => {
         if (nextPosts.length === 0) {
           setHasMore(false);
