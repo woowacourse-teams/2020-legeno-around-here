@@ -153,16 +153,6 @@ public class UserAcceptanceTest extends AcceptanceTest {
         return createUserBy(params);
     }
 
-    private String createUserWithArea(String email, String nickname, String password) {
-        Map<String, String> params = new HashMap<>();
-        params.put("email", email);
-        params.put("nickname", nickname);
-        params.put("password", password);
-        params.put("areaId", String.valueOf(TEST_AREA_ID));
-
-        return createUserBy(params);
-    }
-
     private String createUserBy(Map<String, String> params) {
         return given()
             .body(params)

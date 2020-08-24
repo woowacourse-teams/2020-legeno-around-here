@@ -41,7 +41,7 @@ public class UserImage extends BaseEntity {
     }
 
     public boolean hasNotUser() {
-        return Objects.isNull(user);
+        return Objects.isNull(this.user);
     }
 
     public void setUser(User user) {

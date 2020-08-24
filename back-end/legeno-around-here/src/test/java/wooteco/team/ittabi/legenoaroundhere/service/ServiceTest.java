@@ -36,7 +36,7 @@ public abstract class ServiceTest {
     }
 
     protected void setAuthentication(User user) {
-        UserDetails userDetails = userService.loadUserByUsername(user.getEmailByString());
+        UserDetails userDetails = userService.loadUserByUsername(user.getUsername());
         org.springframework.security.core.Authentication authToken = new UsernamePasswordAuthenticationToken(
             user, "TestCredentials", userDetails.getAuthorities());
         authenticationFacade.setAuthentication(authToken);

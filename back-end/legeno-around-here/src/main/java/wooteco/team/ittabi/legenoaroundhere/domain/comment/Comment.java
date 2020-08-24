@@ -3,6 +3,7 @@ package wooteco.team.ittabi.legenoaroundhere.domain.comment;
 import static wooteco.team.ittabi.legenoaroundhere.domain.State.PUBLISHED;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -32,7 +33,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString(exclude = {"post", "superComment", "cocomments"})
+@ToString(exclude = {"post", "superComment", "cocomments", "zzangs"})
 @SQLDelete(sql = "UPDATE comment SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class Comment extends BaseEntity {
@@ -81,7 +82,7 @@ public class Comment extends BaseEntity {
     public void pressZzang(User user) {
         this.validateAvailable();
         this.post.validateAvailable();
-        Optional<CommentZzang> foundZzang = zzangs.stream()
+        Optional<CommentZzang> foundZzang = this.zzangs.stream()
             .filter(commentZzang -> commentZzang.isSameCreator(user))
             .findFirst();
 
@@ -89,22 +90,21 @@ public class Comment extends BaseEntity {
             this.zzangs.remove(foundZzang.get());
             return;
         }
-        zzangs.add(new CommentZzang(this, user));
+        this.zzangs.add(new CommentZzang(this, user));
     }
 
     private void validateAvailable() {
-        if (!state.isAvailable()) {
+        if (!this.state.isAvailable()) {
             throw new NotAvailableException("ID [" + this.getId() + "]에 해당하는 Comment가 유효하지 않습니다.");
         }
     }
 
     public boolean isAvailable() {
-        return state.isAvailable();
+        return this.state.isAvailable();
     }
 
-    public boolean hasZzangCreator(User user) {
-        return zzangs.stream()
-            .anyMatch(zzang -> zzang.isSameCreator(user));
+    public boolean isNotAvailable() {
+        return !this.state.isAvailable();
     }
 
     public boolean hasPost() {
@@ -112,19 +112,24 @@ public class Comment extends BaseEntity {
     }
 
     public boolean hasSuperComment() {
-        return Objects.isNull(superComment);
+        return Objects.isNull(this.superComment);
     }
 
     public boolean hasCocomments() {
-        return !cocomments.isEmpty();
+        return !this.cocomments.isEmpty();
     }
 
     public boolean hasOnlyCocomment() {
-        return cocomments.size() == 1;
+        return this.cocomments.size() == 1;
+    }
+
+    public boolean hasZzangCreator(User user) {
+        return this.zzangs.stream()
+            .anyMatch(zzang -> zzang.isSameCreator(user));
     }
 
     public int getZzangCounts() {
-        return zzangs.size();
+        return this.zzangs.size();
     }
 
     public void setWriting(String writing) {
@@ -149,7 +154,11 @@ public class Comment extends BaseEntity {
         this.state = state;
     }
 
-    public boolean isNotAvailable() {
-        return !state.isAvailable();
+    public List<Comment> getCocomments() {
+        return Collections.unmodifiableList(this.cocomments);
+    }
+
+    public List<CommentZzang> getZzangs() {
+        return Collections.unmodifiableList(this.zzangs);
     }
 }

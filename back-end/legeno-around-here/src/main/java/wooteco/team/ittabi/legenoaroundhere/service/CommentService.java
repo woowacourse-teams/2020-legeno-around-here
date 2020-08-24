@@ -23,9 +23,9 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.CommentRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 
-@Slf4j
 @Service
 @AllArgsConstructor
+@Slf4j
 public class CommentService {
 
     private final PostRepository postRepository;
@@ -95,7 +95,7 @@ public class CommentService {
     private void validateIsCreator(Comment comment) {
         User user = (User) authenticationFacade.getPrincipal();
 
-        if (user.isNotSame(comment.getCreator())) {
+        if (user.isNotEquals(comment.getCreator())) {
             throw new NotAuthorizedException("권한이 없습니다.");
         }
     }

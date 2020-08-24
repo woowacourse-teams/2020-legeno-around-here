@@ -6,14 +6,12 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
 public class MailAuth extends BaseEntity {
 
     @Embedded
@@ -29,6 +27,6 @@ public class MailAuth extends BaseEntity {
     }
 
     public boolean isDifferentAuthNumber(int authNumber) {
-        return this.authNumber.isNotSame(authNumber);
+        return this.authNumber.isDifferent(authNumber);
     }
 }

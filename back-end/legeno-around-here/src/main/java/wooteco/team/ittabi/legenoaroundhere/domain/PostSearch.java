@@ -16,7 +16,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @ToString
 public class PostSearch {
 
-    protected static final String DELIMITER = ",";
+    private static final String DELIMITER = ",";
 
     private final Long areaId;
     private final List<Long> sectorIds;
@@ -24,32 +24,36 @@ public class PostSearch {
     @Builder
     public PostSearch(Long areaId, String sectorIds) {
         this.areaId = areaId;
-        this.sectorIds = makeUniqueIds("sectorId", sectorIds);
+        this.sectorIds = makeSectorIds(sectorIds);
     }
 
-    private List<Long> makeUniqueIds(String name, String ids) {
-        if (Objects.isNull(ids) || ids.isEmpty()) {
+    private List<Long> makeSectorIds(String sectorIds) {
+        if (Objects.isNull(sectorIds) || sectorIds.isEmpty()) {
             return new ArrayList<>();
         }
+        return splitSectorIds(sectorIds);
+    }
+
+    private List<Long> splitSectorIds(String sectorIds) {
         try {
-            return Arrays.stream(ids.split(DELIMITER))
+            return Arrays.stream(sectorIds.split(DELIMITER))
                 .map(Long::valueOf)
                 .distinct()
                 .collect(Collectors.toList());
         } catch (NumberFormatException e) {
-            throw new WrongUserInputException(name + "필터에 올바르지 않은 Id가 입력되었습니다.");
+            throw new WrongUserInputException("sectorIds 필터에 올바르지 않은 Id가 입력되었습니다.");
         }
     }
 
     public boolean isAreaFilter() {
-        return Objects.nonNull(areaId) && sectorIds.isEmpty();
+        return Objects.nonNull(this.areaId) && this.sectorIds.isEmpty();
     }
 
     public boolean isSectorFilter() {
-        return Objects.isNull(areaId) && !sectorIds.isEmpty();
+        return Objects.isNull(this.areaId) && !this.sectorIds.isEmpty();
     }
 
     public boolean isNotExistsFilter() {
-        return Objects.isNull(areaId) && sectorIds.isEmpty();
+        return Objects.isNull(this.areaId) && this.sectorIds.isEmpty();
     }
 }

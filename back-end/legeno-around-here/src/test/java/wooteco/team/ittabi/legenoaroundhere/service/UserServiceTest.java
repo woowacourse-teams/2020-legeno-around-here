@@ -29,7 +29,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 class UserServiceTest extends ServiceTest {
 
     private static final String TEST_PREFIX = "user_";
-    private static final String NOT_EXIST_PREFIX = "notexist_";
+    private static final String NOT_EXIST_PREFIX = "not_exist_";
     private static final int TOKEN_MIN_SIZE = 1;
 
     @Autowired
@@ -105,7 +105,7 @@ class UserServiceTest extends ServiceTest {
     void loadUserByUsername_Success() {
         User user = (User) userService.loadUserByUsername(TEST_USER_EMAIL);
 
-        assertThat(user.getEmailByString()).isEqualTo(TEST_USER_EMAIL);
+        assertThat(user.getUsername()).isEqualTo(TEST_USER_EMAIL);
     }
 
     @DisplayName("내 정보 찾기")
@@ -163,7 +163,7 @@ class UserServiceTest extends ServiceTest {
 
         User authUser = (User) authenticationFacade.getAuthentication()
             .getPrincipal();
-        assertThatThrownBy(() -> userService.loadUserByUsername(authUser.getEmailByString()))
+        assertThatThrownBy(() -> userService.loadUserByUsername(authUser.getUsername()))
             .isInstanceOf(UsernameNotFoundException.class);
     }
 }

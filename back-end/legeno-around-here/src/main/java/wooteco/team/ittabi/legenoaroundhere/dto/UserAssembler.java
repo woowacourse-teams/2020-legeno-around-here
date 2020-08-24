@@ -1,10 +1,13 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserAssembler {
 
     private static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();

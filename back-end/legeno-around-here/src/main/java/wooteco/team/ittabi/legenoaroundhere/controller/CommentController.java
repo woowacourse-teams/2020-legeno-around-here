@@ -35,6 +35,7 @@ public class CommentController {
     public ResponseEntity<Void> createCocomment(@PathVariable Long commentId,
         @RequestBody CommentRequest commentRequest) {
         CommentResponse commentResponse = commentService.createCocomment(commentId, commentRequest);
+
         return ResponseEntity
             .created(URI.create("/comments/" + commentResponse.getId()))
             .build();
@@ -80,6 +81,7 @@ public class CommentController {
     @PostMapping("/comments/{commentId}/zzangs")
     public ResponseEntity<Void> pressCommentZzang(@PathVariable Long commentId) {
         commentService.pressZzang(commentId);
+
         return ResponseEntity
             .noContent()
             .build();

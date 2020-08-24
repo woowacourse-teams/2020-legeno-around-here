@@ -5,6 +5,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -14,6 +15,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @ToString(exclude = {"comment", "creator"})
 public class CommentZzang extends BaseEntity {
 
@@ -24,11 +26,6 @@ public class CommentZzang extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id", nullable = false)
     private User creator;
-
-    public CommentZzang(Comment comment, User creator) {
-        this.comment = comment;
-        this.creator = creator;
-    }
 
     public boolean isSameCreator(User user) {
         return this.creator.equals(user);

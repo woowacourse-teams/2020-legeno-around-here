@@ -16,8 +16,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenDecoder;
 
-@AllArgsConstructor
 @EnableWebSecurity
+@AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenDecoder jwtTokenDecoder;

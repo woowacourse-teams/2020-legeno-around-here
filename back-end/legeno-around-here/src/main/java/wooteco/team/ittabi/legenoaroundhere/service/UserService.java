@@ -73,7 +73,7 @@ public class UserService implements UserDetailsService {
             .orElseThrow(() -> new NotExistsException("가입되지 않은 회원입니다."));
         checkEmailAuth(user);
         checkPassword(loginRequest, user);
-        String token = jwtTokenGenerator.createToken(user.getEmailByString(), user.getRoles());
+        String token = jwtTokenGenerator.createToken(user.getUsername(), user.getRoles());
         return new TokenResponse(token);
     }
 
@@ -85,7 +85,7 @@ public class UserService implements UserDetailsService {
 
     private void checkPassword(LoginRequest loginRequest, User user) {
         if (!PASSWORD_ENCODER.matches(
-            loginRequest.getPassword(), user.getPasswordByString())) {
+            loginRequest.getPassword(), user.getPassword())) {
             throw new WrongUserInputException("잘못된 비밀번호입니다.");
         }
     }
@@ -118,7 +118,7 @@ public class UserService implements UserDetailsService {
             .orElseThrow(() -> new NotExistsException("사용자를 찾을 수 없습니다."));
 
         String password = userPasswordUpdateRequest.getPassword();
-        if (PASSWORD_ENCODER.matches(password, user.getPasswordByString())) {
+        if (PASSWORD_ENCODER.matches(password, user.getPassword())) {
             throw new WrongUserInputException("기존의 비밀번호와 동일한 비밀번호입니다.");
         }
 
@@ -143,6 +143,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(new Email(email))
             .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));

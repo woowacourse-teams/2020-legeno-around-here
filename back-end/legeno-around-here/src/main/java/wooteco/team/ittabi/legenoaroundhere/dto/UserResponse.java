@@ -26,8 +26,8 @@ public class UserResponse {
     public static UserResponse from(User user) {
         return UserResponse.builder()
             .id(user.getId())
-            .email(user.getEmailByString())
-            .nickname(user.getNicknameByString())
+            .email(user.getEmail().getEmail())
+            .nickname(user.getNickname())
             .image(UserImageResponse.of(user.getImage()))
             .area(AreaResponse.of(user.getArea()))
             .build();

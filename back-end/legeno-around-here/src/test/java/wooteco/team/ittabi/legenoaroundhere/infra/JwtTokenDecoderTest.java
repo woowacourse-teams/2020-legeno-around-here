@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class JwtTokenDecoderTest {
@@ -23,9 +22,6 @@ class JwtTokenDecoderTest {
 
     @Autowired
     private JwtTokenGenerator jwtTokenGenerator;
-
-    @Autowired
-    private UserService userService;
 
     private String token;
 

@@ -19,10 +19,9 @@ import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.MailHandler;
 
-@Slf4j
-@Transactional
 @Service
 @AllArgsConstructor
+@Slf4j
 public class MailAuthService {
 
     private static final int AUTH_NUMBER_MIN = 100_000;
@@ -85,6 +84,6 @@ public class MailAuthService {
     private void updateUserEmailAuthPassed(Email email) {
         User foundUser = userRepository.findByEmail(email)
             .orElseThrow(() -> new NotExistsException("존재하지 않는 회원입니다."));
-        foundUser.setAuthenticatedByEmail(true);
+        foundUser.setAuthenticatedByEmail(Boolean.TRUE);
     }
 }

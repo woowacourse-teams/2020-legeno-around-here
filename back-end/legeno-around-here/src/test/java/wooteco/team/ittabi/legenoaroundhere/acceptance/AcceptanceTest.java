@@ -16,7 +16,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 public abstract class AcceptanceTest {
 
     @LocalServerPort
-    public int port;
+    protected int port;
 
     protected static RequestSpecification given() {
         return RestAssured.given().log().all();
