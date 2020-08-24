@@ -4,11 +4,11 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import TopBar from './RankingTopBar';
 import Bottom from '../../Bottom'
 import BottomBlank from '../../BottomBlank'
-import PostItem from '../../post/PostItem'
 import Loading from '../../Loading'
 import { findRankedPostsFromPage } from '../../api/API'
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils'
 import { RANKING } from '../../../constants/BottomItems'
+import RankingItem from './RankingItem'
 
 const RankingPage = () => {
   const [page, setPage] = useState(0);
@@ -59,7 +59,7 @@ const RankingPage = () => {
         endMessage={<h3>모두 읽으셨습니다!</h3>}
       >
         {posts.map((post) => (
-          <PostItem key={post.id} post={post} />
+          <RankingItem key={post.id} post={post} />
         ))}
       </InfiniteScroll>
       <BottomBlank />
