@@ -8,8 +8,10 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_PASSWORD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_RANKING_EMAIL_A;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_RANKING_EMAIL_B;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_RANKING_EMAIL_C;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import io.restassured.RestAssured;
@@ -31,7 +33,6 @@ public class RankingAcceptanceTest extends AcceptanceTest {
 
     private String adminToken;
     private String accessToken;
-
     private String accessTokenA;
     private String accessTokenB;
     private String accessTokenC;
@@ -45,18 +46,14 @@ public class RankingAcceptanceTest extends AcceptanceTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         TokenResponse tokenResponse = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
         accessToken = tokenResponse.getAccessToken();
 
         adminToken = getCreateAdminToken();
 
-        createUser("a@capzzang.co.kr", "A", "passwordA");
-        createUser("b@capzzang.co.kr", "B", "passwordB");
-        createUser("c@capzzang.co.kr", "C", "passwordC");
-        TokenResponse tokenResponseA = login("a@capzzang.co.kr", "passwordA");
-        TokenResponse tokenResponseB = login("b@capzzang.co.kr", "passwordB");
-        TokenResponse tokenResponseC = login("c@capzzang.co.kr", "passwordC");
+        TokenResponse tokenResponseA = login(TEST_RANKING_EMAIL_A, TEST_USER_PASSWORD);
+        TokenResponse tokenResponseB = login(TEST_RANKING_EMAIL_B, TEST_USER_PASSWORD);
+        TokenResponse tokenResponseC = login(TEST_RANKING_EMAIL_C, TEST_USER_PASSWORD);
         accessTokenA = tokenResponseA.getAccessToken();
         accessTokenB = tokenResponseB.getAccessToken();
         accessTokenC = tokenResponseC.getAccessToken();

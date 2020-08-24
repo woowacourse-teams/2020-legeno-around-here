@@ -20,7 +20,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -35,22 +34,18 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
 @ToString(exclude = {"posts", "comments"})
 @SQLDelete(sql = "UPDATE user SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class User extends BaseEntity implements UserDetails {
 
     @Embedded
-    @Column(nullable = false, unique = true)
     private Email email;
 
     @Embedded
-    @Column(nullable = false)
     private Nickname nickname;
 
     @Embedded
-    @Column(nullable = false)
     private Password password;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -70,6 +65,9 @@ public class User extends BaseEntity implements UserDetails {
     @JoinColumn(name = "area_id")
     private Area area = null;
 
+    @Column(nullable = false, columnDefinition = "tinyint(1) default 0")
+    private Boolean authenticatedByEmail;
+
     @Builder
     public User(String email, String nickname, String password, Area area, UserImage image) {
         this.email = makeEmail(email);
@@ -77,14 +75,7 @@ public class User extends BaseEntity implements UserDetails {
         this.password = new Password(password);
         this.area = area;
         this.image = image;
-    }
-
-    public User(String email, String nickname, Area area, UserImage image) {
-        this.email = makeEmail(email);
-        this.nickname = new Nickname(nickname);
-        this.password = null;
-        this.area = area;
-        this.image = image;
+        this.authenticatedByEmail = Boolean.FALSE;
     }
 
     private Email makeEmail(String email) {
@@ -94,34 +85,8 @@ public class User extends BaseEntity implements UserDetails {
         return null;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = new Nickname(nickname);
-    }
-
-    public void setPassword(String password) {
-        this.password = new Password(password);
-    }
-
-    public void setImage(UserImage image) {
-        this.image = image;
-        setUserAtImage(image);
-    }
-
-    private void setUserAtImage(UserImage userImage) {
-        if (Objects.isNull(userImage)) {
-            return;
-        }
-        if (userImage.hasNotUser()) {
-            image.setUser(this);
-        }
-    }
-
-    public boolean isNotSame(User user) {
+    public boolean isNotEquals(User user) {
         return !this.equals(user);
-    }
-
-    public String getPasswordByString() {
-        return this.password.getPassword();
     }
 
     @Override
@@ -131,14 +96,8 @@ public class User extends BaseEntity implements UserDetails {
             .collect(Collectors.toList());
     }
 
-    @Override
-    public String getUsername() {
-        return email.getEmail();
-    }
-
-    @Override
-    public String getPassword() {
-        return password.getPassword();
+    public boolean isNotAuthenticatedByEmail() {
+        return !this.authenticatedByEmail;
     }
 
     @Override
@@ -161,11 +120,59 @@ public class User extends BaseEntity implements UserDetails {
         return true;
     }
 
-    public String getEmailByString() {
+    @Override
+    public String getUsername() {
         return this.email.getEmail();
     }
 
-    public String getNicknameByString() {
-        return getNickname().getNickname();
+    public String getNickname() {
+        return this.nickname.getNickname();
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = new Nickname(nickname);
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password.getPassword();
+    }
+
+    public void setPassword(String password) {
+        this.password = new Password(password);
+    }
+
+    public List<String> getRoles() {
+        return Collections.unmodifiableList(this.roles);
+    }
+
+    public void setImage(UserImage image) {
+        this.image = image;
+        setUserAtImage(image);
+    }
+
+    private void setUserAtImage(UserImage userImage) {
+        if (Objects.isNull(userImage)) {
+            return;
+        }
+        if (userImage.hasNotUser()) {
+            image.setUser(this);
+        }
+    }
+
+    public List<Post> getPosts() {
+        return Collections.unmodifiableList(this.posts);
+    }
+
+    public List<Comment> getComments() {
+        return Collections.unmodifiableList(comments);
+    }
+
+    public void setArea(Area area) {
+        this.area = area;
+    }
+
+    public void setAuthenticatedByEmail(Boolean authenticatedByEmail) {
+        this.authenticatedByEmail = authenticatedByEmail;
     }
 }

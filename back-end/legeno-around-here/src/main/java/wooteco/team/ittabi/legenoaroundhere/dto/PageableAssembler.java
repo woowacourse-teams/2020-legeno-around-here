@@ -1,10 +1,13 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
 import java.util.Objects;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PageableAssembler {
 
     private static final int MINIMUM_PAGE = 0;

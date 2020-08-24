@@ -6,15 +6,15 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 
-@DataJpaTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AreaRepositoryTest {
 
-    protected static final int INIT_DATA_SIZE = 493;
-    protected static final int SEOUL_SUB_AREA_COUNT = INIT_DATA_SIZE - 1;
-    protected static final long SEOUL_AREA_ID = 1L;
+    private static final int INIT_DATA_SIZE = 493;
+    private static final int SEOUL_SUB_AREA_COUNT = INIT_DATA_SIZE - 1;
+    private static final long SEOUL_AREA_ID = 1L;
 
     @Autowired
     AreaRepository areaRepository;

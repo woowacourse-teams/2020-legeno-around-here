@@ -16,8 +16,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenDecoder;
 
-@AllArgsConstructor
 @EnableWebSecurity
+@AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenDecoder jwtTokenDecoder;
@@ -62,9 +62,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/v2/api-docs",
                 "/swagger-resources/**",
                 "/swagger-ui.html",
-                "/webjars/**").permitAll()
-            .antMatchers("/join").permitAll()
-            .antMatchers("/login").permitAll()
+                "/webjars/**",
+                "/join",
+                "/login",
+                "/mail-auth").permitAll()
             .antMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest().hasAnyRole("USER", "ADMIN")
             .and()

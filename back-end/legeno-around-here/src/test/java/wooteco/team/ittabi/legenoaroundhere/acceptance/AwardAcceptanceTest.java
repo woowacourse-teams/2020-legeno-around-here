@@ -2,7 +2,7 @@ package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import io.restassured.RestAssured;
@@ -23,8 +23,7 @@ public class AwardAcceptanceTest extends AcceptanceTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        String location = createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
-        userId = getIdFromUrl(location);
+        userId = TEST_USER_ID;
         TokenResponse token = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
         accessToken = token.getAccessToken();
     }

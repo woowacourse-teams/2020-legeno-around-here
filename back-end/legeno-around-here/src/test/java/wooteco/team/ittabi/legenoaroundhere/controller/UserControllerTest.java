@@ -35,15 +35,15 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 class UserControllerTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private MockMvc mockMvc;
 
     @MockBean
     private UserService userService;
-    private MockMvc mockMvc;
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext) {

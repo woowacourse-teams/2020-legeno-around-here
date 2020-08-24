@@ -36,7 +36,7 @@ public class PostResponse {
             .id(post.getId())
             .writing(post.getWriting())
             .images(PostImageResponse.listOf(post.getPostImages()))
-            .comments(CommentResponse.listOf(user, post.getComments()))
+            .comments(CommentResponseAssembler.listOf(user, post.getComments()))
             .area(AreaResponse.of(post.getArea()))
             .sector(SectorResponse.of(post.getSector()))
             .creator(UserResponse.from(post.getCreator()))

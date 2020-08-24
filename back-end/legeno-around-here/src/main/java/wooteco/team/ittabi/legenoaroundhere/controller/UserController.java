@@ -1,6 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
 import java.net.URI;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,13 +20,10 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 
 @RestController
+@AllArgsConstructor
 public class UserController {
 
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @PostMapping("/join")
     public ResponseEntity<Void> join(@RequestBody UserCreateRequest userCreateRequest) {

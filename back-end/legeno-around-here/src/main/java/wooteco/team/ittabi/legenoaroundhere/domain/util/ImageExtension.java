@@ -38,7 +38,7 @@ public enum ImageExtension {
     }
 
     private static boolean noneMatchImageExtension(MultipartFile file) {
-        return Arrays.stream(ImageExtension.values())
+        return Arrays.stream(values())
             .noneMatch(imageExtension -> isSame(file, imageExtension.extension));
     }
 
