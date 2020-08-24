@@ -7,7 +7,7 @@ const HTTP_STATUS_NO_CONTENT = 204;
 const DEFAULT_SIZE = 10;
 const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
-const DEFAULT_URL = 'http://localhost:8080';
+const DEFAULT_URL = 'https://back.capzzang.co.kr';
 
 export const loginUser = (email, password, handleReset) => {
   axios
@@ -56,7 +56,25 @@ export const createPost = async (postData, accessToken) => {
     const response = await axios.post(DEFAULT_URL + '/posts', postData, config);
     if (response.status === HTTP_STATUS_CREATED) {
       alert('전송에 성공했습니다!');
-      document.location.href = response.headers.location;
+      document.location.href = '/posts/' + response.headers.location;
+    }
+  } catch (error) {
+    redirectLoginWhenUnauthorized(error);
+    console.log(error);
+  }
+};
+
+export const updatePost = async (postId, postUpdateData, accessToken) => {
+  const config = {
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
+  };
+  try {
+    const response = await axios.put(DEFAULT_URL + `/posts/${postId}`, postUpdateData, config);
+    if (response.status === HTTP_STATUS_OK) {
+      alert('수정에 성공했습니다!');
+      document.location.href = `/posts/${postId}`;
     }
   } catch (error) {
     redirectLoginWhenUnauthorized(error);
@@ -180,7 +198,7 @@ export const pressPostZzang = async (postId, accessToken) => {
   return false;
 };
 
-export const findMyInfo = ({ accessToken }) => {
+export const findMyInfo = (accessToken) => {
   const config = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',

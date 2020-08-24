@@ -39,7 +39,7 @@ const PostDetailPage = ({ match }) => {
     <>
       <PostDetailTopBar />
       <Container>
-        {post && <PostDetail post={post} />}
+        {post && <PostDetail post={post} myInfo={myInfo} />}
         <BottomBlank />
       </Container>
       <Bottom />

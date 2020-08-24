@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
-import {
-  createComment,
-  findCommentsByPostId,
-  pressPostZzang,
-} from '../../api/API';
+import { createComment, findCommentsByPostId, pressPostZzang } from '../../api/API';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import Typography from '@material-ui/core/Typography';
 import { Grid, IconButton, TextField } from '@material-ui/core';
@@ -45,11 +41,7 @@ const PostDetail = ({ post, myInfo }) => {
   const submitForm = () => {
     const sendComment = async () => {
       setLoading(true);
-      const isCommentCreated = await createComment(
-        post.id,
-        writing,
-        accessToken,
-      );
+      const isCommentCreated = await createComment(post.id, writing, accessToken);
       if (isCommentCreated) {
         const loadedComments = await loadComments();
         setComments(loadedComments);
@@ -70,14 +62,7 @@ const PostDetail = ({ post, myInfo }) => {
         <Grid container item xs={6}>
           <Typography>{post.area.fullName}</Typography>
         </Grid>
-        <Grid
-          container
-          item
-          xs={6}
-          alignItems='flex-start'
-          justify='flex-end'
-          direction='row'
-        >
+        <Grid container item xs={6} alignItems='flex-start' justify='flex-end' direction='row'>
           <Typography>{post.creator.nickname}</Typography>
         </Grid>
       </Grid>
@@ -95,20 +80,9 @@ const PostDetail = ({ post, myInfo }) => {
             {post.comments.length}
           </IconButton>
         </Grid>
-        <Grid
-          container
-          item
-          xs={6}
-          alignItems='flex-start'
-          justify='flex-end'
-          direction='row'
-        >
-          <Typography display='inline'>
-            {convertDateFormat(post.createdAt)}
-          </Typography>
-          <Typography display='inline'>
-            {post.creator.id === myInfo.id && <UpdatePostButton post={post} />}{' '}
-          </Typography>
+        <Grid container item xs={6} alignItems='flex-start' justify='flex-end' direction='row'>
+          <Typography display='inline'>{convertDateFormat(post.createdAt)}</Typography>
+          <Typography display='inline'>{post.creator.id === myInfo.id && <UpdatePostButton post={post} />}</Typography>
         </Grid>
       </Grid>
 
@@ -133,9 +107,7 @@ const PostDetail = ({ post, myInfo }) => {
           </Grid>
         </Grid>
       </form>
-      {comments.length > 0 && (
-        <Comments comments={comments} loading={loading} />
-      )}
+      {comments.length > 0 && <Comments comments={comments} loading={loading} />}
     </>
   );
 };
