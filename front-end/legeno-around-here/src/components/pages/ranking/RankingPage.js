@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { makeStyles } from '@material-ui/core/styles'
 
 import TopBar from './RankingTopBar';
 import Bottom from '../../Bottom'
@@ -9,6 +10,28 @@ import { findRankedPostsFromPage } from '../../api/API'
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils'
 import { RANKING } from '../../../constants/BottomItems'
 import RankingItem from './RankingItem'
+import Typography from '@material-ui/core/Typography'
+
+const useStyle = makeStyles(() => ({
+  filterSection: {
+    display: 'flex',
+    width: '95%',
+    height: '30px',
+    margin: 'auto',
+    marginTop: '10px',
+    marginBottom: '10px',
+    fontSize: '15px',
+    color: '#555555',
+  },
+  durationFilter: {
+    display: 'inline-block',
+    marginRight: 'auto',
+  },
+  sectorFilter: {
+    display: 'inline-block',
+    marginLeft: 'auto',
+  },
+}));
 
 const RankingPage = () => {
   const [page, setPage] = useState(0);
@@ -18,6 +41,7 @@ const RankingPage = () => {
 
   const accessToken = getAccessTokenFromCookie();
   const mainAreaId = localStorage.getItem('mainAreaId');
+  const classes = useStyle();
 
   /* 처음에 보여줄 글 목록을 가져옴 */
   useEffect(() => {
@@ -48,12 +72,17 @@ const RankingPage = () => {
       });
   };
 
+  /* 공동순위 처리를 위해서 필요한 변수들 */
   let zzangCountOfBeforePost = 0;
   let rankOfBeforePost = 0;
 
   return (
     <>
       <TopBar />
+      <div className={classes.filterSection}>
+        <Typography className={classes.durationFilter}>역대 랭킹</Typography>
+        <Typography className={classes.sectorFilter}>부문 전체</Typography>
+      </div>
       <InfiniteScroll
         next={fetchNextPosts}
         hasMore={hasMore}
@@ -66,7 +95,7 @@ const RankingPage = () => {
           console.log(post.zzang.count === zzangCountOfBeforePost)
           zzangCountOfBeforePost = post.zzang.count;
           rankOfBeforePost = rank;
-          console.log("###")
+          console.log("###");
           return <RankingItem key={post.id} post={post} rank={rank} />;
         })}
       </InfiniteScroll>
