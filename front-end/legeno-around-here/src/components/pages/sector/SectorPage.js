@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
@@ -7,7 +7,7 @@ import { findSectorsFromPage } from '../../api/API';
 import SectorTopBar from './SectorTopBar';
 import Bottom from '../../Bottom';
 import Loading from '../../Loading';
-import { Typography, Container } from '@material-ui/core';
+import { Container, Typography } from '@material-ui/core';
 import BottomBlank from '../../BottomBlank';
 
 const SectorPage = () => {

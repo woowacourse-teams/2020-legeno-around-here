@@ -1,4 +1,4 @@
-package wooteco.team.ittabi.legenoaroundhere.domain.post;
+package wooteco.team.ittabi.legenoaroundhere.domain;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_FIRST_DEPTH_NAME;
@@ -12,15 +12,18 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
+import java.util.Collections;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
-class PostTest {
+public class PostTest {
 
     private static final User USER;
     private static final Sector SECTOR;
@@ -55,7 +58,8 @@ class PostTest {
         for (int i = 0; i <= 2000; i++) {
             overLengthInput.append("a");
         }
-        assertThatThrownBy(() -> new Post(overLengthInput.toString(), AREA, SECTOR, USER))
+        assertThatThrownBy(() -> new Post(overLengthInput.toString(), Collections
+            .singletonList(PostImage.builder().build()), AREA, SECTOR, USER))
             .isInstanceOf(WrongUserInputException.class);
     }
 }

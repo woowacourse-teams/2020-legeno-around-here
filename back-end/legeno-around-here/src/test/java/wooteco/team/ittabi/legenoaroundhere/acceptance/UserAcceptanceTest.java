@@ -206,7 +206,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .config(RestAssuredConfig.config()
                 .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
             .when()
-            .post("/user-images")
+            .post("/users/images")
             .then()
             .statusCode(HttpStatus.CREATED.value())
             .extract().as(UserImageResponse.class);

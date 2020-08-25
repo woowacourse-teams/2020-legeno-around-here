@@ -54,7 +54,7 @@ public class UserController {
             .ok(user);
     }
 
-    @PostMapping("/user-images")
+    @PostMapping("/users/images")
     public ResponseEntity<UserImageResponse> uploadUserImage(MultipartFile image) {
         UserImageResponse userImage = userService.uploadUserImage(image);
 
