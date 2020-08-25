@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AUTH_NUMBER;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_EMPTY_IMAGES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_EMPTY_MULTIPART_FILES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_INVALID_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_REPORT_WRITING;
@@ -62,7 +63,7 @@ public class ReportServiceTest extends ServiceTest {
         SectorResponse sector = sectorService.createSector(TEST_SECTOR_REQUEST);
         Long sectorId = sector.getId();
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         postId = postService.createPost(postCreateRequest).getId();
     }
 

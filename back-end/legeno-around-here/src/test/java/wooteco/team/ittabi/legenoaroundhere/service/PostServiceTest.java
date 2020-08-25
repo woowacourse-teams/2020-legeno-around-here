@@ -7,8 +7,9 @@ import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_OTHER_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AUTH_NUMBER;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_EMPTY_IMAGES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_CONTENT_TYPE;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_EMPTY_MULTIPART_FILES;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_INVALID_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_REPORT_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
@@ -20,7 +21,9 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,6 +37,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.mailauth.MailAuth;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostReportCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostReportResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
@@ -45,7 +49,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
-import wooteco.team.ittabi.legenoaroundhere.utils.FileConverter;
+import wooteco.team.ittabi.legenoaroundhere.utils.TestConverterUtils;
 
 public class PostServiceTest extends ServiceTest {
 
@@ -91,7 +95,7 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void createPostWithoutImage_SuccessToCreate() {
         PostCreateRequest postCreateRequest
-            = new PostCreateRequest(TEST_POST_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            = new PostCreateRequest(TEST_POST_WRITING, TEST_EMPTY_IMAGES,
             TEST_AREA_ID, sectorId);
 
         PostResponse postResponse = postService.createPost(postCreateRequest);
@@ -102,13 +106,29 @@ public class PostServiceTest extends ServiceTest {
         assertThat(postResponse.getSector()).isEqualTo(sector);
     }
 
+    @DisplayName("포스트 이미지 업로드 - 성공")
+    @Test
+    void uploadPostImages_SuccessToUpload() throws IOException {
+        MultipartFile multipartFile1 = TestConverterUtils
+            .convert(TEST_IMAGE_NAME, TEST_IMAGE_CONTENT_TYPE);
+        MultipartFile multipartFile2 = TestConverterUtils
+            .convert(TEST_IMAGE_NAME, TEST_IMAGE_CONTENT_TYPE);
+        final List<PostImageResponse> postImageResponses = postService
+            .uploadPostImages(Arrays.asList(multipartFile1, multipartFile2));
+
+        assertThat(postImageResponses).hasSize(2);
+    }
+
     @DisplayName("이미지를 포함한 포스트 생성 - 성공")
     @Test
     void createPostWithImage_SuccessToCreate() throws IOException {
         MultipartFile multipartFile
-            = FileConverter.convert("image1.jpg", TEST_IMAGE_CONTENT_TYPE);
+            = TestConverterUtils.convert("image1.jpg", TEST_IMAGE_CONTENT_TYPE);
+        final List<PostImageResponse> postImageResponses = postService
+            .uploadPostImages(Collections.singletonList(multipartFile));
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            Collections.singletonList(multipartFile), TEST_AREA_ID, sectorId);
+            TestConverterUtils.convertImageIds(postImageResponses)
+            , TEST_AREA_ID, sectorId);
 
         PostResponse postResponse = postService.createPost(postCreateRequest);
 
@@ -122,7 +142,7 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void findPost_HasId_SuccessToFind() {
         PostCreateRequest postCreateRequest
-            = new PostCreateRequest(TEST_POST_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            = new PostCreateRequest(TEST_POST_WRITING, TEST_EMPTY_IMAGES,
             TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(postCreateRequest);
 
@@ -138,7 +158,7 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void findPost_AlreadyDeletedPost_ThrownException() {
         PostCreateRequest postCreateRequest
-            = new PostCreateRequest(TEST_POST_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            = new PostCreateRequest(TEST_POST_WRITING, TEST_EMPTY_IMAGES,
             TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(postCreateRequest);
         postService.deletePost(createdPostResponse.getId());
@@ -158,7 +178,7 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void searchAllPost_NoFilter_SuccessToFind() {
         PostCreateRequest postCreateRequest
-            = new PostCreateRequest(TEST_POST_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            = new PostCreateRequest(TEST_POST_WRITING, TEST_EMPTY_IMAGES,
             TEST_AREA_ID, sectorId);
         postService.createPost(postCreateRequest);
         postService.createPost(postCreateRequest);
@@ -174,13 +194,13 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void searchAllPost_AreaFilter_SuccessToFind() {
         PostCreateRequest postCreateRequest
-            = new PostCreateRequest(TEST_POST_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            = new PostCreateRequest(TEST_POST_WRITING, TEST_EMPTY_IMAGES,
             TEST_AREA_ID, sectorId);
         postService.createPost(postCreateRequest);
         postService.createPost(postCreateRequest);
 
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorOtherId);
         postService.createPost(postCreateRequest);
 
         PostSearchRequest postSearchRequest = new PostSearchRequest(TEST_AREA_OTHER_ID, null);
@@ -194,25 +214,25 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void searchAllPost_SectorFilter_SuccessToFind() {
         PostCreateRequest postCreateRequest
-            = new PostCreateRequest(TEST_POST_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            = new PostCreateRequest(TEST_POST_WRITING, TEST_EMPTY_IMAGES,
             TEST_AREA_ID, sectorId);
         postService.createPost(postCreateRequest);
         postService.createPost(postCreateRequest);
 
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            TEST_EMPTY_IMAGES,
             TEST_AREA_ID, sectorOtherId);
         postService.createPost(postCreateRequest);
         postService.createPost(postCreateRequest);
 
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            TEST_EMPTY_IMAGES,
             TEST_AREA_OTHER_ID, sectorId);
         postService.createPost(postCreateRequest);
         postService.createPost(postCreateRequest);
 
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            TEST_EMPTY_IMAGES,
             TEST_AREA_OTHER_ID, sectorOtherId);
         postService.createPost(postCreateRequest);
 
@@ -228,13 +248,13 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void searchAllPost_AreaAndSectorFilter_SuccessToFind() {
         PostCreateRequest postCreateRequest
-            = new PostCreateRequest(TEST_POST_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            = new PostCreateRequest(TEST_POST_WRITING, TEST_EMPTY_IMAGES,
             TEST_AREA_ID, sectorId);
         postService.createPost(postCreateRequest);
         postService.createPost(postCreateRequest);
 
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            TEST_EMPTY_IMAGES,
             TEST_AREA_OTHER_ID, sectorOtherId);
         postService.createPost(postCreateRequest);
 
@@ -251,11 +271,11 @@ public class PostServiceTest extends ServiceTest {
     void updatePost_HasId_SuccessToUpdate() {
         String updatedPostWriting = "Jamie and BingBong";
         PostCreateRequest createdPostCreateRequest
-            = new PostCreateRequest(TEST_POST_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            = new PostCreateRequest(TEST_POST_WRITING, TEST_EMPTY_IMAGES,
             TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(createdPostCreateRequest);
         PostUpdateRequest postUpdateRequest
-            = new PostUpdateRequest(updatedPostWriting, TEST_IMAGE_EMPTY_MULTIPART_FILES);
+            = new PostUpdateRequest(updatedPostWriting, TEST_EMPTY_IMAGES);
 
         postService.updatePost(createdPostResponse.getId(), postUpdateRequest);
         PostResponse updatedPostResponse = postService.findPost(createdPostResponse.getId());
@@ -268,7 +288,7 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void updatePost_HasNotId_ThrownException() {
         PostUpdateRequest postUpdateRequest
-            = new PostUpdateRequest(TEST_POST_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES);
+            = new PostUpdateRequest(TEST_POST_WRITING, TEST_EMPTY_IMAGES);
 
         assertThatThrownBy(() -> postService.updatePost(TEST_POST_INVALID_ID, postUpdateRequest))
             .isInstanceOf(NotExistsException.class);
@@ -279,11 +299,11 @@ public class PostServiceTest extends ServiceTest {
     void updatePost_IfNotCreator_ThrowException() {
         String updatedPostWriting = "Jamie and BingBong";
         PostCreateRequest createdPostCreateRequest
-            = new PostCreateRequest(TEST_POST_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            = new PostCreateRequest(TEST_POST_WRITING, TEST_EMPTY_IMAGES,
             TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(createdPostCreateRequest);
         PostUpdateRequest postUpdateRequest
-            = new PostUpdateRequest(updatedPostWriting, TEST_IMAGE_EMPTY_MULTIPART_FILES);
+            = new PostUpdateRequest(updatedPostWriting, TEST_EMPTY_IMAGES);
 
         setAuthentication(another);
         assertThatThrownBy(() -> postService
@@ -295,7 +315,7 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void deletePost_HasId_SuccessToDelete() {
         PostCreateRequest createdPostCreateRequest
-            = new PostCreateRequest(TEST_POST_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            = new PostCreateRequest(TEST_POST_WRITING, TEST_EMPTY_IMAGES,
             TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(createdPostCreateRequest);
 
@@ -316,7 +336,7 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void deletePost_AlreadyDeletedId_ThrownException() {
         PostCreateRequest createdPostCreateRequest
-            = new PostCreateRequest(TEST_POST_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            = new PostCreateRequest(TEST_POST_WRITING, TEST_EMPTY_IMAGES,
             TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(createdPostCreateRequest);
 
@@ -330,7 +350,7 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void deletePost_IfNotCreator_ThrowException() {
         PostCreateRequest createdPostCreateRequest
-            = new PostCreateRequest(TEST_POST_WRITING, TEST_IMAGE_EMPTY_MULTIPART_FILES,
+            = new PostCreateRequest(TEST_POST_WRITING, TEST_EMPTY_IMAGES,
             TEST_AREA_ID, sectorId);
         PostResponse createdPostResponse = postService.createPost(createdPostCreateRequest);
 
@@ -344,7 +364,7 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void pressPostZzang_activePostZzang_SuccessToActivePostZzang() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postId = postService.createPost(postCreateRequest).getId();
 
         postService.pressZzang(postId);
@@ -360,7 +380,7 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void pressPostZzang_inactivePostZzang_SuccessToInactivePostZzang() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postId = postService.createPost(postCreateRequest).getId();
 
         postService.pressZzang(postId);
@@ -377,7 +397,7 @@ public class PostServiceTest extends ServiceTest {
     @Test
     void createPostReport_SuccessToCreate() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postId = postService.createPost(postCreateRequest).getId();
 
         PostReportCreateRequest postReportCreateRequest = new PostReportCreateRequest(

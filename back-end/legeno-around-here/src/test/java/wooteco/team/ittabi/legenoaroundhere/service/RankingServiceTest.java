@@ -10,7 +10,7 @@ import static wooteco.team.ittabi.legenoaroundhere.domain.ranking.RankingCriteri
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_OTHER_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AUTH_NUMBER;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_EMPTY_MULTIPART_FILES;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_EMPTY_IMAGES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ANOTHER_REQUEST;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_REQUEST;
@@ -89,16 +89,16 @@ public class RankingServiceTest extends ServiceTest {
     @Test
     void searchRanking_AllSectorAllAreaTotalCriteria_SuccessToFind() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postIdA = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorOtherId);
         Long postIdB = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorId);
         Long postIdC = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorOtherId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
         //PostA 짱이야2
@@ -142,16 +142,16 @@ public class RankingServiceTest extends ServiceTest {
     @Transactional
     void searchRanking_AllSectorAllAreaYesterday_SuccessToFind() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postIdA = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorOtherId);
         Long postIdB = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorId);
         Long postIdC = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorOtherId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
         //PostA 짱이야2 - 어제 1 오늘 1
@@ -209,16 +209,16 @@ public class RankingServiceTest extends ServiceTest {
     @Transactional
     void searchRanking_AllSectorAllAreaLastWeek_SuccessToFind() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postIdA = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorOtherId);
         Long postIdB = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorId);
         Long postIdC = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorOtherId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
         //PostA 짱이야2 - 지난주 2 오늘 0
@@ -272,16 +272,16 @@ public class RankingServiceTest extends ServiceTest {
     @Transactional
     void searchRanking_AllSectorAllAreaLastMonth_SuccessToFind() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postIdA = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorOtherId);
         Long postIdB = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorId);
         Long postIdC = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorOtherId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
         //PostA 짱이야2 - 지난달 1 오늘 1
@@ -332,16 +332,16 @@ public class RankingServiceTest extends ServiceTest {
     @Test
     void searchRanking_SpecificSectorAllAreaTotalCriteria_SuccessToFind() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postIdA = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorOtherId);
         Long postIdB = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorId);
         Long postIdC = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorOtherId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
         //PostA 짱이야2 -> 선택 부문
@@ -383,16 +383,16 @@ public class RankingServiceTest extends ServiceTest {
     @Transactional
     void searchRanking_SpecificSectorAllAreaYesterday_SuccessToFind() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postIdA = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorOtherId);
         Long postIdB = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorId);
         Long postIdC = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorOtherId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
         //PostA 짱이야2 - 어제 4 오늘 0 -> 선택 부문
@@ -453,16 +453,16 @@ public class RankingServiceTest extends ServiceTest {
     @Transactional
     void searchRanking_SpecificSectorAllAreaLastWeek_SuccessToFind() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postIdA = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorOtherId);
         Long postIdB = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorId);
         Long postIdC = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorOtherId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
         //PostA 짱이야2 - 지난주 2 오늘 0 -> 선택 부문
@@ -514,16 +514,16 @@ public class RankingServiceTest extends ServiceTest {
     @Transactional
     void searchRanking_SpecificSectorAllAreaLastMonth_SuccessToFind() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postIdA = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorOtherId);
         Long postIdB = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorId);
         Long postIdC = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorOtherId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
         //PostA 짱이야2 - 지난달 1 오늘 1 -> 선택 부문
@@ -572,16 +572,16 @@ public class RankingServiceTest extends ServiceTest {
     @Test
     void searchRanking_ALLSectorSpecificAreaTotalCriteria_SuccessToFind() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postIdA = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorOtherId);
         Long postIdB = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorId);
         Long postIdC = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorOtherId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
         //PostA 짱이야2 -> 선택 지역
@@ -623,16 +623,16 @@ public class RankingServiceTest extends ServiceTest {
     @Transactional
     void searchRanking_AllSectorSpecificAreaYesterday_SuccessToFind() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postIdA = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorOtherId);
         Long postIdB = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorId);
         Long postIdC = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorOtherId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
         //PostA 짱이야2 - 어제 1 오늘 1 -> 선택 지역
@@ -688,16 +688,16 @@ public class RankingServiceTest extends ServiceTest {
     @Transactional
     void searchRanking_AllSectorSpecificAreaLastWeek_SuccessToFind() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postIdA = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorOtherId);
         Long postIdB = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorId);
         Long postIdC = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorOtherId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
         //PostA 짱이야2 - 지난주 2 오늘 0 -> 선택 지역
@@ -749,16 +749,16 @@ public class RankingServiceTest extends ServiceTest {
     @Transactional
     void searchRanking_AllSectorSpecificAreaLastMonth_SuccessToFind() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postIdA = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorOtherId);
         Long postIdB = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorId);
         Long postIdC = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorOtherId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
         //PostA 짱이야2 - 지난달 1 오늘 1 -> 선택 지역
@@ -807,16 +807,16 @@ public class RankingServiceTest extends ServiceTest {
     @Test
     void searchRanking_SpecificSectorSpecificAreaTotalCriteria_SuccessToFind() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postIdA = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorOtherId);
         Long postIdB = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorId);
         Long postIdC = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
         //PostA 짱이야2 -> 선택 부문, 선택 지역
@@ -858,16 +858,16 @@ public class RankingServiceTest extends ServiceTest {
     @Transactional
     void searchRanking_SpecificSectorSpecificAreaYesterday_SuccessToFind() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postIdA = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorOtherId);
         Long postIdB = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorId);
         Long postIdC = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
         //PostA 짱이야2 - 어제 1 오늘 1 -> 선택 부문, 선택 지역
@@ -923,16 +923,16 @@ public class RankingServiceTest extends ServiceTest {
     @Transactional
     void searchRanking_SpecificSectorSpecificAreaLastWeek_SuccessToFind() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postIdA = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorOtherId);
         Long postIdB = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorId);
         Long postIdC = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
         //PostA 짱이야2 - 지난주 2 오늘 0 -> 선택 부문, 선택 지역
@@ -984,16 +984,16 @@ public class RankingServiceTest extends ServiceTest {
     @Transactional
     void searchRanking_SpecificSectorSpecificAreaLastMonth_SuccessToFind() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postIdA = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorOtherId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorOtherId);
         Long postIdB = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_OTHER_ID, sectorId);
         Long postIdC = postService.createPost(postCreateRequest).getId();
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postIdD = postService.createPost(postCreateRequest).getId();
 
         //PostA 짱이야2 - 지난달 1 오늘 1 -> 선택 부문, 선택 지역

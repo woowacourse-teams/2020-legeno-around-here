@@ -53,9 +53,9 @@ public class ImageUploaderTest extends ServiceTest {
     @Test
     void uploadPostImages_SuccessToSave() throws IOException {
         ArrayList<MultipartFile> multipartFiles = new ArrayList<>();
-        multipartFiles.add(FileConverter.convert(TEST_IMAGE_NAME, TEST_IMAGE_CONTENT_TYPE));
+        multipartFiles.add(TestConverterUtils.convert(TEST_IMAGE_NAME, TEST_IMAGE_CONTENT_TYPE));
         multipartFiles
-            .add(FileConverter.convert(TEST_IMAGE_OTHER_NAME, TEST_IMAGE_CONTENT_TYPE));
+            .add(TestConverterUtils.convert(TEST_IMAGE_OTHER_NAME, TEST_IMAGE_CONTENT_TYPE));
 
         List<PostImage> postImages = imageUploader.uploadPostImages(multipartFiles);
         List<String> userName = postImages.stream()
@@ -81,9 +81,10 @@ public class ImageUploaderTest extends ServiceTest {
     @Test
     void uploadPostImages_NotImageMimeType_ThrownException() throws IOException {
         ArrayList<MultipartFile> multipartFiles = new ArrayList<>();
-        multipartFiles.add(FileConverter.convert(TEST_IMAGE_NAME, TEST_IMAGE_CONTENT_TYPE));
+        multipartFiles.add(TestConverterUtils.convert(TEST_IMAGE_NAME, TEST_IMAGE_CONTENT_TYPE));
         multipartFiles
-            .add(FileConverter.convert(TEST_IMAGE_NOT_MIME_TYPE_NAME, TEST_IMAGE_CONTENT_TYPE));
+            .add(
+                TestConverterUtils.convert(TEST_IMAGE_NOT_MIME_TYPE_NAME, TEST_IMAGE_CONTENT_TYPE));
 
         assertThatThrownBy(() -> imageUploader.uploadPostImages(multipartFiles))
             .isInstanceOf(NotImageMimeTypeException.class);
@@ -92,7 +93,7 @@ public class ImageUploaderTest extends ServiceTest {
     @DisplayName("포스트 이미지 업로드 - 성공")
     @Test
     void uploadPostImage_SuccessToSave() throws IOException {
-        MultipartFile multipartFile = FileConverter
+        MultipartFile multipartFile = TestConverterUtils
             .convert(TEST_IMAGE_NAME, TEST_IMAGE_CONTENT_TYPE);
 
         PostImage postImage = imageUploader.uploadPostImage(multipartFile);
@@ -111,7 +112,7 @@ public class ImageUploaderTest extends ServiceTest {
     @DisplayName("포스트 이미지 업로드 - 실패, 이미지 파일 MIME Type 유효성 검사")
     @Test
     void uploadPostImage_NotImageMimeType_ThrownException() throws IOException {
-        MultipartFile multipartFile = FileConverter
+        MultipartFile multipartFile = TestConverterUtils
             .convert(TEST_IMAGE_NOT_MIME_TYPE_NAME, TEST_IMAGE_CONTENT_TYPE);
 
         assertThatThrownBy(() -> imageUploader.uploadPostImage(multipartFile))
@@ -121,7 +122,7 @@ public class ImageUploaderTest extends ServiceTest {
     @DisplayName("사용자 이미지 업로드 - 성공")
     @Test
     void uploadUserImage_SuccessToSave() throws IOException {
-        MultipartFile multipartFile = FileConverter
+        MultipartFile multipartFile = TestConverterUtils
             .convert(TEST_IMAGE_NAME, TEST_IMAGE_CONTENT_TYPE);
 
         UserImage userImage = imageUploader.uploadUserImage(multipartFile);
@@ -139,7 +140,7 @@ public class ImageUploaderTest extends ServiceTest {
     @DisplayName("사용자 이미지 업로드 - 실패, 이미지 파일 MIME Type 유효성 검사")
     @Test
     void uploadUserImage_NotImageMimeType_ThrownException() throws IOException {
-        MultipartFile multipartFile = FileConverter
+        MultipartFile multipartFile = TestConverterUtils
             .convert(TEST_IMAGE_NOT_MIME_TYPE_NAME, TEST_IMAGE_CONTENT_TYPE);
 
         assertThatThrownBy(() -> imageUploader.uploadUserImage(multipartFile))
