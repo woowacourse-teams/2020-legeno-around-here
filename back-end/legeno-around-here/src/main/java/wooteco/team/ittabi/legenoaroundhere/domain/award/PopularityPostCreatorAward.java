@@ -39,10 +39,10 @@ public class PopularityPostCreatorAward extends BaseEntity {
     private Integer ranking;
 
     @Column(nullable = false)
-    private LocalDate PeriodStart;
+    private LocalDate startDate;
 
     @Column(nullable = false)
-    private LocalDate PeriodEnd;
+    private LocalDate endDate;
 
     @ManyToOne
     @JoinColumn(name = "awardee_id", nullable = false)

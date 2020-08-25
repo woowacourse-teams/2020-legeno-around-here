@@ -25,13 +25,13 @@ public class AwardResponse {
         = DateTimeFormatter.ofPattern("yyyy.MM.dd.");
 
     private String name;
-    private String period;
+    private String date;
     private String location;
 
-    public static AwardResponse of(String name, String period, String location) {
+    public static AwardResponse of(String name, String date, String location) {
         return AwardResponse.builder()
             .name(name)
-            .period(period)
+            .date(date)
             .location(location)
             .build();
     }
@@ -39,12 +39,12 @@ public class AwardResponse {
     public static AwardResponse of(PopularityPostCreatorAward popularityPostCreatorAward) {
         Post post = popularityPostCreatorAward.getPost();
 
-        String period = popularityPostCreatorAward.getPeriodStart().format(DATE_FORMAT_YMD)
-            + " ~ " + popularityPostCreatorAward.getPeriodEnd().format(DATE_FORMAT_YMD);
+        String date = popularityPostCreatorAward.getStartDate().format(DATE_FORMAT_YMD)
+            + " ~ " + popularityPostCreatorAward.getEndDate().format(DATE_FORMAT_YMD);
 
         return AwardResponse.builder()
             .name(popularityPostCreatorAward.getName())
-            .period(period)
+            .date(date)
             .location("/posts/" + post.getId())
             .build();
     }
@@ -54,7 +54,7 @@ public class AwardResponse {
 
         return AwardResponse.builder()
             .name(sectorCreatorAward.getName())
-            .period(sectorCreatorAward.getDate().format(DATE_FORMAT_YMD))
+            .date(sectorCreatorAward.getDate().format(DATE_FORMAT_YMD))
             .location("/sectors/" + sector.getId())
             .build();
     }
