@@ -50,14 +50,13 @@ public class UserService implements UserDetailsService {
     private final MailAuthService mailAuthService;
 
     @Transactional
-    public Void checkJoined(UserCheckRequest userCheckRequest) {
+    public void checkJoined(UserCheckRequest userCheckRequest) {
         Email email = new Email(userCheckRequest.getEmail());
         Optional<User> foundUser = userRepository.findByEmail(email);
 
         if (foundUser.isPresent()) {
             throw new AlreadyExistUserException("이미 가입된 회원입니다.");
         }
-        return null;
     }
 
     @Transactional

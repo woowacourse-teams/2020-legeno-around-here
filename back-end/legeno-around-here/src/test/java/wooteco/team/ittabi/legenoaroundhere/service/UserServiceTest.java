@@ -61,7 +61,7 @@ class UserServiceTest extends ServiceTest {
         setAuthentication(user);
     }
 
-    @DisplayName("메일 중복 확인 - 중복되지 않는 메일")
+    @DisplayName("가입 여부 확인 - 가입되지 않은 메일일 경우")
     @Test
     void checkJoined_Success() {
         UserCheckRequest userCheckRequest
@@ -71,7 +71,7 @@ class UserServiceTest extends ServiceTest {
             .doesNotThrowAnyException();
     }
 
-    @DisplayName("메일 중복 확인 - 중복된 메일")
+    @DisplayName("가입 여부 확인 테스트 - 이미 가입된 메일일 경우")
     @Test
     void checkJoined_AlreadyExist_ThrowException() {
         UserCheckRequest userCheckRequest

@@ -11,7 +11,7 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { createUser, checkExistUser, sendAuthMail, checkAuthNumber } from '../api/API';
+import { createUser, checkJoined, sendAuthMail, checkAuthNumber } from '../api/API';
 
 const mailInputStyle = {
   width: '70%',
@@ -145,13 +145,13 @@ function JoinForm() {
     setPasswordRepeat('');
   }, []);
 
-  const checkJoined = useCallback(() => {
-    checkExistUser(email);
+  const checkEmail = useCallback(() => {
+    checkJoined(email);
   }, [email]);
 
   const mailAuthToggleFunction = useCallback(() => {
     if (isMailSent === false) {
-      alert('인증 메일을 전송중입니다. 잠시만 기다려주세요.');
+      alert('인증 메일을 전송합니다. 잠시만 기다려주세요.');
       sendAuthMail(email, setIsEmailDisabled, setMailAuthToggle, setIsMailSent);
       return;
     }
@@ -201,7 +201,7 @@ function JoinForm() {
                 disabled={isEmailDisabled}
                 onChange={handleChangeEmail}
               />
-              <Button style={mailCheckStyle} onClick={checkJoined}>
+              <Button style={mailCheckStyle} onClick={checkEmail}>
                 메일 중복 확인
               </Button>
             </Grid>

@@ -56,7 +56,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("가입 여부 확인 테스트 - 가입되지 않은 메일일 경우")
+    @DisplayName("가입 여부 확인 - 가입되지 않은 메일일 경우")
     void checkJoined() throws Exception {
         String inputJson = objectMapper.writeValueAsString(
             new UserCheckRequest(TEST_USER_EMAIL));
@@ -70,7 +70,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("가입 여부 확인 테스트 - 이미 가입된 메일일 경우")
+    @DisplayName("가입 여부 확인 - 이미 가입된 메일일 경우")
     void checkJoined_AlreadyExistUser_ThrowException() throws Exception {
         willThrow(new AlreadyExistUserException("")).given(userService).checkJoined(any());
 

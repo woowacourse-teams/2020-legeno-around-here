@@ -95,23 +95,25 @@ export const createUser = (email, nickname, password, authNumber, handleReset) =
       document.location.href = '/login';
     })
     .catch((error) => {
-      const errorResponse = error.response.data;
-      if (errorResponse.errorMessage === '에러 메시지') {
-      }
-      console.log(errorResponse);
       alert('회원가입에 실패하였습니다.');
+      console.log(error);
       handleReset();
     });
 };
 
-export const checkExistUser = (email) => {
+export const checkJoined = (email) => {
   axios
     .get(DEFAULT_URL + `/check-joined?email=${email}`)
     .then((response) => {
       alert('사용 가능한 이메일입니다.');
     })
     .catch((error) => {
-      alert('이미 가입된 회원입니다.');
+      const errorResponse = error.response.data;
+      if (errorResponse.errorMessage === '이미 가입된 회원입니다.') {
+        alert('사용할 수 없는 이메일입니다.');
+        return;
+      }
+      alert('메일 확인 요청에 실패했습니다.');
       console.log(error);
     });
 };
