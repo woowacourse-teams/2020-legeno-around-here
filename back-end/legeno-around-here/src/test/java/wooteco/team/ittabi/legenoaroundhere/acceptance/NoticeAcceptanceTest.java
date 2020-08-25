@@ -62,7 +62,7 @@ public class NoticeAcceptanceTest extends AcceptanceTest {
             .collect(Collectors.toList());
         assertThat(readNotices).hasSize(1);
 
-        // 알림 1개 읽음 - 읽었던 알림 : 읽은 알림 - 1
+        // 알림 1개 읽음 - 읽었던 알림 : 읽은 알림 1
         readMyNotices(accessToken, noticeId);
 
         notices = findMyNotice(accessToken);
