@@ -62,6 +62,11 @@ const useStyle = makeStyles({
     width: '20px',
     height: '20px',
   },
+  writing: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    width: '190px',
+  }
 });
 
 const RankingItem = ({ post, rank, whetherToPrintZzangCount}) => {
@@ -79,6 +84,7 @@ const RankingItem = ({ post, rank, whetherToPrintZzangCount}) => {
     id,
     zzang,
     sector,
+    writing,
   } = post;
 
   return (
@@ -103,6 +109,14 @@ const RankingItem = ({ post, rank, whetherToPrintZzangCount}) => {
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
             작성 지역 : {area.fullName}
+          </Typography>
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            component="p"
+            className={classes.writing}
+          >
+            {writing}
           </Typography>
         </CardContent>
         <CardActions className={classes.reactions} disableSpacing>
