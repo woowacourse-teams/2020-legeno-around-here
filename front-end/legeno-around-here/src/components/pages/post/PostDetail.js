@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
-import {
-  createComment,
-  findCommentsByPostId,
-  pressPostZzang,
-} from '../../api/API';
+import { createComment, findCommentsByPostId, pressPostZzang } from '../../api/API';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import Typography from '@material-ui/core/Typography';
-import { TextField, IconButton, Grid } from '@material-ui/core';
+import { Grid, IconButton, TextField } from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import CommentIcon from '@material-ui/icons/Comment';
@@ -14,8 +10,9 @@ import AddIcon from '@material-ui/icons/Add';
 import Comments from './Comments';
 import PostImages from './PostImages';
 import { convertDateFormat } from '../../../util/TimeUtils';
+import UpdatePostButton from './UpdatePostButton';
 
-const PostDetail = ({ post }) => {
+const PostDetail = ({ post, myInfo }) => {
   const accessToken = getAccessTokenFromCookie();
   const [writing, setWriting] = useState('');
   const [comments, setComments] = useState(post.comments);
@@ -44,11 +41,7 @@ const PostDetail = ({ post }) => {
   const submitForm = () => {
     const sendComment = async () => {
       setLoading(true);
-      const isCommentCreated = await createComment(
-        post.id,
-        writing,
-        accessToken,
-      );
+      const isCommentCreated = await createComment(post.id, writing, accessToken);
       if (isCommentCreated) {
         const loadedComments = await loadComments();
         setComments(loadedComments);
@@ -69,19 +62,12 @@ const PostDetail = ({ post }) => {
         <Grid container item xs={6}>
           <Typography>{post.area.fullName}</Typography>
         </Grid>
-        <Grid
-          container
-          item
-          xs={6}
-          alignItems="flex-start"
-          justify="flex-end"
-          direction="row"
-        >
+        <Grid container item xs={6} alignItems='flex-start' justify='flex-end' direction='row'>
           <Typography>{post.creator.nickname}</Typography>
         </Grid>
       </Grid>
-      <Typography variant="h5">{post.sector.name} 부문</Typography>
-      <Typography variant="h6">{post.writing}</Typography>
+      <Typography variant='h5'>{post.sector.name} 부문</Typography>
+      <Typography variant='h6'>{post.writing}</Typography>
       {post.images.length > 0 && <PostImages images={post.images} />}
       <Grid container>
         <Grid container item xs={6}>
@@ -94,17 +80,9 @@ const PostDetail = ({ post }) => {
             {post.comments.length}
           </IconButton>
         </Grid>
-        <Grid
-          container
-          item
-          xs={6}
-          alignItems="flex-start"
-          justify="flex-end"
-          direction="row"
-        >
-          <Typography display="inline">
-            {convertDateFormat(post.createdAt)}
-          </Typography>
+        <Grid container item xs={6} alignItems='flex-start' justify='flex-end' direction='row'>
+          <Typography display='inline'>{convertDateFormat(post.createdAt)}</Typography>
+          <Typography display='inline'>{post.creator.id === myInfo.id && <UpdatePostButton post={post} />}</Typography>
         </Grid>
       </Grid>
 
@@ -112,26 +90,24 @@ const PostDetail = ({ post }) => {
         <Grid container>
           <Grid container item xs={11}>
             <TextField
-              type="text"
-              id="standard-multiline-static"
+              type='text'
+              id='standard-multiline-static'
               fullWidth
               multiline
               rows={2}
-              placeholder="댓글을 입력해주세요!"
+              placeholder='댓글을 입력해주세요!'
               onChange={onWritingChanged}
               value={writing}
             />
           </Grid>
           <Grid container item xs={1}>
-            <IconButton type="submit">
+            <IconButton type='submit'>
               <AddIcon />
             </IconButton>
           </Grid>
         </Grid>
       </form>
-      {comments.length > 0 && (
-        <Comments comments={comments} loading={loading} />
-      )}
+      {comments.length > 0 && <Comments comments={comments} loading={loading} />}
     </>
   );
 };

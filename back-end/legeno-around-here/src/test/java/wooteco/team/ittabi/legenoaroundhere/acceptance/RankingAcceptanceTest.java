@@ -1,9 +1,9 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
-import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_A_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_B_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_EMPTY_IMAGES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_EMAIL;
@@ -15,7 +15,6 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import io.restassured.RestAssured;
-import io.restassured.config.RestAssuredConfig;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import wooteco.team.ittabi.legenoaroundhere.domain.ranking.RankingCriteria;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
@@ -117,34 +117,34 @@ public class RankingAcceptanceTest extends AcceptanceTest {
         // 모든 지역, 모든 부문에 대해서 랭킹을 조회
         rankingPostResponse = searchRanks(accessToken, RankingCriteria.TOTAL, filter);
         assertThat(rankingPostResponse).hasSize(4);
-        assertThat(rankingPostResponse.get(3).getId()).isEqualTo(firstPostId);
-        assertThat(rankingPostResponse.get(3).getZzang().getCount()).isEqualTo(3);
-        assertThat(rankingPostResponse.get(2).getId()).isEqualTo(secondPostId);
-        assertThat(rankingPostResponse.get(2).getZzang().getCount()).isEqualTo(2);
-        assertThat(rankingPostResponse.get(1).getId()).isEqualTo(thirdPostId);
-        assertThat(rankingPostResponse.get(1).getZzang().getCount()).isEqualTo(1);
-        assertThat(rankingPostResponse.get(0).getId()).isEqualTo(fourthPostId);
-        assertThat(rankingPostResponse.get(0).getZzang().getCount()).isEqualTo(0);
+        assertThat(rankingPostResponse.get(0).getId()).isEqualTo(firstPostId);
+        assertThat(rankingPostResponse.get(0).getZzang().getCount()).isEqualTo(3);
+        assertThat(rankingPostResponse.get(1).getId()).isEqualTo(secondPostId);
+        assertThat(rankingPostResponse.get(1).getZzang().getCount()).isEqualTo(2);
+        assertThat(rankingPostResponse.get(2).getId()).isEqualTo(thirdPostId);
+        assertThat(rankingPostResponse.get(2).getZzang().getCount()).isEqualTo(1);
+        assertThat(rankingPostResponse.get(3).getId()).isEqualTo(fourthPostId);
+        assertThat(rankingPostResponse.get(3).getZzang().getCount()).isEqualTo(0);
 
         // 모든 지역, 특정 부문 필터 설정
         filter = "areaId=&sectorIds=" + sectorAId;
         // 모든 지역, 특정 부문에 대해서 랭킹을 조회
         rankingPostResponse = searchRanks(accessToken, RankingCriteria.TOTAL, filter);
         assertThat(rankingPostResponse).hasSize(2);
-        assertThat(rankingPostResponse.get(1).getId()).isEqualTo(firstPostId);
-        assertThat(rankingPostResponse.get(1).getZzang().getCount()).isEqualTo(3);
-        assertThat(rankingPostResponse.get(0).getId()).isEqualTo(thirdPostId);
-        assertThat(rankingPostResponse.get(0).getZzang().getCount()).isEqualTo(1);
+        assertThat(rankingPostResponse.get(0).getId()).isEqualTo(firstPostId);
+        assertThat(rankingPostResponse.get(0).getZzang().getCount()).isEqualTo(3);
+        assertThat(rankingPostResponse.get(1).getId()).isEqualTo(thirdPostId);
+        assertThat(rankingPostResponse.get(1).getZzang().getCount()).isEqualTo(1);
 
         // 특정 지역, 모든 부문 필터 설정
         filter = "areaId=" + TEST_AREA_A_ID + "&sectorIds=";
         // 특정 지역, 모든 부문에 대해서 랭킹을 조회
         rankingPostResponse = searchRanks(accessToken, RankingCriteria.TOTAL, filter);
         assertThat(rankingPostResponse).hasSize(2);
-        assertThat(rankingPostResponse.get(1).getId()).isEqualTo(firstPostId);
-        assertThat(rankingPostResponse.get(1).getZzang().getCount()).isEqualTo(3);
-        assertThat(rankingPostResponse.get(0).getId()).isEqualTo(secondPostId);
-        assertThat(rankingPostResponse.get(0).getZzang().getCount()).isEqualTo(2);
+        assertThat(rankingPostResponse.get(0).getId()).isEqualTo(firstPostId);
+        assertThat(rankingPostResponse.get(0).getZzang().getCount()).isEqualTo(3);
+        assertThat(rankingPostResponse.get(1).getId()).isEqualTo(secondPostId);
+        assertThat(rankingPostResponse.get(1).getZzang().getCount()).isEqualTo(2);
 
         // 특정 지역, 특정 부문 필터 설정
         filter = "areaId=" + TEST_AREA_B_ID + "&sectorIds=" + sectorBId;
@@ -232,14 +232,14 @@ public class RankingAcceptanceTest extends AcceptanceTest {
 
     private String createPostWithoutImageWithAreaAndSector(String accessToken, Long areaId,
         Long sectorId) {
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_EMPTY_IMAGES, areaId, sectorId);
+
         return given()
             .log().all()
-            .formParam("writing", TEST_POST_WRITING)
-            .formParam("areaId", areaId)
-            .formParam("sectorId", sectorId)
             .header("X-AUTH-TOKEN", accessToken)
-            .config(RestAssuredConfig.config()
-                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+            .body(postCreateRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .post("/posts")
             .then()
