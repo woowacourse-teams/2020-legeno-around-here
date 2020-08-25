@@ -103,7 +103,14 @@ public class Post extends BaseEntity {
         }
     }
 
-    public void removePostImages(List<PostImage> postImages) {
+    public void removeNotExistPostImages(List<Long> updatePostImageIds) {
+        List<Long> deletePostImageIds = getDeletePostImageIds(updatePostImageIds);
+        List<PostImage> deletePostImages = getDeletePostImages(deletePostImageIds);
+
+        removePostImages(deletePostImages);
+    }
+
+    private void removePostImages(List<PostImage> postImages) {
         this.postImages.removeAll(postImages);
     }
 
@@ -146,7 +153,7 @@ public class Post extends BaseEntity {
         }
     }
 
-    public List<Long> getDeletePostImageIds(List<Long> updatePostImageIds) {
+    private List<Long> getDeletePostImageIds(List<Long> updatePostImageIds) {
         List<Long> originPostImageIds = this.postImages.stream()
             .map(PostImage::getId)
             .collect(Collectors.toList());
@@ -154,7 +161,7 @@ public class Post extends BaseEntity {
         return originPostImageIds;
     }
 
-    public List<PostImage> getDeletePostImages(List<Long> deletePostImageIds) {
+    private List<PostImage> getDeletePostImages(List<Long> deletePostImageIds) {
         return this.postImages.stream()
             .filter(postImage -> postImage.isContainsOf(deletePostImageIds))
             .collect(Collectors.toList());

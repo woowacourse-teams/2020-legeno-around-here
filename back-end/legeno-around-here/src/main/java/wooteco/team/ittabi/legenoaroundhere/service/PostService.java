@@ -151,19 +151,8 @@ public class PostService {
     private void updatePostImages(PostUpdateRequest postUpdateRequest, Post post) {
         List<PostImage> postImages = postImageRepository
             .findAllById(postUpdateRequest.getImageIds());
-        deleteNotExistPostImage(post, postUpdateRequest.getImageIds());
-        addNewPostImage(post, postImages);
-    }
-
-    private void addNewPostImage(Post post, List<PostImage> postImages) {
+        post.removeNotExistPostImages(postUpdateRequest.getImageIds());
         post.addPostImages(postImages);
-    }
-
-    private void deleteNotExistPostImage(Post post, List<Long> updatePostImageIds) {
-        List<Long> deletePostImageIds = post.getDeletePostImageIds(updatePostImageIds);
-        List<PostImage> deletePostImages = post.getDeletePostImages(deletePostImageIds);
-
-        post.removePostImages(deletePostImages);
     }
 
     @Transactional
