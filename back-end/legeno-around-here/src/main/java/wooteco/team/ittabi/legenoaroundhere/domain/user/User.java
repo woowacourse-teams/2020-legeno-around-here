@@ -27,6 +27,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
+import wooteco.team.ittabi.legenoaroundhere.domain.award.PopularityPostCreatorAward;
+import wooteco.team.ittabi.legenoaroundhere.domain.award.SectorCreatorAward;
 import wooteco.team.ittabi.legenoaroundhere.domain.comment.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 
@@ -63,6 +65,12 @@ public class User extends BaseEntity implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "area_id")
     private Area area = null;
+
+    @OneToMany(mappedBy = "awardee")
+    private List<PopularityPostCreatorAward> popularityPostCreatorAwards;
+
+    @OneToMany(mappedBy = "awardee")
+    private List<SectorCreatorAward> sectorCreatorAwards;
 
     @Builder
     public User(String email, String nickname, String password, Area area, UserImage image) {
@@ -109,6 +117,16 @@ public class User extends BaseEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public int countTopPopularityPostCreatorAwardsBy(int number) {
+        return (int) popularityPostCreatorAwards.stream()
+            .filter(popularityPostCreatorAward -> popularityPostCreatorAward.isTopBy(number))
+            .count();
+    }
+
+    public int countSectorCreatorAwards() {
+        return sectorCreatorAwards.size();
     }
 
     @Override

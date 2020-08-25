@@ -35,4 +35,8 @@ public class Description {
         return description.isEmpty()
             || description.length() > 100;
     }
+
+    public String getDescription(int wordCount) {
+        return description.substring(0, wordCount);
+    }
 }

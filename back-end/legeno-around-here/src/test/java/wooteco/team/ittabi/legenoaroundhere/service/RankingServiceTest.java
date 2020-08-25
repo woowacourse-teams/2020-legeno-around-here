@@ -42,6 +42,9 @@ public class RankingServiceTest extends ServiceTest {
 
     private static final String TEST_PREFIX = "ranking_";
 
+    @MockBean
+    private MailAuthRepository mailAuthRepository;
+
     @Autowired
     private PostService postService;
 
@@ -53,9 +56,6 @@ public class RankingServiceTest extends ServiceTest {
 
     @Autowired
     private SectorService sectorService;
-
-    @MockBean
-    MailAuthRepository mailAuthRepository;
 
     private User userA;
     private User userB;

@@ -30,7 +30,7 @@ public class CommentResponseAssembler {
             .id(comment.getId())
             .writing(comment.getWriting())
             .zzang(CommentZzangResponse.of(user, comment))
-            .creator(UserResponse.from(comment.getCreator()))
+            .creator(UserSimpleResponse.from(comment.getCreator()))
             .cocomments(listOf(user, comment.getCocomments()))
             .createdAt(comment.getCreatedAt())
             .modifiedAt(comment.getModifiedAt())
