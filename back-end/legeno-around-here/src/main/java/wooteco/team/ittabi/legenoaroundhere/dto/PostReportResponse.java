@@ -20,10 +20,9 @@ public class PostReportResponse {
 
     private Long id;
     private String writing;
-    private UserResponse creator;
+    private UserResponse reporter;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
-
 
     public PostReportResponse(String writing) {
         this.writing = writing;
@@ -33,7 +32,7 @@ public class PostReportResponse {
         return PostReportResponse.builder()
             .id(postReport.getId())
             .writing(postReport.getWriting())
-            .creator(UserResponse.from(postReport.getCreator()))
+            .reporter(UserResponse.from(postReport.getReporter()))
             .createdAt(postReport.getCreatedAt())
             .modifiedAt(postReport.getModifiedAt())
             .build();

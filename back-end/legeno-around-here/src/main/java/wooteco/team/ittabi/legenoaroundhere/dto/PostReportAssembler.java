@@ -11,7 +11,7 @@ public class PostReportAssembler {
         return PostReport.builder()
             .writing(postReportCreateRequest.getWriting())
             .post(post)
-            .creator(user)
+            .reporter(user)
             .build();
     }
 }

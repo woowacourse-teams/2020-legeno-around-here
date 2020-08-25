@@ -22,8 +22,9 @@ public class ReportController {
     @PostMapping("/posts/{postId}")
     public ResponseEntity<Void> createPostReport(@PathVariable Long postId, @RequestBody
         PostReportCreateRequest postReportCreateRequest) {
-        final PostReportResponse postReportResponse = reportService
+        PostReportResponse postReportResponse = reportService
             .createPostReport(postId, postReportCreateRequest);
+
         return ResponseEntity
             .created(URI.create("/posts/" + postReportResponse.getId()))
             .build();

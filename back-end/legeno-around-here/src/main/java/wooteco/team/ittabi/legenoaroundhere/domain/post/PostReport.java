@@ -3,6 +3,7 @@ package wooteco.team.ittabi.legenoaroundhere.domain.post;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
@@ -18,7 +19,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString(exclude = {"post", "creator"})
+@ToString(exclude = {"post", "reporter"})
 public class PostReport extends BaseEntity {
 
     private static final int MAX_LENGTH = 2000;
@@ -28,19 +29,19 @@ public class PostReport extends BaseEntity {
     private String writing;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "FK_POST_REPORT_POST"), nullable = false)
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "creator_id", nullable = false)
-    private User creator;
+    @JoinColumn(name = "reporter_id", foreignKey = @ForeignKey(name = "FK_POST_REPORT_REPORTER"), nullable = false)
+    private User reporter;
 
     @Builder
-    public PostReport(String writing, Post post, User creator) {
+    public PostReport(String writing, Post post, User reporter) {
         validateLength(writing);
         this.writing = writing;
         this.post = post;
-        this.creator = creator;
+        this.reporter = reporter;
     }
 
     private void validateLength(String writing) {

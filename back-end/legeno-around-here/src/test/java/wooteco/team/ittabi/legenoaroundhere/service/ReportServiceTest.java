@@ -85,7 +85,7 @@ public class ReportServiceTest extends ServiceTest {
 
         assertThat(postReportResponse.getId()).isNotNull();
         assertThat(postReportResponse.getWriting()).isEqualTo(TEST_POST_REPORT_WRITING);
-        assertThat(postReportResponse.getCreator()).isEqualTo(UserResponse.from(user));
+        assertThat(postReportResponse.getReporter()).isEqualTo(UserResponse.from(user));
     }
 
     @DisplayName("글 신고 조회 - 성공")
