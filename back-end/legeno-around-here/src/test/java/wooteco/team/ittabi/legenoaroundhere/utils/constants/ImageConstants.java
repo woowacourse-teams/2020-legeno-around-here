@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class ImageConstants {
 
+    public static final List<Long> TEST_EMPTY_IMAGES = Collections.emptyList();
     public static final List<MultipartFile> TEST_IMAGE_EMPTY_MULTIPART_FILES
         = Collections.emptyList();
     public static final String TEST_IMAGE_DIR

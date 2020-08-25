@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,6 +29,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.comment.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAvailableException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
@@ -71,9 +73,11 @@ public class Post extends BaseEntity {
     private User creator;
 
     @Builder
-    public Post(String writing, Area area, Sector sector, User creator) {
+    public Post(String writing, List<PostImage> postImages, Area area, Sector sector,
+        User creator) {
         validateLength(writing);
         this.writing = writing;
+        this.postImages = postImages;
         this.area = area;
         this.sector = sector;
         this.state = State.PUBLISHED;
@@ -86,10 +90,28 @@ public class Post extends BaseEntity {
         }
     }
 
-    public void addPostImages(PostImage postImage) {
+    public void addPostImages(List<PostImage> postImages) {
+        postImages.forEach(this::addPostImage);
+    }
+
+    private void addPostImage(PostImage postImage) {
         if (!this.postImages.contains(postImage)) {
             this.postImages.add(postImage);
         }
+        if (!postImage.hasPost()) {
+            postImage.setPost(this);
+        }
+    }
+
+    public void removeNonExistentImagesFromPost(List<Long> updatePostImageIds) {
+        List<Long> postImageIds = getPostImageIdsToBeDeleted(updatePostImageIds);
+        List<PostImage> postImages = getPostImagesToBeDeleted(postImageIds);
+
+        removePostImages(postImages);
+    }
+
+    private void removePostImages(List<PostImage> postImages) {
+        this.postImages.removeAll(postImages);
     }
 
     public void addComment(Comment comment) {
@@ -101,7 +123,7 @@ public class Post extends BaseEntity {
         }
     }
 
-    public void removeComments(Comment comment) {
+    public void removeComment(Comment comment) {
         this.comments.remove(comment);
     }
 
@@ -129,6 +151,24 @@ public class Post extends BaseEntity {
             throw new NotAvailableException(
                 "ID [" + this.getId() + "]에 해당하는 Post가 유효하지 않습니다.");
         }
+    }
+
+    private List<Long> getPostImageIdsToBeDeleted(List<Long> updatePostImageIds) {
+        List<Long> originPostImageIds = this.postImages.stream()
+            .map(PostImage::getId)
+            .collect(Collectors.toList());
+        originPostImageIds.removeAll(updatePostImageIds);
+        return originPostImageIds;
+    }
+
+    private List<PostImage> getPostImagesToBeDeleted(List<Long> deletePostImageIds) {
+        return this.postImages.stream()
+            .filter(postImage -> postImage.isContainsOf(deletePostImageIds))
+            .collect(Collectors.toList());
+    }
+
+    public void update(PostUpdateRequest postUpdateRequest) {
+        this.writing = postUpdateRequest.getWriting();
     }
 
     public int getPostZzangCount() {
@@ -159,10 +199,6 @@ public class Post extends BaseEntity {
 
     public List<PostImage> getPostImages() {
         return Collections.unmodifiableList(this.postImages);
-    }
-
-    public void setPostImages(List<PostImage> postImages) {
-        this.postImages = postImages;
     }
 
     public List<PostZzang> getZzangs() {

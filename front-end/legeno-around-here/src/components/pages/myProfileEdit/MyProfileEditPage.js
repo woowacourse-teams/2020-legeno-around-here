@@ -30,9 +30,7 @@ function MyProfileEditPage() {
 
   useMemo(() => {
     setLoading(true);
-    findMyInfo({
-      accessToken: accessToken,
-    }).then((userResponse) => {
+    findMyInfo(accessToken).then((userResponse) => {
       setEmail(userResponse.email);
       setNickname(userResponse.nickname);
       if (userResponse.image) {
@@ -65,36 +63,27 @@ function MyProfileEditPage() {
 
   return (
     <>
-      <TopBar backButtonLink="/myProfile" />
+      <TopBar backButtonLink='/myProfile' />
       <form className={classes.basicLayout} onSubmit={onSubmit}>
-        <PhotoEditSection
-          profilePhoto={profilePhoto}
-          setProfilePhoto={setProfilePhoto}
-          accessToken={accessToken}
-        />
+        <PhotoEditSection profilePhoto={profilePhoto} setProfilePhoto={setProfilePhoto} accessToken={accessToken} />
         <div className={classes.infoEditSection}>
-          <Typography component="div">{email}</Typography>
+          <Typography component='div'>{email}</Typography>
           <div className={classes.nicknameEditSection}>
-            <Typography component="h1" variant="h5">
+            <Typography component='h1' variant='h5'>
               {originalNickname}
             </Typography>
-            <Typography component="h1" variant="h5">
+            <Typography component='h1' variant='h5'>
               <TextField
-                id="standard-helperText"
-                label="새 닉네임"
+                id='standard-helperText'
+                label='새 닉네임'
                 className={classes.newNicknameInput}
                 onChange={handleNicknameInputChanging}
-                helperText="공란이면 닉네임이 바뀌지 않습니다."
+                helperText='공란이면 닉네임이 바뀌지 않습니다.'
               />
             </Typography>
           </div>
         </div>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          className={classes.submit}
-        >
+        <Button type='submit' variant='contained' color='primary' className={classes.submit}>
           저장
         </Button>
       </form>
