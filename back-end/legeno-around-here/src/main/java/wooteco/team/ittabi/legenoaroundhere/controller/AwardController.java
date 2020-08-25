@@ -56,7 +56,7 @@ public class AwardController {
             .ok(this.awards);
     }
 
-    @GetMapping("/awards/my")
+    @GetMapping("/awards/me")
     public ResponseEntity<List<AwardResponse>> findMyAwards() {
         List<AwardResponse> awards = awardService.findMyAwards();
 

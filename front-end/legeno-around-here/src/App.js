@@ -1,13 +1,15 @@
 import React from 'react';
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-import Join from './components/pages/Join';
-import Login from './components/pages/Login';
+import {BrowserRouter, Redirect, Route, Switch} from 'react-router-dom';
+import Join from './components/pages/JoinPage';
+import Login from './components/pages/LoginPage';
 import PostingPage from './components/pages/posting/PostingPage';
-import MyProfile from './components/pages/MyProfile';
+import MyProfilePage from './components/pages/myProfile/MyProfilePage';
 import SectorPage from './components/pages/sector/SectorPage';
 import PostDetailPage from './components/pages/post/PostDetailPage';
-import Home from './components/pages/Home';
-import Ranking from './components/pages/Ranking';
+import HomePage from './components/pages/HomePage';
+import RankingPage from './components/pages/RankingPage';
+import MyProfileEditPage
+  from "./components/pages/myProfileEdit/MyProfileEditPage";
 
 function App() {
   const mainArea = localStorage.getItem('mainAreaName');
@@ -20,15 +22,16 @@ function App() {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path="/" exact component={Home} />
+        <Route path="/" exact component={HomePage} />
         <Route path="/join" exact component={Join} />
         <Route path="/login" exact component={Login} />
-        <Route path="/myProfile" exact component={MyProfile} />
+        <Route path="/myProfile" exact component={MyProfilePage} />
         <Route path="/posting" exact component={PostingPage} />
         <Route path="/sector" exact component={SectorPage} />
         <Route path="/posts/:postId" exact component={PostDetailPage} />
-        <Route path="/home" exact component={Home} />
-        <Route path="/ranking" exact component={Ranking} />
+        <Route path="/home" exact component={HomePage} />
+        <Route path="/ranking" exact component={RankingPage} />
+        <Route path="/myProfileEdit" exact component={MyProfileEditPage} />
         <Redirect path="*" to="/" />
       </Switch>
     </BrowserRouter>

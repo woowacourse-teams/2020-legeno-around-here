@@ -14,7 +14,6 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstan
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_PASSWORD;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import io.restassured.RestAssured;
@@ -43,7 +42,6 @@ public class PostAcceptanceTest extends AcceptanceTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
         TokenResponse tokenResponse = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
         accessToken = tokenResponse.getAccessToken();
 
@@ -128,15 +126,15 @@ public class PostAcceptanceTest extends AcceptanceTest {
      * <p>
      * Given 글들이 등록되어 있다.
      * <p>
-     * When 글을 areaIds / sectorIds 없이 조회한다. Then 글이 전체 조회되었다.
+     * When 글을 areaId / sectorIds 없이 조회한다. Then 글이 전체 조회되었다.
      * <p>
-     * When 글을 areaIds / sectorIds 값 없이 조회한다. Then 글이 전체 조회되었다.
+     * When 글을 areaId / sectorIds 값 없이 조회한다. Then 글이 전체 조회되었다.
      * <p>
-     * When 글을 areaIds만 포함하여 조회한다. Then areaIds에 해당하는(하위지역 포함) 글들만 조회되었다.
+     * When 글을 areaId만 포함하여 조회한다. Then areaId에 해당하는(하위지역 포함) 글들만 조회되었다.
      * <p>
      * When 글을 sectorIds만 포함하여 조회한다. Then sectorIds에 해당하는 글들만 조회되었다.
      * <p>
-     * When 글을 areaIds, sectorIds를 포함하여 조회한다. Then areaIds, sectorIds에 해당하는(하위지역 포함) 글들만 조회되었다.
+     * When 글을 areaId, sectorIds를 포함하여 조회한다. Then areaId, sectorIds에 해당하는(하위지역 포함) 글들만 조회되었다.
      */
     @DisplayName("글 필터 조회")
     @Test
@@ -161,25 +159,25 @@ public class PostAcceptanceTest extends AcceptanceTest {
         createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorCId);
         createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorCId);
 
-        // 글을 areaIds / sectorIds 없이 조회 - 전체
+        // 글을 areaId / sectorIds 없이 조회 - 전체
         List<PostWithCommentsCountResponse> posts = searchAllPost(accessToken);
         assertThat(posts).hasSize(15);
 
-        // 글을 areaIds / sectorIds 값 없이 조회 - 전체
-        posts = searchAllPostWithFilter(accessToken, "areaIds=&sectorIds=");
+        // 글을 areaId / sectorIds 값 없이 조회 - 전체
+        posts = searchAllPostWithFilter(accessToken, "areaId=&sectorIds=");
         assertThat(posts).hasSize(15);
 
-        // 글을 areaIds만 포함하여 조회 - 하위지역 포함 조회
-        posts = searchAllPostWithFilter(accessToken, "areaIds=" + TEST_AREA_ID);
+        // 글을 areaId만 포함하여 조회 - 하위지역 포함 조회
+        posts = searchAllPostWithFilter(accessToken, "areaId=" + TEST_AREA_ID);
         assertThat(posts).hasSize(6);
 
         // 글을 sectorIds만 포함하여 조회
         posts = searchAllPostWithFilter(accessToken, "sectorIds=" + sectorAId + "," + sectorBId);
         assertThat(posts).hasSize(8);
 
-        // 글을 areaIds, sectorIds를 포함하여 조회
+        // 글을 areaId, sectorIds를 포함하여 조회
         posts = searchAllPostWithFilter(accessToken,
-            "areaIds=" + TEST_AREA_ID + "&sectorIds=" + sectorAId + "," + sectorBId);
+            "areaId=" + TEST_AREA_ID + "&sectorIds=" + sectorAId + "," + sectorBId);
         assertThat(posts).hasSize(3);
     }
 
@@ -226,18 +224,6 @@ public class PostAcceptanceTest extends AcceptanceTest {
 
         assertThat(post.getZzang().getCount()).isEqualTo(1L);
         assertThat(post.getZzang().isActivated()).isTrue();
-    }
-
-    /**
-     * Feature: 글 랭킹 조회
-     * <p>
-     * Scenario: 글을 랭킹 조회 한다.
-     * <p>
-     */
-    @DisplayName("글 랭킹 조회")
-    @Test
-    void searchRanking() {
-        // 일단 글 조회와 동일합니다.
     }
 
     private Long createSector(String accessToken, String name) {
@@ -351,7 +337,6 @@ public class PostAcceptanceTest extends AcceptanceTest {
 
     private String createPostWithoutImage(String accessToken) {
         return given()
-            .log().all()
             .formParam("writing", TEST_POST_WRITING)
             .formParam("areaId", TEST_AREA_ID)
             .formParam("sectorId", sectorId)
@@ -369,7 +354,6 @@ public class PostAcceptanceTest extends AcceptanceTest {
     private String createPostWithoutImageWithAreaAndSector(String accessToken, Long areaId,
         Long sectorId) {
         return given()
-            .log().all()
             .formParam("writing", TEST_POST_WRITING)
             .formParam("areaId", areaId)
             .formParam("sectorId", sectorId)
@@ -388,7 +372,6 @@ public class PostAcceptanceTest extends AcceptanceTest {
         // TODO: 2020/07/28 이미지를 포함했을 때 한글이 안 나오는 문제
 
         return given()
-            .log().all()
             .formParam("writing", TEST_POST_WRITING)
             .multiPart("images", new File(TEST_IMAGE_DIR + TEST_IMAGE_NAME))
             .multiPart("images", new File(TEST_IMAGE_DIR + TEST_IMAGE_OTHER_NAME))

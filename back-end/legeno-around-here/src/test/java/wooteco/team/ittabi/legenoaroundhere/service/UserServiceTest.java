@@ -2,27 +2,40 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AUTH_NUMBER;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_UPDATE_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_OTHER_PASSWORD;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
+import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
+import wooteco.team.ittabi.legenoaroundhere.domain.user.mailauth.MailAuth;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
+import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
 
 class UserServiceTest extends ServiceTest {
 
+    private static final String TEST_PREFIX = "user_";
+    private static final String NOT_EXIST_PREFIX = "not_exist_";
     private static final int TOKEN_MIN_SIZE = 1;
 
     @Autowired
@@ -31,111 +44,140 @@ class UserServiceTest extends ServiceTest {
     @Autowired
     private IAuthenticationFacade authenticationFacade;
 
-    @Test
+    @MockBean
+    private MailAuthRepository mailAuthRepository;
+
+    @BeforeEach
+    void setUp() {
+        MailAuth mailAuth = new MailAuth(TEST_USER_EMAIL, TEST_AUTH_NUMBER);
+        when(mailAuthRepository.findByEmail(any())).thenReturn(java.util.Optional.of(mailAuth));
+
+        User user = createUser(TEST_PREFIX + TEST_USER_EMAIL,
+            TEST_USER_NICKNAME,
+            TEST_USER_PASSWORD);
+        setAuthentication(user);
+    }
+
     @DisplayName("User 생성")
+    @Test
     void createUser_Success() {
         UserCreateRequest userCreateRequest =
-            new UserCreateRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD,
-                TEST_AREA_ID);
+            new UserCreateRequest(
+                "createuser_" + TEST_USER_EMAIL,
+                TEST_USER_NICKNAME,
+                TEST_USER_PASSWORD,
+                TEST_AREA_ID,
+                TEST_AUTH_NUMBER
+            );
         Long userId = userService.createUser(userCreateRequest);
 
         assertThat(userId).isNotNull();
     }
 
-    @Test
     @DisplayName("User 생성, 실패 - 중복된 이메일")
+    @Test
     void createUser_DuplicatedEmail_ThrownException() {
-        UserCreateRequest userCreateRequest = new UserCreateRequest(TEST_USER_EMAIL,
-            TEST_USER_NICKNAME, TEST_USER_PASSWORD, TEST_AREA_ID);
-        userService.createUser(userCreateRequest);
+        UserCreateRequest userCreateRequest = new UserCreateRequest(
+            TEST_PREFIX + TEST_USER_EMAIL,
+            TEST_USER_NICKNAME,
+            TEST_USER_PASSWORD,
+            TEST_AREA_ID,
+            TEST_AUTH_NUMBER
+        );
 
         assertThatThrownBy(() -> userService.createUser(userCreateRequest))
             .isInstanceOf(WrongUserInputException.class);
     }
 
-    @Test
     @DisplayName("로그인")
-    void login() {
-        UserCreateRequest userCreateRequest =
-            new UserCreateRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD,
-                TEST_AREA_ID);
-        userService.createUser(userCreateRequest);
-
+    @Test
+    void login_Success() {
         TokenResponse response = userService.login(new LoginRequest(TEST_USER_EMAIL,
             TEST_USER_PASSWORD));
+        assertThat(response.getAccessToken()).isNotEmpty();
         assertThat(response.getAccessToken()).hasSizeGreaterThan(TOKEN_MIN_SIZE);
     }
 
-    @Test
     @DisplayName("로그인 - 존재하지 않는 이메일")
+    @Test
     void login_IfEmailNotExist_ThrowException() {
-        assertThatThrownBy(() -> userService.login(new LoginRequest(TEST_USER_EMAIL,
-            TEST_USER_PASSWORD)))
+        assertThatThrownBy(
+            () -> userService.login(new LoginRequest(NOT_EXIST_PREFIX + TEST_USER_EMAIL,
+                TEST_USER_PASSWORD)))
             .isInstanceOf(NotExistsException.class);
     }
 
-    @Test
     @DisplayName("로그인 - 비밀번호가 틀렸을 때")
+    @Test
     void login_IfPasswordIsWrong_ThrowException() {
-        UserCreateRequest userCreateRequest = new UserCreateRequest(TEST_USER_EMAIL,
-            TEST_USER_NICKNAME, TEST_USER_PASSWORD, TEST_AREA_ID);
-        userService.createUser(userCreateRequest);
-
         assertThatThrownBy(() -> userService.login(new LoginRequest(TEST_USER_EMAIL, "wrong")))
             .isInstanceOf(WrongUserInputException.class);
     }
 
-    @Test
     @DisplayName("email로 User 찾기 (UserDetails 오버라이딩 메서드)")
-    void loadUserByUsername() {
-        UserCreateRequest userCreateRequest =
-            new UserCreateRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD,
-                TEST_AREA_ID);
-        userService.createUser(userCreateRequest);
-
+    @Test
+    void loadUserByUsername_Success() {
         User user = (User) userService.loadUserByUsername(TEST_USER_EMAIL);
 
-        assertThat(user.getEmailByString()).isEqualTo(TEST_USER_EMAIL);
+        assertThat(user.getUsername()).isEqualTo(TEST_USER_EMAIL);
     }
 
-    @Test
     @DisplayName("내 정보 찾기")
-    void findUser() {
-        User user = createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
-        setAuthentication(user);
-
-        assertThat(userService.findUser().getEmail()).isEqualTo(TEST_USER_EMAIL);
+    @Test
+    void findUser_Success() {
+        assertThat(userService.findUser().getEmail()).isEqualTo(TEST_PREFIX + TEST_USER_EMAIL);
         assertThat(userService.findUser().getNickname()).isEqualTo(TEST_USER_NICKNAME);
     }
 
-    @Test
     @DisplayName("내 정보 수정")
-    void updateUser() {
-        User createdUser = createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
-        setAuthentication(createdUser);
+    @Test
+    void updateMyInfo_Success() {
+        User theOtherUser = userRepository.findByEmail(new Email(TEST_UPDATE_EMAIL))
+            .orElseThrow(() -> new NotExistsException("존재하지 않는 회원입니다."));
+        setAuthentication(theOtherUser);
+
         UserUpdateRequest userUpdateRequest
-            = new UserUpdateRequest("newname", "newpassword", TEST_AREA_ID, null);
+            = new UserUpdateRequest("newname", TEST_AREA_ID, null);
+        UserResponse updatedUserResponse = userService.updateMyInfo(userUpdateRequest);
 
-        UserResponse updatedUserResponse = userService.updateUser(userUpdateRequest);
-
-        assertThat(updatedUserResponse.getEmail()).isEqualTo(TEST_USER_EMAIL);
+        assertThat(updatedUserResponse.getEmail()).isEqualTo(TEST_UPDATE_EMAIL);
         assertThat(updatedUserResponse.getNickname()).isEqualTo("newname");
+    }
 
-        LoginRequest loginRequest = new LoginRequest(TEST_USER_EMAIL, "newpassword");
+    @DisplayName("내 비밀번호 수정, 성공")
+    @Test
+    void changeMyPassword_Success() {
+        User updateUser = userRepository.findByEmail(new Email(TEST_UPDATE_EMAIL))
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        setAuthentication(updateUser);
+
+        UserPasswordUpdateRequest userPasswordUpdateRequest
+            = new UserPasswordUpdateRequest(TEST_USER_OTHER_PASSWORD);
+
+        userService.changeMyPassword(userPasswordUpdateRequest);
+        LoginRequest loginRequest = new LoginRequest(TEST_UPDATE_EMAIL, TEST_USER_OTHER_PASSWORD);
+
         assertThat(userService.login(loginRequest)).isInstanceOf(TokenResponse.class);
     }
 
+    @DisplayName("내 비밀번호 수정, 예외 발생 - 기존과 동일한 비밀번호")
     @Test
-    @DisplayName("회원 탈퇴")
-    void deleteUser() {
-        User createdUser = createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
-        setAuthentication(createdUser);
+    void changeMyPassword_SamePassword_ThrownException() {
+        UserPasswordUpdateRequest userPasswordUpdateRequest
+            = new UserPasswordUpdateRequest(TEST_USER_PASSWORD);
 
+        assertThatThrownBy(() -> userService.changeMyPassword(userPasswordUpdateRequest))
+            .isInstanceOf(WrongUserInputException.class);
+    }
+
+    @DisplayName("회원 탈퇴")
+    @Test
+    void deleteUser_Success() {
         userService.deleteUser();
 
         User authUser = (User) authenticationFacade.getAuthentication()
             .getPrincipal();
-        assertThatThrownBy(() -> userService.loadUserByUsername(authUser.getEmailByString()))
+        assertThatThrownBy(() -> userService.loadUserByUsername(authUser.getUsername()))
             .isInstanceOf(UsernameNotFoundException.class);
     }
 }

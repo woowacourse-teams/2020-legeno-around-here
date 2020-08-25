@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -20,7 +19,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -35,22 +33,18 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
 @ToString(exclude = {"posts", "comments"})
 @SQLDelete(sql = "UPDATE user SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class User extends BaseEntity implements UserDetails {
 
     @Embedded
-    @Column(nullable = false, unique = true)
     private Email email;
 
     @Embedded
-    @Column(nullable = false)
     private Nickname nickname;
 
     @Embedded
-    @Column(nullable = false)
     private Password password;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -86,29 +80,8 @@ public class User extends BaseEntity implements UserDetails {
         return null;
     }
 
-    public void update(User user) {
-        this.nickname = user.nickname;
-        this.password = user.password;
-        this.area = user.area;
-        this.image = user.image;
-        setUserAtImage(user.image);
-    }
-
-    private void setUserAtImage(UserImage userImage) {
-        if (Objects.isNull(userImage)) {
-            return;
-        }
-        if (userImage.hasNotUser()) {
-            image.setUser(this);
-        }
-    }
-
-    public boolean isNotSame(User user) {
+    public boolean isNotEquals(User user) {
         return !this.equals(user);
-    }
-
-    public String getPasswordByString() {
-        return this.password.getPassword();
     }
 
     @Override
@@ -116,16 +89,6 @@ public class User extends BaseEntity implements UserDetails {
         return this.roles.stream()
             .map(SimpleGrantedAuthority::new)
             .collect(Collectors.toList());
-    }
-
-    @Override
-    public String getUsername() {
-        return email.getEmail();
-    }
-
-    @Override
-    public String getPassword() {
-        return password.getPassword();
     }
 
     @Override
@@ -148,11 +111,56 @@ public class User extends BaseEntity implements UserDetails {
         return true;
     }
 
-    public String getEmailByString() {
+    @Override
+    public String getUsername() {
         return this.email.getEmail();
     }
 
-    public String getNicknameByString() {
-        return getNickname().getNickname();
+    public String getNickname() {
+        return this.nickname.getNickname();
     }
+
+    public void setNickname(String nickname) {
+        this.nickname = new Nickname(nickname);
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password.getPassword();
+    }
+
+    public void setPassword(String password) {
+        this.password = new Password(password);
+    }
+
+    public List<String> getRoles() {
+        return Collections.unmodifiableList(this.roles);
+    }
+
+    public void setImage(UserImage image) {
+        this.image = image;
+        setUserAtImage(image);
+    }
+
+    private void setUserAtImage(UserImage userImage) {
+        if (Objects.isNull(userImage)) {
+            return;
+        }
+        if (userImage.hasNotUser()) {
+            image.setUser(this);
+        }
+    }
+
+    public List<Post> getPosts() {
+        return Collections.unmodifiableList(this.posts);
+    }
+
+    public List<Comment> getComments() {
+        return Collections.unmodifiableList(comments);
+    }
+
+    public void setArea(Area area) {
+        this.area = area;
+    }
+
 }

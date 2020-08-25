@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Loading from '../../Loading';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
@@ -15,8 +15,8 @@ import {
 } from '@material-ui/core';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 
-import {createPost, findAllSectors} from '../../api/API';
-import {getAccessTokenFromCookie} from '../../../util/TokenUtils';
+import { createPost, findSectorsFromPage } from '../../api/API';
+import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import useStyles from './PostingFormStyles';
 import SectorApplyButton from '../sector/SectorApplyButton';
 
@@ -42,7 +42,7 @@ const PostingForm = () => {
   useEffect(() => {
     const loadSectors = async () => {
       setLoading(true);
-      const allSectors = await findAllSectors(accessToken);
+      const allSectors = await findSectorsFromPage(0, accessToken);
       setSectors(allSectors);
       setLoading(false);
     };
@@ -76,6 +76,12 @@ const PostingForm = () => {
   const submitPost = (e) => {
     e.preventDefault();
 
+    try {
+      validateForm();
+    } catch (e) {
+      alert(e.message);
+      return;
+    }
     const formData = new FormData();
     if (images.length > 0) {
       Array.from(images).forEach((image) => {
@@ -93,6 +99,19 @@ const PostingForm = () => {
     };
     sendPost();
   };
+
+  const validateForm = () => {
+    if (area.id === null) {
+      throw new Error('지역을 선택해주세요!');
+    }
+    if (writing === '' && images.length === 0) {
+      throw new Error('아무것도 안 쓴 글을 올릴 수 없습니다! 뭔가 써주세요 :)');
+    }
+    if (sector.id === null) {
+      throw new Error('부문을 선택해주세요!');
+    }
+  };
+
   if (loading) {
     return <Loading />;
   }

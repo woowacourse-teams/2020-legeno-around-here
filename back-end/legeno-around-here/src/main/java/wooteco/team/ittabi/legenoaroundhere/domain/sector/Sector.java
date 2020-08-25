@@ -32,7 +32,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @Where(clause = "deleted_at IS NULL")
 public class Sector extends BaseEntity {
 
-    protected static final String DEFAULT_REASON = "";
+    private static final String DEFAULT_REASON = "";
 
     @Embedded
     private Name name;
@@ -100,7 +100,7 @@ public class Sector extends BaseEntity {
     }
 
     public boolean isUniqueState() {
-        return state.isUnique();
+        return this.state.isUnique();
     }
 
     public String getName() {
@@ -116,11 +116,11 @@ public class Sector extends BaseEntity {
     }
 
     public String getState() {
-        return state.getName();
+        return this.state.getName();
     }
 
     public String getStateExceptionName() {
-        return state.getExceptionName();
+        return this.state.getExceptionName();
     }
 
     public List<Post> getPosts() {

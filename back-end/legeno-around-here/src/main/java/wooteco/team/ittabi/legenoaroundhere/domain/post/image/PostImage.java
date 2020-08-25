@@ -47,6 +47,6 @@ public class PostImage extends BaseEntity {
             this.post.getPostImages().remove(this);
         }
         this.post = post;
-        post.getPostImages().add(this);
+        post.addPostImages(this);
     }
 }

@@ -1,16 +1,16 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
-import {MAIN_COLOR} from '../../constants/Color';
+import { MAIN_COLOR } from '../../constants/Color';
 
 export const ProfilePhoto = styled.div`
   width: 100px;
   height: 100px;
-  background-image: url(https://www.talkwalker.com/images/2020/blog-headers/image-analysis.png);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
   border-radius: 300px;
-  // background-image: url(${props => props.photoUrl});
+  background-image: url(${(props) => props.photoUrl});
   border: 1px solid ${MAIN_COLOR};
 `;
 
@@ -39,7 +39,7 @@ export const PrivacyBox = styled.div`
   text-align: left;
 `;
 
-export const PrivacyEditBox = styled.div`
+export const PrivacyEditBox = styled(Link)`
   margin-left: auto;
   padding-right: 10px;
   font-size: 15px;

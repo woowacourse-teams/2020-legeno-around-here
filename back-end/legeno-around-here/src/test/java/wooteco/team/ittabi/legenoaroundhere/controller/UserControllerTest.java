@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -12,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AUTH_NUMBER;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
@@ -35,15 +35,15 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 class UserControllerTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private MockMvc mockMvc;
 
     @MockBean
     private UserService userService;
-    private MockMvc mockMvc;
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext) {
@@ -59,7 +59,7 @@ class UserControllerTest {
 
         String inputJson = objectMapper.writeValueAsString(
             new UserCreateRequest(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD,
-                TEST_AREA_ID));
+                TEST_AREA_ID, TEST_AUTH_NUMBER));
 
         this.mockMvc.perform(post("/join")
             .content(inputJson)
@@ -152,7 +152,7 @@ class UserControllerTest {
 
         String expectedJson = objectMapper.writeValueAsString(expected);
 
-        String actual = this.mockMvc.perform(get("/users/myinfo")
+        String actual = this.mockMvc.perform(get("/users/me")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -165,17 +165,17 @@ class UserControllerTest {
 
     @Test
     @DisplayName("내 정보 수정")
-    void updateUser() throws Exception {
+    void updateMyUser_Success() throws Exception {
         UserResponse expected = UserResponse.builder()
             .id(TEST_USER_ID)
             .email(TEST_USER_EMAIL)
             .nickname(TEST_USER_NICKNAME)
             .build();
-        given(userService.updateUser(any())).willReturn(expected);
+        given(userService.updateMyInfo(any())).willReturn(expected);
 
         String expectedJson = objectMapper.writeValueAsString(expected);
 
-        String actual = this.mockMvc.perform(put("/users/myinfo")
+        String actual = this.mockMvc.perform(put("/users/me")
             .content(expectedJson)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON))
@@ -190,7 +190,7 @@ class UserControllerTest {
     @Test
     @DisplayName("회원 탈퇴")
     void deleteUser() throws Exception {
-        this.mockMvc.perform(delete("/users/myinfo")
+        this.mockMvc.perform(delete("/users/me")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());

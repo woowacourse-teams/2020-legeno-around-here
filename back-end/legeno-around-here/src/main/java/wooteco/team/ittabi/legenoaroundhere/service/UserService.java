@@ -2,6 +2,7 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import java.util.Objects;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,6 +21,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
@@ -42,21 +44,20 @@ public class UserService implements UserDetailsService {
     private final JwtTokenGenerator jwtTokenGenerator;
     private final IAuthenticationFacade authenticationFacade;
     private final ImageUploader imageUploader;
+    private final MailAuthService mailAuthService;
 
     @Transactional
     public Long createUser(UserCreateRequest userCreateRequest) {
-        // ToDo 삭제 계정과 겹치는 것을 허용할지 추후 고려하기
-        userRepository.findByEmail(new Email(userCreateRequest.getEmail()))
-            .ifPresent(user -> {
-                throw new WrongUserInputException(
-                    "[" + userCreateRequest.getEmail() + "] 이메일은 이미 사용중입니다.");
-            });
-
+        mailAuthService.checkAuth(userCreateRequest.toMailAuthCheckRequest());
         Area area = findAreaBy(userCreateRequest.getAreaId());
         User user = UserAssembler.assemble(userCreateRequest, area);
-        User createdUser = userRepository.save(user);
-
-        return createdUser.getId();
+        try {
+            User createdUser = userRepository.save(user);
+            return createdUser.getId();
+        } catch (DataIntegrityViolationException e) {
+            throw new WrongUserInputException(
+                "[" + userCreateRequest.getEmail() + "] 이메일은 이미 사용중입니다.");
+        }
     }
 
     private Area findAreaBy(Long areaId) {
@@ -71,13 +72,16 @@ public class UserService implements UserDetailsService {
     public TokenResponse login(LoginRequest loginRequest) {
         User user = userRepository.findByEmail(new Email(loginRequest.getEmail()))
             .orElseThrow(() -> new NotExistsException("가입되지 않은 회원입니다."));
+        checkPassword(loginRequest, user);
+        String token = jwtTokenGenerator.createToken(user.getUsername(), user.getRoles());
+        return new TokenResponse(token);
+    }
 
+    private void checkPassword(LoginRequest loginRequest, User user) {
         if (!PASSWORD_ENCODER.matches(
-            loginRequest.getPassword(), user.getPasswordByString())) {
+            loginRequest.getPassword(), user.getPassword())) {
             throw new WrongUserInputException("잘못된 비밀번호입니다.");
         }
-        return new TokenResponse(
-            jwtTokenGenerator.createToken(user.getEmailByString(), user.getRoles()));
     }
 
     @Transactional(readOnly = true)
@@ -87,16 +91,33 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public UserResponse updateUser(UserUpdateRequest userUpdateRequest) {
+    public UserResponse updateMyInfo(UserUpdateRequest userUpdateRequest) {
         User user = (User) authenticationFacade.getPrincipal();
         User foundUser = userRepository.findByEmail(user.getEmail())
             .orElseThrow(() -> new NotExistsException("사용자를 찾을 수 없습니다."));
         Area area = findAreaBy(userUpdateRequest.getAreaId());
         UserImage userImage = findUserImageBy(userUpdateRequest.getImageId());
 
-        foundUser.update(UserAssembler.assemble(userUpdateRequest, area, userImage));
+        foundUser.setNickname(userUpdateRequest.getNickname());
+        foundUser.setArea(area);
+        foundUser.setImage(userImage);
 
         return UserResponse.from(foundUser);
+    }
+
+    @Transactional
+    public void changeMyPassword(UserPasswordUpdateRequest userPasswordUpdateRequest) {
+        User user = (User) authenticationFacade.getPrincipal();
+        User foundUser = userRepository.findByEmail(user.getEmail())
+            .orElseThrow(() -> new NotExistsException("사용자를 찾을 수 없습니다."));
+
+        String password = userPasswordUpdateRequest.getPassword();
+        if (PASSWORD_ENCODER.matches(password, user.getPassword())) {
+            throw new WrongUserInputException("기존의 비밀번호와 동일한 비밀번호입니다.");
+        }
+
+        String encodePassword = PASSWORD_ENCODER.encode(password);
+        foundUser.setPassword(encodePassword);
     }
 
     private UserImage findUserImageBy(Long userImageId) {
@@ -116,6 +137,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(new Email(email))
             .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));

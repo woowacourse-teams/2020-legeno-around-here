@@ -25,7 +25,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.service.PostService;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class PostControllerTest {
 
@@ -33,10 +33,10 @@ public class PostControllerTest {
     private static final String ANY_ID = "1";
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private MockMvc mockMvc;
 
     @MockBean
     private PostService postService;
-    private MockMvc mockMvc;
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext) {

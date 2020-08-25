@@ -1,8 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,10 +29,9 @@ import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.ImageUploader;
 
-@Slf4j
-@Transactional
 @Service
 @AllArgsConstructor
+@Slf4j
 public class PostService {
 
     private final PostRepository postRepository;
@@ -91,60 +88,19 @@ public class PostService {
         return posts.map(post -> PostWithCommentsCountResponse.of(user, post));
     }
 
-    private Page<Post> getPostByFilter(Pageable pageable, PostSearch postSearch) {
+    Page<Post> getPostByFilter(Pageable pageable, PostSearch postSearch) {
         if (postSearch.isNotExistsFilter()) {
             return postRepository.findAllBy(pageable);
         }
 
         if (postSearch.isAreaFilter()) {
-            List<Area> areas = findAllAreas(postSearch.getAreaIds());
-            return postRepository.findAllByAreaIn(pageable, areas);
+            return postRepository.findAllByAreaId(pageable, postSearch.getAreaId());
         }
-
         if (postSearch.isSectorFilter()) {
-            List<Sector> sectors = findAllSectors(postSearch.getSectorIds());
-            return postRepository.findAllBySectorIn(pageable, sectors);
+            return postRepository.findAllBySectorIds(pageable, postSearch.getSectorIds());
         }
-
-        List<Area> areas = findAllAreas(postSearch.getAreaIds());
-        List<Sector> sectors = findAllSectors(postSearch.getSectorIds());
-        return postRepository.findAllByAreaInAndSectorIn(pageable, areas, sectors);
-    }
-
-    private List<Area> findAllAreas(List<Long> areaIds) {
-        List<Area> allArea = areaRepository.findAll();
-        List<Area> foundArea = findAreas(allArea, areaIds);
-
-        List<Area> areas = new ArrayList<>();
-        for (Area area : foundArea) {
-            areas.addAll(findSubAreas(allArea, area));
-        }
-        return areas;
-    }
-
-    private List<Area> findAreas(List<Area> allArea, List<Long> areaIds) {
-        List<Area> foundArea = allArea.stream()
-            .filter(area -> area.isIncludeId(areaIds))
-            .collect(Collectors.toList());
-
-        if (areaIds.size() != foundArea.size()) {
-            throw new WrongUserInputException("유효하지 않은 Area ID를 사용하셨습니다.");
-        }
-        return foundArea;
-    }
-
-    private List<Area> findSubAreas(List<Area> areas, Area targetArea) {
-        return areas.stream()
-            .filter(area -> area.isSubAreaOf(targetArea))
-            .collect(Collectors.toList());
-    }
-
-    private List<Sector> findAllSectors(List<Long> sectorIds) {
-        List<Sector> sectors = sectorRepository.findAllById(sectorIds);
-        if (sectors.size() != sectorIds.size()) {
-            throw new WrongUserInputException("유효하지 않은 Sector ID를 사용하셨습니다.");
-        }
-        return sectors;
+        return postRepository.findAllByAreaIdsAndSectorIds(pageable, postSearch.getAreaId(),
+            postSearch.getSectorIds());
     }
 
     @Transactional
@@ -165,7 +121,7 @@ public class PostService {
     private void validateIsCreator(Post post) {
         User user = (User) authenticationFacade.getPrincipal();
 
-        if (user.isNotSame(post.getCreator())) {
+        if (user.isNotEquals(post.getCreator())) {
             throw new NotAuthorizedException("권한이 없습니다.");
         }
     }

@@ -237,7 +237,6 @@ public class SectorAcceptanceTest extends AcceptanceTest {
     }
 
     private String getCreateUserToken(String email, String nickname, String password) {
-        createUser(email, nickname, password);
         TokenResponse tokenResponse = login(email, password);
         return tokenResponse.getAccessToken();
     }
@@ -458,7 +457,6 @@ public class SectorAcceptanceTest extends AcceptanceTest {
 
     private Long createPostWithoutImageWithSector(String accessToken, Long sectorId) {
         String location = given()
-            .log().all()
             .formParam("writing", TEST_POST_WRITING)
             .formParam("areaId", TEST_AREA_ID)
             .formParam("sectorId", sectorId)

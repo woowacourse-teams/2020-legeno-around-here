@@ -2,7 +2,6 @@ package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import io.restassured.RestAssured;
@@ -24,25 +23,8 @@ public class AreaAcceptanceTest extends AcceptanceTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        createUser();
         TokenResponse tokenResponse = login();
         accessToken = tokenResponse.getAccessToken();
-    }
-
-    private void createUser() {
-        Map<String, String> params = new HashMap<>();
-        params.put("email", TEST_USER_EMAIL);
-        params.put("nickname", TEST_USER_NICKNAME);
-        params.put("password", TEST_USER_PASSWORD);
-
-        given()
-            .body(params)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/join")
-            .then()
-            .statusCode(HttpStatus.CREATED.value());
     }
 
     private TokenResponse login() {

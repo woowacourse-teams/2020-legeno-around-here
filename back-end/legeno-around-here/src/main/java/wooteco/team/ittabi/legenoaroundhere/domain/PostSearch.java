@@ -16,40 +16,44 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @ToString
 public class PostSearch {
 
-    protected static final String DELIMITER = ",";
+    private static final String DELIMITER = ",";
 
-    private List<Long> areaIds;
-    private List<Long> sectorIds;
+    private final Long areaId;
+    private final List<Long> sectorIds;
 
     @Builder
-    public PostSearch(String areaIds, String sectorIds) {
-        this.areaIds = makeUniqueIds("areaID", areaIds);
-        this.sectorIds = makeUniqueIds("sectorId", sectorIds);
+    public PostSearch(Long areaId, String sectorIds) {
+        this.areaId = areaId;
+        this.sectorIds = makeSectorIds(sectorIds);
     }
 
-    private List<Long> makeUniqueIds(String name, String ids) {
-        if (Objects.isNull(ids) || ids.isEmpty()) {
+    private List<Long> makeSectorIds(String sectorIds) {
+        if (Objects.isNull(sectorIds) || sectorIds.isEmpty()) {
             return new ArrayList<>();
         }
+        return splitSectorIds(sectorIds);
+    }
+
+    private List<Long> splitSectorIds(String sectorIds) {
         try {
-            return Arrays.stream(ids.split(DELIMITER))
+            return Arrays.stream(sectorIds.split(DELIMITER))
                 .map(Long::valueOf)
                 .distinct()
                 .collect(Collectors.toList());
         } catch (NumberFormatException e) {
-            throw new WrongUserInputException(name + "필터에 올바르지 않은 Id가 입력되었습니다.");
+            throw new WrongUserInputException("sectorIds 필터에 올바르지 않은 Id가 입력되었습니다.");
         }
     }
 
     public boolean isAreaFilter() {
-        return !areaIds.isEmpty() && sectorIds.isEmpty();
+        return Objects.nonNull(this.areaId) && this.sectorIds.isEmpty();
     }
 
     public boolean isSectorFilter() {
-        return areaIds.isEmpty() && !sectorIds.isEmpty();
+        return Objects.isNull(this.areaId) && !this.sectorIds.isEmpty();
     }
 
     public boolean isNotExistsFilter() {
-        return areaIds.isEmpty() && sectorIds.isEmpty();
+        return Objects.isNull(this.areaId) && this.sectorIds.isEmpty();
     }
 }

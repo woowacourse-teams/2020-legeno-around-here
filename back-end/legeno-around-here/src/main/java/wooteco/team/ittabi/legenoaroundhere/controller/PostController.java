@@ -1,6 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
 import java.net.URI;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,13 +23,10 @@ import wooteco.team.ittabi.legenoaroundhere.service.PostService;
 
 @RestController
 @RequestMapping("/posts")
+@AllArgsConstructor
 public class PostController {
 
     private final PostService postService;
-
-    public PostController(PostService postService) {
-        this.postService = postService;
-    }
 
     @PostMapping
     public ResponseEntity<Void> createPost(PostCreateRequest postCreateRequest) {
@@ -76,17 +74,6 @@ public class PostController {
         return ResponseEntity
             .noContent()
             .build();
-    }
-
-    @GetMapping("/ranking")
-    public ResponseEntity<Page<PostWithCommentsCountResponse>> searchAllRanking(
-        PageRequest pageRequest, PostSearchRequest postSearchRequest) {
-        Page<PostWithCommentsCountResponse> posts
-            = postService.searchAllPost(PageableAssembler.assemble(pageRequest), postSearchRequest);
-
-        return ResponseEntity
-            .ok()
-            .body(posts);
     }
 
     @PostMapping("/{postId}/zzangs")

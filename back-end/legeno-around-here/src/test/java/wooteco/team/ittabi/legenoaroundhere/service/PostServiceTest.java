@@ -2,8 +2,11 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_OTHER_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AUTH_NUMBER;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_CONTENT_TYPE;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_EMPTY_MULTIPART_FILES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_INVALID_ID;
@@ -21,10 +24,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
+import wooteco.team.ittabi.legenoaroundhere.domain.user.mailauth.MailAuth;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchRequest;
@@ -35,10 +40,13 @@ import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
+import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.FileConverter;
 
 public class PostServiceTest extends ServiceTest {
+
+    private static final String TEST_PREFIX = "post_";
 
     @Autowired
     private PostService postService;
@@ -49,6 +57,9 @@ public class PostServiceTest extends ServiceTest {
     @Autowired
     private SectorService sectorService;
 
+    @MockBean
+    private MailAuthRepository mailAuthRepository;
+
     private User user;
     private User another;
     private SectorResponse sector;
@@ -57,8 +68,15 @@ public class PostServiceTest extends ServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = createUser(TEST_USER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
-        another = createUser(TEST_USER_OTHER_EMAIL, TEST_USER_NICKNAME, TEST_USER_PASSWORD);
+        MailAuth mailAuth = new MailAuth(TEST_USER_EMAIL, TEST_AUTH_NUMBER);
+        when(mailAuthRepository.findByEmail(any())).thenReturn(java.util.Optional.of(mailAuth));
+
+        user = createUser(TEST_PREFIX + TEST_USER_EMAIL,
+            TEST_USER_NICKNAME,
+            TEST_USER_PASSWORD);
+        another = createUser(TEST_PREFIX + TEST_USER_OTHER_EMAIL,
+            TEST_USER_NICKNAME,
+            TEST_USER_PASSWORD);
         setAuthentication(user);
 
         sector = sectorService.createSector(TEST_SECTOR_REQUEST);
@@ -159,12 +177,10 @@ public class PostServiceTest extends ServiceTest {
         postService.createPost(postCreateRequest);
 
         postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
-            TEST_IMAGE_EMPTY_MULTIPART_FILES,
-            TEST_AREA_OTHER_ID, sectorOtherId);
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_OTHER_ID, sectorOtherId);
         postService.createPost(postCreateRequest);
 
-        PostSearchRequest postSearchRequest = new PostSearchRequest(
-            String.valueOf(TEST_AREA_OTHER_ID), null);
+        PostSearchRequest postSearchRequest = new PostSearchRequest(TEST_AREA_OTHER_ID, null);
         Page<PostWithCommentsCountResponse> posts
             = postService.searchAllPost(Pageable.unpaged(), postSearchRequest);
 
@@ -197,8 +213,8 @@ public class PostServiceTest extends ServiceTest {
             TEST_AREA_OTHER_ID, sectorOtherId);
         postService.createPost(postCreateRequest);
 
-        PostSearchRequest postSearchRequest = new PostSearchRequest(
-            String.valueOf(TEST_AREA_OTHER_ID), String.valueOf(sectorOtherId));
+        PostSearchRequest postSearchRequest
+            = new PostSearchRequest(TEST_AREA_OTHER_ID, String.valueOf(sectorOtherId));
         Page<PostWithCommentsCountResponse> posts
             = postService.searchAllPost(Pageable.unpaged(), postSearchRequest);
 
