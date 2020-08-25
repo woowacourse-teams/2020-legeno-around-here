@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles';
 
 import TopBar from './RankingTopBar';
-import Bottom from '../../Bottom'
-import BottomBlank from '../../BottomBlank'
-import Loading from '../../Loading'
-import { findRankedPostsFromPage } from '../../api/API'
-import { getAccessTokenFromCookie } from '../../../util/TokenUtils'
-import { RANKING } from '../../../constants/BottomItems'
-import RankingItem from './RankingItem'
-import Typography from '@material-ui/core/Typography'
+import Bottom from '../../Bottom';
+import BottomBlank from '../../BottomBlank';
+import Loading from '../../Loading';
+import { findRankedPostsFromPage } from '../../api/API';
+import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
+import { RANKING } from '../../../constants/BottomItems';
+import RankingItem from './RankingItem';
+import Typography from '@material-ui/core/Typography';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 const useStyle = makeStyles(() => ({
   filterSection: {
@@ -37,7 +39,7 @@ const RankingPage = () => {
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
-  const [criteria] = useState('total');
+  const [criteria, setCriteria] = useState('total');
 
   const accessToken = getAccessTokenFromCookie();
   const mainAreaId = localStorage.getItem('mainAreaId');
@@ -45,16 +47,18 @@ const RankingPage = () => {
 
   /* 처음에 보여줄 글 목록을 가져옴 */
   useEffect(() => {
-    findRankedPostsFromPage(mainAreaId, criteria,0, accessToken).then((firstPosts) => {
-      console.log(firstPosts)
-      if (firstPosts.length === 0) {
-        setHasMore(false);
-        return;
-      }
-      setPosts(firstPosts);
-    });
+    findRankedPostsFromPage(mainAreaId, criteria, 0, accessToken).then(
+      (firstPosts) => {
+        console.log(firstPosts);
+        if (firstPosts.length === 0) {
+          setHasMore(false);
+          return;
+        }
+        setPosts(firstPosts);
+      },
+    );
     setPage(1);
-  }, [mainAreaId, accessToken]);
+  }, [mainAreaId, accessToken, criteria]);
 
   const fetchNextPosts = () => {
     findRankedPostsFromPage(mainAreaId, criteria, page, accessToken)
@@ -72,6 +76,10 @@ const RankingPage = () => {
       });
   };
 
+  const handleChange = (event) => {
+    setCriteria(event.target.value);
+  };
+
   /* 공동순위 처리를 위해서 필요한 변수들 */
   let zzangCountOfBeforePost = 0;
   let rankOfBeforePost = 0;
@@ -80,7 +88,14 @@ const RankingPage = () => {
     <>
       <TopBar />
       <div className={classes.filterSection}>
-        <Typography className={classes.durationFilter}>역대 랭킹</Typography>
+        <FormControl className={classes.durationFilter}>
+          <Select native value={criteria} onChange={handleChange}>
+            <option value="total">역대</option>
+            <option value="month">월간</option>
+            <option value="week">주간</option>
+          </Select>
+        </FormControl>
+
         <Typography className={classes.sectorFilter}>부문 전체</Typography>
       </div>
       <InfiniteScroll
@@ -91,12 +106,22 @@ const RankingPage = () => {
         endMessage={<h3>모두 읽으셨습니다!</h3>}
       >
         {posts.map((post, index) => {
-          const rank = (post.zzang.count === zzangCountOfBeforePost)? rankOfBeforePost : (index + 1);
-          console.log(post.zzang.count === zzangCountOfBeforePost)
+          const rank =
+            post.zzang.count === zzangCountOfBeforePost
+              ? rankOfBeforePost
+              : index + 1;
+          console.log(post.zzang.count === zzangCountOfBeforePost);
           zzangCountOfBeforePost = post.zzang.count;
           rankOfBeforePost = rank;
-          console.log("###");
-          return <RankingItem key={post.id} post={post} rank={rank} />;
+          console.log('###');
+          return (
+            <RankingItem
+              key={post.id}
+              post={post}
+              rank={rank}
+              whetherToPrintZzangCount={criteria === `total`}
+            />
+          );
         })}
       </InfiniteScroll>
       <BottomBlank />

@@ -10,9 +10,9 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
 import { convertDateFormat } from '../../../util/TimeUtils';
-import { MAIN_COLOR } from '../../../constants/Color'
+import { MAIN_COLOR } from '../../../constants/Color';
 
-const useStyles = makeStyles(() => ({
+const useStyle = makeStyles({
   grow: {
     flexGrow: 1,
   },
@@ -50,9 +50,10 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
     marginTop: 100,
   },
-  reactions: {
+  reactions: (props) => ({
+    display: `${props.whetherToPrintZzangCount? 'block' : 'none'}`,
     paddingTop: 0,
-  },
+  }),
   reactionIconSpace: {
     margin: 0,
     padding: 0,
@@ -61,10 +62,13 @@ const useStyles = makeStyles(() => ({
     width: '20px',
     height: '20px',
   },
-}));
+});
 
-const RankingItem = ({ post, rank }) => {
-  const classes = useStyles();
+const RankingItem = ({ post, rank, whetherToPrintZzangCount}) => {
+  const props = {
+    whetherToPrintZzangCount: whetherToPrintZzangCount,
+  };
+  const classes = useStyle(props);
 
   const {
     area,
