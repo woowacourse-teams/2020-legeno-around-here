@@ -19,18 +19,18 @@ public class NoticeResponse {
     private Long id;
     private String content;
     private String location;
-    private Boolean read;
+    private Boolean isRead;
 
-    public static NoticeResponse of(Long id, String content, String location, Boolean read) {
+    public static NoticeResponse of(Long id, String content, String location, Boolean isRead) {
         return NoticeResponse.builder()
             .id(id)
             .content(content)
             .location(location)
-            .read(read)
+            .isRead(isRead)
             .build();
     }
 
-    public void setRead(Boolean read) {
-        this.read = read;
+    public void setRead(Boolean isRead) {
+        this.isRead = isRead;
     }
 }
