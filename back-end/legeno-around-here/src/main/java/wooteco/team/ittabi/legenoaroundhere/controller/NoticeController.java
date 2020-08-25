@@ -1,5 +1,8 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ME_PATH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.NOTICE_PATH;
+
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -13,7 +16,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.NoticeResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 
 @RestController
-@RequestMapping("/notices")
+@RequestMapping(NOTICE_PATH)
 @AllArgsConstructor
 public class NoticeController {
 
@@ -30,7 +33,7 @@ public class NoticeController {
         myNotices.add(NoticeResponse.of(8L, "가입을 축하해요.", "/users/me", Boolean.FALSE));
     }
 
-    @GetMapping("/me")
+    @GetMapping(ME_PATH)
     public ResponseEntity<List<NoticeResponse>> findMyNotices() {
         return ResponseEntity
             .ok(myNotices);
