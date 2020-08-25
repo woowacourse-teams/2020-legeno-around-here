@@ -10,6 +10,7 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_CONTENT_TYPE;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_EMPTY_MULTIPART_FILES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_INVALID_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_REPORT_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ANOTHER_REQUEST;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_REQUEST;
@@ -31,6 +32,8 @@ import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.mailauth.MailAuth;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostReportCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostReportResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
@@ -368,5 +371,23 @@ public class PostServiceTest extends ServiceTest {
 
         assertThat(zzang.getCount()).isEqualTo(0L);
         assertThat(zzang.isActivated()).isFalse();
+    }
+
+    @DisplayName("글 신고 생성 - 성공")
+    @Test
+    void createPostReport_SuccessToCreate() {
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_IMAGE_EMPTY_MULTIPART_FILES, TEST_AREA_ID, sectorId);
+        Long postId = postService.createPost(postCreateRequest).getId();
+
+        PostReportCreateRequest postReportCreateRequest = new PostReportCreateRequest(
+            TEST_POST_REPORT_WRITING);
+
+        PostReportResponse postReportResponse = postService
+            .createPostReport(postId, postReportCreateRequest);
+
+        assertThat(postReportResponse.getId()).isNotNull();
+        assertThat(postReportResponse.getWriting()).isEqualTo(TEST_POST_REPORT_WRITING);
+        assertThat(postReportResponse.getCreator()).isEqualTo(UserResponse.from(user));
     }
 }

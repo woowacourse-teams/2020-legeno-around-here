@@ -54,7 +54,7 @@ public class CommentServiceTest extends ServiceTest {
     private CommentService commentService;
 
     @MockBean
-    MailAuthRepository mailAuthRepository;
+    private MailAuthRepository mailAuthRepository;
 
     @BeforeEach
     void setUp() {

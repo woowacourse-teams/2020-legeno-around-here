@@ -55,7 +55,7 @@ public class RankingServiceTest extends ServiceTest {
     private SectorService sectorService;
 
     @MockBean
-    MailAuthRepository mailAuthRepository;
+    private MailAuthRepository mailAuthRepository;
 
     private User userA;
     private User userB;

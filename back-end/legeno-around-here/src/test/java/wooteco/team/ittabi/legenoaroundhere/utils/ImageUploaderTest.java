@@ -34,11 +34,11 @@ import wooteco.team.ittabi.legenoaroundhere.service.ServiceTest;
 
 public class ImageUploaderTest extends ServiceTest {
 
+    @MockBean
+    private MailAuthRepository mailAuthRepository;
+
     @Autowired
     private ImageUploader imageUploader;
-
-    @MockBean
-    MailAuthRepository mailAuthRepository;
 
     @BeforeEach
     void setUp() {
