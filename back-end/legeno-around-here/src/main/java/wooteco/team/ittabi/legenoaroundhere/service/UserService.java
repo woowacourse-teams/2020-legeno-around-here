@@ -45,9 +45,11 @@ public class UserService implements UserDetailsService {
     private final JwtTokenGenerator jwtTokenGenerator;
     private final IAuthenticationFacade authenticationFacade;
     private final ImageUploader imageUploader;
+    private final MailAuthService mailAuthService;
 
     @Transactional
     public Long createUser(UserCreateRequest userCreateRequest) {
+        mailAuthService.checkAuth(userCreateRequest.toMailAuthCheckRequest());
         Area area = findAreaBy(userCreateRequest.getAreaId());
         User user = UserAssembler.assemble(userCreateRequest, area);
         try {
@@ -71,16 +73,9 @@ public class UserService implements UserDetailsService {
     public TokenResponse login(LoginRequest loginRequest) {
         User user = userRepository.findByEmail(new Email(loginRequest.getEmail()))
             .orElseThrow(() -> new NotExistsException("가입되지 않은 회원입니다."));
-        checkEmailAuth(user);
         checkPassword(loginRequest, user);
         String token = jwtTokenGenerator.createToken(user.getUsername(), user.getRoles());
         return new TokenResponse(token);
-    }
-
-    private void checkEmailAuth(User user) {
-        if (user.isNotAuthenticatedByEmail()) {
-            throw new NeedEmailAuthException("메일 인증이 필요합니다.");
-        }
     }
 
     private void checkPassword(LoginRequest loginRequest, User user) {

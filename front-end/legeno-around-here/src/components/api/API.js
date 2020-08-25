@@ -82,12 +82,13 @@ export const updatePost = async (postId, postUpdateData, accessToken) => {
   }
 };
 
-export const createUser = (email, nickname, password, handleReset) => {
+export const createUser = (email, nickname, password, authNumber, handleReset) => {
   axios
     .post(DEFAULT_URL + '/join', {
       email,
       nickname,
       password,
+      authNumber,
     })
     .then((response) => {
       alert('회원가입을 축하드립니다.');
@@ -99,6 +100,38 @@ export const createUser = (email, nickname, password, handleReset) => {
     });
 };
 
+export const sendAuthMail = (email, setIsEmailDisabled) => {
+  axios
+    .post(DEFAULT_URL + '/mail-auth/send', {
+      email,
+    })
+    .then((response) => {
+      alert('인증 메일을 전송했습니다.');
+      setIsEmailDisabled(true);
+    })
+    .catch((error) => {
+      alert('인증 메일 발송 실패하였습니다.');
+      setIsEmailDisabled(false);
+      console.log(error);
+    });
+};
+
+export const checkAuthNumber = (email, authNumber, setIsAuthNumberDisabled) => {
+  axios
+    .post(DEFAULT_URL + '/mail-auth/check', {
+      email,
+      authNumber,
+    })
+    .then((response) => {
+      alert('인증되었습니다.');
+      setIsAuthNumberDisabled(true);
+    })
+    .catch((error) => {
+      alert('인증 실패했습니다.');
+      setIsAuthNumberDisabled(false);
+      console.log(error);
+    });
+};
 export const saveProfilePhoto = async (formData, accessToken) => {
   const config = {
     headers: {
@@ -355,7 +388,6 @@ export const findCommentsByPostId = async (accessToken, postId) => {
 
 const redirectLoginWhenUnauthorized = (error) => {
   if (error.response && error.response.status === 403) {
-    console.log(error);
     document.location.href = '/login';
   }
 };
