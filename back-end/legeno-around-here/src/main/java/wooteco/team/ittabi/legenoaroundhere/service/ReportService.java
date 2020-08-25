@@ -18,15 +18,24 @@ public class ReportService {
 
     @Transactional(readOnly = true)
     public PostReportResponse findPostReport(Long id) {
-        PostReport postReport = postReportRepository.findById(id)
-            .orElseThrow(() -> new NotExistsException("ID에 해당하는 REPORT가 없습니다."));
-
+        PostReport postReport = findPostReportBy(id);
         return PostReportResponse.of(postReport);
+    }
+
+    private PostReport findPostReportBy(Long id) {
+        return postReportRepository.findById(id)
+            .orElseThrow(() -> new NotExistsException("ID에 해당하는 REPORT가 없습니다."));
     }
 
     @Transactional(readOnly = true)
     public Page<PostReportResponse> findPostReportByPage(Pageable pageable) {
         Page<PostReport> postReportPage = postReportRepository.findAll(pageable);
         return postReportPage.map(PostReportResponse::of);
+    }
+
+    @Transactional
+    public void deletePostReport(Long id) {
+        PostReport postReport = findPostReportBy(id);
+        postReportRepository.delete(postReport);
     }
 }

@@ -7,9 +7,9 @@ import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AUTH_NUMBER;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_EMPTY_MULTIPART_FILES;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_INVALID_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_REPORT_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_INVALID_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_REQUEST;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
@@ -84,8 +84,8 @@ public class ReportServiceTest extends ServiceTest {
 
     @DisplayName("글 신고 조회 - 예외 발생, ID가 없는 경우")
     @Test
-    void findUsedSector_HasNotId_ThrowException() {
-        assertThatThrownBy(() -> reportService.findPostReport(TEST_SECTOR_INVALID_ID))
+    void findPostReport_HasNotId_ThrowException() {
+        assertThatThrownBy(() -> reportService.findPostReport(TEST_POST_INVALID_ID))
             .isInstanceOf(NotExistsException.class);
     }
 
@@ -103,4 +103,24 @@ public class ReportServiceTest extends ServiceTest {
         assertThat(postReportPage.getContent()).contains(postReportResponse);
     }
 
+    @DisplayName("글 신고 삭제 - 성공")
+    @Test
+    void deletePostReport_SuccessToDelete() {
+        PostReportCreateRequest postReportCreateRequest = new PostReportCreateRequest(
+            TEST_POST_REPORT_WRITING);
+
+        PostReportResponse postReportCreateResponse = postService
+            .createPostReport(postId, postReportCreateRequest);
+
+        reportService.deletePostReport(postReportCreateResponse.getId());
+
+        assertThatThrownBy(() -> reportService.findPostReport(postReportCreateResponse.getId()));
+    }
+
+    @DisplayName("글 신고 삭제 - 예외 발생, ID가 없는 경우")
+    @Test
+    void deletePostReport_HasNotId_ThrowException() {
+        assertThatThrownBy(() -> reportService.deletePostReport(TEST_POST_INVALID_ID))
+            .isInstanceOf(NotExistsException.class);
+    }
 }

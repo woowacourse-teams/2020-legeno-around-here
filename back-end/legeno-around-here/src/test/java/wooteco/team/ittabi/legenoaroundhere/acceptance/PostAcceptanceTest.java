@@ -260,6 +260,21 @@ public class PostAcceptanceTest extends AcceptanceTest {
         List<PostReportResponse> postReportResponses = findPostReportByPage(adminToken);
         assertThat(postReportResponses).hasSize(1);
 
+        // 관리자가 해당 신고 글을 삭제
+        deletePostReport(adminToken, postReportId);
+        List<PostReportResponse> postReportResponsesAfterDelete = findPostReportByPage(adminToken);
+        assertThat(postReportResponsesAfterDelete).hasSize(0);
+    }
+
+    private void deletePostReport(String adminToken, Long postReportId) {
+        given()
+            .header("X-AUTH-TOKEN", adminToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .delete("/admin/reports/" + postReportId)
+            .then()
+            .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     private List<PostReportResponse> findPostReportByPage(String accessToken) {
