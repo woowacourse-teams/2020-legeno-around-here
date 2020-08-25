@@ -17,14 +17,14 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @ToString
 public class AwardsCountResponse {
 
-    private int top1;
-    private int top3;
+    private int topOne;
+    private int topThree;
     private int sector;
 
     public static AwardsCountResponse of(User awardee) {
         return AwardsCountResponse.builder()
-            .top1(awardee.countTopPopularityPostCreatorAwardsBy(1))
-            .top3(awardee.countTopPopularityPostCreatorAwardsBy(3))
+            .topOne(awardee.countTopPopularityPostCreatorAwardsBy(1))
+            .topThree(awardee.countTopPopularityPostCreatorAwardsBy(3))
             .sector(awardee.countSectorCreatorAwards())
             .build();
     }
