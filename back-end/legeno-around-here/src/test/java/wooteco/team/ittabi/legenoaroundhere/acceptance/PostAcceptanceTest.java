@@ -226,6 +226,49 @@ public class PostAcceptanceTest extends AcceptanceTest {
         assertThat(post.getZzang().isActivated()).isTrue();
     }
 
+    /**
+     * Feature: 글의 신고 기능
+     * <p>
+     * Scenario: 신고 버튼을 누르고, 신고 내용을 작성한다.
+     * <p>
+     * When 글을 등록한다. Then 글이 등록되었다.
+     * <p>
+     * When 신고 버튼을 누르고 신고 내용을 작성한다. Then 글을 신고하는데 성공했다.
+     * <p>
+     * When 관리자가 신고 내용을 조회한다. Then 작성했던 신고글이 조회된다.
+     * <p>
+     * When 관리자가 해당 신고 내용을 삭제한다. Then 작성했던 신고글이 삭제된다.
+     */
+    @DisplayName("글의 신고 관리")
+    @Test
+    void managePostReport() {
+        String postLocation = createPostWithoutImage(accessToken);
+        Long postId = getIdFromUrl(postLocation);
+//        PostResponse post = findPost(accessToken, postId);
+
+        // 해당 글을 유저가 신고
+        String reportLocation = createReport(accessToken, postId);
+        Long postReportId = getIdFromUrl(reportLocation);
+
+        assertThat(postId).isEqualTo(postReportId);
+    }
+
+    private String createReport(String accessToken, Long postId) {
+        return given()
+            .formParam("writing", TEST_POST_WRITING)
+            .formParam("areaId", TEST_AREA_ID)
+            .formParam("sectorId", sectorId)
+            .header("X-AUTH-TOKEN", accessToken)
+            .config(RestAssuredConfig.config()
+                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
+            .when()
+            .post("/posts/" + postId + "/report")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract()
+            .header("Location");
+    }
+
     private Long createSector(String accessToken, String name) {
         Map<String, String> params = new HashMap<>();
         params.put("name", name);

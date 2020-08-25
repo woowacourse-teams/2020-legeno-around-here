@@ -84,4 +84,12 @@ public class PostController {
             .noContent()
             .build();
     }
+
+    @PostMapping("/{postId}/report")
+    public ResponseEntity<Void> createPostReport(@PathVariable Long postId) {
+
+        return ResponseEntity
+            .created(URI.create("/posts/" + postId))
+            .build();
+    }
 }
