@@ -22,6 +22,7 @@ public class UserResponse {
     private String nickname;
     private UserImageResponse image;
     private AreaResponse area;
+    private AwardsCountResponse awardsCount;
 
     public static UserResponse from(User user) {
         return UserResponse.builder()
@@ -30,6 +31,7 @@ public class UserResponse {
             .nickname(user.getNickname())
             .image(UserImageResponse.of(user.getImage()))
             .area(AreaResponse.of(user.getArea()))
+            .awardsCount(AwardsCountResponse.of(user))
             .build();
     }
 }

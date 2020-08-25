@@ -47,4 +47,9 @@ public class PopularityPostCreatorAward extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "awardee_id", nullable = false)
     private User awardee;
+
+    public boolean isTopBy(int number) {
+        return ranking <= number;
+    }
+
 }
