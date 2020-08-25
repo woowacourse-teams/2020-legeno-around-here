@@ -30,7 +30,6 @@ public class UrlPathConstants {
     public static final String USERS_PATH = PATH_DELIMITER + USERS;
     public static final String ZZANGS_PATH = PATH_DELIMITER + ZZANGS;
 
-    public static final String ADMIN_PATH_WITH_SLASH = ADMIN_PATH + PATH_DELIMITER;
     public static final String AREAS_PATH_WITH_SLASH = AREAS_PATH + PATH_DELIMITER;
     public static final String AWARDS_PATH_WITH_SLASH = AWARDS_PATH + PATH_DELIMITER;
     public static final String COMMENTS_PATH_WITH_SLASH = COMMENTS_PATH + PATH_DELIMITER;
