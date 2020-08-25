@@ -93,6 +93,7 @@ const RankingPage = () => {
             <option value="total">역대</option>
             <option value="month">월간</option>
             <option value="week">주간</option>
+            <option value="yesterday">어제</option>
           </Select>
         </FormControl>
 
