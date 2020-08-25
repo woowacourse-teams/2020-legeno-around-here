@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,4 +46,21 @@ public interface PostRepository extends JpaRepository<Post, Long> {
         + "                        AND id IN :sectorIds)", nativeQuery = true)
     Page<Post> findAllByAreaIdsAndSectorIds(Pageable pageable, @Param("areaId") Long areaId,
         @Param("sectorIds") List<Long> sectorIds);
+
+    @Query(value = "SELECT * FROM post", nativeQuery = true)
+    Page<Post> findRankingBy(Pageable pageable, @Param("startDate") LocalDateTime startDate,
+        @Param("endDate") LocalDateTime endDate);
+
+    @Query(value = "SELECT * FROM post", nativeQuery = true)
+    Page<Post> findRankingByAreaId(Pageable pageable, @Param("areaId") Long areaId,
+        @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
+    @Query(value = "SELECT * FROM post", nativeQuery = true)
+    Page<Post> findRankingBySectorIds(Pageable pageable, @Param("sectorIds") List<Long> sectorIds,
+        @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
+    @Query(value = "SELECT * FROM post", nativeQuery = true)
+    Page<Post> findRankingByAreaIdAndSectorIds(Pageable pageable, @Param("areaId") Long areaId,
+        @Param("sectorIds") List<Long> sectorIds, @Param("startDate") LocalDateTime startDate,
+        @Param("endDate") LocalDateTime endDate);
 }
