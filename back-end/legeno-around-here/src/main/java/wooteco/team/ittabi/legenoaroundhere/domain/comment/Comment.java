@@ -138,7 +138,7 @@ public class Comment extends BaseEntity {
 
     public void setPost(Post post) {
         if (Objects.nonNull(this.post)) {
-            this.post.removeComments(this);
+            this.post.removeComment(this);
         }
         this.post = post;
         post.addComment(this);

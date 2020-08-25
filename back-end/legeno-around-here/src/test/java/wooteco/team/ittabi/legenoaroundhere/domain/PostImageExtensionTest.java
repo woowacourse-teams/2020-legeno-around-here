@@ -10,14 +10,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.domain.util.ImageExtension;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageExtensionException;
-import wooteco.team.ittabi.legenoaroundhere.utils.FileConverter;
+import wooteco.team.ittabi.legenoaroundhere.utils.TestConverterUtils;
 
 public class PostImageExtensionTest {
 
     @DisplayName("이미지 확장자 유효성 검사 - 실패, 예외 처리")
     @Test
     void validateImageExtension_NoneMatchImageExtension_ThrownException() throws IOException {
-        MultipartFile multipartFile = FileConverter
+        MultipartFile multipartFile = TestConverterUtils
             .convert(TEST_IMAGE_NOT_TXT_EXTENSION, TEST_IMAGE_TEXT_CONTENT_TYPE);
 
         assertThatThrownBy(() -> ImageExtension.validateImageExtension(multipartFile))

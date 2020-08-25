@@ -33,6 +33,7 @@ public class RankingService {
             .getPostByFilter(pageable, postSearchFilter.toPostSearch());
         List<Post> filteredDateZzangPosts
             = getPostsThatZzangFilteredByDate(rankingRequest.getCriteria(), allDateZzangPosts);
+        Collections.reverse(filteredDateZzangPosts);
 
         User user = (User) authenticationFacade.getPrincipal();
         PageImpl<Post> posts = new PageImpl<>(filteredDateZzangPosts);
