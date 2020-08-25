@@ -43,8 +43,8 @@ public class UserController {
     }
 
     @GetMapping("/users/me")
-    public ResponseEntity<UserResponse> findUser() {
-        UserResponse user = userService.findUser();
+    public ResponseEntity<UserResponse> findMyInfo() {
+        UserResponse user = userService.findMyInfo();
 
         return ResponseEntity
             .ok(user);

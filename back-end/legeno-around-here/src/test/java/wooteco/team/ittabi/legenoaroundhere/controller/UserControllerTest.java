@@ -142,13 +142,13 @@ class UserControllerTest {
 
     @Test
     @DisplayName("내 정보 얻기")
-    void findUser() throws Exception {
+    void findMyInfo() throws Exception {
         UserResponse expected = UserResponse.builder()
             .id(TEST_USER_ID)
             .email(TEST_USER_EMAIL)
             .nickname(TEST_USER_NICKNAME)
             .build();
-        given(userService.findUser()).willReturn(expected);
+        given(userService.findMyInfo()).willReturn(expected);
 
         String expectedJson = objectMapper.writeValueAsString(expected);
 

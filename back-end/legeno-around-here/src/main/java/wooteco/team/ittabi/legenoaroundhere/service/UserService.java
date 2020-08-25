@@ -85,31 +85,34 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional(readOnly = true)
-    public UserResponse findUser() {
-        User user = (User) authenticationFacade.getPrincipal();
+    public UserResponse findMyInfo() {
+        User user = findMe();
         return UserResponse.from(user);
     }
 
     @Transactional
     public UserResponse updateMyInfo(UserUpdateRequest userUpdateRequest) {
-        User user = (User) authenticationFacade.getPrincipal();
-        User foundUser = userRepository.findByEmail(user.getEmail())
-            .orElseThrow(() -> new NotExistsException("사용자를 찾을 수 없습니다."));
+        User user = findMe();
         Area area = findAreaBy(userUpdateRequest.getAreaId());
         UserImage userImage = findUserImageBy(userUpdateRequest.getImageId());
 
-        foundUser.setNickname(userUpdateRequest.getNickname());
-        foundUser.setArea(area);
-        foundUser.setImage(userImage);
+        user.setNickname(userUpdateRequest.getNickname());
+        user.setArea(area);
+        user.setImage(userImage);
 
-        return UserResponse.from(foundUser);
+        return UserResponse.from(user);
+    }
+
+    private User findMe() {
+        User user = (User) authenticationFacade.getPrincipal();
+
+        return userRepository.findById(user.getId())
+            .orElseThrow(() -> new NotExistsException("사용자를 찾을 수 없습니다."));
     }
 
     @Transactional
     public void changeMyPassword(UserPasswordUpdateRequest userPasswordUpdateRequest) {
-        User user = (User) authenticationFacade.getPrincipal();
-        User foundUser = userRepository.findByEmail(user.getEmail())
-            .orElseThrow(() -> new NotExistsException("사용자를 찾을 수 없습니다."));
+        User user = findMe();
 
         String password = userPasswordUpdateRequest.getPassword();
         if (PASSWORD_ENCODER.matches(password, user.getPassword())) {
@@ -117,7 +120,7 @@ public class UserService implements UserDetailsService {
         }
 
         String encodePassword = PASSWORD_ENCODER.encode(password);
-        foundUser.setPassword(encodePassword);
+        user.setPassword(encodePassword);
     }
 
     private UserImage findUserImageBy(Long userImageId) {
@@ -130,10 +133,8 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void deleteUser() {
-        User user = (User) authenticationFacade.getPrincipal();
-        User persistUser = userRepository.findByEmail(user.getEmail())
-            .orElseThrow(() -> new NotExistsException("사용자를 찾을 수 없습니다."));
-        userRepository.delete(persistUser);
+        User user = findMe();
+        userRepository.delete(user);
     }
 
     @Override
