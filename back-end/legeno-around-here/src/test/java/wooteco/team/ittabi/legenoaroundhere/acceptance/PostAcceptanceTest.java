@@ -254,17 +254,38 @@ public class PostAcceptanceTest extends AcceptanceTest {
 
         // 관리자가 해당 신고 글을 조회
         PostReportResponse postReportResponse = findPostReport(adminToken, postReportId);
-
         assertThat(postReportResponse.getWriting()).isEqualTo(TEST_POST_REPORT_WRITING);
+
+        // 관리자가 페이지 별 신고 글을 조회
+        List<PostReportResponse> postReportResponses = findPostReportByPage(adminToken);
+        assertThat(postReportResponses).hasSize(1);
+
+    }
+
+    private List<PostReportResponse> findPostReportByPage(String accessToken) {
+        return findPostReportByPageWithParameter(accessToken,
+            "page=0&size=10&sortedBy=id&direction=asc");
+    }
+
+    private List<PostReportResponse> findPostReportByPageWithParameter(String adminToken,
+        String parameter) {
+        return given()
+            .header("X-AUTH-TOKEN", adminToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/admin/reports?" + parameter)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .jsonPath()
+            .getList("content", PostReportResponse.class);
     }
 
     private PostReportResponse findPostReport(String adminToken, Long postReportId) {
-        PostReportCreateRequest postReportCreateRequest = new PostReportCreateRequest(
-            TEST_POST_REPORT_WRITING);
 
         return given()
             .header("X-AUTH-TOKEN", adminToken)
-            .body(postReportCreateRequest)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when()
