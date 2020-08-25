@@ -3,10 +3,10 @@ import {
   Backdrop,
   Button,
   Fade,
-  TextField,
-  Modal,
-  Typography,
   Grid,
+  Modal,
+  TextField,
+  Typography,
 } from '@material-ui/core';
 import useStyles from './SectorApplyButtonStyles';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
