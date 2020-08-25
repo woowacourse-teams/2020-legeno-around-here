@@ -10,68 +10,29 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
 import { convertDateFormat } from '../../../util/TimeUtils';
-import { MAIN_COLOR } from '../../../constants/Color';
+import useStyle from './RankingItemStyle';
 
-const useStyle = makeStyles({
-  grow: {
-    flexGrow: 1,
-  },
-  card: {
-    display: 'flex',
-  },
-  rank: {
-    width: '65px',
-    height: '65px',
-    borderRadius: '300px',
-    border: `1px solid ${MAIN_COLOR}`,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignContent: 'center',
-    textAlign: 'center',
-    margin: 'auto 8px',
-  },
-  details: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '80%',
-  },
-  content: {
-    flex: '1 0 auto',
-    // border: '1px solid red',
-    padding: '5px',
-  },
-  cover: {
-    flex: '1 0 auto',
-    opacity: 0.7,
-    backgroundSize: 'contain',
-  },
-  photoText: {
-    textAlign: 'center',
-    marginTop: 100,
-  },
-  reactions: (props) => ({
-    display: `${props.whetherToPrintZzangCount? 'block' : 'none'}`,
-    paddingTop: 0,
-  }),
-  reactionIconSpace: {
-    margin: 0,
-    padding: 0,
-  },
-  reactionIcon: {
-    width: '20px',
-    height: '20px',
-  },
-  writing: {
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    width: '190px',
-  }
-});
+const FIRST_PRIZE_IMAGE_URL = '/images/gold.png';
+const SECOND_PRIZE_IMAGE_URL = '/images/silver.png';
+const THIRD_PRIZE_IMAGE_URL = '/images/bronze.png';
 
-const RankingItem = ({ post, rank, whetherToPrintZzangCount}) => {
+const RankingItem = ({ post, rank, whetherToPrintZzangCount }) => {
+  const matchRankToPrizeUrl = (rank) => {
+    if (rank === 1) {
+      return FIRST_PRIZE_IMAGE_URL;
+    }
+    if (rank === 2) {
+      return SECOND_PRIZE_IMAGE_URL;
+    }
+    if (rank === 3) {
+      return THIRD_PRIZE_IMAGE_URL;
+    }
+    return '';
+  };
+
   const props = {
     whetherToPrintZzangCount: whetherToPrintZzangCount,
+    prizeImageUrl: matchRankToPrizeUrl(rank),
   };
   const classes = useStyle(props);
 
@@ -94,7 +55,13 @@ const RankingItem = ({ post, rank, whetherToPrintZzangCount}) => {
       onClick={() => (document.location.href = `/posts/${id}`)}
     >
       <div className={classes.rank}>
-        <Typography component="h5" variant="h5">{rank}</Typography>
+        {rank > 3 ? (
+          <Typography component="h5" variant="h5">
+            {rank}
+          </Typography>
+        ) : (
+          ''
+        )}
       </div>
       <div className={classes.details}>
         <CardContent className={classes.content}>
@@ -129,7 +96,7 @@ const RankingItem = ({ post, rank, whetherToPrintZzangCount}) => {
             {zzang.count}
           </IconButton>
           <IconButton>
-            <CommentIcon className={classes.reactionIcon}/>
+            <CommentIcon className={classes.reactionIcon} />
             {commentsCount}
           </IconButton>
         </CardActions>
