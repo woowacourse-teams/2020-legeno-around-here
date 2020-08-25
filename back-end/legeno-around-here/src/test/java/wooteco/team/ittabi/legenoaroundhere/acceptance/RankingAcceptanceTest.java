@@ -117,34 +117,34 @@ public class RankingAcceptanceTest extends AcceptanceTest {
         // 모든 지역, 모든 부문에 대해서 랭킹을 조회
         rankingPostResponse = searchRanks(accessToken, RankingCriteria.TOTAL, filter);
         assertThat(rankingPostResponse).hasSize(4);
-        assertThat(rankingPostResponse.get(0).getId()).isEqualTo(firstPostId);
-        assertThat(rankingPostResponse.get(0).getZzang().getCount()).isEqualTo(3);
-        assertThat(rankingPostResponse.get(1).getId()).isEqualTo(secondPostId);
-        assertThat(rankingPostResponse.get(1).getZzang().getCount()).isEqualTo(2);
-        assertThat(rankingPostResponse.get(2).getId()).isEqualTo(thirdPostId);
-        assertThat(rankingPostResponse.get(2).getZzang().getCount()).isEqualTo(1);
-        assertThat(rankingPostResponse.get(3).getId()).isEqualTo(fourthPostId);
-        assertThat(rankingPostResponse.get(3).getZzang().getCount()).isEqualTo(0);
+        assertThat(rankingPostResponse.get(3).getId()).isEqualTo(firstPostId);
+        assertThat(rankingPostResponse.get(3).getZzang().getCount()).isEqualTo(3);
+        assertThat(rankingPostResponse.get(2).getId()).isEqualTo(secondPostId);
+        assertThat(rankingPostResponse.get(2).getZzang().getCount()).isEqualTo(2);
+        assertThat(rankingPostResponse.get(1).getId()).isEqualTo(thirdPostId);
+        assertThat(rankingPostResponse.get(1).getZzang().getCount()).isEqualTo(1);
+        assertThat(rankingPostResponse.get(0).getId()).isEqualTo(fourthPostId);
+        assertThat(rankingPostResponse.get(0).getZzang().getCount()).isEqualTo(0);
 
         // 모든 지역, 특정 부문 필터 설정
         filter = "areaId=&sectorIds=" + sectorAId;
         // 모든 지역, 특정 부문에 대해서 랭킹을 조회
         rankingPostResponse = searchRanks(accessToken, RankingCriteria.TOTAL, filter);
         assertThat(rankingPostResponse).hasSize(2);
-        assertThat(rankingPostResponse.get(0).getId()).isEqualTo(firstPostId);
-        assertThat(rankingPostResponse.get(0).getZzang().getCount()).isEqualTo(3);
-        assertThat(rankingPostResponse.get(1).getId()).isEqualTo(thirdPostId);
-        assertThat(rankingPostResponse.get(1).getZzang().getCount()).isEqualTo(1);
+        assertThat(rankingPostResponse.get(1).getId()).isEqualTo(firstPostId);
+        assertThat(rankingPostResponse.get(1).getZzang().getCount()).isEqualTo(3);
+        assertThat(rankingPostResponse.get(0).getId()).isEqualTo(thirdPostId);
+        assertThat(rankingPostResponse.get(0).getZzang().getCount()).isEqualTo(1);
 
         // 특정 지역, 모든 부문 필터 설정
         filter = "areaId=" + TEST_AREA_A_ID + "&sectorIds=";
         // 특정 지역, 모든 부문에 대해서 랭킹을 조회
         rankingPostResponse = searchRanks(accessToken, RankingCriteria.TOTAL, filter);
         assertThat(rankingPostResponse).hasSize(2);
-        assertThat(rankingPostResponse.get(0).getId()).isEqualTo(firstPostId);
-        assertThat(rankingPostResponse.get(0).getZzang().getCount()).isEqualTo(3);
-        assertThat(rankingPostResponse.get(1).getId()).isEqualTo(secondPostId);
-        assertThat(rankingPostResponse.get(1).getZzang().getCount()).isEqualTo(2);
+        assertThat(rankingPostResponse.get(1).getId()).isEqualTo(firstPostId);
+        assertThat(rankingPostResponse.get(1).getZzang().getCount()).isEqualTo(3);
+        assertThat(rankingPostResponse.get(0).getId()).isEqualTo(secondPostId);
+        assertThat(rankingPostResponse.get(0).getZzang().getCount()).isEqualTo(2);
 
         // 특정 지역, 특정 부문 필터 설정
         filter = "areaId=" + TEST_AREA_B_ID + "&sectorIds=" + sectorBId;

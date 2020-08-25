@@ -104,34 +104,13 @@ public class PostService {
         }
 
         if (postSearch.isAreaFilter()) {
-            List<Area> areas = findAllAreas(postSearch.getAreaId());
-            return postRepository.findAllByAreaIn(pageable, areas);
+            return postRepository.findAllByAreaId(pageable, postSearch.getAreaId());
         }
-
         if (postSearch.isSectorFilter()) {
-            List<Sector> sectors = findAllSectors(postSearch.getSectorIds());
-            return postRepository.findAllBySectorIn(pageable, sectors);
+            return postRepository.findAllBySectorIds(pageable, postSearch.getSectorIds());
         }
-
-        List<Area> areas = findAllAreas(postSearch.getAreaId());
-        List<Sector> sectors = findAllSectors(postSearch.getSectorIds());
-        return postRepository.findAllByAreaInAndSectorIn(pageable, areas, sectors);
-    }
-
-    private List<Area> findAllAreas(Long areaId) {
-        List<Area> subAreas = areaRepository.findSubAreasById(areaId);
-        if (subAreas.isEmpty()) {
-            throw new NotExistsException("해당 Area가 존재하지 않습니다.");
-        }
-        return subAreas;
-    }
-
-    private List<Sector> findAllSectors(List<Long> sectorIds) {
-        List<Sector> sectors = sectorRepository.findAllById(sectorIds);
-        if (sectors.size() != sectorIds.size()) {
-            throw new WrongUserInputException("유효하지 않은 Sector ID를 사용하셨습니다.");
-        }
-        return sectors;
+        return postRepository.findAllByAreaIdsAndSectorIds(pageable, postSearch.getAreaId(),
+            postSearch.getSectorIds());
     }
 
     @Transactional

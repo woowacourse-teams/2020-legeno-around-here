@@ -21,7 +21,8 @@ VALUES (1, 'admin@email.com', '어드민씨',
 
 INSERT INTO User_roles(user_id, roles)
 VALUES (1, 'ROLE_ADMIN'),
-       (2, 'ROLE_USER');
+       (2, 'ROLE_USER'),
+       (3, 'ROLE_USER');
 
 INSERT INTO Sector(id, name, description, state, reason,
                    creator_id, last_modifier_id, created_at, modified_at)

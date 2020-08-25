@@ -131,10 +131,10 @@ public class RankingServiceTest extends ServiceTest {
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(4);
-        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdB);
-        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdC);
-        assertThat(posts.getContent().get(2).getId()).isEqualTo(postIdA);
-        assertThat(posts.getContent().get(3).getId()).isEqualTo(postIdD);
+        assertThat(posts.getContent().get(3).getId()).isEqualTo(postIdB);
+        assertThat(posts.getContent().get(2).getId()).isEqualTo(postIdC);
+        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdA);
+        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdD);
     }
 
     @DisplayName("모든 부문, 모든 지역 랭킹 조회 - 어제")
@@ -198,10 +198,10 @@ public class RankingServiceTest extends ServiceTest {
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(4);
-        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdC);
-        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdB);
-        assertThat(posts.getContent().get(2).getId()).isEqualTo(postIdA);
-        assertThat(posts.getContent().get(3).getId()).isEqualTo(postIdD);
+        assertThat(posts.getContent().get(3).getId()).isEqualTo(postIdC);
+        assertThat(posts.getContent().get(2).getId()).isEqualTo(postIdB);
+        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdA);
+        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdD);
     }
 
     @DisplayName("모든 부문, 모든 지역 랭킹 조회 - 지난주")
@@ -261,10 +261,10 @@ public class RankingServiceTest extends ServiceTest {
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(4);
-        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdC);
-        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdA);
-        assertThat(posts.getContent().get(2).getId()).isEqualTo(postIdD);
-        assertThat(posts.getContent().get(3).getId()).isEqualTo(postIdB);
+        assertThat(posts.getContent().get(3).getId()).isEqualTo(postIdC);
+        assertThat(posts.getContent().get(2).getId()).isEqualTo(postIdA);
+        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdD);
+        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdB);
     }
 
     @DisplayName("모든 부문, 모든 지역 랭킹 조회 - 지난달")
@@ -322,10 +322,10 @@ public class RankingServiceTest extends ServiceTest {
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(4);
-        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdD);
-        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdA);
-        assertThat(posts.getContent().get(2).getId()).isEqualTo(postIdC);
-        assertThat(posts.getContent().get(3).getId()).isEqualTo(postIdB);
+        assertThat(posts.getContent().get(3).getId()).isEqualTo(postIdD);
+        assertThat(posts.getContent().get(2).getId()).isEqualTo(postIdA);
+        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdC);
+        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdB);
     }
 
     @DisplayName("특정 부문, 모든 지역 랭킹 조회 - 전체 기간")
@@ -374,8 +374,8 @@ public class RankingServiceTest extends ServiceTest {
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
-        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdC);
-        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdA);
+        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdC);
+        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
     }
 
     @DisplayName("특정 부문, 모든 지역 랭킹 조회 - 어제")
@@ -444,8 +444,8 @@ public class RankingServiceTest extends ServiceTest {
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
-        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
-        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdC);
+        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdA);
+        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdC);
     }
 
     @DisplayName("특정 부문, 모든 지역 랭킹 조회 - 지난주")
@@ -505,8 +505,8 @@ public class RankingServiceTest extends ServiceTest {
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
-        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdC);
-        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdA);
+        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdC);
+        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
     }
 
     @DisplayName("특정 부문, 모든 지역 랭킹 조회 - 지난달")
@@ -564,8 +564,8 @@ public class RankingServiceTest extends ServiceTest {
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
-        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
-        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdC);
+        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdA);
+        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdC);
     }
 
     @DisplayName("모든 부문, 특정 지역 랭킹 조회 - 전체 기간")
@@ -614,8 +614,8 @@ public class RankingServiceTest extends ServiceTest {
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
-        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdB);
-        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdA);
+        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdB);
+        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
     }
 
     @DisplayName("모든 부문, 특정 지역 랭킹 조회 - 어제")
@@ -679,8 +679,8 @@ public class RankingServiceTest extends ServiceTest {
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
-        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdB);
-        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdA);
+        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdB);
+        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
     }
 
     @DisplayName("모든 부문, 특정 지역 랭킹 조회 - 지난주")
@@ -740,8 +740,8 @@ public class RankingServiceTest extends ServiceTest {
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
-        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
-        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdB);
+        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdA);
+        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdB);
     }
 
     @DisplayName("모든 부문, 특정 지역 랭킹 조회 - 지난달")
@@ -799,8 +799,8 @@ public class RankingServiceTest extends ServiceTest {
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
-        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
-        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdB);
+        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdA);
+        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdB);
     }
 
     @DisplayName("특정 부문, 특정 지역 랭킹 조회 - 전체 기간")
@@ -849,8 +849,8 @@ public class RankingServiceTest extends ServiceTest {
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
-        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
-        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdD);
+        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdA);
+        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdD);
     }
 
     @DisplayName("특정 부문, 특정 지역 랭킹 조회 - 어제")
@@ -914,8 +914,8 @@ public class RankingServiceTest extends ServiceTest {
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
-        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
-        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdD);
+        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdA);
+        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdD);
     }
 
     @DisplayName("특정 부문, 특정 지역 랭킹 조회 - 지난주")
@@ -975,8 +975,8 @@ public class RankingServiceTest extends ServiceTest {
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
-        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
-        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdD);
+        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdA);
+        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdD);
     }
 
     @DisplayName("특정 부문, 특정 지역 랭킹 조회 - 지난달")
@@ -1034,7 +1034,7 @@ public class RankingServiceTest extends ServiceTest {
             = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
-        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdD);
-        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdA);
+        assertThat(posts.getContent().get(1).getId()).isEqualTo(postIdD);
+        assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
     }
 }
