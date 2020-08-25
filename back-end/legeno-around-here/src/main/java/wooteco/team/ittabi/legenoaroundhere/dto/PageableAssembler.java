@@ -60,4 +60,13 @@ public class PageableAssembler {
             .orElseThrow(() -> new WrongUserInputException(
                 "Direction를 잘못 [" + direction + "] 입력하셨습니다.(asc/desc)"));
     }
+
+    public static Pageable assemble(PageRequest pageRequest, int size) {
+        return org.springframework.data.domain.PageRequest.of(
+            calculatePage(pageRequest.getPage()),
+            size,
+            makeDirection(pageRequest.getDirection()),
+            makeSortedBy(pageRequest.getSortedBy())
+        );
+    }
 }
