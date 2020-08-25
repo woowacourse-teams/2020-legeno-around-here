@@ -90,12 +90,6 @@ public class Post extends BaseEntity {
         }
     }
 
-    public void addPostImages(PostImage postImage) {
-        if (!this.postImages.contains(postImage)) {
-            this.postImages.add(postImage);
-        }
-    }
-
     public void addPostImage(PostImage postImage) {
         if (!this.postImages.contains(postImage)) {
             this.postImages.add(postImage);
@@ -105,8 +99,8 @@ public class Post extends BaseEntity {
         }
     }
 
-    public void removePostImage(PostImage postImage) {
-        this.postImages.remove(postImage);
+    public void removePostImages(List<PostImage> postImages) {
+        this.postImages.removeAll(postImages);
     }
 
     public void addComment(Comment comment) {

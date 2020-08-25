@@ -163,7 +163,7 @@ public class PostService {
         List<Long> deletePostImageIds = post.getDeletePostImageIds(updatePostImageIds);
         List<PostImage> deletePostImages = post.getDeletePostImages(deletePostImageIds);
 
-        deletePostImages.forEach(post::removePostImage);
+        post.removePostImages(deletePostImages);
     }
 
     @Transactional
