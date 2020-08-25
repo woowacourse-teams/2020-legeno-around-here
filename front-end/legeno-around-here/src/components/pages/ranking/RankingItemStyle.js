@@ -9,10 +9,10 @@ const useStyle = makeStyles({
     display: 'flex',
   },
   rank: (props) => ({
+    height: `${props.prizeImageUrl?'90px':'65px'}`,
     width: '65px',
-    height: '65px',
-    borderRadius: '300px',
-    border: `1px solid ${MAIN_COLOR}`,
+    borderRadius: `${props.prizeImageUrl?'0':'300px'}`,
+    border: `${props.prizeImageUrl? 0 :('1px solid ' + MAIN_COLOR)}`,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
