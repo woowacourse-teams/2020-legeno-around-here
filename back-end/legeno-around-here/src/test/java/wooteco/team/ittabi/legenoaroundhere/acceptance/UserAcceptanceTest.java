@@ -69,8 +69,11 @@ public class UserAcceptanceTest extends AcceptanceTest {
     @Test
     @DisplayName("회원 관리")
     void manageUser() {
+        //메일 중복 확인
+        checkJoined(TEST_NEW_USER_EMAIL);
+
         //메일 인증
-        MailAuth mailAuth = new MailAuth(TEST_USER_EMAIL, TEST_AUTH_NUMBER);
+        MailAuth mailAuth = new MailAuth(TEST_NEW_USER_EMAIL, TEST_AUTH_NUMBER);
         when(mailAuthRepository.findByEmail(any())).thenReturn(java.util.Optional.of(mailAuth));
 
         //회원 가입
@@ -270,5 +273,13 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .delete("/users/me")
             .then()
             .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    private void checkJoined(String email) {
+        given()
+            .when()
+            .get("/check-joined?email=" + email)
+            .then()
+            .statusCode(HttpStatus.OK.value());
     }
 }

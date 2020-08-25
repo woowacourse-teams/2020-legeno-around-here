@@ -3,6 +3,7 @@ package wooteco.team.ittabi.legenoaroundhere.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,8 +31,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserCheckRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
+import wooteco.team.ittabi.legenoaroundhere.exception.AlreadyExistUserException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 
@@ -50,6 +53,36 @@ class UserControllerTest {
         this.mockMvc = MockMvcBuilders
             .webAppContextSetup(webApplicationContext)
             .build();
+    }
+
+    @Test
+    @DisplayName("가입 여부 확인 테스트 - 가입되지 않은 메일일 경우")
+    void checkJoined() throws Exception {
+        String inputJson = objectMapper.writeValueAsString(
+            new UserCheckRequest(TEST_USER_EMAIL));
+
+        this.mockMvc.perform(get("/check-joined")
+            .content(inputJson)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andDo(print());
+    }
+
+    @Test
+    @DisplayName("가입 여부 확인 테스트 - 이미 가입된 메일일 경우")
+    void checkJoined_AlreadyExistUser_ThrowException() throws Exception {
+        willThrow(new AlreadyExistUserException("")).given(userService).checkJoined(any());
+
+        String inputJson = objectMapper.writeValueAsString(
+            new UserCheckRequest(TEST_USER_EMAIL));
+
+        this.mockMvc.perform(get("/check-joined")
+            .content(inputJson)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andDo(print());
     }
 
     @Test
