@@ -1,5 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.RANKING_PATH;
+
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +16,14 @@ import wooteco.team.ittabi.legenoaroundhere.dto.RankingRequest;
 import wooteco.team.ittabi.legenoaroundhere.service.RankingService;
 
 @RestController
-@RequestMapping("/ranking")
+@RequestMapping(RANKING_PATH)
 @AllArgsConstructor
 public class RankingController {
 
     private final RankingService rankingService;
 
     @GetMapping
-    public ResponseEntity<Page<PostWithCommentsCountResponse>> searchAllRanking(
+    public ResponseEntity<Page<PostWithCommentsCountResponse>> searchRanking(
         PageRequest pageRequest, RankingRequest rankingRequest,
         PostSearchRequest postSearchRequest) {
         Page<PostWithCommentsCountResponse> posts

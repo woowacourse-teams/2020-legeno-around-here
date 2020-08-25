@@ -1,5 +1,9 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POSTS_PATH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POSTS_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ZZANGS_PATH;
+
 import java.net.URI;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,7 +26,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.service.PostService;
 
 @RestController
-@RequestMapping("/posts")
+@RequestMapping(POSTS_PATH)
 @AllArgsConstructor
 public class PostController {
 
@@ -33,23 +37,23 @@ public class PostController {
         Long postId = postService.createPost(postCreateRequest).getId();
 
         return ResponseEntity
-            .created(URI.create("/posts/" + postId))
+            .created(URI.create(POSTS_PATH_WITH_SLASH + postId))
             .build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<PostResponse> findPost(@PathVariable Long id) {
-        PostResponse post = postService.findPost(id);
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostResponse> findPost(@PathVariable Long postId) {
+        PostResponse post = postService.findPost(postId);
 
         return ResponseEntity
             .ok()
             .body(post);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updatePost(@PathVariable Long id,
+    @PutMapping("/{postId}")
+    public ResponseEntity<Void> updatePost(@PathVariable Long postId,
         @RequestBody PostUpdateRequest postUpdateRequest) {
-        postService.updatePost(id, postUpdateRequest);
+        postService.updatePost(postId, postUpdateRequest);
 
         return ResponseEntity
             .ok()
@@ -57,26 +61,26 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<PostWithCommentsCountResponse>> searchAllPost(
+    public ResponseEntity<Page<PostWithCommentsCountResponse>> searchPosts(
         PageRequest pageRequest, PostSearchRequest postSearchRequest) {
         Page<PostWithCommentsCountResponse> posts
-            = postService.searchAllPost(PageableAssembler.assemble(pageRequest), postSearchRequest);
+            = postService.searchPosts(PageableAssembler.assemble(pageRequest), postSearchRequest);
 
         return ResponseEntity
             .ok()
             .body(posts);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
-        postService.deletePost(id);
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
+        postService.deletePost(postId);
 
         return ResponseEntity
             .noContent()
             .build();
     }
 
-    @PostMapping("/{postId}/zzangs")
+    @PostMapping("/{postId}" + ZZANGS_PATH)
     public ResponseEntity<Void> pressPostZzang(@PathVariable Long postId) {
         postService.pressZzang(postId);
 

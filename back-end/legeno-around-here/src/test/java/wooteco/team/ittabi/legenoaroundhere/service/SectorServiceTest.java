@@ -278,7 +278,7 @@ class SectorServiceTest extends ServiceTest {
 
     @DisplayName("현재 사용자와 관련된 모든 부문 조회")
     @Test
-    void findAllMySector_Success() {
+    void findMySectors_Success() {
         List<Long> sectorIds = new ArrayList<>();
         SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
         sectorIds.add(sectorService.createPendingSector(sectorRequest).getId());
@@ -286,7 +286,7 @@ class SectorServiceTest extends ServiceTest {
             = new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_DESCRIPTION);
         sectorIds.add(sectorService.createPendingSector(sectorAnotherRequest).getId());
 
-        Page<SectorDetailResponse> sectors = sectorService.findAllMySector(Pageable.unpaged());
+        Page<SectorDetailResponse> sectors = sectorService.findMySectors(Pageable.unpaged());
         assertThat(sectors.getContent().stream()
             .filter(sector -> sectorIds.contains(sector.getId()))
             .collect(Collectors.toList())).hasSize(2);

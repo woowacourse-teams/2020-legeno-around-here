@@ -115,7 +115,7 @@ public class RankingAcceptanceTest extends AcceptanceTest {
         // 모든 지역, 모든 부문 필터 설정
         filter = "areaId=&sectorIds=";
         // 모든 지역, 모든 부문에 대해서 랭킹을 조회
-        rankingPostResponse = searchRanks(accessToken, RankingCriteria.TOTAL, filter);
+        rankingPostResponse = searchRanking(accessToken, RankingCriteria.TOTAL, filter);
         assertThat(rankingPostResponse).hasSize(4);
         assertThat(rankingPostResponse.get(0).getId()).isEqualTo(firstPostId);
         assertThat(rankingPostResponse.get(0).getZzang().getCount()).isEqualTo(3);
@@ -129,7 +129,7 @@ public class RankingAcceptanceTest extends AcceptanceTest {
         // 모든 지역, 특정 부문 필터 설정
         filter = "areaId=&sectorIds=" + sectorAId;
         // 모든 지역, 특정 부문에 대해서 랭킹을 조회
-        rankingPostResponse = searchRanks(accessToken, RankingCriteria.TOTAL, filter);
+        rankingPostResponse = searchRanking(accessToken, RankingCriteria.TOTAL, filter);
         assertThat(rankingPostResponse).hasSize(2);
         assertThat(rankingPostResponse.get(0).getId()).isEqualTo(firstPostId);
         assertThat(rankingPostResponse.get(0).getZzang().getCount()).isEqualTo(3);
@@ -139,7 +139,7 @@ public class RankingAcceptanceTest extends AcceptanceTest {
         // 특정 지역, 모든 부문 필터 설정
         filter = "areaId=" + TEST_AREA_A_ID + "&sectorIds=";
         // 특정 지역, 모든 부문에 대해서 랭킹을 조회
-        rankingPostResponse = searchRanks(accessToken, RankingCriteria.TOTAL, filter);
+        rankingPostResponse = searchRanking(accessToken, RankingCriteria.TOTAL, filter);
         assertThat(rankingPostResponse).hasSize(2);
         assertThat(rankingPostResponse.get(0).getId()).isEqualTo(firstPostId);
         assertThat(rankingPostResponse.get(0).getZzang().getCount()).isEqualTo(3);
@@ -149,7 +149,7 @@ public class RankingAcceptanceTest extends AcceptanceTest {
         // 특정 지역, 특정 부문 필터 설정
         filter = "areaId=" + TEST_AREA_B_ID + "&sectorIds=" + sectorBId;
         // 특정 지역, 특정 부문에 대해서 랭킹을 조회
-        rankingPostResponse = searchRanks(accessToken, RankingCriteria.TOTAL, filter);
+        rankingPostResponse = searchRanking(accessToken, RankingCriteria.TOTAL, filter);
         assertThat(rankingPostResponse).hasSize(1);
         assertThat(rankingPostResponse.get(0).getId()).isEqualTo(fourthPostId);
         assertThat(rankingPostResponse.get(0).getZzang().getCount()).isEqualTo(0);
@@ -258,7 +258,7 @@ public class RankingAcceptanceTest extends AcceptanceTest {
             .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    private List<PostWithCommentsCountResponse> searchRanks(String accessToken,
+    private List<PostWithCommentsCountResponse> searchRanking(String accessToken,
         RankingCriteria rankingCriteria,
         String filter) {
         return given()

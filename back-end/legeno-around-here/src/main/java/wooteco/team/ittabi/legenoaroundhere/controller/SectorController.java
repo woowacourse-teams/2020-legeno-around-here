@@ -1,5 +1,9 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ME_PATH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.SECTORS_PATH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.SECTORS_PATH_WITH_SLASH;
+
 import java.net.URI;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -20,15 +24,15 @@ import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.service.SectorService;
 
 @RestController
-@RequestMapping("/sectors")
+@RequestMapping(SECTORS_PATH)
 @AllArgsConstructor
 public class SectorController {
 
     private final SectorService sectorService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<SectorResponse> findAvailableSector(@PathVariable Long id) {
-        SectorResponse sector = sectorService.findAvailableSector(id);
+    @GetMapping("/{sectorId}")
+    public ResponseEntity<SectorResponse> findAvailableSector(@PathVariable Long sectorId) {
+        SectorResponse sector = sectorService.findAvailableSector(sectorId);
 
         return ResponseEntity
             .ok(sector);
@@ -47,17 +51,17 @@ public class SectorController {
     @PostMapping
     public ResponseEntity<Void> createPendingSector(@RequestBody SectorRequest sectorRequest) {
         SectorResponse sectorResponse = sectorService.createPendingSector(sectorRequest);
-        Long id = sectorResponse.getId();
+        Long sectorId = sectorResponse.getId();
 
         return ResponseEntity
-            .created(URI.create("/sectors/" + id))
+            .created(URI.create(SECTORS_PATH_WITH_SLASH + sectorId))
             .build();
     }
 
-    @GetMapping("/me")
-    public ResponseEntity<Page<SectorDetailResponse>> findAllMySector(PageRequest pageRequest) {
+    @GetMapping(ME_PATH)
+    public ResponseEntity<Page<SectorDetailResponse>> findMySectors(PageRequest pageRequest) {
         Page<SectorDetailResponse> sectorDetailResponses
-            = sectorService.findAllMySector(PageableAssembler.assemble(pageRequest));
+            = sectorService.findMySectors(PageableAssembler.assemble(pageRequest));
 
         return ResponseEntity
             .ok(sectorDetailResponses);

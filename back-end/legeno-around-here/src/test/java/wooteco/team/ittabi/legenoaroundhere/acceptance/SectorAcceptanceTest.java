@@ -179,7 +179,7 @@ public class SectorAcceptanceTest extends AcceptanceTest {
         Long sectorCId = createPendingSector(userAToken, "C", TEST_SECTOR_DESCRIPTION);
 
         // 사용자 A - 본인 승인 신청 부문 확인
-        List<SectorDetailResponse> sectors = getAllMySector(userAToken);
+        List<SectorDetailResponse> sectors = findMySectors(userAToken);
         List<Long> sectorIds = sectors.stream()
             .map(SectorDetailResponse::getId)
             .collect(Collectors.toList());
@@ -222,7 +222,7 @@ public class SectorAcceptanceTest extends AcceptanceTest {
         assertThatThrownBy(() -> findAvailableSector(userBToken, sectorNewBId));         // 승인 신청
 
         // 사용자 A - 승인 목록 조회
-        sectors = getAllMySector(userAToken);
+        sectors = findMySectors(userAToken);
         Map<Long, SectorDetailResponse> sectorsWithId = sectors.stream()
             .collect(Collectors.toMap(SectorDetailResponse::getId, sector -> sector));
         assertThat(sectorsWithId.get(sectorAId).getState()).isEqualTo("승인");
@@ -632,7 +632,7 @@ public class SectorAcceptanceTest extends AcceptanceTest {
             .getList("content", SectorResponse.class);
     }
 
-    private List<SectorDetailResponse> getAllMySector(String accessToken) {
+    private List<SectorDetailResponse> findMySectors(String accessToken) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)

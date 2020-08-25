@@ -123,7 +123,7 @@ public class SectorService {
     }
 
     @Transactional(readOnly = true)
-    public Page<SectorDetailResponse> findAllMySector(Pageable pageable) {
+    public Page<SectorDetailResponse> findMySectors(Pageable pageable) {
         User user = (User) authenticationFacade.getPrincipal();
         Page<Sector> sectors = sectorRepository.findAllByCreator(pageable, user);
         return sectors.map(SectorDetailResponse::of);

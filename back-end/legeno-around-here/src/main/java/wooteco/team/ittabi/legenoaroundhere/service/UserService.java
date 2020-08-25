@@ -85,14 +85,14 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional(readOnly = true)
-    public UserResponse findMyInfo() {
-        User user = findMe();
+    public UserResponse findMe() {
+        User user = findPrincipal();
         return UserResponse.from(user);
     }
 
     @Transactional
-    public UserResponse updateMyInfo(UserUpdateRequest userUpdateRequest) {
-        User user = findMe();
+    public UserResponse updateMe(UserUpdateRequest userUpdateRequest) {
+        User user = findPrincipal();
         Area area = findAreaBy(userUpdateRequest.getAreaId());
         UserImage userImage = findUserImageBy(userUpdateRequest.getImageId());
 
@@ -103,7 +103,7 @@ public class UserService implements UserDetailsService {
         return UserResponse.from(user);
     }
 
-    private User findMe() {
+    private User findPrincipal() {
         User user = (User) authenticationFacade.getPrincipal();
 
         return userRepository.findById(user.getId())
@@ -112,7 +112,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void changeMyPassword(UserPasswordUpdateRequest userPasswordUpdateRequest) {
-        User user = findMe();
+        User user = findPrincipal();
 
         String password = userPasswordUpdateRequest.getPassword();
         if (PASSWORD_ENCODER.matches(password, user.getPassword())) {
@@ -132,8 +132,8 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void deleteUser() {
-        User user = findMe();
+    public void deleteMe() {
+        User user = findPrincipal();
         userRepository.delete(user);
     }
 

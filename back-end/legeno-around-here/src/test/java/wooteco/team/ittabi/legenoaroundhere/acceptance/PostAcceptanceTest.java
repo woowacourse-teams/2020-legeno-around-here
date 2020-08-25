@@ -92,7 +92,7 @@ public class PostAcceptanceTest extends AcceptanceTest {
         assertThat(postWithoutImageResponse.getSector()).isEqualTo(sector);
 
         // 목록 조회
-        List<PostWithCommentsCountResponse> postResponses = searchAllPost(accessToken);
+        List<PostWithCommentsCountResponse> postResponses = searchPosts(accessToken);
         assertThat(postResponses).hasSize(2);
 
         // 수정
@@ -114,7 +114,7 @@ public class PostAcceptanceTest extends AcceptanceTest {
         deletePost(postWithoutImageId, accessToken);
         findNotExistsPost(postWithoutImageId, accessToken);
 
-        List<PostWithCommentsCountResponse> foundPostResponses = searchAllPost(accessToken);
+        List<PostWithCommentsCountResponse> foundPostResponses = searchPosts(accessToken);
 
         assertThat(foundPostResponses).hasSize(1);
     }
@@ -160,23 +160,23 @@ public class PostAcceptanceTest extends AcceptanceTest {
         createPostWithoutImageWithAreaAndSector(accessToken, TEST_AREA_OTHER_ID, sectorCId);
 
         // 글을 areaId / sectorIds 없이 조회 - 전체
-        List<PostWithCommentsCountResponse> posts = searchAllPost(accessToken);
+        List<PostWithCommentsCountResponse> posts = searchPosts(accessToken);
         assertThat(posts).hasSize(15);
 
         // 글을 areaId / sectorIds 값 없이 조회 - 전체
-        posts = searchAllPostWithFilter(accessToken, "areaId=&sectorIds=");
+        posts = searchPostsWithFilter(accessToken, "areaId=&sectorIds=");
         assertThat(posts).hasSize(15);
 
         // 글을 areaId만 포함하여 조회 - 하위지역 포함 조회
-        posts = searchAllPostWithFilter(accessToken, "areaId=" + TEST_AREA_ID);
+        posts = searchPostsWithFilter(accessToken, "areaId=" + TEST_AREA_ID);
         assertThat(posts).hasSize(6);
 
         // 글을 sectorIds만 포함하여 조회
-        posts = searchAllPostWithFilter(accessToken, "sectorIds=" + sectorAId + "," + sectorBId);
+        posts = searchPostsWithFilter(accessToken, "sectorIds=" + sectorAId + "," + sectorBId);
         assertThat(posts).hasSize(8);
 
         // 글을 areaId, sectorIds를 포함하여 조회
-        posts = searchAllPostWithFilter(accessToken,
+        posts = searchPostsWithFilter(accessToken,
             "areaId=" + TEST_AREA_ID + "&sectorIds=" + sectorAId + "," + sectorBId);
         assertThat(posts).hasSize(3);
     }
@@ -296,7 +296,7 @@ public class PostAcceptanceTest extends AcceptanceTest {
             .statusCode(HttpStatus.OK.value());
     }
 
-    private List<PostWithCommentsCountResponse> searchAllPost(String accessToken) {
+    private List<PostWithCommentsCountResponse> searchPosts(String accessToken) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
@@ -309,7 +309,7 @@ public class PostAcceptanceTest extends AcceptanceTest {
             .getList("content", PostWithCommentsCountResponse.class);
     }
 
-    private List<PostWithCommentsCountResponse> searchAllPostWithFilter(String accessToken,
+    private List<PostWithCommentsCountResponse> searchPostsWithFilter(String accessToken,
         String filter) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
