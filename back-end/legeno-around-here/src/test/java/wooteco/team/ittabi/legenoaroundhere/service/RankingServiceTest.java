@@ -41,16 +41,22 @@ import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 public class RankingServiceTest extends ServiceTest {
 
     private static final String TEST_PREFIX = "ranking_";
+
     @MockBean
-    MailAuthRepository mailAuthRepository;
+    private MailAuthRepository mailAuthRepository;
+
     @Autowired
     private PostService postService;
+
     @Autowired
     private PostRepository postRepository;
+
     @Autowired
     private RankingService rankingService;
+
     @Autowired
     private SectorService sectorService;
+
     private User userA;
     private User userB;
     private User userC;

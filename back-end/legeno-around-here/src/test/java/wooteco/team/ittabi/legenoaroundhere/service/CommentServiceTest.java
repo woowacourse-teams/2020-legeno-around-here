@@ -40,8 +40,6 @@ public class CommentServiceTest extends ServiceTest {
 
     private static final String TEST_PREFIX = "comment_";
 
-    private User user;
-    private User another;
     @MockBean
     MailAuthRepository mailAuthRepository;
 
@@ -53,6 +51,9 @@ public class CommentServiceTest extends ServiceTest {
 
     @Autowired
     private CommentService commentService;
+
+    private User user;
+    private User another;
     private Long postId;
 
     @BeforeEach
