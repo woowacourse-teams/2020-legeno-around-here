@@ -1,5 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.AREAS_PATH;
+
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -13,17 +15,17 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PageableAssembler;
 import wooteco.team.ittabi.legenoaroundhere.service.AreaService;
 
 @RestController
-@RequestMapping("/areas")
+@RequestMapping(AREAS_PATH)
 @AllArgsConstructor
 public class AreaController {
 
     private final AreaService areaService;
 
     @GetMapping
-    public ResponseEntity<Page<AreaResponse>> searchAllArea(PageRequest pageRequest,
+    public ResponseEntity<Page<AreaResponse>> searchAreas(PageRequest pageRequest,
         @RequestParam(defaultValue = "") String keyword) {
         Page<AreaResponse> areas
-            = areaService.searchAllArea(PageableAssembler.assemble(pageRequest), keyword);
+            = areaService.searchAreas(PageableAssembler.assemble(pageRequest), keyword);
 
         return ResponseEntity
             .ok(areas);

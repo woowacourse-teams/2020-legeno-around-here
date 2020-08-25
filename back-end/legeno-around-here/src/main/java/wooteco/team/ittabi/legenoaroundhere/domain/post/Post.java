@@ -212,4 +212,12 @@ public class Post extends BaseEntity {
     public void setState(State state) {
         this.state = state;
     }
+
+    public String getAreaLastDepthName() {
+        return area.getLastDepthName();
+    }
+
+    public String getSectorName() {
+        return sector.getName();
+    }
 }

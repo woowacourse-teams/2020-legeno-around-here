@@ -15,23 +15,19 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class UserResponse {
+public class UserSimpleResponse {
 
     private Long id;
     private String email;
     private String nickname;
     private UserImageResponse image;
-    private AreaResponse area;
-    private AwardsCountResponse awardsCount;
 
-    public static UserResponse from(User user) {
-        return UserResponse.builder()
+    public static UserSimpleResponse from(User user) {
+        return UserSimpleResponse.builder()
             .id(user.getId())
             .email(user.getEmail().getEmail())
             .nickname(user.getNickname())
             .image(UserImageResponse.of(user.getImage()))
-            .area(AreaResponse.of(user.getArea()))
-            .awardsCount(AwardsCountResponse.of(user))
             .build();
     }
 }

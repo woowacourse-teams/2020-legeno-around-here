@@ -20,8 +20,8 @@ public class AdminSectorResponse {
     private Long id;
     private String name;
     private String description;
-    private UserResponse creator;
-    private UserResponse lastModifier;
+    private UserSimpleResponse creator;
+    private UserSimpleResponse lastModifier;
     private String state;
     private String reason;
 
@@ -30,8 +30,8 @@ public class AdminSectorResponse {
             .id(sector.getId())
             .name(sector.getName())
             .description(sector.getDescription())
-            .creator(UserResponse.from(sector.getCreator()))
-            .lastModifier(UserResponse.from(sector.getLastModifier()))
+            .creator(UserSimpleResponse.from(sector.getCreator()))
+            .lastModifier(UserSimpleResponse.from(sector.getLastModifier()))
             .state(sector.getState())
             .reason(sector.getReason())
             .build();

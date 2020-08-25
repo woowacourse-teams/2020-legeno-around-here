@@ -1,4 +1,8 @@
-package wooteco.team.ittabi.legenoaroundhere.controller;
+package wooteco.team.ittabi.legenoaroundhere.adminController;
+
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ADMIN_PATH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.SECTORS_PATH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.SECTORS_PATH_WITH_SLASH;
 
 import java.net.URI;
 import lombok.AllArgsConstructor;
@@ -21,7 +25,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.SectorUpdateStateRequest;
 import wooteco.team.ittabi.legenoaroundhere.service.SectorService;
 
 @RestController
-@RequestMapping("/admin/sectors")
+@RequestMapping(ADMIN_PATH + SECTORS_PATH)
 @AllArgsConstructor
 public class SectorAdminController {
 
@@ -32,7 +36,7 @@ public class SectorAdminController {
         SectorResponse sector = sectorService.createSector(sectorRequest);
 
         return ResponseEntity
-            .created(URI.create("/sectors/" + sector.getId()))
+            .created(URI.create(SECTORS_PATH_WITH_SLASH + sector.getId()))
             .build();
     }
 
