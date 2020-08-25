@@ -14,4 +14,6 @@ public class AreaConstants {
 
     public static final Long TEST_AREA_A_ID = 3L;
     public static final Long TEST_AREA_B_ID = 4L;
+
+    public static final Integer TEST_AUTH_NUMBER = 111111;
 }

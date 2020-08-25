@@ -3,7 +3,10 @@ package wooteco.team.ittabi.legenoaroundhere.acceptance;
 import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AUTH_NUMBER;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_DIR;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NEW_USER_EMAIL;
@@ -24,11 +27,14 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import wooteco.team.ittabi.legenoaroundhere.domain.user.mailauth.MailAuth;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
+import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
 
 public class UserAcceptanceTest extends AcceptanceTest {
 
@@ -39,6 +45,9 @@ public class UserAcceptanceTest extends AcceptanceTest {
     void setUp() {
         RestAssured.port = port;
     }
+
+    @MockBean
+    private MailAuthRepository mailAuthRepository;
 
     /**
      * Feature: 회원관리 Scenario: 회원을 관리한다.
@@ -60,13 +69,14 @@ public class UserAcceptanceTest extends AcceptanceTest {
     @Test
     @DisplayName("회원 관리")
     void manageUser() {
+        //메일 인증
+        MailAuth mailAuth = new MailAuth(TEST_USER_EMAIL, TEST_AUTH_NUMBER);
+        when(mailAuthRepository.findByEmail(any())).thenReturn(java.util.Optional.of(mailAuth));
+
         //회원 가입
         String location = createUserWithoutArea(TEST_NEW_USER_EMAIL, TEST_NEW_USER_NICKNAME,
             TEST_NEW_USER_PASSWORD);
         assertThat(location).matches(USER_LOCATION_FORMAT);
-
-        // 인증 없는 로그인 시 인증 요구
-        loginWithoutEmailAuth(TEST_NEW_USER_EMAIL, TEST_NEW_USER_PASSWORD);
 
         // 메일 인증 완료 한 로그인
         TokenResponse tokenResponse = login(TEST_THE_OTHER_EMAIL, TEST_USER_PASSWORD);
@@ -149,6 +159,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
         params.put("email", email);
         params.put("nickname", nickname);
         params.put("password", password);
+        params.put("authNumber", String.valueOf(TEST_AUTH_NUMBER));
 
         return createUserBy(params);
     }

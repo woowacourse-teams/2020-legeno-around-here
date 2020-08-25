@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -65,9 +64,6 @@ public class User extends BaseEntity implements UserDetails {
     @JoinColumn(name = "area_id")
     private Area area = null;
 
-    @Column(nullable = false, columnDefinition = "tinyint(1) default 0")
-    private Boolean authenticatedByEmail;
-
     @Builder
     public User(String email, String nickname, String password, Area area, UserImage image) {
         this.email = makeEmail(email);
@@ -75,7 +71,6 @@ public class User extends BaseEntity implements UserDetails {
         this.password = new Password(password);
         this.area = area;
         this.image = image;
-        this.authenticatedByEmail = Boolean.FALSE;
     }
 
     private Email makeEmail(String email) {
@@ -94,10 +89,6 @@ public class User extends BaseEntity implements UserDetails {
         return this.roles.stream()
             .map(SimpleGrantedAuthority::new)
             .collect(Collectors.toList());
-    }
-
-    public boolean isNotAuthenticatedByEmail() {
-        return !this.authenticatedByEmail;
     }
 
     @Override
@@ -172,7 +163,4 @@ public class User extends BaseEntity implements UserDetails {
         this.area = area;
     }
 
-    public void setAuthenticatedByEmail(Boolean authenticatedByEmail) {
-        this.authenticatedByEmail = authenticatedByEmail;
-    }
 }
