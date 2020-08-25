@@ -46,7 +46,7 @@ public class NoticeAcceptanceTest extends AcceptanceTest {
         assertThat(notices).hasSize(8);
 
         List<NoticeResponse> readNotices = notices.stream()
-            .filter(NoticeResponse::getRead)
+            .filter(NoticeResponse::getIsRead)
             .collect(Collectors.toList());
         assertThat(readNotices).hasSize(0);
 
@@ -58,7 +58,7 @@ public class NoticeAcceptanceTest extends AcceptanceTest {
         assertThat(notices).hasSize(8);
 
         readNotices = notices.stream()
-            .filter(NoticeResponse::getRead)
+            .filter(NoticeResponse::getIsRead)
             .collect(Collectors.toList());
         assertThat(readNotices).hasSize(1);
 
@@ -69,7 +69,7 @@ public class NoticeAcceptanceTest extends AcceptanceTest {
         assertThat(notices).hasSize(8);
 
         readNotices = notices.stream()
-            .filter(NoticeResponse::getRead)
+            .filter(NoticeResponse::getIsRead)
             .collect(Collectors.toList());
         assertThat(readNotices).hasSize(1);
     }
