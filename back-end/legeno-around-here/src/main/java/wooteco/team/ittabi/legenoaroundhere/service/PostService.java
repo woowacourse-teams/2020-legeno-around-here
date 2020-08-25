@@ -3,7 +3,6 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -60,7 +59,7 @@ public class PostService {
         List<PostImage> postImages = findAllPostImagesByIds(postCreateRequest);
 
         Post post = PostAssembler.assemble(postCreateRequest, postImages, area, sector, user);
-        new CopyOnWriteArrayList<>(postImages).forEach(postImage -> postImage.setPost(post));
+        postImages.forEach(postImage -> postImage.setPost(post));
 
         Post savedPost = postRepository.save(post);
         return PostResponse.of(user, savedPost);
@@ -130,7 +129,7 @@ public class PostService {
     private void updatePostImages(PostUpdateRequest postUpdateRequest, Post post) {
         List<PostImage> postImages = postImageRepository
             .findAllById(postUpdateRequest.getImageIds());
-        post.removeNotExistPostImages(postUpdateRequest.getImageIds());
+        post.removeNonExistentImagesFromPost(postUpdateRequest.getImageIds());
         post.addPostImages(postImages);
     }
 

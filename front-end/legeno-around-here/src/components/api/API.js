@@ -139,7 +139,7 @@ export const saveProfilePhoto = async (formData, accessToken) => {
     },
   };
   try {
-    const response = await axios.post(DEFAULT_URL + '/user-images', formData, config);
+    const response = await axios.post(DEFAULT_URL + '/users/images', formData, config);
     if (response.status === HTTP_STATUS_CREATED) {
       alert('전송에 성공했습니다!');
       return response.data;
