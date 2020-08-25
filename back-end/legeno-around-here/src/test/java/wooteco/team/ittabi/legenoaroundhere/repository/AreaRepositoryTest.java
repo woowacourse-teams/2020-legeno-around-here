@@ -25,11 +25,4 @@ class AreaRepositoryTest {
         List<Area> areas = areaRepository.findAll();
         assertThat(areas).hasSize(INIT_DATA_SIZE);
     }
-
-    @DisplayName("서울특별시 ID로 검색시 SubAreas 확인")
-    @Test
-    void findAreas_UseAreaId_FoundSubArea() {
-        List<Area> areas = areaRepository.findSubAreasById(SEOUL_AREA_ID);
-        assertThat(areas).hasSize(SEOUL_SUB_AREA_COUNT);
-    }
 }
