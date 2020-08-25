@@ -156,7 +156,7 @@ public class PostService {
     }
 
     private void addNewPostImage(Post post, List<PostImage> postImages) {
-        postImages.forEach(post::addPostImage);
+        post.addPostImages(postImages);
     }
 
     private void deleteNotExistPostImage(Post post, List<Long> updatePostImageIds) {

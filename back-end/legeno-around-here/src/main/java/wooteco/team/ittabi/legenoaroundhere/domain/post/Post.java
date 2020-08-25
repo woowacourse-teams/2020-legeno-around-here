@@ -90,7 +90,11 @@ public class Post extends BaseEntity {
         }
     }
 
-    public void addPostImage(PostImage postImage) {
+    public void addPostImages(List<PostImage> postImages) {
+        postImages.forEach(this::addPostImage);
+    }
+
+    private void addPostImage(PostImage postImage) {
         if (!this.postImages.contains(postImage)) {
             this.postImages.add(postImage);
         }
