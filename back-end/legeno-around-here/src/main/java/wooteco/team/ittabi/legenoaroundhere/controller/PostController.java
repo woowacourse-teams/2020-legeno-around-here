@@ -87,7 +87,7 @@ public class PostController {
             .build();
     }
 
-    @PostMapping("/{postId}/report")
+    @PostMapping("/{postId}/reports")
     public ResponseEntity<Void> createPostReport(@PathVariable Long postId, @RequestBody
         PostReportCreateRequest postReportCreateRequest) {
         final PostReportResponse postReportResponse = postService

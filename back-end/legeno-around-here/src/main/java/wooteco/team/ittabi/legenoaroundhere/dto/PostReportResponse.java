@@ -24,6 +24,11 @@ public class PostReportResponse {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
+
+    public PostReportResponse(String writing) {
+        this.writing = writing;
+    }
+
     public static PostReportResponse of(PostReport postReport) {
         return PostReportResponse.builder()
             .id(postReport.getId())

@@ -8,6 +8,7 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_DIR;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_OTHER_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_REPORT_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
@@ -27,6 +28,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostReportCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostReportResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
@@ -244,23 +247,44 @@ public class PostAcceptanceTest extends AcceptanceTest {
     void managePostReport() {
         String postLocation = createPostWithoutImage(accessToken);
         Long postId = getIdFromUrl(postLocation);
-//        PostResponse post = findPost(accessToken, postId);
 
         // 해당 글을 유저가 신고
         String reportLocation = createReport(accessToken, postId);
         Long postReportId = getIdFromUrl(reportLocation);
+
+        // 관리자가 해당 신고 글을 조회
+        PostReportResponse postReportResponse = findPostReport(adminToken, postReportId);
+
+        assertThat(postReportResponse.getWriting()).isEqualTo(TEST_POST_REPORT_WRITING);
+    }
+
+    private PostReportResponse findPostReport(String adminToken, Long postReportId) {
+        PostReportCreateRequest postReportCreateRequest = new PostReportCreateRequest(
+            TEST_POST_REPORT_WRITING);
+
+        return given()
+            .header("X-AUTH-TOKEN", adminToken)
+            .body(postReportCreateRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/admin/reports/" + postReportId)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .as(PostReportResponse.class);
     }
 
     private String createReport(String accessToken, Long postId) {
+        PostReportCreateRequest postReportCreateRequest = new PostReportCreateRequest(
+            TEST_POST_REPORT_WRITING);
+
         return given()
-            .formParam("writing", TEST_POST_WRITING)
-            .formParam("areaId", TEST_AREA_ID)
-            .formParam("sectorId", sectorId)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(postReportCreateRequest)
             .header("X-AUTH-TOKEN", accessToken)
-            .config(RestAssuredConfig.config()
-                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
             .when()
-            .post("/posts/" + postId + "/report")
+            .post("/posts/" + postId + "/reports")
             .then()
             .statusCode(HttpStatus.CREATED.value())
             .extract()
