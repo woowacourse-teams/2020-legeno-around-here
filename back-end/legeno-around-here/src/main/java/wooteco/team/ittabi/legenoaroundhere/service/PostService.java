@@ -15,16 +15,12 @@ import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.PostSearch;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.PostReport;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostImageResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.PostReportAssembler;
-import wooteco.team.ittabi.legenoaroundhere.dto.PostReportCreateRequest;
-import wooteco.team.ittabi.legenoaroundhere.dto.PostReportResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
@@ -34,7 +30,6 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.repository.AreaRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostImageRepository;
-import wooteco.team.ittabi.legenoaroundhere.repository.PostReportRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.ImageUploader;
@@ -46,7 +41,6 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final PostImageRepository postImageRepository;
-    private final PostReportRepository postReportRepository;
     private final AreaRepository areaRepository;
     private final SectorRepository sectorRepository;
     private final ImageUploader imageUploader;
@@ -160,18 +154,6 @@ public class PostService {
 
         Post post = findPostBy(postId);
         post.pressZzang(user);
-    }
-
-    @Transactional
-    public PostReportResponse createPostReport(Long postId,
-        PostReportCreateRequest postReportCreateRequest) {
-        User user = (User) authenticationFacade.getPrincipal();
-        Post post = findPostBy(postId);
-
-        PostReport postReport = PostReportAssembler.assemble(postReportCreateRequest, post, user);
-
-        PostReport savedPostReport = postReportRepository.save(postReport);
-        return PostReportResponse.of(savedPostReport);
     }
 
     public List<PostImageResponse> uploadPostImages(List<MultipartFile> images) {

@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AUTH_NUMBER;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_EMPTY_IMAGES;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_EMPTY_MULTIPART_FILES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_INVALID_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_REPORT_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
@@ -29,6 +28,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostReportCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostReportResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
 
@@ -48,23 +48,44 @@ public class ReportServiceTest extends ServiceTest {
     @MockBean
     private MailAuthRepository mailAuthRepository;
 
+    private User user;
     private Long postId;
+    private Long sectorId;
 
     @BeforeEach
     void setUp() {
         MailAuth mailAuth = new MailAuth(TEST_USER_EMAIL, TEST_AUTH_NUMBER);
         when(mailAuthRepository.findByEmail(any())).thenReturn(java.util.Optional.of(mailAuth));
 
-        User user = createUser(TEST_PREFIX + TEST_USER_EMAIL,
+        user = createUser(TEST_PREFIX + TEST_USER_EMAIL,
             TEST_USER_NICKNAME,
             TEST_USER_PASSWORD);
         setAuthentication(user);
 
         SectorResponse sector = sectorService.createSector(TEST_SECTOR_REQUEST);
-        Long sectorId = sector.getId();
+        sectorId = sector.getId();
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
             TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         postId = postService.createPost(postCreateRequest).getId();
+    }
+
+
+    @DisplayName("글 신고 생성 - 성공")
+    @Test
+    void createPostReport_SuccessToCreate() {
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
+        Long postId = postService.createPost(postCreateRequest).getId();
+
+        PostReportCreateRequest postReportCreateRequest = new PostReportCreateRequest(
+            TEST_POST_REPORT_WRITING);
+
+        PostReportResponse postReportResponse = reportService
+            .createPostReport(postId, postReportCreateRequest);
+
+        assertThat(postReportResponse.getId()).isNotNull();
+        assertThat(postReportResponse.getWriting()).isEqualTo(TEST_POST_REPORT_WRITING);
+        assertThat(postReportResponse.getCreator()).isEqualTo(UserResponse.from(user));
     }
 
     @DisplayName("글 신고 조회 - 성공")
@@ -73,7 +94,7 @@ public class ReportServiceTest extends ServiceTest {
         PostReportCreateRequest postReportCreateRequest = new PostReportCreateRequest(
             TEST_POST_REPORT_WRITING);
 
-        PostReportResponse postReportCreateResponse = postService
+        PostReportResponse postReportCreateResponse = reportService
             .createPostReport(postId, postReportCreateRequest);
 
         PostReportResponse postReportResponse = reportService
@@ -95,7 +116,7 @@ public class ReportServiceTest extends ServiceTest {
     void findPostReportByPage_SuccessToFind() {
         PostReportCreateRequest postReportCreateRequest = new PostReportCreateRequest(
             TEST_POST_REPORT_WRITING);
-        PostReportResponse postReportResponse = postService
+        PostReportResponse postReportResponse = reportService
             .createPostReport(postId, postReportCreateRequest);
 
         Page<PostReportResponse> postReportPage = reportService
@@ -110,7 +131,7 @@ public class ReportServiceTest extends ServiceTest {
         PostReportCreateRequest postReportCreateRequest = new PostReportCreateRequest(
             TEST_POST_REPORT_WRITING);
 
-        PostReportResponse postReportCreateResponse = postService
+        PostReportResponse postReportCreateResponse = reportService
             .createPostReport(postId, postReportCreateRequest);
 
         reportService.deletePostReport(postReportCreateResponse.getId());
