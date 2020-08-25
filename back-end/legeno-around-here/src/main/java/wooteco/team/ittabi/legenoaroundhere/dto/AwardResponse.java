@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
+import java.time.format.DateTimeFormatter;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +8,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import wooteco.team.ittabi.legenoaroundhere.domain.award.PopularityPostCreatorAward;
+import wooteco.team.ittabi.legenoaroundhere.domain.award.SectorCreatorAward;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
+import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
@@ -15,6 +20,9 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 public class AwardResponse {
+
+    private static final DateTimeFormatter DATE_FORMAT_YMD
+        = DateTimeFormatter.ofPattern("yyyy.MM.dd.");
 
     private String name;
     private String period;
@@ -25,6 +33,29 @@ public class AwardResponse {
             .name(name)
             .period(period)
             .location(location)
+            .build();
+    }
+
+    public static AwardResponse of(PopularityPostCreatorAward popularityPostCreatorAward) {
+        Post post = popularityPostCreatorAward.getPost();
+
+        String period = popularityPostCreatorAward.getPeriodStart().format(DATE_FORMAT_YMD)
+            + " ~ " + popularityPostCreatorAward.getPeriodEnd().format(DATE_FORMAT_YMD);
+
+        return AwardResponse.builder()
+            .name(popularityPostCreatorAward.getName())
+            .period(period)
+            .location("/posts/" + post.getId())
+            .build();
+    }
+
+    public static AwardResponse of(SectorCreatorAward sectorCreatorAward) {
+        Sector sector = sectorCreatorAward.getSector();
+
+        return AwardResponse.builder()
+            .name(sectorCreatorAward.getName())
+            .period(sectorCreatorAward.getDate().format(DATE_FORMAT_YMD))
+            .location("/sectors/" + sector.getId())
             .build();
     }
 }
