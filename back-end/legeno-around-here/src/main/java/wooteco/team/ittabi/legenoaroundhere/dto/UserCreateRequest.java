@@ -18,4 +18,9 @@ public class UserCreateRequest {
     private String nickname;
     private String password;
     private Long areaId;
+    private Integer authNumber;
+
+    public MailAuthCheckRequest toMailAuthCheckRequest() {
+        return new MailAuthCheckRequest(email, authNumber);
+    }
 }

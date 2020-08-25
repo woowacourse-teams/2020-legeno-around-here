@@ -10,18 +10,19 @@ SELECT id
      , NOW()
 FROM CSVRead('src/main/resources/area.csv');
 
-INSERT INTO User(id, email, nickname, password, authenticated_by_email, area_id, created_at,
+INSERT INTO User(id, email, nickname, password, area_id, created_at,
                  modified_at)
 VALUES (1, 'admin@email.com', '어드민씨',
-        '$2a$10$dEcia20EDmjecE7dlxmSJeb6pHk/cKixUxVdFDKfdABSovUxySFgK', true, null, now(), now()),
+        '$2a$10$dEcia20EDmjecE7dlxmSJeb6pHk/cKixUxVdFDKfdABSovUxySFgK', null, now(), now()),
        (2, 'user-area@email.com', '서울지역유저씨',
-        '$2a$10$.x/ntq./VhbmHZn/RTAyIOnN08cTQqqpgVcw1zHxdUa.VIuXeAwZ6', true, 1, now(), now()),
+        '$2a$10$.x/ntq./VhbmHZn/RTAyIOnN08cTQqqpgVcw1zHxdUa.VIuXeAwZ6', 1, now(), now()),
        (3, 'user@email.com', '유저씨',
-        '$2a$10$.x/ntq./VhbmHZn/RTAyIOnN08cTQqqpgVcw1zHxdUa.VIuXeAwZ6', true, null, now(), now());
+        '$2a$10$.x/ntq./VhbmHZn/RTAyIOnN08cTQqqpgVcw1zHxdUa.VIuXeAwZ6', null, now(), now());
 
 INSERT INTO User_roles(user_id, roles)
 VALUES (1, 'ROLE_ADMIN'),
-       (2, 'ROLE_USER');
+       (2, 'ROLE_USER'),
+       (3, 'ROLE_USER');
 
 INSERT INTO Sector(id, name, description, state, reason,
                    creator_id, last_modifier_id, created_at, modified_at)

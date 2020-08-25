@@ -1,6 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AUTH_NUMBER;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,7 +29,7 @@ public abstract class ServiceTest {
 
     protected User createUser(String email, String nickname, String password) {
         UserCreateRequest userCreateRequest
-            = new UserCreateRequest(email, nickname, password, TEST_AREA_ID);
+            = new UserCreateRequest(email, nickname, password, TEST_AREA_ID, TEST_AUTH_NUMBER);
         Long userId = userService.createUser(userCreateRequest);
 
         return userRepository.findById(userId)
