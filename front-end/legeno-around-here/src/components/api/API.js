@@ -290,7 +290,7 @@ export const findRankedPostsFromPage = async (
     .then((response) => response.data.content)
     .catch((error) => {
       redirectLoginWhenUnauthorized(error);
-      console.log(`## 최근 글을 가져올 수 없습니다.`);
+      console.log(`## 랭킹을 가져올 수 없습니다.`);
     });
 };
 
