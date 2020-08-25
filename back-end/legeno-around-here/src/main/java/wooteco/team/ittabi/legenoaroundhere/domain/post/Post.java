@@ -156,7 +156,7 @@ public class Post extends BaseEntity {
 
     public List<PostImage> getDeletePostImages(List<Long> deletePostImageIds) {
         return this.postImages.stream()
-            .filter(postImage -> postImage.isDeleteId(deletePostImageIds))
+            .filter(postImage -> postImage.isContainsOf(deletePostImageIds))
             .collect(Collectors.toList());
     }
 

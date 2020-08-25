@@ -47,7 +47,7 @@ public class PostImage extends BaseEntity {
         return Objects.nonNull(this.post);
     }
 
-    public boolean isDeleteId(List<Long> deletePostImageIds) {
+    public boolean isContainsOf(List<Long> deletePostImageIds) {
         return deletePostImageIds.contains(this.getId());
     }
 
