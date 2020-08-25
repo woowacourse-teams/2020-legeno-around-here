@@ -1,5 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.award;
 
+import java.time.LocalDate;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -26,11 +28,17 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @Where(clause = "deleted_at IS NULL")
 public class SectorCreatorAward extends BaseEntity {
 
+    @Column(nullable = false)
+    private String name;
+
     @ManyToOne
     @JoinColumn(name = "awardee_id", nullable = false)
     private User awardee;
 
     @OneToOne
-    @JoinColumn(name = "sector_id")
+    @JoinColumn(name = "sector_id", nullable = false)
     private Sector sector;
+
+    @Column(nullable = false)
+    private LocalDate date;
 }

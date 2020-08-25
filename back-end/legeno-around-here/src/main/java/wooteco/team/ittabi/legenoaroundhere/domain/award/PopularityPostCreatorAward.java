@@ -3,8 +3,6 @@ package wooteco.team.ittabi.legenoaroundhere.domain.award;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -30,17 +28,15 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @Where(clause = "deleted_at IS NULL")
 public class PopularityPostCreatorAward extends BaseEntity {
 
-    @ManyToOne
-    @JoinColumn(name = "awardee_id", nullable = false)
-    private User awardee;
+    @Column(nullable = false)
+    private String name;
 
     @OneToOne
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PopularCycle cycle;
+    private Integer ranking;
 
     @Column(nullable = false)
     private LocalDate PeriodStart;
@@ -48,10 +44,7 @@ public class PopularityPostCreatorAward extends BaseEntity {
     @Column(nullable = false)
     private LocalDate PeriodEnd;
 
-    @Column(nullable = false)
-    private Long ranking;
-
-    public String getCycleName() {
-        return cycle.name();
-    }
+    @ManyToOne
+    @JoinColumn(name = "awardee_id", nullable = false)
+    private User awardee;
 }

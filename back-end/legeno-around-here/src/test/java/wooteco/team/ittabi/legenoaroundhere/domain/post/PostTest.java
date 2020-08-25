@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.post;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_FIRST_DEPTH_NAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_FOURTH_DEPTH_NAME;
@@ -58,17 +57,5 @@ class PostTest {
         }
         assertThatThrownBy(() -> new Post(overLengthInput.toString(), AREA, SECTOR, USER))
             .isInstanceOf(WrongUserInputException.class);
-    }
-
-    @Test
-    void getWriting_wordCount10_thenReturn10() {
-        StringBuilder writing = new StringBuilder();
-        for (int i = 0; i < 100; i++) {
-            writing.append("0");
-        }
-        Post post = new Post(writing.toString(), area, sector, user);
-
-        int expected = 10;
-        assertThat(post.getWriting(expected).length()).isEqualTo(expected);
     }
 }

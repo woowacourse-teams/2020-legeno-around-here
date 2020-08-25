@@ -22,7 +22,7 @@ public class SectorDetailResponse {
     private String description;
     private String state;
     private String reason;
-    private UserResponse creator;
+    private UserSimpleResponse creator;
 
     public static SectorDetailResponse of(Sector sector) {
         return SectorDetailResponse.builder()
@@ -31,7 +31,7 @@ public class SectorDetailResponse {
             .description(sector.getDescription())
             .state(sector.getState())
             .reason(sector.getReason())
-            .creator(UserResponse.from(sector.getCreator()))
+            .creator(UserSimpleResponse.from(sector.getCreator()))
             .build();
     }
 }

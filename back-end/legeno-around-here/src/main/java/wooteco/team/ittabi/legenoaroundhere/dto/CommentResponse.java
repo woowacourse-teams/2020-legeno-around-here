@@ -21,7 +21,7 @@ public class CommentResponse {
     private Long id;
     private String writing;
     private CommentZzangResponse zzang;
-    private UserResponse creator;
+    private UserSimpleResponse creator;
     private List<CommentResponse> cocomments;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;

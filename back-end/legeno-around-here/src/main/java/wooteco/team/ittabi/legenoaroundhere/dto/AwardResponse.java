@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,20 +17,13 @@ import lombok.ToString;
 public class AwardResponse {
 
     private String name;
-    private String description;
-    @Builder.Default
-    private String period = "";
-    private LocalDateTime date;
+    private String period;
     private String location;
 
-    public static AwardResponse of(String name, String description, String period,
-        LocalDateTime date,
-        String location) {
+    public static AwardResponse of(String name, String period, String location) {
         return AwardResponse.builder()
             .name(name)
-            .description(description)
             .period(period)
-            .date(date)
             .location(location)
             .build();
     }

@@ -37,7 +37,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostZzangResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserSimpleResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
@@ -95,7 +95,7 @@ public class PostServiceTest extends ServiceTest {
 
         assertThat(postResponse.getId()).isNotNull();
         assertThat(postResponse.getWriting()).isEqualTo(TEST_POST_WRITING);
-        assertThat(postResponse.getCreator()).isEqualTo(UserResponse.from(user));
+        assertThat(postResponse.getCreator()).isEqualTo(UserSimpleResponse.from(user));
         assertThat(postResponse.getSector()).isEqualTo(sector);
     }
 
@@ -111,7 +111,7 @@ public class PostServiceTest extends ServiceTest {
 
         assertThat(postResponse.getWriting()).isEqualTo(TEST_POST_WRITING);
         assertThat(postResponse.getImages()).hasSize(1);
-        assertThat(postResponse.getCreator()).isEqualTo(UserResponse.from(user));
+        assertThat(postResponse.getCreator()).isEqualTo(UserSimpleResponse.from(user));
         assertThat(postResponse.getSector()).isEqualTo(sector);
     }
 
@@ -127,7 +127,7 @@ public class PostServiceTest extends ServiceTest {
 
         assertThat(postResponse.getId()).isEqualTo(createdPostResponse.getId());
         assertThat(postResponse.getWriting()).isEqualTo(createdPostResponse.getWriting());
-        assertThat(postResponse.getCreator()).isEqualTo(UserResponse.from(user));
+        assertThat(postResponse.getCreator()).isEqualTo(UserSimpleResponse.from(user));
         assertThat(postResponse.getSector()).isEqualTo(sector);
     }
 
@@ -258,7 +258,7 @@ public class PostServiceTest extends ServiceTest {
         PostResponse updatedPostResponse = postService.findPost(createdPostResponse.getId());
 
         assertThat(updatedPostResponse.getWriting()).isEqualTo(updatedPostWriting);
-        assertThat(updatedPostResponse.getCreator()).isEqualTo(UserResponse.from(user));
+        assertThat(updatedPostResponse.getCreator()).isEqualTo(UserSimpleResponse.from(user));
     }
 
     @DisplayName("ID로 포스트 수정 - 실패")

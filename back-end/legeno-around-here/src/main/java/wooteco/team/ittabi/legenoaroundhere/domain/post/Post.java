@@ -177,10 +177,6 @@ public class Post extends BaseEntity {
         this.state = state;
     }
 
-    public String getWriting(int wordCount) {
-        return writing.substring(0, wordCount);
-    }
-
     public String getAreaLastDepthName() {
         return area.getLastDepthName();
     }

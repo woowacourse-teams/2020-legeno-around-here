@@ -30,7 +30,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentZzangResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserSimpleResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAvailableException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
@@ -81,7 +81,7 @@ public class CommentServiceTest extends ServiceTest {
 
         assertThat(comment.getId()).isNotNull();
         assertThat(comment.getWriting()).isEqualTo(TEST_COMMENT_WRITING);
-        assertThat(comment.getCreator()).isEqualTo(UserResponse.from(user));
+        assertThat(comment.getCreator()).isEqualTo(UserSimpleResponse.from(user));
         assertThat(comment.getZzang()).isNotNull();
         assertThat(comment.getCocomments()).isEmpty();
         assertThat(comment.isDeleted()).isFalse();
