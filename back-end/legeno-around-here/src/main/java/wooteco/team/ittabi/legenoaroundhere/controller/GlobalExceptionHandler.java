@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import wooteco.team.ittabi.legenoaroundhere.dto.ErrorResponse;
+import wooteco.team.ittabi.legenoaroundhere.exception.AlreadyExistUserException;
 import wooteco.team.ittabi.legenoaroundhere.exception.FileIOException;
 import wooteco.team.ittabi.legenoaroundhere.exception.MultipartFileConvertException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NeedEmailAuthException;
@@ -45,7 +46,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({WrongUserInputException.class, NotImageMimeTypeException.class,
         NotImageExtensionException.class, MultipartFileConvertException.class,
         FileIOException.class, NotUniqueException.class, PropertyReferenceException.class,
-        BindException.class})
+        BindException.class, AlreadyExistUserException.class})
     public ResponseEntity<ErrorResponse> handleBadRequest(Exception e) {
         log.info(e.getMessage());
 
