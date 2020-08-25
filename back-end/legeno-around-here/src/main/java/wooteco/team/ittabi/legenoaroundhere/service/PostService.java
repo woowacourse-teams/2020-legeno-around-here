@@ -143,7 +143,7 @@ public class PostService {
         validateIsCreator(post);
 
         updatePostImages(postUpdateRequest, post);
-        post.update(postUpdateRequest);
+        post.setWriting(postUpdateRequest.getWriting());
 
         return PostResponse.of(user, post);
     }

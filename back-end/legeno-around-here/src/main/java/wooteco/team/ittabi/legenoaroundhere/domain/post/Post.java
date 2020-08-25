@@ -201,10 +201,6 @@ public class Post extends BaseEntity {
         return Collections.unmodifiableList(this.postImages);
     }
 
-    public void setPostImages(List<PostImage> postImages) {
-        this.postImages = postImages;
-    }
-
     public List<PostZzang> getZzangs() {
         return Collections.unmodifiableList(this.zzangs);
     }
