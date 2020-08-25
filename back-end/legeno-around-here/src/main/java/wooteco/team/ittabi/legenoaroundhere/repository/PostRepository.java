@@ -13,7 +13,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query(value = ""
         + "SELECT * "
-        + "  FROM Post "
+        + "  FROM post "
         + " WHERE deleted_at IS NULL "
         + "   AND area_id IN (SELECT id "
         + "                     FROM area "
@@ -29,7 +29,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query(value = ""
         + "SELECT * "
-        + "  FROM Post "
+        + "  FROM post "
         + " WHERE deleted_at IS NULL "
         + "   AND area_id IN (SELECT id "
         + "                     FROM area "
