@@ -249,8 +249,6 @@ public class PostAcceptanceTest extends AcceptanceTest {
         // 해당 글을 유저가 신고
         String reportLocation = createReport(accessToken, postId);
         Long postReportId = getIdFromUrl(reportLocation);
-
-        assertThat(postId).isEqualTo(postReportId);
     }
 
     private String createReport(String accessToken, Long postId) {

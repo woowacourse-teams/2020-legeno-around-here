@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import wooteco.team.ittabi.legenoaroundhere.dto.PageRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PageableAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostReportCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostReportResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
@@ -86,10 +88,12 @@ public class PostController {
     }
 
     @PostMapping("/{postId}/report")
-    public ResponseEntity<Void> createPostReport(@PathVariable Long postId) {
-
+    public ResponseEntity<Void> createPostReport(@PathVariable Long postId, @RequestBody
+        PostReportCreateRequest postReportCreateRequest) {
+        final PostReportResponse postReportResponse = postService
+            .createPostReport(postId, postReportCreateRequest);
         return ResponseEntity
-            .created(URI.create("/posts/" + postId))
+            .created(URI.create("/posts/" + postReportResponse.getId()))
             .build();
     }
 }
