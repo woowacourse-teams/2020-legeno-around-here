@@ -7,18 +7,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostReportResponse;
+import wooteco.team.ittabi.legenoaroundhere.service.ReportService;
 
 @RestController
 @RequestMapping("/admin/reports")
 @AllArgsConstructor
 public class ReportAdminController {
 
-//    private final ReportService reportService;
+    private final ReportService reportService;
 
     @GetMapping("/{id}")
     public ResponseEntity<PostReportResponse> findPostReport(@PathVariable Long id) {
+        PostReportResponse postReportResponse = reportService.findPostReport(id);
 
-        PostReportResponse postReportResponse = new PostReportResponse("Test Report Writing");
         return ResponseEntity
             .ok(postReportResponse);
     }

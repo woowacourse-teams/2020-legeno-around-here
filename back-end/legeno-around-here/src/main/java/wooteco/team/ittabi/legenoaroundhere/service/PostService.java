@@ -140,6 +140,7 @@ public class PostService {
         post.pressZzang(user);
     }
 
+    @Transactional
     public PostReportResponse createPostReport(Long postId,
         PostReportCreateRequest postReportCreateRequest) {
         User user = (User) authenticationFacade.getPrincipal();
