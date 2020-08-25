@@ -30,7 +30,7 @@ public class RankingService {
     public Page<PostWithCommentsCountResponse> searchRanking(Pageable pageable,
         RankingRequest rankingRequest, PostSearchRequest postSearchFilter) {
         Page<Post> allDateZzangPosts = postService
-            .getPostByFilter(pageable, postSearchFilter.toPostSearch());
+            .getPostByFilter(Pageable.unpaged(), postSearchFilter.toPostSearch());
         List<Post> filteredDateZzangPosts
             = getPostsThatZzangFilteredByDate(rankingRequest.getCriteria(), allDateZzangPosts);
         Collections.reverse(filteredDateZzangPosts);
