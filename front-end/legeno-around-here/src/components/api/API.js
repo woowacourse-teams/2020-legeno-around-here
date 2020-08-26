@@ -412,7 +412,7 @@ export const findCommentsByPostId = async (accessToken, postId) => {
     });
 };
 
-export const findOthersProfileById = async (accessToken) => {
+export const findOthersProfileById = async ({ accessToken, userId }) => {
   const config = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -420,7 +420,7 @@ export const findOthersProfileById = async (accessToken) => {
     },
   };
   return axios
-    .get(DEFAULT_URL + '/users/me', config) // Todo: 남의 프로필 가져오기
+    .get(DEFAULT_URL + '/users/' + userId, config)
     .then(async (response) => {
       const userResponse = await response.data;
       console.log(userResponse);

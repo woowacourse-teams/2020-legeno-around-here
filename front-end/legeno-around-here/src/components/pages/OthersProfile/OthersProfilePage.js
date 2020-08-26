@@ -1,44 +1,32 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { getAccessTokenFromCookie, removeAccessTokenCookie } from '../../../util/TokenUtils'
-import { findAllMySector, findMyInfo } from '../../api/API'
-import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage'
-import Loading from '../../Loading'
-import TopBar from '../myProfile/myProfileTopBar'
-import {
-  Email,
-  Nickname,
-  PrivacyBox,
-  ProfilePhoto,
-  TopSection
-} from '../../myProfile/PrivacySection'
-import { Divider, Typography } from '@material-ui/core'
-import { AwardsSection, AwardSummary } from '../../myProfile/AwardSection'
-import { NavElement, NavSection } from '../../myProfile/LinksSection'
-import MySectors from '../myProfile/MySectors'
-import Bottom from '../../Bottom'
-import { PROFILE } from '../../../constants/BottomItems'
+import React, { useMemo, useState } from 'react';
+import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
+import { findOthersProfileById } from '../../api/API';
+import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
+import Loading from '../../Loading';
+import TopBar from '../myProfile/myProfileTopBar';
+import { Nickname, PrivacyBox, ProfilePhoto, TopSection } from '../../myProfile/PrivacySection';
+import { Typography } from '@material-ui/core';
+import { AwardsSection, AwardSummary } from '../../myProfile/AwardSection';
+import { NavElement, NavSection } from '../../myProfile/LinksSection';
+import Bottom from '../../Bottom';
 
 function OthersProfilePage({ match }) {
   const [accessToken] = useState(getAccessTokenFromCookie());
-  const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
   const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
   const [loading, setLoading] = useState(false);
 
   useMemo(() => {
     setLoading(true);
-    // findMyInfo(accessToken).then((userResponse) => {
-    //   setEmail(userResponse.email);
-    //   setNickname(userResponse.nickname);
-      setProfilePhotoUrl(/*userResponse.image ? userResponse.image.url : */DEFAULT_IMAGE_URL);
-    // });
+    findOthersProfileById({
+      accessToken: accessToken,
+      userId: match.params.userId
+    }).then((userResponse) => {
+      setNickname(userResponse.nickname);
+      setProfilePhotoUrl(userResponse.image ? userResponse.image.url : DEFAULT_IMAGE_URL);
+    });
     setLoading(false);
-  }, [accessToken]);
-
-  const logout = useCallback(() => {
-    removeAccessTokenCookie();
-    alert('로그아웃 되었습니다.');
-  }, []);
+  }, [accessToken, match.params.userId]);
 
   if (loading) {
     return <Loading />;
@@ -51,9 +39,8 @@ function OthersProfilePage({ match }) {
         <ProfilePhoto photoUrl={profilePhotoUrl} />
         <PrivacyBox>
           <Typography component='h1' variant='h5'>
-            {/*<Nickname>{nickname}</Nickname>*/}닉네임
+            <Nickname>{nickname}</Nickname>
           </Typography>
-          {/*<Email>{email}</Email>*/}이메일
         </PrivacyBox>
       </TopSection>
       <AwardsSection>
