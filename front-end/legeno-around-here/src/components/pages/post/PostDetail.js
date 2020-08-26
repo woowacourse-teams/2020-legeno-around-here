@@ -11,7 +11,7 @@ import Comments from './Comments';
 import PostImages from './PostImages';
 import { convertDateFormat } from '../../../util/TimeUtils';
 import UpdatePostButton from './UpdatePostButton';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 const PostDetail = ({ post, myInfo }) => {
   const accessToken = getAccessTokenFromCookie();
@@ -64,7 +64,12 @@ const PostDetail = ({ post, myInfo }) => {
           <Typography>{post.area.fullName}</Typography>
         </Grid>
         <Grid container item xs={6} alignItems='flex-start' justify='flex-end' direction='row'>
-          <Link to={'/profile/' + post.creator.id}><Typography>{post.creator.nickname}</Typography></Link>
+          <Typography
+            component={Link}
+            to={post.creator.id === myInfo.id ? '/myProfile' : '/profile/' + post.creator.id}
+          >
+            {post.creator.nickname}
+          </Typography>
         </Grid>
       </Grid>
       <Typography variant='h5'>{post.sector.name} 부문</Typography>
