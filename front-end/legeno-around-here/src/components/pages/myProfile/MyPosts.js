@@ -7,7 +7,7 @@ import { PROFILE } from '../../../constants/BottomItems';
 import Loading from '../../Loading';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import { findMyPostsFromPage } from '../../api/API';
-import PostItem from '../../post/PostItem';
+import PostItem from '../../PostItem';
 import BottomBlank from '../../BottomBlank';
 
 function MyPosts() {

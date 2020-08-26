@@ -7,7 +7,7 @@ import Bottom from '../Bottom';
 import { findCurrentPostsFromPage } from '../api/API';
 import { getAccessTokenFromCookie } from '../../util/TokenUtils';
 import { HOME } from '../../constants/BottomItems';
-import PostItem from '../post/PostItem';
+import PostItem from '../PostItem';
 import Loading from '../Loading';
 import BottomBlank from '../BottomBlank';
 
