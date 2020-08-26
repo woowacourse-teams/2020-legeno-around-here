@@ -6,6 +6,8 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.AWARDS
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.AWARDS_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.COMMENTS;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.COMMENTS_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.IMAGES;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.IMAGES_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.MAIL_AUTH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.MAIL_AUTH_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ME;
@@ -63,6 +65,13 @@ public class SwaggerConfig {
         groupName = COMMENTS;
         return getDocket(groupName,
             String.format(ALL_ANT_PATTERN_FORMAT, COMMENTS_PATH_WITH_SLASH));
+    }
+
+    @Bean
+    public Docket imageApiDocket() {
+        groupName = IMAGES;
+        return getDocket(groupName,
+            String.format(ALL_ANT_PATTERN_FORMAT, IMAGES_PATH_WITH_SLASH));
     }
 
     @Bean

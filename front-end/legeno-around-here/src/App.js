@@ -8,9 +8,10 @@ import PostDetailPage from './components/pages/post/PostDetailPage';
 import MyProfileEditPage from './components/pages/myProfileEdit/MyProfileEditPage';
 import PostingUpdatePage from './components/pages/posting/PostingUpdatePage';
 import MyProfilePage from './components/pages/myProfile/MyProfilePage';
-import HomePage from './components/pages/HomePage';
 import RankingPage from './components/pages/ranking/RankingPage';
 import OthersProfilePage from './components/pages/OthersProfile/OthersProfilePage';
+import MyPosts from './components/pages/myProfile/MyPosts.js';
+import HomePage from './components/pages/home/HomePage';
 
 function App() {
   const mainArea = localStorage.getItem('mainAreaName');
@@ -35,6 +36,7 @@ function App() {
         <Route path='/ranking' exact component={RankingPage} />
         <Route path='/myProfileEdit' exact component={MyProfileEditPage} />
         <Route path='/profile/:userId' exact component={OthersProfilePage} />
+        <Route path='/my-posts' exact component={MyPosts} />
         <Redirect path='*' to='/' />
       </Switch>
     </BrowserRouter>

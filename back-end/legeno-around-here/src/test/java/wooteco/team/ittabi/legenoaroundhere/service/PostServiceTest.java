@@ -404,4 +404,25 @@ public class PostServiceTest extends ServiceTest {
         posts = postService.findMyPosts(Pageable.unpaged()).getContent();
         assertThat(posts).hasSize(1);
     }
+
+    @DisplayName("타인이 쓴 글 검색 - 성공")
+    @Test
+    void findPostsByUserId_Success() {
+        PostCreateRequest postCreateRequest
+            = new PostCreateRequest(TEST_POST_WRITING, TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
+        postService.createPost(postCreateRequest);
+
+        List<PostWithCommentsCountResponse> posts
+            = postService.findMyPosts(Pageable.unpaged()).getContent();
+        assertThat(posts).hasSize(1);
+
+        Long creatorId = user.getId();
+        setAuthentication(another);
+
+        posts = postService.findMyPosts(Pageable.unpaged()).getContent();
+        assertThat(posts).hasSize(0);
+
+        posts = postService.findPostsByUserId(Pageable.unpaged(), creatorId).getContent();
+        assertThat(posts).hasSize(1);
+    }
 }
