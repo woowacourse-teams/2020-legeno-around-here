@@ -35,11 +35,6 @@ public enum SectorState {
             .collect(Collectors.toList());
     }
 
-    public static boolean isTurnPendingToApproved(SectorState beforeSectorState,
-        SectorState afterSectorState) {
-        return beforeSectorState.equals(PENDING) && afterSectorState.equals(APPROVED);
-    }
-
     public String getName() {
         return this.name;
     }

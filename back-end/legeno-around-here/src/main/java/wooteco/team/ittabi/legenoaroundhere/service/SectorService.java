@@ -143,12 +143,11 @@ public class SectorService {
         Sector sector = findSectorBy(id);
         validateSectorUnique(sector);
 
-        SectorState beforeSectorState = SectorState.of(sector.getState());
-        SectorState afterSectorState = sectorUpdateStateRequest.getSectorState();
-        sector.setState(afterSectorState,
+        SectorState sectorState = sectorUpdateStateRequest.getSectorState();
+        sector.setState(sectorState,
             sectorUpdateStateRequest.getReason(), user);
 
-        if (SectorState.isTurnPendingToApproved(beforeSectorState, afterSectorState)) {
+        if (sectorState.equals(SectorState.APPROVED)) {
             giveASectorCreatorAward(sector);
         }
     }
