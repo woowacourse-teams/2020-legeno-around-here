@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ME_PATH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POSTS_PATH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POSTS_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ZZANGS_PATH;
@@ -78,6 +79,18 @@ public class PostController {
         PageRequest pageRequest, PostSearchRequest postSearchRequest) {
         Page<PostWithCommentsCountResponse> posts
             = postService.searchPosts(PageableAssembler.assemble(pageRequest), postSearchRequest);
+
+        return ResponseEntity
+            .ok()
+            .body(posts);
+    }
+
+
+    @GetMapping(ME_PATH)
+    public ResponseEntity<Page<PostWithCommentsCountResponse>> findMyPosts(
+        PageRequest pageRequest) {
+        Page<PostWithCommentsCountResponse> posts
+            = postService.findMyPosts(PageableAssembler.assemble(pageRequest));
 
         return ResponseEntity
             .ok()
