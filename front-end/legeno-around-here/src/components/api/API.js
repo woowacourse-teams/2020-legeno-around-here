@@ -386,6 +386,26 @@ export const findCommentsByPostId = async (accessToken, postId) => {
     });
 };
 
+export const findOthersProfileById = async (accessToken) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-Auth-Token': accessToken,
+    },
+  };
+  return axios
+    .get(DEFAULT_URL + '/users/me', config) // Todo: 남의 프로필 가져오기
+    .then(async (response) => {
+      const userResponse = await response.data;
+      console.log(userResponse);
+      return userResponse;
+    })
+    .catch((error) => {
+      redirectLoginWhenUnauthorized(error);
+      alert(`회원정보를 가져올 수 없습니다.${error}`);
+    });
+};
+
 const redirectLoginWhenUnauthorized = (error) => {
   if (error.response && error.response.status === 403) {
     document.location.href = '/login';

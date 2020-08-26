@@ -20,8 +20,8 @@ import { PROFILE } from '../../../constants/BottomItems'
 
 function OthersProfilePage({ match }) {
   const [accessToken] = useState(getAccessTokenFromCookie());
-  // const [email, setEmail] = useState('');
-  // const [nickname, setNickname] = useState('');
+  const [email, setEmail] = useState('');
+  const [nickname, setNickname] = useState('');
   const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
   const [loading, setLoading] = useState(false);
 
