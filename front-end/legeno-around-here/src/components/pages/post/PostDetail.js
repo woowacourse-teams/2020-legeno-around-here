@@ -20,6 +20,7 @@ const PostDetail = ({ post, myInfo }) => {
   const [loading, setLoading] = useState(false);
   const [zzang, setZzang] = useState(post.zzang.activated);
   const [zzangCount, setZzangCount] = useState(post.zzang.count);
+  const isMyPost = post.creator.id === myInfo.id;
 
   const onWritingChanged = (e) => {
     setWriting(e.target.value);
@@ -66,7 +67,7 @@ const PostDetail = ({ post, myInfo }) => {
         <Grid container item xs={6} alignItems='flex-start' justify='flex-end' direction='row'>
           <Typography
             component={Link}
-            to={post.creator.id === myInfo.id ? '/myProfile' : '/profile/' + post.creator.id}
+            to={isMyPost? '/myProfile' : '/profile/' + post.creator.id}
           >
             {post.creator.nickname}
           </Typography>
@@ -88,7 +89,7 @@ const PostDetail = ({ post, myInfo }) => {
         </Grid>
         <Grid container item xs={6} alignItems='flex-start' justify='flex-end' direction='row'>
           <Typography display='inline'>{convertDateFormat(post.createdAt)}</Typography>
-          <Typography display='inline'>{post.creator.id === myInfo.id && <UpdatePostButton post={post} />}</Typography>
+          <Typography display='inline'>{isMyPost && <UpdatePostButton post={post} />}</Typography>
         </Grid>
       </Grid>
 
