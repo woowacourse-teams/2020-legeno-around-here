@@ -27,14 +27,10 @@ public class NotificationController {
 
     static {
         myNotifications
-            .add(NotificationResponse.of(1L, "당신의 글에 5명이 댓글을 달았어요", "/posts/1", Boolean.FALSE));
+            .add(NotificationResponse.of(1L, "신청한 부문이 승인되었어요", "/sector/1", Boolean.FALSE));
         myNotifications
-            .add(NotificationResponse.of(2L, "당신의 댓글에 3명이 댓글을 달았어요", "/posts/1", Boolean.FALSE));
-        myNotifications
-            .add(NotificationResponse.of(3L, "신청한 부문이 승인되었어요", "/sector/1", Boolean.FALSE));
-        myNotifications
-            .add(NotificationResponse.of(4L, "신청한 부문이 반려되었어요", "/sector/1", Boolean.FALSE));
-        myNotifications.add(NotificationResponse.of(5L, "상을 수상했어요.", "/users/me", Boolean.FALSE));
+            .add(NotificationResponse.of(2L, "신청한 부문이 반려되었어요", "/sector/1", Boolean.FALSE));
+        myNotifications.add(NotificationResponse.of(3L, "상을 수상했어요.", "/users/me", Boolean.FALSE));
     }
 
     @GetMapping(ME_PATH)

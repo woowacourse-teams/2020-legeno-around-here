@@ -43,7 +43,7 @@ public class NotificationAcceptanceTest extends AcceptanceTest {
     void manageMyNotices() {
         // 알림 조회 - 읽은 알림 0
         List<NotificationResponse> notices = findMyNotice(accessToken);
-        assertThat(notices).hasSize(8);
+        assertThat(notices).hasSize(3);
 
         List<NotificationResponse> readNotices = notices.stream()
             .filter(NotificationResponse::getIsRead)
@@ -55,7 +55,7 @@ public class NotificationAcceptanceTest extends AcceptanceTest {
         readMyNotices(accessToken, noticeId);
 
         notices = findMyNotice(accessToken);
-        assertThat(notices).hasSize(8);
+        assertThat(notices).hasSize(3);
 
         readNotices = notices.stream()
             .filter(NotificationResponse::getIsRead)
@@ -66,7 +66,7 @@ public class NotificationAcceptanceTest extends AcceptanceTest {
         readMyNotices(accessToken, noticeId);
 
         notices = findMyNotice(accessToken);
-        assertThat(notices).hasSize(8);
+        assertThat(notices).hasSize(3);
 
         readNotices = notices.stream()
             .filter(NotificationResponse::getIsRead)
