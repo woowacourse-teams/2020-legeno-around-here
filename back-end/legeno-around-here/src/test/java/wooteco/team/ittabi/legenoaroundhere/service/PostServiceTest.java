@@ -389,4 +389,19 @@ public class PostServiceTest extends ServiceTest {
         assertThat(zzang.getCount()).isEqualTo(0L);
         assertThat(zzang.isActivated()).isFalse();
     }
+
+    @DisplayName("내가 쓴 글 검색 - 성공")
+    @Test
+    void findMyPosts_Success() {
+        List<PostWithCommentsCountResponse> posts
+            = postService.findMyPosts(Pageable.unpaged()).getContent();
+        assertThat(posts).hasSize(0);
+
+        PostCreateRequest postCreateRequest
+            = new PostCreateRequest(TEST_POST_WRITING, TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
+        postService.createPost(postCreateRequest);
+
+        posts = postService.findMyPosts(Pageable.unpaged()).getContent();
+        assertThat(posts).hasSize(1);
+    }
 }

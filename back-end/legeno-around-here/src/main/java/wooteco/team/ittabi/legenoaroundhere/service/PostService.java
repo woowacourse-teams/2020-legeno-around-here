@@ -156,10 +156,20 @@ public class PostService {
         post.pressZzang(user);
     }
 
+    @Transactional
     public List<PostImageResponse> uploadPostImages(List<MultipartFile> images) {
         List<PostImage> postImages = imageUploader.uploadPostImages(images);
         List<PostImage> savedPostImages = postImageRepository.saveAll(postImages);
 
         return PostImageResponse.listOf(savedPostImages);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PostWithCommentsCountResponse> findMyPosts(Pageable pageable) {
+        User user = (User) authenticationFacade.getPrincipal();
+
+        Page<Post> posts = postRepository.findAllByCreator(pageable, user);
+
+        return posts.map(post -> PostWithCommentsCountResponse.of(user, post));
     }
 }

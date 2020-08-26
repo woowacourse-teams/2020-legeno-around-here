@@ -64,6 +64,8 @@ public class PostAcceptanceTest extends AcceptanceTest {
      * <p>
      * When 글 목록을 조회한다. Then 글 목록을 응답받는다. And 글 목록은 n개이다.
      * <p>
+     * When 내 글 목록을 조회한다. Then 글 목록을 응답받는다. And 내 글 목록은 n개이다.
+     * <p>
      * When 글을 조회한다. Then 글을 응답 받는다.
      * <p>
      * When 글을 수정한다. Then 글이 수정되었다.
@@ -101,6 +103,10 @@ public class PostAcceptanceTest extends AcceptanceTest {
         List<PostWithCommentsCountResponse> postResponses = searchPosts(accessToken);
         assertThat(postResponses).hasSize(2);
 
+        // 내 글 조회
+        postResponses = findMyPosts(accessToken);
+        assertThat(postResponses).hasSize(2);
+
         // 이미지가 포함된 글 수정
         String updatedWriting = "BingBong and Jamie";
         List<PostImageResponse> newPostImages = uploadPostImages(accessToken);
@@ -124,9 +130,11 @@ public class PostAcceptanceTest extends AcceptanceTest {
         deletePost(postWithoutImageId, accessToken);
         findNotExistsPost(postWithoutImageId, accessToken);
 
-        List<PostWithCommentsCountResponse> foundPostResponses = searchPosts(accessToken);
+        postResponses = searchPosts(accessToken);
+        assertThat(postResponses).hasSize(1);
 
-        assertThat(foundPostResponses).hasSize(1);
+        postResponses = findMyPosts(accessToken);
+        assertThat(postResponses).hasSize(1);
     }
 
     /**
@@ -326,6 +334,19 @@ public class PostAcceptanceTest extends AcceptanceTest {
             .header("X-AUTH-TOKEN", accessToken)
             .when()
             .get("/posts?page=0&size=50&sortedBy=id&direction=asc&" + filter)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .jsonPath()
+            .getList("content", PostWithCommentsCountResponse.class);
+    }
+
+    private List<PostWithCommentsCountResponse> findMyPosts(String accessToken) {
+        return given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .get("/posts/me")
             .then()
             .statusCode(HttpStatus.OK.value())
             .extract()
