@@ -12,6 +12,8 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.MAIL_A
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.MAIL_AUTH_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ME_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.NOTICE;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.NOTICE_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POSTS;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POSTS_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.PROFILE;
@@ -83,6 +85,12 @@ public class SwaggerConfig {
     public Docket meApiDocket() {
         groupName = ME;
         return getDocket(groupName, String.format(ALL_ANT_PATTERN_FORMAT, ME_PATH_WITH_SLASH));
+    }
+
+    @Bean
+    public Docket noticeApiDocket() {
+        groupName = NOTICE;
+        return getDocket(groupName, String.format(ALL_ANT_PATTERN_FORMAT, NOTICE_PATH_WITH_SLASH));
     }
 
     @Bean
