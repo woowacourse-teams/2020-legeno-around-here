@@ -54,9 +54,9 @@ public class UserService implements UserDetailsService {
         Email email = new Email(userCheckRequest.getEmail());
         Optional<User> foundUser = userRepository.findByEmail(email);
 
-        if (foundUser.isPresent()) {
+        foundUser.ifPresent(user -> {
             throw new AlreadyExistUserException("이미 가입된 회원입니다.");
-        }
+        });
     }
 
     @Transactional

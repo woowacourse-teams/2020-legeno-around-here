@@ -77,8 +77,8 @@ class UserServiceTest extends ServiceTest {
         UserCheckRequest userCheckRequest
             = new UserCheckRequest(TEST_USER_EMAIL);
 
-        assertThatThrownBy(() -> userService.checkJoined(userCheckRequest)).isInstanceOf(
-            AlreadyExistUserException.class);
+        assertThatThrownBy(() -> userService.checkJoined(userCheckRequest))
+            .isInstanceOf(AlreadyExistUserException.class);
     }
 
     @DisplayName("User 생성")
