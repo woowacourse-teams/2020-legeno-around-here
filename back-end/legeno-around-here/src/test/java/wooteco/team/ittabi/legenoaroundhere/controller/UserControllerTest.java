@@ -65,7 +65,7 @@ class UserControllerTest {
             .content(inputJson)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
+            .andExpect(status().isNoContent())
             .andDo(print());
     }
 

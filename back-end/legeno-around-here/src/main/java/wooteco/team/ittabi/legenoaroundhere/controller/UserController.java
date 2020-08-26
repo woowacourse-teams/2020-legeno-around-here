@@ -35,7 +35,7 @@ public class UserController {
         userService.checkJoined(userCheckRequest);
 
         return ResponseEntity
-            .ok()
+            .noContent()
             .build();
     }
 

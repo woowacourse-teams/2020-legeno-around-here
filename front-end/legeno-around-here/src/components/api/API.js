@@ -109,11 +109,7 @@ export const checkJoined = (email) => {
     })
     .catch((error) => {
       const errorResponse = error.response.data;
-      if (errorResponse.errorMessage === '이미 가입된 회원입니다.') {
-        alert('사용할 수 없는 이메일입니다.');
-        return;
-      }
-      alert('메일 확인 요청에 실패했습니다.');
+      alert(errorResponse.errorMessage);
       console.log(error);
     });
 };

@@ -281,6 +281,6 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .when()
             .get("/check-joined?email=" + email)
             .then()
-            .statusCode(HttpStatus.OK.value());
+            .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }
