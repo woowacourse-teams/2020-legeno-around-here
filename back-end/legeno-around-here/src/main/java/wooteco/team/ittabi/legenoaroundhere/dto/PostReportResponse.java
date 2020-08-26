@@ -1,6 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,19 +20,19 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.PostReport;
 public class PostReportResponse {
 
     private Long id;
-    private String writing;
+    private String reportWriting;
+    private String postWriting;
+    private List<String> postImageUrls;
     private UserResponse reporter;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    public PostReportResponse(String writing) {
-        this.writing = writing;
-    }
-
     public static PostReportResponse of(PostReport postReport) {
         return PostReportResponse.builder()
             .id(postReport.getId())
-            .writing(postReport.getWriting())
+            .reportWriting(postReport.getReportWriting())
+            .postWriting(postReport.getPostWriting())
+            .postImageUrls(postReport.getPostImageUrls())
             .reporter(UserResponse.from(postReport.getReporter()))
             .createdAt(postReport.getCreatedAt())
             .modifiedAt(postReport.getModifiedAt())

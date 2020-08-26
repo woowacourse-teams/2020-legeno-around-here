@@ -1,6 +1,8 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.post;
 
+import java.util.List;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
@@ -19,28 +21,27 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString(exclude = {"post", "reporter"})
+@ToString(exclude = {"reporter"})
 public class PostReport extends BaseEntity {
 
     private static final int MAX_LENGTH = 2000;
 
     @Lob
     @Column(nullable = false)
-    private String writing;
+    private String reportWriting;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "FK_POST_REPORT_POST"), nullable = false)
-    private Post post;
+    @Embedded
+    private PostSnapshot postSnapshot;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reporter_id", foreignKey = @ForeignKey(name = "FK_POST_REPORT_REPORTER"), nullable = false)
     private User reporter;
 
     @Builder
-    public PostReport(String writing, Post post, User reporter) {
-        validateLength(writing);
-        this.writing = writing;
-        this.post = post;
+    public PostReport(String reportWriting, PostSnapshot postSnapshot, User reporter) {
+        validateLength(reportWriting);
+        this.reportWriting = reportWriting;
+        this.postSnapshot = postSnapshot;
         this.reporter = reporter;
     }
 
@@ -48,5 +49,13 @@ public class PostReport extends BaseEntity {
         if (writing.length() > MAX_LENGTH) {
             throw new WrongUserInputException(MAX_LENGTH + "글자를 초과했습니다!");
         }
+    }
+
+    public String getPostWriting() {
+        return this.postSnapshot.getPostWriting();
+    }
+
+    public List<String> getPostImageUrls() {
+        return this.postSnapshot.getPostImageUrls();
     }
 }

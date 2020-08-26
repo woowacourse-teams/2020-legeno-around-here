@@ -209,6 +209,12 @@ public class Post extends BaseEntity {
         return Collections.unmodifiableList(this.comments);
     }
 
+    public List<String> getPostImageUrls() {
+        return this.postImages.stream()
+            .map(PostImage::getUrl)
+            .collect(Collectors.toList());
+    }
+
     public void setState(State state) {
         this.state = state;
     }

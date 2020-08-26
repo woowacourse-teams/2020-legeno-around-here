@@ -264,7 +264,9 @@ public class PostAcceptanceTest extends AcceptanceTest {
 
         // 관리자가 해당 신고 글을 조회
         PostReportResponse postReportResponse = findPostReport(adminToken, postReportId);
-        assertThat(postReportResponse.getWriting()).isEqualTo(TEST_POST_REPORT_WRITING);
+        assertThat(postReportResponse.getReportWriting()).isEqualTo(TEST_POST_REPORT_WRITING);
+        assertThat(postReportResponse.getPostWriting()).isEqualTo(TEST_POST_WRITING);
+        assertThat(postReportResponse.getPostImageUrls()).hasSize(0);
 
         // 관리자가 페이지 별 신고 글을 조회
         List<PostReportResponse> postReportResponses = findPostReportByPage(adminToken);

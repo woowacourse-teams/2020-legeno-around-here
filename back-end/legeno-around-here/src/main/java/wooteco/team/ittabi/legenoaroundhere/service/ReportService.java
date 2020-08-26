@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.PostReport;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.PostSnapshot;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostReportAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostReportCreateRequest;
@@ -29,8 +30,13 @@ public class ReportService {
         PostReportCreateRequest postReportCreateRequest) {
         User user = (User) authenticationFacade.getPrincipal();
         Post post = findPostBy(postId);
+        PostSnapshot postSnapshot = PostSnapshot.builder()
+            .postWriting(post.getWriting())
+            .postImageUrls(post.getPostImageUrls())
+            .build();
 
-        PostReport postReport = PostReportAssembler.assemble(postReportCreateRequest, post, user);
+        PostReport postReport = PostReportAssembler
+            .assemble(postReportCreateRequest, postSnapshot, user);
 
         PostReport savedPostReport = postReportRepository.save(postReport);
         return PostReportResponse.of(savedPostReport);

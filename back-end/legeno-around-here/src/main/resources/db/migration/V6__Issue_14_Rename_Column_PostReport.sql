@@ -1,7 +1,0 @@
-ALTER TABLE `post_report` CHANGE `creator_id` `reporter_id` BIGINT(20);
-
-ALTER TABLE `post_report` DROP FOREIGN KEY `CONSTRAINT_43`;
-ALTER TABLE `post_report` DROP FOREIGN KEY `CONSTRAINT_438`;
-
-ALTER TABLE `post_report` ADD CONSTRAINT `FK_POST_REPORT_POST` FOREIGN KEY(`post_id`) REFERENCES `post` (`id`);
-ALTER TABLE `post_report` ADD CONSTRAINT `FK_POST_REPORT_REPORTER` FOREIGN KEY(`reporter_id`) REFERENCES `user` (`id`);
