@@ -1,6 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
 import java.util.Objects;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,11 +20,14 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.UserImage;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserAssembler;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserCheckRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserOtherResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
+import wooteco.team.ittabi.legenoaroundhere.exception.AlreadyExistUserException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
@@ -45,6 +49,16 @@ public class UserService implements UserDetailsService {
     private final IAuthenticationFacade authenticationFacade;
     private final ImageUploader imageUploader;
     private final MailAuthService mailAuthService;
+
+    @Transactional
+    public void checkJoined(UserCheckRequest userCheckRequest) {
+        Email email = new Email(userCheckRequest.getEmail());
+        Optional<User> foundUser = userRepository.findByEmail(email);
+
+        foundUser.ifPresent(user -> {
+            throw new AlreadyExistUserException("이미 가입된 회원입니다.");
+        });
+    }
 
     @Transactional
     public Long createUser(UserCreateRequest userCreateRequest) {
@@ -106,8 +120,12 @@ public class UserService implements UserDetailsService {
     private User findPrincipal() {
         User user = (User) authenticationFacade.getPrincipal();
 
-        return userRepository.findById(user.getId())
-            .orElseThrow(() -> new NotExistsException("사용자를 찾을 수 없습니다."));
+        return findById(user.getId());
+    }
+
+    private User findById(Long userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new NotExistsException("ID : " + userId + " 에 해당하는 User가 없습니다!"));
     }
 
     @Transactional
@@ -150,5 +168,11 @@ public class UserService implements UserDetailsService {
         UserImage savedUserImage = userImageRepository.save(userImage);
 
         return UserImageResponse.of(savedUserImage);
+    }
+
+    @Transactional(readOnly = true)
+    public UserOtherResponse findUser(Long userId) {
+        User user = findById(userId);
+        return UserOtherResponse.from(user);
     }
 }
