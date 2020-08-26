@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +19,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserOtherResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
@@ -49,6 +51,14 @@ public class UserController {
     @GetMapping(USERS_PATH + ME_PATH)
     public ResponseEntity<UserResponse> findMe() {
         UserResponse user = userService.findMe();
+
+        return ResponseEntity
+            .ok(user);
+    }
+
+    @GetMapping(USERS_PATH_WITH_SLASH + "{userId}")
+    public ResponseEntity<UserOtherResponse> findUser(@PathVariable Long userId) {
+        UserOtherResponse user = userService.findUser(userId);
 
         return ResponseEntity
             .ok(user);
