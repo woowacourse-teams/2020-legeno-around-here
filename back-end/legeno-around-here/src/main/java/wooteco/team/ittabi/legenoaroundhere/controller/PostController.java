@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.IMAGES_PATH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ME_PATH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POSTS_PATH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POSTS_PATH_WITH_SLASH;
@@ -54,7 +55,7 @@ public class PostController {
             .body(post);
     }
 
-    @PostMapping(POSTS_PATH_WITH_SLASH + "images")
+    @PostMapping(POSTS_PATH + IMAGES_PATH)
     public ResponseEntity<List<PostImageResponse>> uploadPostImages(List<MultipartFile> images) {
         List<PostImageResponse> postImageResponses = postService.uploadPostImages(images);
 

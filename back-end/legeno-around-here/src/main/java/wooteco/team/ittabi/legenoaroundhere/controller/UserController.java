@@ -1,5 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.IMAGES_PATH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.IMAGES_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ME_PATH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.USERS_PATH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.USERS_PATH_WITH_SLASH;
@@ -54,12 +56,12 @@ public class UserController {
             .ok(user);
     }
 
-    @PostMapping("/users/images")
+    @PostMapping(USERS_PATH + IMAGES_PATH)
     public ResponseEntity<UserImageResponse> uploadUserImage(MultipartFile image) {
         UserImageResponse userImage = userService.uploadUserImage(image);
 
         return ResponseEntity
-            .created(URI.create("/user-images/" + userImage.getId()))
+            .created(URI.create(USERS_PATH + IMAGES_PATH_WITH_SLASH + userImage.getId()))
             .body(userImage);
     }
 
