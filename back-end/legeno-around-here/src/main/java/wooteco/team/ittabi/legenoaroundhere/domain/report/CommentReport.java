@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.report;
 
-import java.util.List;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import lombok.AccessLevel;
@@ -14,22 +13,18 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString
-public class PostReport extends ReportEntity {
+public class CommentReport extends ReportEntity {
 
     @Embedded
-    private PostSnapshot postSnapshot;
+    private CommentSnapshot commentSnapshot;
 
     @Builder
-    public PostReport(String reportWriting, User reporter, PostSnapshot postSnapshot) {
+    public CommentReport(String reportWriting, User reporter, CommentSnapshot commentSnapshot) {
         super(reportWriting, reporter);
-        this.postSnapshot = postSnapshot;
+        this.commentSnapshot = commentSnapshot;
     }
 
-    public String getPostWriting() {
-        return this.postSnapshot.getPostWriting();
-    }
-
-    public List<String> getPostImageUrls() {
-        return this.postSnapshot.getPostImageUrls();
+    public String getCommentWriting() {
+        return this.commentSnapshot.getCommentWriting();
     }
 }
