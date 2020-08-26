@@ -16,6 +16,8 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.NotificationResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.NotificationResponseAssembler;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.NotificationRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.NotificationContentMaker;
 
@@ -28,6 +30,7 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final IAuthenticationFacade authenticationFacade;
 
+    @Transactional(readOnly = true)
     public List<NotificationResponse> findMyNotice() {
         User user = (User) authenticationFacade.getPrincipal();
 
@@ -118,5 +121,23 @@ public class NotificationService {
         String zzangNotificationContent
             = NotificationContentMaker.makeCreatedCommentNotificationContent(comment);
         createNewCommentNotificationOfContent(comment, receiver, zzangNotificationContent);
+    }
+
+    @Transactional
+    public void readMyNotice(Long noticeId) {
+        User user = (User) authenticationFacade.getPrincipal();
+
+        Notification notification = notificationRepository.findById(noticeId)
+            .orElseThrow(
+                () -> new NotExistsException("ID : " + noticeId + " 에 해당하는 Notice가 없습니다!"));
+
+        validateReceiver(user, notification);
+        notification.read();
+    }
+
+    private void validateReceiver(User user, Notification notification) {
+        if (notification.isDifferentReceiver(user)) {
+            throw new NotAuthorizedException("권한이 없습니다.");
+        }
     }
 }

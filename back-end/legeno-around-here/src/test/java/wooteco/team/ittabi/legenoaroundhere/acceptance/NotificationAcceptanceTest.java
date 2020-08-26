@@ -1,7 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NOTIFICATION_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import io.restassured.RestAssured;
@@ -23,7 +23,7 @@ public class NotificationAcceptanceTest extends AcceptanceTest {
     void setUp() {
         RestAssured.port = port;
         // 로그인
-        TokenResponse tokenResponse = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
+        TokenResponse tokenResponse = login(TEST_USER_NOTIFICATION_EMAIL, TEST_USER_PASSWORD);
         accessToken = tokenResponse.getAccessToken();
     }
 
@@ -43,7 +43,7 @@ public class NotificationAcceptanceTest extends AcceptanceTest {
     void manageMyNotices() {
         // 알림 조회 - 읽은 알림 0
         List<NotificationResponse> notices = findMyNotice(accessToken);
-        assertThat(notices).hasSize(3);
+        assertThat(notices).hasSize(7);
 
         List<NotificationResponse> readNotices = notices.stream()
             .filter(NotificationResponse::getIsRead)
@@ -55,7 +55,7 @@ public class NotificationAcceptanceTest extends AcceptanceTest {
         readMyNotices(accessToken, noticeId);
 
         notices = findMyNotice(accessToken);
-        assertThat(notices).hasSize(3);
+        assertThat(notices).hasSize(7);
 
         readNotices = notices.stream()
             .filter(NotificationResponse::getIsRead)
@@ -66,7 +66,7 @@ public class NotificationAcceptanceTest extends AcceptanceTest {
         readMyNotices(accessToken, noticeId);
 
         notices = findMyNotice(accessToken);
-        assertThat(notices).hasSize(3);
+        assertThat(notices).hasSize(7);
 
         readNotices = notices.stream()
             .filter(NotificationResponse::getIsRead)
