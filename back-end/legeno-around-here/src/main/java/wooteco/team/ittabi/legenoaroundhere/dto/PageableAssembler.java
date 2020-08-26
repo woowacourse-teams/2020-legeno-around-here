@@ -25,6 +25,12 @@ public class PageableAssembler {
         );
     }
 
+    public static Pageable assembleForRanking(PageRequest pageRequest) {
+        return org.springframework.data.domain.PageRequest.of(
+            calculatePage(pageRequest.getPage()),
+            calculateSize(pageRequest.getSize()));
+    }
+
     public static int calculatePage(Integer page) {
         if (Objects.isNull(page)) {
             return MINIMUM_PAGE;
@@ -59,14 +65,5 @@ public class PageableAssembler {
         return Direction.fromOptionalString(direction)
             .orElseThrow(() -> new WrongUserInputException(
                 "Direction를 잘못 [" + direction + "] 입력하셨습니다.(asc/desc)"));
-    }
-
-    public static Pageable assemble(PageRequest pageRequest, int size) {
-        return org.springframework.data.domain.PageRequest.of(
-            calculatePage(pageRequest.getPage()),
-            size,
-            makeDirection(pageRequest.getDirection()),
-            makeSortedBy(pageRequest.getSortedBy())
-        );
     }
 }
