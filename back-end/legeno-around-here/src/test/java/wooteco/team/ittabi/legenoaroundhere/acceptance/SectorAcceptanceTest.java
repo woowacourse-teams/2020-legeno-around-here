@@ -34,6 +34,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.ErrorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorSimpleResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
 public class SectorAcceptanceTest extends AcceptanceTest {
@@ -391,12 +392,14 @@ public class SectorAcceptanceTest extends AcceptanceTest {
     }
 
     /**
-     * Feature: 인기 부문 조회, Scenario: 인기 부문을 조회한다.
+     * Feature: 부문 조회, Scenario: 부문을 조회한다.
      * <p>
-     * Given 부문을 10개 등록한다, 부문이 10개 등록된다.
+     * Given 부문을 5개 등록한다, 부문이 5개 등록된다.
      * <p>
      * 부문 1) 글 0건 + 삭제 글 8건 부문 2) 글 1건 + 삭제 글 6건 부문 3) 글 2건 + 삭제 글 4건 부문 4) 글 3건 + 삭제 글 2건 부문 5) 글
      * 4건 + 삭제 글 0건
+     * <p>
+     * When 전체 부문 단순 조회 Then 5개가 조회된다.
      * <p>
      * When 인기 부문 조회 Then 4개가 조회된다.
      * <p>
@@ -404,9 +407,10 @@ public class SectorAcceptanceTest extends AcceptanceTest {
      * <p>
      * When 인기 부문 2개 조회 Then 2개가 조회된다.
      */
-    @DisplayName("인기 부문 조회")
+    @DisplayName("부문 조회")
     @Test
-    void findBestSectorsWithCounts() {
+    void findSectors() {
+        // 초기 데이터 셋팅
         TokenResponse tokenResponse = login(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD);
         String accessToken = tokenResponse.getAccessToken();
 
@@ -423,10 +427,14 @@ public class SectorAcceptanceTest extends AcceptanceTest {
                 deletePost(accessToken, postId);
             }
         }
-
         Collections.reverse(sectorIds);
 
-        List<SectorResponse> sectorResponses = findBestSectors(accessToken, "");
+        // 전체 부문 단순(ID+NAME) 조회
+        List<SectorSimpleResponse> sectorResponses = findSectorsForKeywordSearch(accessToken);
+        assertThat(sectorResponses).hasSize(5);
+
+        // 인기 부문 조회
+        sectorResponses = findBestSectors(accessToken, "");
         assertThat(sectorResponses).hasSize(4);
         assertThat(getSectorIdsBy(sectorResponses)).isEqualTo(sectorIds.subList(0, 4));
 
@@ -449,9 +457,9 @@ public class SectorAcceptanceTest extends AcceptanceTest {
             .collect(Collectors.toList());
     }
 
-    private List<Long> getSectorIdsBy(List<SectorResponse> sectors) {
+    private List<Long> getSectorIdsBy(List<SectorSimpleResponse> sectors) {
         return sectors.stream()
-            .map(SectorResponse::getId)
+            .map(SectorSimpleResponse::getId)
             .collect(Collectors.toList());
     }
 
@@ -645,7 +653,7 @@ public class SectorAcceptanceTest extends AcceptanceTest {
             .getList("content", SectorDetailResponse.class);
     }
 
-    private List<SectorResponse> findBestSectors(String accessToken, String parameter) {
+    private List<SectorSimpleResponse> findBestSectors(String accessToken, String parameter) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
@@ -656,7 +664,21 @@ public class SectorAcceptanceTest extends AcceptanceTest {
             .log().body()
             .extract()
             .jsonPath()
-            .getList(".", SectorResponse.class);
+            .getList(".", SectorSimpleResponse.class);
+    }
+
+    private List<SectorSimpleResponse> findSectorsForKeywordSearch(String accessToken) {
+        return given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .get("/sectors/simple")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .log().body()
+            .extract()
+            .jsonPath()
+            .getList(".", SectorSimpleResponse.class);
     }
 
     private void deleteSector(String accessToken, Long id) {
