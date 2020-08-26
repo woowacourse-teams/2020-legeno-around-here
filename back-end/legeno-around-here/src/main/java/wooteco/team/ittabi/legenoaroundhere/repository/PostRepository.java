@@ -15,6 +15,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findAllByCreator(Pageable pageable, User creator);
 
+    Page<Post> findAllByCreatorId(Pageable pageable, Long creatorId);
+
     @Query(value = ""
         + "SELECT * "
         + "  FROM post "
