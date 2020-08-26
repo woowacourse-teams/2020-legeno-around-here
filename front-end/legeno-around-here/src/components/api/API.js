@@ -251,7 +251,7 @@ export const findMyInfo = (accessToken) => {
     });
 };
 
-export const findCurrentPostsFromPage = async (mainAreaId, page, accessToken) => {
+export const findCurrentPostsFromPage = async (mainAreaId, page, sectorId, accessToken) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -266,7 +266,7 @@ export const findCurrentPostsFromPage = async (mainAreaId, page, accessToken) =>
         `sortedBy=${DEFAULT_SORTED_BY}&` +
         `direction=${DEFAULT_DIRECTION}&` +
         `areaId=${mainAreaId}&` +
-        `sectorIds=`,
+        `sectorIds=${sectorId}`,
       config,
     )
     .then((response) => response.data.content)
@@ -300,6 +300,19 @@ export const findAllAreas = async (page, accessToken, keyword) => {
       redirectLoginWhenUnauthorized(error);
       throw error.response;
     });
+};
+
+export const findAllSimpleSectors = async (accessToken) => {
+  const config = {
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
+  };
+  const response = await axios.get(DEFAULT_URL + `/sectors/simple`, config).catch((error) => {
+    redirectLoginWhenUnauthorized(error);
+    alert(`부문정보를 가져올 수 없습니다.${error}`);
+  });
+  return response.data;
 };
 
 export const findSectorsFromPage = async (page, accessToken) => {

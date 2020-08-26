@@ -8,7 +8,7 @@ import PostDetailPage from './components/pages/post/PostDetailPage';
 import MyProfileEditPage from './components/pages/myProfileEdit/MyProfileEditPage';
 import PostingUpdatePage from './components/pages/posting/PostingUpdatePage';
 import MyProfilePage from './components/pages/myProfile/MyProfilePage';
-import HomePage from './components/pages/HomePage';
+import HomePage from './components/pages/home/HomePage';
 import RankingPage from './components/pages/RankingPage';
 
 function App() {
