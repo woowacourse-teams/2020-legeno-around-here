@@ -319,9 +319,9 @@ class SectorServiceTest extends ServiceTest {
         assertThat(sector.getReason()).isEqualTo(TEST_SECTOR_REASON);
     }
 
-    @DisplayName("SectorState 업데이트 - 수상, Pending에서 Approve로 변경")
+    @DisplayName("SectorState 업데이트 - 수상, Approve로 변경")
     @Test
-    void updateSectorState_TurnPendingToApproved_giveASectorCreatorAward() {
+    void updateSectorState_TurnApproved_giveASectorCreatorAward() {
         SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
         Long sectorId = sectorService.createPendingSector(sectorRequest).getId();
 
@@ -342,9 +342,9 @@ class SectorServiceTest extends ServiceTest {
         assertThat(sectorCreatorAward.getName()).contains(sectorCreatorAward.getSector().getName());
     }
 
-    @DisplayName("SectorState 업데이트 - 수상 안함, Pending에서 Rejected 변경")
+    @DisplayName("SectorState 업데이트 - 수상 안함, Rejected 변경")
     @Test
-    void updateSectorState_TurnPendingToREJECTED_giveNothing() {
+    void updateSectorState_TurnRejected_GiveNothing() {
         SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
         Long sectorId = sectorService.createPendingSector(sectorRequest).getId();
 
@@ -360,7 +360,7 @@ class SectorServiceTest extends ServiceTest {
 
     @DisplayName("SectorState 업데이트 - 수상 안함, 이미 수상내역 있음")
     @Test
-    void updateSectorState_ExistsAward_giveNothing() {
+    void updateSectorState_ExistsAward_GiveNothing() {
         SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
         Long sectorId = sectorService.createPendingSector(sectorRequest).getId();
 
