@@ -1,13 +1,25 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 
 import TopBar from './myProfileTopBar';
 import Bottom from '../../Bottom';
 import { PROFILE } from '../../../constants/BottomItems';
 import { findAllMySector, findMyInfo } from '../../api/API';
 import Loading from '../../Loading';
-import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
+import {
+  getAccessTokenFromCookie,
+  removeAccessTokenCookie,
+} from '../../../util/TokenUtils';
 import { Divider, Typography } from '@material-ui/core';
-import { Email, Nickname, PrivacyBox, PrivacyEditBox, ProfilePhoto, TopSection } from '../../myProfile/PrivacySection';
+import {
+  Email,
+  Nickname,
+  PrivacyBox,
+  PrivacyEditBox,
+  PrivacySignOutBox,
+  ProfilePhoto,
+  TopSection,
+  PrivacyRightBox,
+} from '../../myProfile/PrivacySection';
 import { AwardsSection, AwardSummary } from '../../myProfile/AwardSection';
 import { NavElement, NavSection } from '../../myProfile/LinksSection';
 import MySectors from './MySectors';
@@ -41,6 +53,11 @@ function MyProfilePage() {
     setLoading(false);
   }, [accessToken]);
 
+  const logout = useCallback(() => {
+    removeAccessTokenCookie();
+    alert('로그아웃 되었습니다.');
+  }, []);
+
   if (loading) {
     return <Loading />;
   }
@@ -56,7 +73,12 @@ function MyProfilePage() {
           </Typography>
           <Email>{email}</Email>
         </PrivacyBox>
-        <PrivacyEditBox to='/myProfileEdit'>수정</PrivacyEditBox>
+        <PrivacyRightBox>
+          <PrivacyEditBox to="/myProfileEdit">수정</PrivacyEditBox>
+          <PrivacySignOutBox onClick={logout} to="/login">
+            로그아웃
+          </PrivacySignOutBox>
+        </PrivacyRightBox>
       </TopSection>
       <AwardsSection>
         <AwardSummary awardName='TOP3' awardCount={1} />

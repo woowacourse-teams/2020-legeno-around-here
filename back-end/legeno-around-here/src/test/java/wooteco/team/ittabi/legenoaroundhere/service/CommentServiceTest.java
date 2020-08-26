@@ -30,7 +30,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.CommentResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentZzangResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserSimpleResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAvailableException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
@@ -40,9 +40,8 @@ public class CommentServiceTest extends ServiceTest {
 
     private static final String TEST_PREFIX = "comment_";
 
-    private User user;
-    private User another;
-    private Long postId;
+    @MockBean
+    MailAuthRepository mailAuthRepository;
 
     @Autowired
     private SectorService sectorService;
@@ -53,8 +52,9 @@ public class CommentServiceTest extends ServiceTest {
     @Autowired
     private CommentService commentService;
 
-    @MockBean
-    private MailAuthRepository mailAuthRepository;
+    private User user;
+    private User another;
+    private Long postId;
 
     @BeforeEach
     void setUp() {
@@ -82,7 +82,7 @@ public class CommentServiceTest extends ServiceTest {
 
         assertThat(comment.getId()).isNotNull();
         assertThat(comment.getWriting()).isEqualTo(TEST_COMMENT_WRITING);
-        assertThat(comment.getCreator()).isEqualTo(UserResponse.from(user));
+        assertThat(comment.getCreator()).isEqualTo(UserSimpleResponse.from(user));
         assertThat(comment.getZzang()).isNotNull();
         assertThat(comment.getCocomments()).isEmpty();
         assertThat(comment.isDeleted()).isFalse();
@@ -197,7 +197,7 @@ public class CommentServiceTest extends ServiceTest {
         CommentRequest commentRequest = new CommentRequest(TEST_COMMENT_WRITING);
         commentService.createComment(postId, commentRequest);
 
-        List<CommentResponse> comments = commentService.findAllCommentBy(postId);
+        List<CommentResponse> comments = commentService.findAllComment(postId);
 
         assertThat(comments).hasSize(1);
     }
@@ -210,7 +210,7 @@ public class CommentServiceTest extends ServiceTest {
 
         commentService.deleteComment(commentId);
 
-        List<CommentResponse> comments = commentService.findAllCommentBy(postId);
+        List<CommentResponse> comments = commentService.findAllComment(postId);
         assertThat(comments).hasSize(0);
     }
 
@@ -223,7 +223,7 @@ public class CommentServiceTest extends ServiceTest {
 
         commentService.deleteComment(commentId);
 
-        List<CommentResponse> comments = commentService.findAllCommentBy(postId);
+        List<CommentResponse> comments = commentService.findAllComment(postId);
         assertThat(comments).hasSize(1);
 
         CommentResponse comment = commentService.findComment(commentId);
@@ -250,7 +250,7 @@ public class CommentServiceTest extends ServiceTest {
             .isInstanceOf(NotExistsException.class);
         assertThatThrownBy(() -> commentService.findComment(commentId))
             .isInstanceOf(NotExistsException.class);
-        assertThat(commentService.findAllCommentBy(postId)).isEmpty();
+        assertThat(commentService.findAllComment(postId)).isEmpty();
     }
 
     @DisplayName("댓글 삭제 - 삭제되진 않음, 삭제된 상태에서 하위 댓글이 일부 삭제되는 경우")
@@ -268,7 +268,7 @@ public class CommentServiceTest extends ServiceTest {
         assertThatThrownBy(() -> commentService.findComment(cocommentId))
             .isInstanceOf(NotExistsException.class);
         assertThat(commentService.findComment(commentId).getCocomments()).hasSize(1);
-        assertThat(commentService.findAllCommentBy(postId)).hasSize(1);
+        assertThat(commentService.findAllComment(postId)).hasSize(1);
     }
 
     @DisplayName("댓글 삭제 - 삭제, 하위 댓글의 경우")
@@ -280,7 +280,7 @@ public class CommentServiceTest extends ServiceTest {
 
         commentService.deleteComment(cocommentId);
 
-        List<CommentResponse> comments = commentService.findAllCommentBy(postId);
+        List<CommentResponse> comments = commentService.findAllComment(postId);
         assertThat(comments).hasSize(1);
 
         CommentResponse comment = commentService.findComment(commentId);

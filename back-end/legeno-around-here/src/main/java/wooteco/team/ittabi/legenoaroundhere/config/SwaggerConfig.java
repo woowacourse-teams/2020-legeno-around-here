@@ -1,5 +1,30 @@
 package wooteco.team.ittabi.legenoaroundhere.config;
 
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.AREAS;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.AREAS_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.AWARDS;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.AWARDS_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.COMMENTS;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.COMMENTS_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.MAIL_AUTH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.MAIL_AUTH_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ME_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.NOTICE;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.NOTICE_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POSTS;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POSTS_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.PROFILE;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.PROFILE_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.RANKING;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.RANKING_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.SECTORS;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.SECTORS_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.USERS;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.USERS_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ZZANGS;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ZZANGS_PATH_WITH_SLASH;
+
 import java.util.ArrayList;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,64 +42,103 @@ public class SwaggerConfig {
 
     private static final String CONTROLLER_PACKAGE_NAME = "wooteco.team.ittabi.legenoaroundhere.controller";
     private static final String DEFAULT_TITLE = "Legeno Around Here ";
+    private static final String ALL_ANT_PATTERN_FORMAT = "/**%s**";
 
     private String groupName;
 
     @Bean
     public Docket areaApiDocket() {
-        groupName = "areas";
-        return getDocket(groupName, "/areas/**", DEFAULT_TITLE + groupName);
+        groupName = AREAS;
+        return getDocket(groupName, String.format(ALL_ANT_PATTERN_FORMAT, AREAS_PATH_WITH_SLASH));
     }
 
     @Bean
     public Docket awardApiDocket() {
-        groupName = "awards";
-        return getDocket(groupName, "/**/awards/**", DEFAULT_TITLE + groupName);
+        groupName = AWARDS;
+        return getDocket(groupName, String.format(ALL_ANT_PATTERN_FORMAT, AWARDS_PATH_WITH_SLASH));
     }
 
     @Bean
     public Docket commentApiDocket() {
-        groupName = "comments";
-        return getDocket(groupName, "/**/comments/**", DEFAULT_TITLE + groupName);
+        groupName = COMMENTS;
+        return getDocket(groupName,
+            String.format(ALL_ANT_PATTERN_FORMAT, COMMENTS_PATH_WITH_SLASH));
+    }
+
+    @Bean
+    public Docket mailAuthApiDocket() {
+        groupName = MAIL_AUTH;
+        return getDocket(groupName,
+            String.format(ALL_ANT_PATTERN_FORMAT, MAIL_AUTH_PATH_WITH_SLASH));
+    }
+
+    @Bean
+    public Docket meApiDocket() {
+        groupName = ME;
+        return getDocket(groupName, String.format(ALL_ANT_PATTERN_FORMAT, ME_PATH_WITH_SLASH));
+    }
+
+    @Bean
+    public Docket noticeApiDocket() {
+        groupName = NOTICE;
+        return getDocket(groupName, String.format(ALL_ANT_PATTERN_FORMAT, NOTICE_PATH_WITH_SLASH));
     }
 
     @Bean
     public Docket postApiDocket() {
-        groupName = "posts";
-        return getDocket(groupName, "/posts/**", DEFAULT_TITLE + groupName);
+        groupName = POSTS;
+        return getDocket(groupName, String.format(ALL_ANT_PATTERN_FORMAT, POSTS_PATH_WITH_SLASH));
+    }
+
+    @Bean
+    public Docket profileApiDocket() {
+        groupName = PROFILE;
+        return getDocket(groupName, String.format(ALL_ANT_PATTERN_FORMAT, PROFILE_PATH_WITH_SLASH));
+    }
+
+    @Bean
+    public Docket rankingApiDocket() {
+        groupName = RANKING;
+        return getDocket(groupName, String.format(ALL_ANT_PATTERN_FORMAT, RANKING_PATH_WITH_SLASH));
     }
 
     @Bean
     public Docket sectorApiDocket() {
-        groupName = "sectors";
-        return getDocket(groupName, "/sectors/**", DEFAULT_TITLE + groupName);
+        groupName = SECTORS;
+        return getDocket(groupName, String.format(ALL_ANT_PATTERN_FORMAT, SECTORS_PATH_WITH_SLASH));
     }
 
     @Bean
     public Docket userApiDocket() {
-        groupName = "users";
-        return getDocket(groupName, "/users/**", DEFAULT_TITLE + groupName);
+        groupName = USERS;
+        return getDocket(groupName, String.format(ALL_ANT_PATTERN_FORMAT, USERS_PATH_WITH_SLASH));
+    }
+
+    @Bean
+    public Docket zzangApiDocket() {
+        groupName = ZZANGS;
+        return getDocket(groupName, String.format(ALL_ANT_PATTERN_FORMAT, ZZANGS_PATH_WITH_SLASH));
     }
 
     @Bean
     public Docket userImageApiDocket() {
         groupName = "userImages";
-        return getDocket(groupName, "/user-images/**", DEFAULT_TITLE + groupName);
+        return getDocket(groupName, "/user-images/**");
     }
 
     @Bean
-    public Docket userJoinApiDocket() {
+    public Docket joinApiDocket() {
         groupName = "join";
-        return getDocket(groupName, "/join/**", DEFAULT_TITLE + groupName);
+        return getDocket(groupName, "/join/**");
     }
 
     @Bean
-    public Docket userLoginApiDocket() {
+    public Docket loginApiDocket() {
         groupName = "login";
-        return getDocket(groupName, "/login/**", DEFAULT_TITLE + groupName);
+        return getDocket(groupName, "/login/**");
     }
 
-    private Docket getDocket(String groupName, String groupUrl, String title) {
+    private Docket getDocket(String groupName, String groupUrl) {
         return new Docket(DocumentationType.SWAGGER_2)
             .useDefaultResponseMessages(false)
             .groupName(groupName)
@@ -83,7 +147,7 @@ public class SwaggerConfig {
                 .basePackage(CONTROLLER_PACKAGE_NAME))
             .paths(PathSelectors.ant(groupUrl))
             .build()
-            .apiInfo(apiInfo(title, groupName));
+            .apiInfo(apiInfo(DEFAULT_TITLE + groupName, groupName));
     }
 
     private ApiInfo apiInfo(String title, String version) {

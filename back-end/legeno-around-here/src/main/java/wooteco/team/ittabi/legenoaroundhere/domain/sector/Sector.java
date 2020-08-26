@@ -111,6 +111,10 @@ public class Sector extends BaseEntity {
         return this.description.getDescription();
     }
 
+    public String getDescription(int wordCount) {
+        return this.description.getDescription(wordCount);
+    }
+
     public String getState() {
         return this.state.getName();
     }
