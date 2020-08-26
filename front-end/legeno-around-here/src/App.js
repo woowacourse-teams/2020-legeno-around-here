@@ -8,9 +8,9 @@ import PostDetailPage from './components/pages/post/PostDetailPage';
 import MyProfileEditPage from './components/pages/myProfileEdit/MyProfileEditPage';
 import PostingUpdatePage from './components/pages/posting/PostingUpdatePage';
 import MyProfilePage from './components/pages/myProfile/MyProfilePage';
-import HomePage from './components/pages/HomePage';
 import RankingPage from './components/pages/ranking/RankingPage';
 import MyPosts from './components/pages/myProfile/MyPosts.js';
+import HomePage from './components/pages/home/HomePage';
 
 function App() {
   const mainArea = localStorage.getItem('mainAreaName');
