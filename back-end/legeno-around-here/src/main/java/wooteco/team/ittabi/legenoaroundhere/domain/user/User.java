@@ -67,10 +67,10 @@ public class User extends BaseEntity implements UserDetails {
     private Area area = null;
 
     @OneToMany(mappedBy = "awardee")
-    private List<PopularityPostCreatorAward> popularityPostCreatorAwards;
+    private List<PopularityPostCreatorAward> popularityPostCreatorAwards = new ArrayList<>();
 
     @OneToMany(mappedBy = "awardee")
-    private List<SectorCreatorAward> sectorCreatorAwards;
+    private List<SectorCreatorAward> sectorCreatorAwards = new ArrayList<>();
 
     @Builder
     public User(String email, String nickname, String password, Area area, UserImage image) {
