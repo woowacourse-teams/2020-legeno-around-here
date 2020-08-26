@@ -22,14 +22,14 @@ public class SectorResponse {
     private Long id;
     private String name;
     private String description;
-    private UserResponse creator;
+    private UserSimpleResponse creator;
 
     public static SectorResponse of(Sector sector) {
         return SectorResponse.builder()
             .id(sector.getId())
             .name(sector.getName())
             .description(sector.getDescription())
-            .creator(UserResponse.from(sector.getCreator()))
+            .creator(UserSimpleResponse.from(sector.getCreator()))
             .build();
     }
 

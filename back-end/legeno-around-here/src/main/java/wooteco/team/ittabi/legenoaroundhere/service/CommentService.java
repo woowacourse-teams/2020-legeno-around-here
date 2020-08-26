@@ -54,7 +54,7 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<CommentResponse> findAllCommentBy(Long postId) {
+    public List<CommentResponse> findAllComment(Long postId) {
         User user = (User) authenticationFacade.getPrincipal();
 
         List<Comment> comments = commentRepository.findAllByPostId(postId)

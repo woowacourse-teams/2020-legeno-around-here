@@ -1,5 +1,9 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ME_PATH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.USERS_PATH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.USERS_PATH_WITH_SLASH;
+
 import java.net.URI;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +44,7 @@ public class UserController {
         Long userId = userService.createUser(userCreateRequest);
 
         return ResponseEntity
-            .created(URI.create("/users/" + userId))
+            .created(URI.create(USERS_PATH_WITH_SLASH + userId))
             .build();
     }
 
@@ -52,9 +56,9 @@ public class UserController {
             .ok(token);
     }
 
-    @GetMapping("/users/me")
-    public ResponseEntity<UserResponse> findUser() {
-        UserResponse user = userService.findUser();
+    @GetMapping(USERS_PATH + ME_PATH)
+    public ResponseEntity<UserResponse> findMe() {
+        UserResponse user = userService.findMe();
 
         return ResponseEntity
             .ok(user);
@@ -69,25 +73,24 @@ public class UserController {
             .body(userImage);
     }
 
-    @PutMapping("/users/me")
-    public ResponseEntity<UserResponse> updateMyInfo(
-        @RequestBody UserUpdateRequest userUpdateRequest) {
-        UserResponse user = userService.updateMyInfo(userUpdateRequest);
+    @PutMapping(USERS_PATH + ME_PATH)
+    public ResponseEntity<UserResponse> updateMe(@RequestBody UserUpdateRequest userUpdateRequest) {
+        UserResponse user = userService.updateMe(userUpdateRequest);
 
         return ResponseEntity
             .ok(user);
     }
 
-    @DeleteMapping("/users/me")
-    public ResponseEntity<Void> deleteUser() {
-        userService.deleteUser();
+    @DeleteMapping(USERS_PATH + ME_PATH)
+    public ResponseEntity<Void> deleteMe() {
+        userService.deleteMe();
 
         return ResponseEntity
             .noContent()
             .build();
     }
 
-    @PutMapping("/users/me/password")
+    @PutMapping(USERS_PATH + ME_PATH + "/password")
     public ResponseEntity<Void> changeMyPassword(
         @RequestBody UserPasswordUpdateRequest userPasswordUpdateRequest) {
         userService.changeMyPassword(userPasswordUpdateRequest);

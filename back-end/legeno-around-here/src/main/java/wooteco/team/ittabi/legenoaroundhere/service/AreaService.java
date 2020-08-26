@@ -18,7 +18,7 @@ public class AreaService {
     private final AreaRepository areaRepository;
 
     @Transactional(readOnly = true)
-    public Page<AreaResponse> searchAllArea(Pageable pageable, String keyword) {
+    public Page<AreaResponse> searchAreas(Pageable pageable, String keyword) {
         String likeKeyword = String.format(DB_LIKE_FORMAT, keyword);
         Page<Area> areas = areaRepository.findAllByFullNameIsLike(pageable, likeKeyword);
 

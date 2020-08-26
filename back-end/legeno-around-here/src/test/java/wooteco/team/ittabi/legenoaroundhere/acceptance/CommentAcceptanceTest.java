@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
-import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.CommentConstants.TEST_COMMENT_OTHER_WRITING;
@@ -15,7 +14,6 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import io.restassured.RestAssured;
-import io.restassured.config.RestAssuredConfig;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +72,7 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         assertThat(commentResponse.getZzang()).isNotNull();
 
         // 댓글 목록 조회
-        List<CommentResponse> commentResponses = findAllCommentBy(postId, accessToken);
+        List<CommentResponse> commentResponses = findAllComment(postId, accessToken);
         assertThat(commentResponses).hasSize(1);
 
         // 수정
@@ -87,7 +85,7 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         deleteComment(accessToken, commentId);
         findNotExistsComment(accessToken, commentId);
 
-        List<CommentResponse> reFoundPostResponses = findAllCommentBy(postId, accessToken);
+        List<CommentResponse> reFoundPostResponses = findAllComment(postId, accessToken);
 
         assertThat(reFoundPostResponses).hasSize(0);
     }
@@ -136,7 +134,7 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         assertThat(cocomments.get(0).getWriting()).isEqualTo(TEST_COMMENT_OTHER_WRITING);
 
         // 댓글 목록 조회
-        List<CommentResponse> commentResponses = findAllCommentBy(postId, accessToken);
+        List<CommentResponse> commentResponses = findAllComment(postId, accessToken);
         assertThat(commentResponses).hasSize(1);
 
         // 대댓글 삭제
@@ -148,7 +146,7 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         // 댓글 삭제
         deleteComment(accessToken, commentId);
         findNotExistsComment(accessToken, commentId);
-        commentResponses = findAllCommentBy(postId, accessToken);
+        commentResponses = findAllComment(postId, accessToken);
         assertThat(commentResponses).isEmpty();
 
         // 댓글 및 대댓글 재생성
@@ -166,7 +164,7 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         commentResponse = findComment(accessToken, commentId);
         assertThat(commentResponse.getWriting()).isNull();
         assertThat(commentResponse.getCocomments()).hasSize(2);
-        commentResponses = findAllCommentBy(postId, accessToken);
+        commentResponses = findAllComment(postId, accessToken);
         assertThat(commentResponses).hasSize(1);
 
         // 대댓글 삭제 - 다 지우는 경우 댓글도 삭제됨
@@ -174,13 +172,13 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         findNotExistsComment(accessToken, cocommentId);
         commentResponse = findComment(accessToken, commentId);
         assertThat(commentResponse.getCocomments()).hasSize(1);
-        commentResponses = findAllCommentBy(postId, accessToken);
+        commentResponses = findAllComment(postId, accessToken);
         assertThat(commentResponses).hasSize(1);
 
         deleteComment(accessToken, cocommentOtherId);
         findNotExistsComment(accessToken, cocommentOtherId);
         findNotExistsComment(accessToken, commentId);
-        commentResponses = findAllCommentBy(postId, accessToken);
+        commentResponses = findAllComment(postId, accessToken);
         assertThat(commentResponses).isEmpty();
     }
 
@@ -256,7 +254,7 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         return tokenResponse.getAccessToken();
     }
 
-    private List<CommentResponse> findAllCommentBy(Long postId, String accessToken) {
+    private List<CommentResponse> findAllComment(Long postId, String accessToken) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)

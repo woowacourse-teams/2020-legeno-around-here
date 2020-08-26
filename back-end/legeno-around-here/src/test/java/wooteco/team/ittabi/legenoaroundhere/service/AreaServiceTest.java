@@ -20,16 +20,16 @@ class AreaServiceTest extends ServiceTest {
     @DisplayName("Keyword 기준 조회 - 조회, 존재하는 키워드")
     @ParameterizedTest
     @CsvSource(value = {"서울특, 492", "송파, 14", "잠실, 1", "동, 427"})
-    void searchAllAreaBy_ExistsKeyword_Success(String keyword, int expectedCount) {
-        Page<AreaResponse> areas = areaService.searchAllArea(Pageable.unpaged(), keyword);
+    void searchAreas_ExistsKeyword_Success(String keyword, int expectedCount) {
+        Page<AreaResponse> areas = areaService.searchAreas(Pageable.unpaged(), keyword);
         assertThat(areas.getContent()).hasSize(expectedCount);
     }
 
     @DisplayName("Keyword 기준 조회 - 조회건이 없음, 존재하지 않는 키워드")
     @ParameterizedTest
     @ValueSource(strings = "마마마, 강남시, 서울시, 대한민국")
-    void searchAllAreaBy_NotExistsKeyword_SearchAnything(String keyword) {
-        Page<AreaResponse> areas = areaService.searchAllArea(Pageable.unpaged(), keyword);
+    void searchAreas_NotExistsKeyword_SearchAnything(String keyword) {
+        Page<AreaResponse> areas = areaService.searchAreas(Pageable.unpaged(), keyword);
         assertThat(areas.getContent()).hasSize(0);
     }
 }

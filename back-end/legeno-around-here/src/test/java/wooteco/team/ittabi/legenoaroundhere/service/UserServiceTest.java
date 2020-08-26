@@ -147,21 +147,21 @@ class UserServiceTest extends ServiceTest {
 
     @DisplayName("내 정보 찾기")
     @Test
-    void findUser_Success() {
-        assertThat(userService.findUser().getEmail()).isEqualTo(TEST_PREFIX + TEST_USER_EMAIL);
-        assertThat(userService.findUser().getNickname()).isEqualTo(TEST_USER_NICKNAME);
+    void findMe_Success() {
+        assertThat(userService.findMe().getEmail()).isEqualTo(TEST_PREFIX + TEST_USER_EMAIL);
+        assertThat(userService.findMe().getNickname()).isEqualTo(TEST_USER_NICKNAME);
     }
 
     @DisplayName("내 정보 수정")
     @Test
-    void updateMyInfo_Success() {
+    void updateMe_Success() {
         User theOtherUser = userRepository.findByEmail(new Email(TEST_UPDATE_EMAIL))
             .orElseThrow(() -> new NotExistsException("존재하지 않는 회원입니다."));
         setAuthentication(theOtherUser);
 
         UserUpdateRequest userUpdateRequest
             = new UserUpdateRequest("newname", TEST_AREA_ID, null);
-        UserResponse updatedUserResponse = userService.updateMyInfo(userUpdateRequest);
+        UserResponse updatedUserResponse = userService.updateMe(userUpdateRequest);
 
         assertThat(updatedUserResponse.getEmail()).isEqualTo(TEST_UPDATE_EMAIL);
         assertThat(updatedUserResponse.getNickname()).isEqualTo("newname");
@@ -195,8 +195,8 @@ class UserServiceTest extends ServiceTest {
 
     @DisplayName("회원 탈퇴")
     @Test
-    void deleteUser_Success() {
-        userService.deleteUser();
+    void deleteMe_Success() {
+        userService.deleteMe();
 
         User authUser = (User) authenticationFacade.getAuthentication()
             .getPrincipal();

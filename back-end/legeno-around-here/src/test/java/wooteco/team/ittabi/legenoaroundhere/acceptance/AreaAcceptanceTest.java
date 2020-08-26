@@ -68,33 +68,33 @@ public class AreaAcceptanceTest extends AcceptanceTest {
      */
     @DisplayName("지역 키워드 조회")
     @Test
-    void findAreaByKeyword() {
-        List<AreaResponse> areas = searchAllArea(accessToken, "page=49&size=10");
+    void searchAreaByKeyword() {
+        List<AreaResponse> areas = searchAreas(accessToken, "page=49&size=10");
         assertThat(areas).hasSize(3);
 
-        areas = searchAllArea(accessToken, "page=49&size=10&keyword=");
+        areas = searchAreas(accessToken, "page=49&size=10&keyword=");
         assertThat(areas).hasSize(3);
 
-        areas = searchAllArea(accessToken, "page=49&size=10&keyword=서울특별시");
+        areas = searchAreas(accessToken, "page=49&size=10&keyword=서울특별시");
         assertThat(areas).hasSize(2);
 
-        areas = searchAllArea(accessToken, "page=49&size=10&keyword=서울특별시 ");
+        areas = searchAreas(accessToken, "page=49&size=10&keyword=서울특별시 ");
         assertThat(areas).hasSize(1);
 
-        areas = searchAllArea(accessToken, "page=0&size=10&keyword=서울시");
+        areas = searchAreas(accessToken, "page=0&size=10&keyword=서울시");
         assertThat(areas).hasSize(0);
 
-        areas = searchAllArea(accessToken, "page=0&size=10&keyword= 잠실");
+        areas = searchAreas(accessToken, "page=0&size=10&keyword= 잠실");
         assertThat(areas).hasSize(1);
 
-        areas = searchAllArea(accessToken, "page=0&size=10&keyword=잠실");
+        areas = searchAreas(accessToken, "page=0&size=10&keyword=잠실");
         assertThat(areas).hasSize(1);
 
-        areas = searchAllArea(accessToken, "page=0&size=10&keyword=잠실 ");
+        areas = searchAreas(accessToken, "page=0&size=10&keyword=잠실 ");
         assertThat(areas).hasSize(0);
     }
 
-    private List<AreaResponse> searchAllArea(String accessToken, String parameter) {
+    private List<AreaResponse> searchAreas(String accessToken, String parameter) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)

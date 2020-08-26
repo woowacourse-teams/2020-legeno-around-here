@@ -32,7 +32,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorUpdateStateRequest;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserSimpleResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotUniqueException;
 import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
@@ -66,7 +66,7 @@ class SectorServiceTest extends ServiceTest {
         assertThat(sectorResponse.getId()).isNotNull();
         assertThat(sectorResponse.getName()).isEqualToIgnoringCase(TEST_SECTOR_NAME);
         assertThat(sectorResponse.getDescription()).isEqualTo(TEST_SECTOR_DESCRIPTION);
-        assertThat(sectorResponse.getCreator()).isEqualTo(UserResponse.from(admin));
+        assertThat(sectorResponse.getCreator()).isEqualTo(UserSimpleResponse.from(admin));
     }
 
     @DisplayName("Sector 생성 - 예외 발생, 동일 이름의 부문이 존재")
@@ -264,7 +264,7 @@ class SectorServiceTest extends ServiceTest {
         assertThat(sector.getId()).isNotNull();
         assertThat(sector.getName()).isEqualToIgnoringCase(sectorRequest.getName());
         assertThat(sector.getDescription()).isEqualTo(sectorRequest.getDescription());
-        assertThat(sector.getCreator()).isEqualTo(UserResponse.from(admin));
+        assertThat(sector.getCreator()).isEqualTo(UserSimpleResponse.from(admin));
     }
 
     @DisplayName("승인 신청 상태의 Sector 생성 - 예외 발생, 동일 이름의 Sector 존재")
@@ -279,7 +279,7 @@ class SectorServiceTest extends ServiceTest {
 
     @DisplayName("현재 사용자와 관련된 모든 부문 조회")
     @Test
-    void findAllMySector_Success() {
+    void findMySectors_Success() {
         List<Long> sectorIds = new ArrayList<>();
         SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
         sectorIds.add(sectorService.createPendingSector(sectorRequest).getId());
@@ -287,7 +287,7 @@ class SectorServiceTest extends ServiceTest {
             = new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_DESCRIPTION);
         sectorIds.add(sectorService.createPendingSector(sectorAnotherRequest).getId());
 
-        Page<SectorDetailResponse> sectors = sectorService.findAllMySector(Pageable.unpaged());
+        Page<SectorDetailResponse> sectors = sectorService.findMySectors(Pageable.unpaged());
         assertThat(sectors.getContent().stream()
             .filter(sector -> sectorIds.contains(sector.getId()))
             .collect(Collectors.toList())).hasSize(2);

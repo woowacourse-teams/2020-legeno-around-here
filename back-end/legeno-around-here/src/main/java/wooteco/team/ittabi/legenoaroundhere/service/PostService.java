@@ -88,7 +88,7 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public Page<PostWithCommentsCountResponse> searchAllPost(Pageable pageable,
+    public Page<PostWithCommentsCountResponse> searchPosts(Pageable pageable,
         PostSearchRequest postSearchFilter) {
         User user = (User) authenticationFacade.getPrincipal();
 

@@ -1,8 +1,9 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.MAIL_AUTH_PATH;
+
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,14 +13,15 @@ import wooteco.team.ittabi.legenoaroundhere.dto.MailAuthCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.service.MailAuthService;
 
 @RestController
-@RequestMapping("/mail-auth")
+@RequestMapping(MAIL_AUTH_PATH)
 @AllArgsConstructor
 public class MailAuthController {
 
     private final MailAuthService mailAuthService;
 
     @PostMapping("/send")
-    public ResponseEntity<Void> mailAuth(@RequestBody MailAuthCreateRequest mailAuthCreateRequest) {
+    public ResponseEntity<Void> sendAuthMail(
+        @RequestBody MailAuthCreateRequest mailAuthCreateRequest) {
         mailAuthService.publishAuth(mailAuthCreateRequest);
 
         return ResponseEntity

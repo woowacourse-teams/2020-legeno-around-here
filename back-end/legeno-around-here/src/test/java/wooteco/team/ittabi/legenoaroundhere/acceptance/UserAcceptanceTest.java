@@ -93,6 +93,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
         assertThat(userResponse.getId()).isNotNull();
         assertThat(userResponse.getEmail()).isEqualTo(TEST_THE_OTHER_EMAIL);
         assertThat(userResponse.getNickname()).isEqualTo(TEST_USER_NICKNAME);
+        assertThat(userResponse.getAwardsCount()).isNotNull();
 
         // 프로필 사진 등록
         UserImageResponse userImageResponse = createUserImage(accessToken);

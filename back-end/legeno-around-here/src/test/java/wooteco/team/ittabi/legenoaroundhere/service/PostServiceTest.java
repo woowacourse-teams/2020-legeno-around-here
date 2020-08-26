@@ -41,7 +41,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostZzangResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserSimpleResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
@@ -99,7 +99,7 @@ public class PostServiceTest extends ServiceTest {
 
         assertThat(postResponse.getId()).isNotNull();
         assertThat(postResponse.getWriting()).isEqualTo(TEST_POST_WRITING);
-        assertThat(postResponse.getCreator()).isEqualTo(UserResponse.from(user));
+        assertThat(postResponse.getCreator()).isEqualTo(UserSimpleResponse.from(user));
         assertThat(postResponse.getSector()).isEqualTo(sector);
     }
 
@@ -131,7 +131,7 @@ public class PostServiceTest extends ServiceTest {
 
         assertThat(postResponse.getWriting()).isEqualTo(TEST_POST_WRITING);
         assertThat(postResponse.getImages()).hasSize(1);
-        assertThat(postResponse.getCreator()).isEqualTo(UserResponse.from(user));
+        assertThat(postResponse.getCreator()).isEqualTo(UserSimpleResponse.from(user));
         assertThat(postResponse.getSector()).isEqualTo(sector);
     }
 
@@ -147,7 +147,7 @@ public class PostServiceTest extends ServiceTest {
 
         assertThat(postResponse.getId()).isEqualTo(createdPostResponse.getId());
         assertThat(postResponse.getWriting()).isEqualTo(createdPostResponse.getWriting());
-        assertThat(postResponse.getCreator()).isEqualTo(UserResponse.from(user));
+        assertThat(postResponse.getCreator()).isEqualTo(UserSimpleResponse.from(user));
         assertThat(postResponse.getSector()).isEqualTo(sector);
     }
 
@@ -173,7 +173,7 @@ public class PostServiceTest extends ServiceTest {
 
     @DisplayName("포스트 전체 목록 검색 - 성공")
     @Test
-    void searchAllPost_NoFilter_SuccessToFind() {
+    void searchPosts_NoFilter_SuccessToFind() {
         PostCreateRequest postCreateRequest
             = new PostCreateRequest(TEST_POST_WRITING, TEST_EMPTY_IMAGES,
             TEST_AREA_ID, sectorId);
@@ -182,14 +182,14 @@ public class PostServiceTest extends ServiceTest {
 
         PostSearchRequest postSearchRequest = new PostSearchRequest(null, null);
         Page<PostWithCommentsCountResponse> posts
-            = postService.searchAllPost(Pageable.unpaged(), postSearchRequest);
+            = postService.searchPosts(Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(2);
     }
 
     @DisplayName("포스트 전체 목록 검색(Area Filter) 단 건 - 성공")
     @Test
-    void searchAllPost_AreaFilter_SuccessToFind() {
+    void searchPosts_AreaFilter_SuccessToFind() {
         PostCreateRequest postCreateRequest
             = new PostCreateRequest(TEST_POST_WRITING, TEST_EMPTY_IMAGES,
             TEST_AREA_ID, sectorId);
@@ -202,14 +202,14 @@ public class PostServiceTest extends ServiceTest {
 
         PostSearchRequest postSearchRequest = new PostSearchRequest(TEST_AREA_OTHER_ID, null);
         Page<PostWithCommentsCountResponse> posts
-            = postService.searchAllPost(Pageable.unpaged(), postSearchRequest);
+            = postService.searchPosts(Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(1);
     }
 
     @DisplayName("포스트 전체 목록 검색(Sector Filter) - 성공")
     @Test
-    void searchAllPost_SectorFilter_SuccessToFind() {
+    void searchPosts_SectorFilter_SuccessToFind() {
         PostCreateRequest postCreateRequest
             = new PostCreateRequest(TEST_POST_WRITING, TEST_EMPTY_IMAGES,
             TEST_AREA_ID, sectorId);
@@ -236,14 +236,14 @@ public class PostServiceTest extends ServiceTest {
         PostSearchRequest postSearchRequest
             = new PostSearchRequest(TEST_AREA_OTHER_ID, String.valueOf(sectorOtherId));
         Page<PostWithCommentsCountResponse> posts
-            = postService.searchAllPost(Pageable.unpaged(), postSearchRequest);
+            = postService.searchPosts(Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(1);
     }
 
     @DisplayName("포스트 전체 목록 검색(Area + Sector Filter) - 성공")
     @Test
-    void searchAllPost_AreaAndSectorFilter_SuccessToFind() {
+    void searchPosts_AreaAndSectorFilter_SuccessToFind() {
         PostCreateRequest postCreateRequest
             = new PostCreateRequest(TEST_POST_WRITING, TEST_EMPTY_IMAGES,
             TEST_AREA_ID, sectorId);
@@ -258,7 +258,7 @@ public class PostServiceTest extends ServiceTest {
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             null, String.valueOf(sectorOtherId));
         Page<PostWithCommentsCountResponse> posts
-            = postService.searchAllPost(Pageable.unpaged(), postSearchRequest);
+            = postService.searchPosts(Pageable.unpaged(), postSearchRequest);
 
         assertThat(posts.getContent()).hasSize(1);
     }
@@ -278,7 +278,7 @@ public class PostServiceTest extends ServiceTest {
         PostResponse updatedPostResponse = postService.findPost(createdPostResponse.getId());
 
         assertThat(updatedPostResponse.getWriting()).isEqualTo(updatedPostWriting);
-        assertThat(updatedPostResponse.getCreator()).isEqualTo(UserResponse.from(user));
+        assertThat(updatedPostResponse.getCreator()).isEqualTo(UserSimpleResponse.from(user));
     }
 
     @DisplayName("ID로 포스트 수정 - 실패")
