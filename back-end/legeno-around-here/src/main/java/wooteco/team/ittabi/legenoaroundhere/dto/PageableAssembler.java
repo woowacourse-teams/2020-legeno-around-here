@@ -28,7 +28,7 @@ public class PageableAssembler {
     public static Pageable assembleForRanking(PageRequest pageRequest) {
         return org.springframework.data.domain.PageRequest.of(
             calculatePage(pageRequest.getPage()),
-            calculateSize(1000));
+            calculateSize(pageRequest.getSize()));
     }
 
     public static int calculatePage(Integer page) {

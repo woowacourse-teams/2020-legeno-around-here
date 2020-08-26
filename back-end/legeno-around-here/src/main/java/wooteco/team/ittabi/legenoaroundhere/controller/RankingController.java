@@ -28,7 +28,7 @@ public class RankingController {
         PostSearchRequest postSearchRequest) {
         Page<PostWithCommentsCountResponse> posts
             = rankingService.searchRanking(PageableAssembler.assembleForRanking(pageRequest),
-            rankingRequest, postSearchRequest);
+            postSearchRequest, rankingRequest);
 
         return ResponseEntity
             .ok()
