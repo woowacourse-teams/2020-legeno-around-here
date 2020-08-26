@@ -341,7 +341,7 @@ export const findRankedPostsFromPage = async (mainAreaId, criteria, page, access
     });
 };
 
-export const findAllAreas = async (page, accessToken, keyword) => {
+export const findAreasFromPage = async (page, accessToken, keyword) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
