@@ -40,7 +40,19 @@ export const PrivacyBox = styled.div`
 `;
 
 export const PrivacyEditBox = styled(Link)`
-  margin-left: auto;
-  padding-right: 10px;
+  margin: 0px auto;
   font-size: 15px;
+  display: block;
+`;
+
+export const PrivacySignOutBox = styled(Link)`
+  margin: 0px auto;
+  font-size: 15px;
+  display: block;
+`;
+
+export const PrivacyRightBox = styled(Link)`
+  margin: 0px auto;
+  font-size: 15px;
+  display: block;
 `;
