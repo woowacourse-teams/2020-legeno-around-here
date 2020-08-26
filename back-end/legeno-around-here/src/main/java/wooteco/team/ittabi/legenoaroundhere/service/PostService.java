@@ -97,7 +97,7 @@ public class PostService {
         return posts.map(post -> PostWithCommentsCountResponse.of(user, post));
     }
 
-    Page<Post> getPostByFilter(Pageable pageable, PostSearch postSearch) {
+    private Page<Post> getPostByFilter(Pageable pageable, PostSearch postSearch) {
         if (postSearch.isNotExistsFilter()) {
             return postRepository.findAllBy(pageable);
         }
