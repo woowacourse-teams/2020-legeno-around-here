@@ -24,7 +24,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @AllArgsConstructor
 @Getter
 @ToString
-@SQLDelete(sql = "UPDATE area SET deleted_at = NOW() WHERE id = ?")
+@SQLDelete(sql = "UPDATE sector_creator_award SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class SectorCreatorAward extends BaseEntity {
 
