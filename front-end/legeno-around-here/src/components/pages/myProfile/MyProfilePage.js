@@ -7,7 +7,6 @@ import { findAllMySector, findMyInfo } from '../../api/API';
 import Loading from '../../Loading';
 import {
   getAccessTokenFromCookie,
-  removeAccessTokenCookie,
 } from '../../../util/TokenUtils';
 import { Divider, Typography } from '@material-ui/core';
 import {
@@ -54,8 +53,8 @@ function MyProfilePage() {
   }, [accessToken]);
 
   const logout = useCallback(() => {
-    removeAccessTokenCookie();
     alert('로그아웃 되었습니다.');
+    document.location.href = '/login';
   }, []);
 
   if (loading) {
@@ -75,7 +74,7 @@ function MyProfilePage() {
         </PrivacyBox>
         <PrivacyRightBox>
           <PrivacyEditBox to="/myProfileEdit">수정</PrivacyEditBox>
-          <PrivacySignOutBox onClick={logout} to="/login">
+          <PrivacySignOutBox onClick={logout}>
             로그아웃
           </PrivacySignOutBox>
         </PrivacyRightBox>
@@ -87,7 +86,7 @@ function MyProfilePage() {
       </AwardsSection>
       <NavSection>
         <NavElement linkTo='/'>수상내역</NavElement>
-        <NavElement linkTo='/'>작성글</NavElement>
+        <NavElement linkTo='/my-posts'>작성글</NavElement>
         <NavElement linkTo='/'>작성 댓글</NavElement>
         <Typography>현재 신청중인 부문</Typography>
         <Divider />
