@@ -227,7 +227,6 @@ class UserServiceTest extends ServiceTest {
         UserOtherResponse user = userService.findUser(TEST_USER_ID);
 
         assertThat(user.getId()).isEqualTo(TEST_USER_ID);
-        assertThat(user.getEmail()).isEqualTo(TEST_USER_EMAIL);
         assertThat(user.getNickname()).isEqualTo(TEST_USER_NICKNAME);
         assertThat(user.getAwardsCount()).isNotNull();
     }

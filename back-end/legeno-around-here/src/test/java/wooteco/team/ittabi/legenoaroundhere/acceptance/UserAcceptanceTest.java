@@ -172,7 +172,6 @@ public class UserAcceptanceTest extends AcceptanceTest {
 
         UserOtherResponse userOtherResponse = findUser(accessToken, TEST_USER_ID);
         assertThat(userOtherResponse.getId()).isEqualTo(TEST_USER_ID);
-        assertThat(userOtherResponse.getEmail()).isEqualTo(TEST_USER_EMAIL);
         assertThat(userOtherResponse.getNickname()).isEqualTo(TEST_USER_NICKNAME);
         assertThat(userOtherResponse.getAwardsCount()).isNotNull();
         assertThat(userOtherResponse.getImage());
