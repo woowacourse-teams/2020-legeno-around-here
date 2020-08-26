@@ -39,7 +39,7 @@ public class NotificationResponseAssembler {
         if (Objects.nonNull(notification.getPost())) {
             return makePostLocation(notification.getPost());
         }
-        if (Objects.nonNull(notification.getSector()) && Objects.nonNull(notification.getUser())) {
+        if (Objects.nonNull(notification.getSector()) || Objects.nonNull(notification.getUser())) {
             return MY_PROFILE_PATH;
         }
         return HOME_PATH;
