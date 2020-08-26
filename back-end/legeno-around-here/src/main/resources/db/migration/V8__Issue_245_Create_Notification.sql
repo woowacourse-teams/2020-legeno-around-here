@@ -6,6 +6,7 @@ CREATE TABLE `notification`
     `sector_id`   BIGINT(20),
     `post_id`     BIGINT(20),
     `user_id`     BIGINT(20),
+    `receiver_id` BIGINT(20),
     `read`        TINYINT(1)   NOT NULL,
     `created_at`  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `modified_at` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

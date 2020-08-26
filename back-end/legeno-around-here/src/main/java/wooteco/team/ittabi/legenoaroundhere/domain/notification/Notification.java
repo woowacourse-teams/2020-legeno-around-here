@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -18,6 +20,8 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @ToString
 @SQLDelete(sql = "UPDATE notification SET deleted_at = NOW() WHERE id = ?")
@@ -29,20 +33,29 @@ public class Notification extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "comment_id")
-    private Comment comment;
+    @Builder.Default
+    private Comment comment = null;
 
     @ManyToOne
     @JoinColumn(name = "sector_id")
-    private Sector sector;
+    @Builder.Default
+    private Sector sector = null;
 
     @ManyToOne
     @JoinColumn(name = "post_id")
-    private Post post;
+    @Builder.Default
+    private Post post = null;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    @Builder.Default
+    private User user = null;
+
+    @ManyToOne
+    @JoinColumn(name = "receiver_id")
+    private User receiver;
 
     @Column(nullable = false, columnDefinition = "tinyint(1) default 0")
-    private Boolean read;
+    @Builder.Default
+    private Boolean read = Boolean.FALSE;
 }
