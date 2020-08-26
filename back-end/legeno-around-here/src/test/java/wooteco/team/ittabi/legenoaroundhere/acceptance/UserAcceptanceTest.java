@@ -41,13 +41,13 @@ public class UserAcceptanceTest extends AcceptanceTest {
     private static final String USER_LOCATION_FORMAT = "^/users/[1-9][0-9]*$";
     private static final int TOKEN_MIN_SIZE = 1;
 
+    @MockBean
+    private MailAuthRepository mailAuthRepository;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
     }
-
-    @MockBean
-    private MailAuthRepository mailAuthRepository;
 
     /**
      * Feature: 회원관리 Scenario: 회원을 관리한다.
