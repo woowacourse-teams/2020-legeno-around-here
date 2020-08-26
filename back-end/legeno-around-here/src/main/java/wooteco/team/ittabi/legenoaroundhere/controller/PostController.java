@@ -84,8 +84,6 @@ public class PostController {
             .ok()
             .body(posts);
     }
-
-
     @GetMapping(ME_PATH)
     public ResponseEntity<Page<PostWithCommentsCountResponse>> findMyPosts(
         PageRequest pageRequest) {
