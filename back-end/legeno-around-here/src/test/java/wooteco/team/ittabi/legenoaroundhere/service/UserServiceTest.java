@@ -9,6 +9,8 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AUTH_NUMBER;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_UPDATE_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_INVALID_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_OTHER_PASSWORD;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
@@ -27,6 +29,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCheckRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserOtherResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
@@ -202,5 +205,23 @@ class UserServiceTest extends ServiceTest {
             .getPrincipal();
         assertThatThrownBy(() -> userService.loadUserByUsername(authUser.getUsername()))
             .isInstanceOf(UsernameNotFoundException.class);
+    }
+
+    @DisplayName("회원 조회, 성공")
+    @Test
+    void findUser_Success() {
+        UserOtherResponse user = userService.findUser(TEST_USER_ID);
+
+        assertThat(user.getId()).isEqualTo(TEST_USER_ID);
+        assertThat(user.getEmail()).isEqualTo(TEST_USER_EMAIL);
+        assertThat(user.getNickname()).isEqualTo(TEST_USER_NICKNAME);
+        assertThat(user.getAwardsCount()).isNotNull();
+    }
+
+    @DisplayName("회원 조회, 예외 발생 - 유효하지 않은 ID")
+    @Test
+    void findUser_InvalidId_ThrownException() {
+        assertThatThrownBy(() -> userService.findUser(TEST_USER_INVALID_ID))
+            .isInstanceOf(NotExistsException.class);
     }
 }

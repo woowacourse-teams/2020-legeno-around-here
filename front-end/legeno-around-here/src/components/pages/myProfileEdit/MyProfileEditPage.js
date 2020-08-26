@@ -12,7 +12,7 @@ import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import PhotoEditSection from './PhotoEditSection';
 import useStyle from './MyProfileEditStyles';
 
-export const DEFAULT_IMAGE_URL = '/default-profile.png';
+export const DEFAULT_IMAGE_URL = '/images/default-profile.png';
 
 function MyProfileEditPage() {
   const [accessToken] = useState(getAccessTokenFromCookie());

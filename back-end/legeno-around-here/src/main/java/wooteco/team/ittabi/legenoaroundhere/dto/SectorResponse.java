@@ -1,7 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,11 +29,5 @@ public class SectorResponse {
             .description(sector.getDescription())
             .creator(UserSimpleResponse.from(sector.getCreator()))
             .build();
-    }
-
-    public static List<SectorResponse> listOf(List<Sector> sector) {
-        return sector.stream()
-            .map(SectorResponse::of)
-            .collect(Collectors.toList());
     }
 }

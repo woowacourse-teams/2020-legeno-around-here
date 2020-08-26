@@ -290,6 +290,37 @@ export const findCurrentPostsFromPage = async (mainAreaId, page, accessToken) =>
     });
 };
 
+export const findRankedPostsFromPage = async (
+  mainAreaId,
+  criteria,
+  page,
+  accessToken,
+) => {
+  const config = {
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
+  };
+  return await axios
+    .get(
+      DEFAULT_URL +
+      `/ranking?` +
+      `page=${page}&` +
+      `size=${DEFAULT_SIZE}&` +
+      `sortedBy=${DEFAULT_SORTED_BY}&` +
+      `direction=${DEFAULT_DIRECTION}&` +
+      `criteria=${criteria}&` +
+      `areaId=${mainAreaId}&` +
+      `sectorIds=`,
+      config,
+    )
+    .then((response) => response.data.content)
+    .catch((error) => {
+      redirectLoginWhenUnauthorized(error);
+      console.log(`## 랭킹을 가져올 수 없습니다.`);
+    });
+};
+
 export const findAllAreas = async (page, accessToken, keyword) => {
   const config = {
     headers: {

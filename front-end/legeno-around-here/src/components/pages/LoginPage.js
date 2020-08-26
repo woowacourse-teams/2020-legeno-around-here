@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { loginUser } from '../api/API';
 
@@ -12,10 +12,11 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { removeAccessTokenCookie } from '../../util/TokenUtils';
 
 const Copyright = () => {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
+    <Typography variant='body2' color='textSecondary' align='center'>
       {'Copyright © Ittabi 2020.'}
     </Typography>
   );
@@ -71,56 +72,54 @@ function LoginForm() {
     [login],
   );
 
+  useEffect(() => {
+    removeAccessTokenCookie();
+  }, []);
+
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component='main' maxWidth='xs'>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <ThumbUpIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
+        <Typography component='h1' variant='h5'>
           우리동네캡짱 로그인
         </Typography>
         <form onSubmit={handleSubmit} className={classes.form} noValidate>
           <TextField
-            variant="outlined"
-            margin="normal"
+            variant='outlined'
+            margin='normal'
             required
             fullWidth
-            id="email"
-            label="이메일"
-            name="email"
-            autoComplete="email"
+            id='email'
+            label='이메일'
+            name='email'
+            autoComplete='email'
             autoFocus
-            type="email"
+            type='email'
             value={email}
             onChange={handleChangeEmail}
           />
           <TextField
-            variant="outlined"
-            margin="normal"
+            variant='outlined'
+            margin='normal'
             required
             fullWidth
-            name="password"
-            label="비밀번호"
-            type="password"
-            id="password"
-            autoComplete="current-password"
+            name='password'
+            label='비밀번호'
+            type='password'
+            id='password'
+            autoComplete='current-password'
             value={password}
             onChange={handleChangePassword}
           />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
+          <Button type='submit' fullWidth variant='contained' color='primary' className={classes.submit}>
             로그인
           </Button>
           <Grid container>
             <Grid item>
-              <Link to="/join" variant="body2">
+              <Link to='/join' variant='body2'>
                 {'처음이신가요? 회원가입을 해주세요!'}
               </Link>
             </Grid>

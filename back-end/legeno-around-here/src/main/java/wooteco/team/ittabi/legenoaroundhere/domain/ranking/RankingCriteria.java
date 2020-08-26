@@ -34,7 +34,8 @@ public enum RankingCriteria {
             1,
             0,
             0)),
-    TOTAL("total", LocalDateTime.MIN, LocalDateTime.MAX);
+    TOTAL("total", LocalDateTime.of(1000, 1, 1, 0, 0, 0),
+        LocalDateTime.of(9999, 12, 31, 23, 59, 59));
 
     private final String rankingCriteria;
     private final LocalDateTime startDate;

@@ -8,6 +8,7 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_EMPTY_IMAGES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_DIR;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_REPORT_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
@@ -30,11 +31,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostImageResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostReportCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PostReportResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.utils.TestConverterUtils;
 
 public class PostAcceptanceTest extends AcceptanceTest {
@@ -63,6 +67,10 @@ public class PostAcceptanceTest extends AcceptanceTest {
      * When 글을 등록한다. Then 글이 등록되었다.
      * <p>
      * When 글 목록을 조회한다. Then 글 목록을 응답받는다. And 글 목록은 n개이다.
+     * <p>
+     * When 내 글 목록을 조회한다. Then 글 목록을 응답받는다. And 내 글 목록은 n개이다.
+     * <p>
+     * When 타인이 내 글 목록을 조회한다. Then 글 목록을 응답받는다. And 내 글 목록은 n개이다.
      * <p>
      * When 글을 조회한다. Then 글을 응답 받는다.
      * <p>
@@ -101,6 +109,16 @@ public class PostAcceptanceTest extends AcceptanceTest {
         List<PostWithCommentsCountResponse> postResponses = searchPosts(accessToken);
         assertThat(postResponses).hasSize(2);
 
+        // 내 글 조회
+        postResponses = findMyPosts(accessToken);
+        assertThat(postResponses).hasSize(2);
+
+        // 타인이 내 글 조회
+        Long myId = findUser(accessToken).getId();
+
+        postResponses = findPosts(adminToken, myId);
+        assertThat(postResponses).hasSize(2);
+
         // 이미지가 포함된 글 수정
         String updatedWriting = "BingBong and Jamie";
         List<PostImageResponse> newPostImages = uploadPostImages(accessToken);
@@ -124,9 +142,11 @@ public class PostAcceptanceTest extends AcceptanceTest {
         deletePost(postWithoutImageId, accessToken);
         findNotExistsPost(postWithoutImageId, accessToken);
 
-        List<PostWithCommentsCountResponse> foundPostResponses = searchPosts(accessToken);
+        postResponses = searchPosts(accessToken);
+        assertThat(postResponses).hasSize(1);
 
-        assertThat(foundPostResponses).hasSize(1);
+        postResponses = findMyPosts(accessToken);
+        assertThat(postResponses).hasSize(1);
     }
 
     /**
@@ -236,6 +256,106 @@ public class PostAcceptanceTest extends AcceptanceTest {
         assertThat(post.getZzang().isActivated()).isTrue();
     }
 
+    /**
+     * Feature: 글의 신고 기능
+     * <p>
+     * Scenario: 신고 버튼을 누르고, 신고 내용을 작성한다.
+     * <p>
+     * When 글을 등록한다. Then 글이 등록되었다.
+     * <p>
+     * When 신고 버튼을 누르고 신고 내용을 작성한다. Then 글을 신고하는데 성공했다.
+     * <p>
+     * When 관리자가 신고 내용을 조회한다. Then 작성했던 신고글이 조회된다.
+     * <p>
+     * When 관리자가 해당 신고 내용을 삭제한다. Then 작성했던 신고글이 삭제된다.
+     */
+    @DisplayName("글의 신고 관리")
+    @Test
+    void managePostReport() {
+        String postLocation = createPostWithoutImage(accessToken);
+        Long postId = getIdFromUrl(postLocation);
+
+        // 해당 글을 유저가 신고
+        String reportLocation = createReport(accessToken, postId);
+        Long postReportId = getIdFromUrl(reportLocation);
+
+        // 관리자가 해당 신고 글을 조회
+        PostReportResponse postReportResponse = findPostReport(adminToken, postReportId);
+        assertThat(postReportResponse.getReportWriting()).isEqualTo(TEST_POST_REPORT_WRITING);
+        assertThat(postReportResponse.getPostWriting()).isEqualTo(TEST_POST_WRITING);
+        assertThat(postReportResponse.getPostImageUrls()).hasSize(0);
+
+        // 관리자가 페이지 별 신고 글을 조회
+        List<PostReportResponse> postReportResponses = findPostReportByPage(adminToken);
+        assertThat(postReportResponses).hasSize(1);
+
+        // 관리자가 해당 신고 글을 삭제
+        deletePostReport(adminToken, postReportId);
+        List<PostReportResponse> postReportResponsesAfterDelete = findPostReportByPage(adminToken);
+        assertThat(postReportResponsesAfterDelete).hasSize(0);
+    }
+
+    private void deletePostReport(String adminToken, Long postReportId) {
+        given()
+            .header("X-AUTH-TOKEN", adminToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .delete("/admin/reports/" + postReportId)
+            .then()
+            .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    private List<PostReportResponse> findPostReportByPage(String accessToken) {
+        return findPostReportByPageWithParameter(accessToken,
+            "page=0&size=10&sortedBy=id&direction=asc");
+    }
+
+    private List<PostReportResponse> findPostReportByPageWithParameter(String adminToken,
+        String parameter) {
+        return given()
+            .header("X-AUTH-TOKEN", adminToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/admin/reports?" + parameter)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .jsonPath()
+            .getList("content", PostReportResponse.class);
+    }
+
+    private PostReportResponse findPostReport(String adminToken, Long postReportId) {
+
+        return given()
+            .header("X-AUTH-TOKEN", adminToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/admin/reports/" + postReportId)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .as(PostReportResponse.class);
+    }
+
+    private String createReport(String accessToken, Long postId) {
+        PostReportCreateRequest postReportCreateRequest = new PostReportCreateRequest(
+            TEST_POST_REPORT_WRITING);
+
+        return given()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(postReportCreateRequest)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .post("/reports/posts/" + postId)
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .extract()
+            .header("Location");
+    }
+
     private Long createSector(String accessToken, String name) {
         Map<String, String> params = new HashMap<>();
         params.put("name", name);
@@ -326,6 +446,32 @@ public class PostAcceptanceTest extends AcceptanceTest {
             .header("X-AUTH-TOKEN", accessToken)
             .when()
             .get("/posts?page=0&size=50&sortedBy=id&direction=asc&" + filter)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .jsonPath()
+            .getList("content", PostWithCommentsCountResponse.class);
+    }
+
+    private List<PostWithCommentsCountResponse> findMyPosts(String accessToken) {
+        return given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .get("/posts/me")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .jsonPath()
+            .getList("content", PostWithCommentsCountResponse.class);
+    }
+
+    private List<PostWithCommentsCountResponse> findPosts(String accessToken, Long userId) {
+        return given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .get("/users/" + userId + "/posts")
             .then()
             .statusCode(HttpStatus.OK.value())
             .extract()
@@ -441,5 +587,16 @@ public class PostAcceptanceTest extends AcceptanceTest {
         postImageIds.addAll(newPostImageIds);
 
         return postImageIds;
+    }
+
+    private UserResponse findUser(String accessToken) {
+        return given()
+            .header("X-AUTH-TOKEN", accessToken)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/users/me")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract().as(UserResponse.class);
     }
 }

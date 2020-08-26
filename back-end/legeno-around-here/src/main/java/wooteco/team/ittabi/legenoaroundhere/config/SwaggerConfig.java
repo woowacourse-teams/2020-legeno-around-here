@@ -6,10 +6,14 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.AWARDS
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.AWARDS_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.COMMENTS;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.COMMENTS_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.IMAGES;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.IMAGES_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.MAIL_AUTH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.MAIL_AUTH_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ME_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.NOTICE;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.NOTICE_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POSTS;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POSTS_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.PROFILE;
@@ -64,6 +68,13 @@ public class SwaggerConfig {
     }
 
     @Bean
+    public Docket imageApiDocket() {
+        groupName = IMAGES;
+        return getDocket(groupName,
+            String.format(ALL_ANT_PATTERN_FORMAT, IMAGES_PATH_WITH_SLASH));
+    }
+
+    @Bean
     public Docket mailAuthApiDocket() {
         groupName = MAIL_AUTH;
         return getDocket(groupName,
@@ -74,6 +85,12 @@ public class SwaggerConfig {
     public Docket meApiDocket() {
         groupName = ME;
         return getDocket(groupName, String.format(ALL_ANT_PATTERN_FORMAT, ME_PATH_WITH_SLASH));
+    }
+
+    @Bean
+    public Docket noticeApiDocket() {
+        groupName = NOTICE;
+        return getDocket(groupName, String.format(ALL_ANT_PATTERN_FORMAT, NOTICE_PATH_WITH_SLASH));
     }
 
     @Bean

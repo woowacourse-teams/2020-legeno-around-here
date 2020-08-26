@@ -97,7 +97,7 @@ public class PostService {
         return posts.map(post -> PostWithCommentsCountResponse.of(user, post));
     }
 
-    Page<Post> getPostByFilter(Pageable pageable, PostSearch postSearch) {
+    private Page<Post> getPostByFilter(Pageable pageable, PostSearch postSearch) {
         if (postSearch.isNotExistsFilter()) {
             return postRepository.findAllBy(pageable);
         }
@@ -156,10 +156,29 @@ public class PostService {
         post.pressZzang(user);
     }
 
+    @Transactional
     public List<PostImageResponse> uploadPostImages(List<MultipartFile> images) {
         List<PostImage> postImages = imageUploader.uploadPostImages(images);
         List<PostImage> savedPostImages = postImageRepository.saveAll(postImages);
 
         return PostImageResponse.listOf(savedPostImages);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PostWithCommentsCountResponse> findMyPosts(Pageable pageable) {
+        User user = (User) authenticationFacade.getPrincipal();
+
+        Page<Post> posts = postRepository.findAllByCreator(pageable, user);
+
+        return posts.map(post -> PostWithCommentsCountResponse.of(user, post));
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PostWithCommentsCountResponse> findPostsByUserId(Pageable pageable, Long userId) {
+        User user = (User) authenticationFacade.getPrincipal();
+
+        Page<Post> posts = postRepository.findAllByCreatorId(pageable, userId);
+
+        return posts.map(post -> PostWithCommentsCountResponse.of(user, post));
     }
 }

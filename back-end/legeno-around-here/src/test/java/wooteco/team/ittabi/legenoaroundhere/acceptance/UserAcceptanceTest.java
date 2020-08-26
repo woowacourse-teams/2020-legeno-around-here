@@ -14,6 +14,7 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NEW_USER_PASSWORD;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_THE_OTHER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_OTHER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_OTHER_PASSWORD;
@@ -33,6 +34,7 @@ import org.springframework.http.MediaType;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.mailauth.MailAuth;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserOtherResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
 
@@ -41,13 +43,13 @@ public class UserAcceptanceTest extends AcceptanceTest {
     private static final String USER_LOCATION_FORMAT = "^/users/[1-9][0-9]*$";
     private static final int TOKEN_MIN_SIZE = 1;
 
+    @MockBean
+    private MailAuthRepository mailAuthRepository;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
     }
-
-    @MockBean
-    private MailAuthRepository mailAuthRepository;
 
     /**
      * Feature: 회원관리 Scenario: 회원을 관리한다.
@@ -88,7 +90,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
         assertThat(accessToken).hasSizeGreaterThanOrEqualTo(TOKEN_MIN_SIZE);
 
         // 내 정보 조회
-        UserResponse userResponse = findUser(accessToken);
+        UserResponse userResponse = findMe(accessToken);
         assertThat(userResponse).isNotNull();
         assertThat(userResponse.getId()).isNotNull();
         assertThat(userResponse.getEmail()).isEqualTo(TEST_THE_OTHER_EMAIL);
@@ -100,14 +102,14 @@ public class UserAcceptanceTest extends AcceptanceTest {
 
         // 내 정보 수정 - 프로필 사진 포함
         updateMyInfoWithImage(accessToken, "newname", userImageResponse.getId());
-        UserResponse updatedUserResponse = findUser(accessToken);
+        UserResponse updatedUserResponse = findMe(accessToken);
         assertThat(updatedUserResponse.getNickname()).isEqualTo("newname");
         assertThat(updatedUserResponse.getImage()).isNotNull();
         login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
 
         // 내 정보 수정 - 프로필 사진 사용 안함(기본 이미지)
         updateMyInfoWithImage(accessToken, TEST_USER_NICKNAME, null);
-        updatedUserResponse = findUser(accessToken);
+        updatedUserResponse = findMe(accessToken);
         assertThat(updatedUserResponse.getNickname()).isEqualTo(TEST_USER_NICKNAME);
         assertThat(updatedUserResponse.getImage()).isNull();
         login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
@@ -121,7 +123,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
 
         // 회원 탈퇴
         deleteUser(accessToken);
-        findNotExistUser(accessToken);
+        findNotExistMe(accessToken);
     }
 
     /**
@@ -139,23 +141,44 @@ public class UserAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원 지역 관리")
     void joinUserWithArea() {
         TokenResponse tokenResponse = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
-        UserResponse userResponse = findUser(tokenResponse.getAccessToken());
+        UserResponse userResponse = findMe(tokenResponse.getAccessToken());
         assertThat(userResponse.getArea()).isNull();
 
         tokenResponse = login(TEST_USER_OTHER_EMAIL, TEST_USER_PASSWORD);
         String accessToken = tokenResponse.getAccessToken();
-        userResponse = findUser(accessToken);
+        userResponse = findMe(accessToken);
         assertThat(userResponse.getArea()).isNotNull();
         assertThat(userResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
 
         updateMyInfoWithoutAreaAndImage(accessToken, TEST_USER_NICKNAME);
-        userResponse = findUser(accessToken);
+        userResponse = findMe(accessToken);
         assertThat(userResponse.getArea()).isNull();
 
         updateMyInfoWithAreaAndWithoutImage(accessToken, TEST_USER_NICKNAME);
-        userResponse = findUser(accessToken);
+        userResponse = findMe(accessToken);
         assertThat(userResponse.getArea()).isNotNull();
         assertThat(userResponse.getArea().getId()).isEqualTo(TEST_AREA_ID);
+    }
+
+    /**
+     * Feature: 타 회원 프로필 조회 Scenario: 타 회원의 프로필을 조회한다.
+     * <p>
+     * Given 타 회원이 가입되어 있다.
+     * <p>
+     * When 타 회원을 조회한다. Then 타 회원이 조회된다.
+     */
+    @DisplayName("타 회원 프로필 조회")
+    @Test
+    void findOtherUser() {
+        TokenResponse tokenResponse = login(TEST_USER_OTHER_EMAIL, TEST_USER_PASSWORD);
+        String accessToken = tokenResponse.getAccessToken();
+
+        UserOtherResponse userOtherResponse = findUser(accessToken, TEST_USER_ID);
+        assertThat(userOtherResponse.getId()).isEqualTo(TEST_USER_ID);
+        assertThat(userOtherResponse.getEmail()).isEqualTo(TEST_USER_EMAIL);
+        assertThat(userOtherResponse.getNickname()).isEqualTo(TEST_USER_NICKNAME);
+        assertThat(userOtherResponse.getAwardsCount()).isNotNull();
+        assertThat(userOtherResponse.getImage());
     }
 
     private String createUserWithoutArea(String email, String nickname, String password) {
@@ -181,7 +204,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .header("Location");
     }
 
-    private UserResponse findUser(String accessToken) {
+    private UserResponse findMe(String accessToken) {
         return given()
             .header("X-AUTH-TOKEN", accessToken)
             .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -192,7 +215,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .extract().as(UserResponse.class);
     }
 
-    private void findNotExistUser(String accessToken) {
+    private void findNotExistMe(String accessToken) {
         given()
             .header("X-AUTH-TOKEN", accessToken)
             .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -282,5 +305,16 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .get("/check-joined?email=" + email)
             .then()
             .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    private UserOtherResponse findUser(String accessToken, Long userId) {
+        return given()
+            .header("X-AUTH-TOKEN", accessToken)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/users/" + userId)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract().as(UserOtherResponse.class);
     }
 }

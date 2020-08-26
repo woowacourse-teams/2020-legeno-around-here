@@ -23,4 +23,6 @@ public interface SectorRepository extends JpaRepository<Sector, Long> {
     @Query("SELECT s FROM Sector s WHERE s.state IN :states ORDER BY s.posts.size DESC")
     List<Sector> findAllByStateInAndOrderByPostsCountDesc(Pageable pageable,
         @Param("states") Iterable<SectorState> states);
+
+    List<Sector> findAllByStateIn(Iterable<SectorState> states);
 }
