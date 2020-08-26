@@ -1,17 +1,21 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
+import wooteco.team.ittabi.legenoaroundhere.domain.award.SectorCreatorAward;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Name;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
+import wooteco.team.ittabi.legenoaroundhere.domain.util.AwardNameMaker;
 import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
@@ -20,16 +24,19 @@ import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorUpdateStateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotUniqueException;
+import wooteco.team.ittabi.legenoaroundhere.repository.SectorCreatorAwardRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class SectorService {
 
     private static final String DB_LIKE_FORMAT = "%%%s%%";
     private static final int DEFAULT_PAGING_NUMBER = 0;
 
     private final SectorRepository sectorRepository;
+    private final SectorCreatorAwardRepository sectorCreatorAwardRepository;
     private final IAuthenticationFacade authenticationFacade;
 
     @Transactional
@@ -133,10 +140,31 @@ public class SectorService {
     public void updateSectorState(Long id, SectorUpdateStateRequest sectorUpdateStateRequest) {
         User user = (User) authenticationFacade.getPrincipal();
         Sector sector = findSectorBy(id);
-
         validateSectorUnique(sector);
-        sector.setState(sectorUpdateStateRequest.getSectorState(),
+
+        SectorState beforeSectorState = SectorState.of(sector.getState());
+        SectorState afterSectorState = sectorUpdateStateRequest.getSectorState();
+        sector.setState(afterSectorState,
             sectorUpdateStateRequest.getReason(), user);
+
+        if (SectorState.isTurnPendingToApproved(beforeSectorState, afterSectorState)) {
+            giveASectorCreatorAward(sector);
+        }
+    }
+
+    private void giveASectorCreatorAward(Sector sector) {
+        if (sectorCreatorAwardRepository.findBySector(sector).isPresent()) {
+            log.info("기존에 수상 이력이 있는 부문입니다.");
+            return;
+        }
+
+        SectorCreatorAward sectorCreatorAward = SectorCreatorAward.builder()
+            .name(AwardNameMaker.makeSectorCreatorAwardName(sector))
+            .awardee(sector.getCreator())
+            .sector(sector)
+            .date(LocalDate.now())
+            .build();
+        sectorCreatorAwardRepository.save(sectorCreatorAward);
     }
 
     @Transactional(readOnly = true)
