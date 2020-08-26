@@ -5,7 +5,7 @@ import Bottom from '../../Bottom';
 import { PROFILE } from '../../../constants/BottomItems';
 import { findMyInfo } from '../../api/API';
 import Loading from '../../Loading';
-import { getAccessTokenFromCookie, removeAccessTokenCookie } from '../../../util/TokenUtils';
+import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import { Typography } from '@material-ui/core';
 import {
   Email,
@@ -20,7 +20,6 @@ import {
 import { AwardsSection, AwardSummary } from '../../myProfile/AwardSection';
 import { NavElement, NavSection } from '../../myProfile/LinksSection';
 import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
-import BottomBlank from '../../BottomBlank';
 import MySectorSection from './MySectorSection';
 
 function MyProfilePage() {
@@ -41,8 +40,8 @@ function MyProfilePage() {
   }, [accessToken]);
 
   const logout = useCallback(() => {
-    removeAccessTokenCookie();
     alert('로그아웃 되었습니다.');
+    document.location.href = '/login';
   }, []);
 
   if (loading) {
@@ -62,9 +61,7 @@ function MyProfilePage() {
         </PrivacyBox>
         <PrivacyRightBox>
           <PrivacyEditBox to='/myProfileEdit'>수정</PrivacyEditBox>
-          <PrivacySignOutBox onClick={logout} to='/login'>
-            로그아웃
-          </PrivacySignOutBox>
+          <PrivacySignOutBox onClick={logout}>로그아웃</PrivacySignOutBox>
         </PrivacyRightBox>
       </TopSection>
       <AwardsSection>
@@ -74,11 +71,10 @@ function MyProfilePage() {
       </AwardsSection>
       <NavSection>
         <NavElement linkTo='/'>수상내역</NavElement>
-        <NavElement linkTo='/'>작성글</NavElement>
+        <NavElement linkTo='/my-posts'>작성글</NavElement>
         <NavElement linkTo='/'>작성 댓글</NavElement>
         <MySectorSection />
       </NavSection>
-      <BottomBlank />
       <Bottom selected={PROFILE} />
     </>
   );
