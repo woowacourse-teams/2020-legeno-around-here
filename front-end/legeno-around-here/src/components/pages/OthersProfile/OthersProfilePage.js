@@ -1,11 +1,12 @@
 import React, { useMemo, useState } from 'react';
+import { Typography } from '@material-ui/core';
+
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import { findOthersProfileById } from '../../api/API';
 import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
 import Loading from '../../Loading';
 import TopBar from '../myProfile/myProfileTopBar';
 import { Nickname, PrivacyBox, ProfilePhoto, TopSection } from '../../myProfile/PrivacySection';
-import { Typography } from '@material-ui/core';
 import { AwardsSection, AwardSummary } from '../../myProfile/AwardSection';
 import { NavElement, NavSection } from '../../myProfile/LinksSection';
 import Bottom from '../../Bottom';
@@ -34,7 +35,7 @@ function OthersProfilePage({ match }) {
 
   return (
     <>
-      <TopBar backButtonLink='/' />
+      <TopBar />
       <TopSection>
         <ProfilePhoto photoUrl={profilePhotoUrl} />
         <PrivacyBox>

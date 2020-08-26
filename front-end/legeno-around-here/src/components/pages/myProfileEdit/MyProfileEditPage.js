@@ -63,7 +63,7 @@ function MyProfileEditPage() {
 
   return (
     <>
-      <TopBar backButtonLink='/myProfile' />
+      <TopBar />
       <form className={classes.basicLayout} onSubmit={onSubmit}>
         <PhotoEditSection profilePhoto={profilePhoto} setProfilePhoto={setProfilePhoto} accessToken={accessToken} />
         <div className={classes.infoEditSection}>

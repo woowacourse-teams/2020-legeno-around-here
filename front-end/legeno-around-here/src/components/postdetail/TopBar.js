@@ -25,13 +25,13 @@ const ActualItemSpace = styled.div`
   flex-direction: row;
 `;
 
-const TopBar = ({ backButtonLink }) => {
+const TopBar = () => {
   const classes = useStyles();
 
   return (
     <AppBar position="sticky" className={classes.topBarBackground}>
       <ActualItemSpace>
-        <BackButton linkTo={backButtonLink} />
+        <BackButton />
       </ActualItemSpace>
     </AppBar>
   );

@@ -1,21 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-const StyledLink = styled(Link)`
+import handleBackButtonClicked from '../../util/BackButtonHandler'
+
+const StyledDiv = styled.div`
   margin-right: auto;
   margin-left: 0px;
 `;
 
-const BackButton = ({ linkTo }) => {
+const BackButton = () => {
   return (
-    <StyledLink to={linkTo}>
+    <StyledDiv onClick={handleBackButtonClicked}>
       <IconButton edge="start">
         <ArrowBackIcon />
       </IconButton>
-    </StyledLink>
+    </StyledDiv>
   );
 };
 

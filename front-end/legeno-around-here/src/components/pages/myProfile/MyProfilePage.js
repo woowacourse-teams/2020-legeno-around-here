@@ -64,7 +64,7 @@ function MyProfilePage() {
 
   return (
     <>
-      <TopBar backButtonLink='/' />
+      <TopBar />
       <TopSection>
         <ProfilePhoto photoUrl={profilePhotoUrl} />
         <PrivacyBox>
