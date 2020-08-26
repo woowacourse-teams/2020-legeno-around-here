@@ -177,4 +177,13 @@ public class PostService {
 
         return posts.map(post -> PostWithCommentsCountResponse.of(user, post));
     }
+
+    @Transactional(readOnly = true)
+    public Page<PostWithCommentsCountResponse> findPostsByUserId(Pageable pageable, Long userId) {
+        User user = (User) authenticationFacade.getPrincipal();
+
+        Page<Post> posts = postRepository.findAllByCreatorId(pageable, userId);
+
+        return posts.map(post -> PostWithCommentsCountResponse.of(user, post));
+    }
 }

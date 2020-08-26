@@ -1,6 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
 import java.util.Objects;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,12 +21,14 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.UserImage;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserAssembler;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserCheckRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserOtherResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
+import wooteco.team.ittabi.legenoaroundhere.exception.AlreadyExistUserException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
@@ -50,6 +53,16 @@ public class UserService implements UserDetailsService {
     private final ImageUploader imageUploader;
     private final MailAuthService mailAuthService;
     private final NotificationRepository notificationRepository;
+
+    @Transactional
+    public void checkJoined(UserCheckRequest userCheckRequest) {
+        Email email = new Email(userCheckRequest.getEmail());
+        Optional<User> foundUser = userRepository.findByEmail(email);
+
+        foundUser.ifPresent(user -> {
+            throw new AlreadyExistUserException("이미 가입된 회원입니다.");
+        });
+    }
 
     @Transactional
     public Long createUser(UserCreateRequest userCreateRequest) {
