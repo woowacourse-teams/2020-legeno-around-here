@@ -21,6 +21,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.SectorAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorSimpleResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorUpdateStateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotUniqueException;
@@ -168,10 +169,16 @@ public class SectorService {
     }
 
     @Transactional(readOnly = true)
-    public List<SectorResponse> findBestSectors(int count) {
+    public List<SectorSimpleResponse> findBestSectors(int count) {
         List<Sector> sectors = sectorRepository
             .findAllByStateInAndOrderByPostsCountDesc(PageRequest.of(DEFAULT_PAGING_NUMBER, count),
                 SectorState.getAllAvailable());
-        return SectorResponse.listOf(sectors);
+        return SectorSimpleResponse.listOf(sectors);
+    }
+
+    @Transactional(readOnly = true)
+    public List<SectorSimpleResponse> findSectorsForKeywordSearch() {
+        List<Sector> sectors = sectorRepository.findAllByStateIn(SectorState.getAllAvailable());
+        return SectorSimpleResponse.listOf(sectors);
     }
 }

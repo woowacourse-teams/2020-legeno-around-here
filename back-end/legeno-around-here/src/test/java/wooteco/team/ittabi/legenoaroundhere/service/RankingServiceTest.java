@@ -128,7 +128,7 @@ public class RankingServiceTest extends ServiceTest {
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             null, null);
         Page<PostWithCommentsCountResponse> posts
-            = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
+            = rankingService.searchRanking(Pageable.unpaged(), postSearchRequest, rankingRequest);
 
         assertThat(posts.getContent()).hasSize(4);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdB);
@@ -195,7 +195,7 @@ public class RankingServiceTest extends ServiceTest {
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             null, null);
         Page<PostWithCommentsCountResponse> posts
-            = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
+            = rankingService.searchRanking(Pageable.unpaged(), postSearchRequest, rankingRequest);
 
         assertThat(posts.getContent()).hasSize(4);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdC);
@@ -258,7 +258,7 @@ public class RankingServiceTest extends ServiceTest {
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             null, null);
         Page<PostWithCommentsCountResponse> posts
-            = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
+            = rankingService.searchRanking(Pageable.unpaged(), postSearchRequest, rankingRequest);
 
         assertThat(posts.getContent()).hasSize(4);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdC);
@@ -319,7 +319,7 @@ public class RankingServiceTest extends ServiceTest {
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             null, null);
         Page<PostWithCommentsCountResponse> posts
-            = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
+            = rankingService.searchRanking(Pageable.unpaged(), postSearchRequest, rankingRequest);
 
         assertThat(posts.getContent()).hasSize(4);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdD);
@@ -371,7 +371,7 @@ public class RankingServiceTest extends ServiceTest {
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             null, String.valueOf(sectorId));
         Page<PostWithCommentsCountResponse> posts
-            = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
+            = rankingService.searchRanking(Pageable.unpaged(), postSearchRequest, rankingRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdC);
@@ -441,7 +441,7 @@ public class RankingServiceTest extends ServiceTest {
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             null, String.valueOf(sectorId));
         Page<PostWithCommentsCountResponse> posts
-            = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
+            = rankingService.searchRanking(Pageable.unpaged(), postSearchRequest, rankingRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
@@ -502,7 +502,7 @@ public class RankingServiceTest extends ServiceTest {
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             null, String.valueOf(sectorId));
         Page<PostWithCommentsCountResponse> posts
-            = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
+            = rankingService.searchRanking(Pageable.unpaged(), postSearchRequest, rankingRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdC);
@@ -561,7 +561,7 @@ public class RankingServiceTest extends ServiceTest {
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             null, String.valueOf(sectorId));
         Page<PostWithCommentsCountResponse> posts
-            = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
+            = rankingService.searchRanking(Pageable.unpaged(), postSearchRequest, rankingRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
@@ -611,7 +611,7 @@ public class RankingServiceTest extends ServiceTest {
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             TEST_AREA_ID, null);
         Page<PostWithCommentsCountResponse> posts
-            = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
+            = rankingService.searchRanking(Pageable.unpaged(), postSearchRequest, rankingRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdB);
@@ -676,7 +676,7 @@ public class RankingServiceTest extends ServiceTest {
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             TEST_AREA_ID, null);
         Page<PostWithCommentsCountResponse> posts
-            = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
+            = rankingService.searchRanking(Pageable.unpaged(), postSearchRequest, rankingRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdB);
@@ -737,7 +737,7 @@ public class RankingServiceTest extends ServiceTest {
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             TEST_AREA_ID, null);
         Page<PostWithCommentsCountResponse> posts
-            = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
+            = rankingService.searchRanking(Pageable.unpaged(), postSearchRequest, rankingRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
@@ -796,7 +796,7 @@ public class RankingServiceTest extends ServiceTest {
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             TEST_AREA_ID, null);
         Page<PostWithCommentsCountResponse> posts
-            = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
+            = rankingService.searchRanking(Pageable.unpaged(), postSearchRequest, rankingRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
@@ -846,7 +846,7 @@ public class RankingServiceTest extends ServiceTest {
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             TEST_AREA_ID, String.valueOf(sectorId));
         Page<PostWithCommentsCountResponse> posts
-            = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
+            = rankingService.searchRanking(Pageable.unpaged(), postSearchRequest, rankingRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
@@ -911,7 +911,7 @@ public class RankingServiceTest extends ServiceTest {
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             TEST_AREA_ID, String.valueOf(sectorId));
         Page<PostWithCommentsCountResponse> posts
-            = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
+            = rankingService.searchRanking(Pageable.unpaged(), postSearchRequest, rankingRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
@@ -972,7 +972,7 @@ public class RankingServiceTest extends ServiceTest {
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             TEST_AREA_ID, String.valueOf(sectorId));
         Page<PostWithCommentsCountResponse> posts
-            = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
+            = rankingService.searchRanking(Pageable.unpaged(), postSearchRequest, rankingRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdA);
@@ -1031,7 +1031,7 @@ public class RankingServiceTest extends ServiceTest {
         PostSearchRequest postSearchRequest = new PostSearchRequest(
             TEST_AREA_ID, String.valueOf(sectorId));
         Page<PostWithCommentsCountResponse> posts
-            = rankingService.searchRanking(Pageable.unpaged(), rankingRequest, postSearchRequest);
+            = rankingService.searchRanking(Pageable.unpaged(), postSearchRequest, rankingRequest);
 
         assertThat(posts.getContent()).hasSize(2);
         assertThat(posts.getContent().get(0).getId()).isEqualTo(postIdD);

@@ -11,19 +11,19 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { createUser, sendAuthMail, checkAuthNumber } from '../api/API';
+import { createUser, checkJoined, sendAuthMail, checkAuthNumber } from '../api/API';
 
-const authInputStyle = {
+const mailInputStyle = {
   width: '70%',
 };
 
-const authCheckStyle = {
+const mailCheckStyle = {
   width: '30%',
 };
 
 const Copyright = () => {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
+    <Typography variant='body2' color='textSecondary' align='center'>
       {'Copyright © Ittabi 2020.'}
     </Typography>
   );
@@ -32,7 +32,7 @@ const Copyright = () => {
 const InputCheck = (input) => {
   return (
     <Grid item xs={12}>
-      <Typography variant="caption" color="error">
+      <Typography variant='caption' color='error'>
         {input}
       </Typography>
     </Grid>
@@ -74,32 +74,23 @@ function JoinForm() {
   const [passwordRepeat, setPasswordRepeat] = useState('');
   const [isEmailDisabled, setIsEmailDisabled] = useState(false);
   const [isAuthNumberDisabled, setIsAuthNumberDisabled] = useState(false);
+  const [mailAuthToggle, setMailAuthToggle] = useState('인증 메일 전송');
+  const [isMailSent, setIsMailSent] = useState(false);
 
   const validateEmail = useMemo(() => {
     return email && !EMAIL_REGEX.test(String(email).toLowerCase());
   }, [EMAIL_REGEX, email]);
 
   const validateNickname = useMemo(() => {
-    return (
-      nickname &&
-      (nickname.length < NICKNAME_MIN_LENGTH ||
-        nickname.length > NICKNAME_MAX_LENGTH)
-    );
+    return nickname && (nickname.length < NICKNAME_MIN_LENGTH || nickname.length > NICKNAME_MAX_LENGTH);
   }, [nickname]);
 
   const validatePassword = useMemo(() => {
-    return (
-      password &&
-      (password.length < PASSWORD_MIN_LENGTH ||
-        password.length > PASSWORD_MAX_LENGTH)
-    );
+    return password && (password.length < PASSWORD_MIN_LENGTH || password.length > PASSWORD_MAX_LENGTH);
   }, [password]);
 
   const validatePasswordRepeat = useMemo(() => {
-    return (
-      passwordRepeat &&
-      (passwordRepeat.length === 0 || password !== passwordRepeat)
-    );
+    return passwordRepeat && (passwordRepeat.length === 0 || password !== passwordRepeat);
   }, [password, passwordRepeat]);
 
   const emailCheck = useMemo(() => {
@@ -154,13 +145,18 @@ function JoinForm() {
     setPasswordRepeat('');
   }, []);
 
-  const sendMail = useCallback(() => {
-    sendAuthMail(email, setIsEmailDisabled);
+  const checkEmail = useCallback(() => {
+    checkJoined(email);
   }, [email]);
 
-  const checkNumber = useCallback(() => {
+  const mailAuthToggleFunction = useCallback(() => {
+    if (isMailSent === false) {
+      alert('인증 메일을 전송합니다. 잠시만 기다려주세요.');
+      sendAuthMail(email, setIsEmailDisabled, setMailAuthToggle, setIsMailSent);
+      return;
+    }
     checkAuthNumber(email, authNumber, setIsAuthNumberDisabled);
-  }, [email, authNumber]);
+  }, [email, authNumber, isMailSent]);
 
   const join = useCallback(() => {
     createUser(email, nickname, password, authNumber, handleReset);
@@ -169,154 +165,137 @@ function JoinForm() {
   const handleSubmit = useCallback(
     (event) => {
       event.preventDefault();
-      if (
-        validateEmail ||
-        validateNickname ||
-        validatePassword ||
-        validatePasswordRepeat
-      ) {
+      if (validateEmail || validateNickname || validatePassword || validatePasswordRepeat) {
         alert('입력값을 확인해 주세요.');
         return;
       }
       join();
     },
-    [
-      validateEmail,
-      validateNickname,
-      validatePassword,
-      validatePasswordRepeat,
-      join,
-    ],
+    [validateEmail, validateNickname, validatePassword, validatePasswordRepeat, join],
   );
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component='main' maxWidth='xs'>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <ThumbUpIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
+        <Typography component='h1' variant='h5'>
           우리동네캡짱 회원가입
         </Typography>
         <form onSubmit={handleSubmit} className={classes.form} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                style={authInputStyle}
-                variant="outlined"
+                style={mailInputStyle}
+                variant='outlined'
                 required
                 fullWidth
-                id="email"
-                label="이메일"
-                name="email"
-                autoComplete="email"
-                type="email"
+                id='email'
+                label='이메일'
+                name='email'
+                autoComplete='email'
+                type='email'
                 value={email}
                 disabled={isEmailDisabled}
                 onChange={handleChangeEmail}
               />
-              <Button style={authCheckStyle} onClick={sendMail}>
-                인증 메일 전송
+              <Button style={mailCheckStyle} onClick={checkEmail}>
+                메일 중복 확인
               </Button>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="caption" color="error">
+              <Typography variant='caption' color='error'>
                 {emailCheck}
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <TextField
-                style={authInputStyle}
-                variant="outlined"
+                style={mailInputStyle}
+                variant='outlined'
                 required
                 fullWidth
-                id="authNumber"
-                label="인증 번호"
-                name="authNumber"
-                autoComplete="authNumber"
-                type="authNumber"
+                id='authNumber'
+                label='인증 번호'
+                name='authNumber'
+                autoComplete='authNumber'
+                type='authNumber'
                 value={authNumber}
                 disabled={isAuthNumberDisabled}
                 onChange={handleChangeAuthNumber}
               />
-              <Button style={authCheckStyle} onClick={checkNumber}>
-                인증 번호 확인
+              <Button style={mailCheckStyle} onClick={mailAuthToggleFunction}>
+                {mailAuthToggle}
               </Button>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="caption" color="error"></Typography>
+              <Typography variant='caption' color='error'></Typography>
             </Grid>
             <Grid item xs={12}>
               <TextField
-                variant="outlined"
+                variant='outlined'
                 required
                 fullWidth
-                id="lastName"
-                label="닉네임"
-                name="lastName"
-                autoComplete="lname"
-                type="text"
+                id='lastName'
+                label='닉네임'
+                name='lastName'
+                autoComplete='lname'
+                type='text'
                 value={nickname}
                 onChange={handleChangeNickname}
               />
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="caption" color="error">
+              <Typography variant='caption' color='error'>
                 {nicknameCheck}
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <TextField
-                variant="outlined"
+                variant='outlined'
                 required
                 fullWidth
-                name="password"
-                label="비밀번호"
-                id="password"
-                autoComplete="current-password"
-                type="password"
+                name='password'
+                label='비밀번호'
+                id='password'
+                autoComplete='current-password'
+                type='password'
                 value={password}
                 onChange={handleChangePassword}
               />
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="caption" color="error">
+              <Typography variant='caption' color='error'>
                 {passwordCheck}
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <TextField
-                variant="outlined"
+                variant='outlined'
                 required
                 fullWidth
-                name="passwordRepeat"
-                label="비밀번호 확인"
-                id="passwordRepeat"
-                autoComplete="current-password"
-                type="password"
+                name='passwordRepeat'
+                label='비밀번호 확인'
+                id='passwordRepeat'
+                autoComplete='current-password'
+                type='password'
                 value={passwordRepeat}
                 onChange={handleChangePasswordRepeat}
               />
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="caption" color="error">
+              <Typography variant='caption' color='error'>
                 {passwordRepeatCheck}
               </Typography>
             </Grid>
           </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
+          <Button type='submit' fullWidth variant='contained' color='primary' className={classes.submit}>
             회원가입
           </Button>
-          <Grid container justify="flex-end">
+          <Grid container justify='flex-end'>
             <Grid item>
-              <Link to="/login" variant="body2">
+              <Link to='/login' variant='body2'>
                 이미 계정이 있으신가요? 로그인을 해주세요!
               </Link>
             </Grid>
