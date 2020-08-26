@@ -96,11 +96,25 @@ export const createUser = (email, nickname, password, authNumber, handleReset) =
     })
     .catch((error) => {
       alert('회원가입에 실패하였습니다.');
+      console.log(error);
       handleReset();
     });
 };
 
-export const sendAuthMail = (email, setIsEmailDisabled) => {
+export const checkJoined = (email) => {
+  axios
+    .get(DEFAULT_URL + `/check-joined?email=${email}`)
+    .then((response) => {
+      alert('사용 가능한 이메일입니다.');
+    })
+    .catch((error) => {
+      const errorResponse = error.response.data;
+      alert(errorResponse.errorMessage);
+      console.log(error);
+    });
+};
+
+export const sendAuthMail = (email, setIsEmailDisabled, setMailAuthToggle, setIsMailSent) => {
   axios
     .post(DEFAULT_URL + '/mail-auth/send', {
       email,
@@ -108,10 +122,11 @@ export const sendAuthMail = (email, setIsEmailDisabled) => {
     .then((response) => {
       alert('인증 메일을 전송했습니다.');
       setIsEmailDisabled(true);
+      setMailAuthToggle('인증 번호 확인');
+      setIsMailSent(true);
     })
     .catch((error) => {
       alert('인증 메일 발송 실패하였습니다.');
-      setIsEmailDisabled(false);
       console.log(error);
     });
 };
@@ -127,8 +142,7 @@ export const checkAuthNumber = (email, authNumber, setIsAuthNumberDisabled) => {
       setIsAuthNumberDisabled(true);
     })
     .catch((error) => {
-      alert('인증 실패했습니다.');
-      setIsAuthNumberDisabled(false);
+      alert('인증번호를 확인해주세요.');
       console.log(error);
     });
 };
