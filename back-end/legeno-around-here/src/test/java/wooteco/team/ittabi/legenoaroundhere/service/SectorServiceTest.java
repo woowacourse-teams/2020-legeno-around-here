@@ -31,11 +31,11 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorSimpleResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorUpdateStateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserSimpleResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotUniqueException;
-import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 
 class SectorServiceTest extends ServiceTest {
 
@@ -44,9 +44,6 @@ class SectorServiceTest extends ServiceTest {
 
     @Autowired
     private PostService postService;
-
-    @Autowired
-    private UserRepository userRepository;
 
     private User admin;
 
@@ -349,8 +346,60 @@ class SectorServiceTest extends ServiceTest {
         Collections.reverse(sectorIds);
 
         List<Long> bestSectorIds = sectorService.findBestSectors(count).stream()
-            .map(SectorResponse::getId)
+            .map(SectorSimpleResponse::getId)
             .collect(Collectors.toList());
         assertThat(bestSectorIds).isEqualTo(sectorIds.subList(0, count));
+    }
+
+    @DisplayName("조회를 위한 부문 조회, 0건 조회 - 아무 것도 없음")
+    @Test
+    void findSectorsForKeywordSearch_Nothing_ZeroReturn() {
+        List<SectorSimpleResponse> sectorsForKeywordSearch
+            = sectorService.findSectorsForKeywordSearch();
+
+        assertThat(sectorsForKeywordSearch).hasSize(0);
+    }
+
+    @DisplayName("조회를 위한 부문 조회, 0건 조회 - 승인 대기 1건")
+    @Test
+    void findSectorsForKeywordSearch_ExistsPendingOne_ZeroReturn() {
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        sectorService.createPendingSector(sectorRequest);
+
+        List<SectorSimpleResponse> sectorsForKeywordSearch
+            = sectorService.findSectorsForKeywordSearch();
+
+        assertThat(sectorsForKeywordSearch).hasSize(0);
+    }
+
+    @DisplayName("조회를 위한 부문 조회, 1건 조회 - 승인 1건")
+    @Test
+    void findSectorsForKeywordSearch_ExistsApprovedOne_OneReturn() {
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        SectorResponse pendingSector = sectorService.createPendingSector(sectorRequest);
+
+        SectorUpdateStateRequest sectorUpdateStateRequest
+            = new SectorUpdateStateRequest("승인", "승인함");
+        sectorService.updateSectorState(pendingSector.getId(), sectorUpdateStateRequest);
+
+        List<SectorSimpleResponse> sectorsForKeywordSearch
+            = sectorService.findSectorsForKeywordSearch();
+
+        assertThat(sectorsForKeywordSearch).hasSize(1);
+    }
+
+    @DisplayName("조회를 위한 부문 조회, 2건 조회 - 발행된 건 2건")
+    @Test
+    void findSectorsForKeywordSearch_ExistsPublishedOne_OneReturn() {
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        sectorService.createSector(sectorRequest);
+        sectorRequest = new SectorRequest(TEST_SECTOR_ANOTHER_NAME,
+            TEST_SECTOR_ANOTHER_DESCRIPTION);
+        sectorService.createSector(sectorRequest);
+
+        List<SectorSimpleResponse> sectorsForKeywordSearch
+            = sectorService.findSectorsForKeywordSearch();
+
+        assertThat(sectorsForKeywordSearch).hasSize(2);
     }
 }

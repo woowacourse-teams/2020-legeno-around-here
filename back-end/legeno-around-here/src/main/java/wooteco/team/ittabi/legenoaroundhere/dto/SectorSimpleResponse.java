@@ -1,5 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,19 +17,21 @@ import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class SectorResponse {
+public class SectorSimpleResponse {
 
     private Long id;
     private String name;
-    private String description;
-    private UserSimpleResponse creator;
 
-    public static SectorResponse of(Sector sector) {
-        return SectorResponse.builder()
+    public static SectorSimpleResponse of(Sector sector) {
+        return SectorSimpleResponse.builder()
             .id(sector.getId())
             .name(sector.getName())
-            .description(sector.getDescription())
-            .creator(UserSimpleResponse.from(sector.getCreator()))
             .build();
+    }
+
+    public static List<SectorSimpleResponse> listOf(List<Sector> sector) {
+        return sector.stream()
+            .map(SectorSimpleResponse::of)
+            .collect(Collectors.toList());
     }
 }
