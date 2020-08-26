@@ -1,4 +1,4 @@
-package wooteco.team.ittabi.legenoaroundhere.domain.post;
+package wooteco.team.ittabi.legenoaroundhere.domain.report;
 
 import java.util.ArrayList;
 import java.util.List;

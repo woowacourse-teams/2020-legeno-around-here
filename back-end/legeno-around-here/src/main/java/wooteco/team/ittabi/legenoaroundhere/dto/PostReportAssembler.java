@@ -1,7 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
-import wooteco.team.ittabi.legenoaroundhere.domain.post.PostReport;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.PostSnapshot;
+import wooteco.team.ittabi.legenoaroundhere.domain.report.PostReport;
+import wooteco.team.ittabi.legenoaroundhere.domain.report.PostSnapshot;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 
 public class PostReportAssembler {

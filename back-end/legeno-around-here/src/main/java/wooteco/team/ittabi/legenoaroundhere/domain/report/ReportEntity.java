@@ -1,16 +1,12 @@
-package wooteco.team.ittabi.legenoaroundhere.domain.post;
+package wooteco.team.ittabi.legenoaroundhere.domain.report;
 
-import java.util.List;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -18,11 +14,11 @@ import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 
-@Entity
+@MappedSuperclass
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString(exclude = {"reporter"})
-public class PostReport extends BaseEntity {
+@ToString
+public abstract class ReportEntity extends BaseEntity {
 
     private static final int MAX_LENGTH = 2000;
 
@@ -30,18 +26,13 @@ public class PostReport extends BaseEntity {
     @Column(nullable = false)
     private String reportWriting;
 
-    @Embedded
-    private PostSnapshot postSnapshot;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reporter_id", foreignKey = @ForeignKey(name = "FK_POST_REPORT_REPORTER"), nullable = false)
+    @JoinColumn(name = "reporter_id", nullable = false)
     private User reporter;
 
-    @Builder
-    public PostReport(String reportWriting, PostSnapshot postSnapshot, User reporter) {
+    public ReportEntity(String reportWriting, User reporter) {
         validateLength(reportWriting);
         this.reportWriting = reportWriting;
-        this.postSnapshot = postSnapshot;
         this.reporter = reporter;
     }
 
@@ -49,13 +40,5 @@ public class PostReport extends BaseEntity {
         if (writing.length() > MAX_LENGTH) {
             throw new WrongUserInputException(MAX_LENGTH + "글자를 초과했습니다!");
         }
-    }
-
-    public String getPostWriting() {
-        return this.postSnapshot.getPostWriting();
-    }
-
-    public List<String> getPostImageUrls() {
-        return this.postSnapshot.getPostImageUrls();
     }
 }
