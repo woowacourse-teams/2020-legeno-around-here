@@ -9,7 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import { findAllSimpleSectors } from '../../api/API';
-import AreaSearching from '../../AreaSearch';
+import AreaSearch from '../../AreaSearch';
 
 const useStyles = makeStyles(() => ({
   grow: {
@@ -37,7 +37,7 @@ const HomeTopBar = ({ setSectorId }) => {
     <>
       <AppBar position='sticky'>
         <Toolbar>
-          <AreaSearching />
+          <AreaSearch />
           <Autocomplete
             id='sector-search'
             freeSolo

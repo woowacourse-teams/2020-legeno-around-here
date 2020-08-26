@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 const DEFAULT_SIZE = 10;
 
-const AreaSearching = () => {
+const AreaSearch = () => {
   const mainArea = localStorage.getItem('mainAreaName');
 
   if (!mainArea) {
@@ -149,4 +149,4 @@ const AreaSearching = () => {
   );
 };
 
-export default AreaSearching;
+export default AreaSearch;
