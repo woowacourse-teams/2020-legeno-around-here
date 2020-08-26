@@ -44,4 +44,6 @@ public class UrlPathConstants {
     public static final String SECTORS_PATH_WITH_SLASH = SECTORS_PATH + PATH_DELIMITER;
     public static final String USERS_PATH_WITH_SLASH = USERS_PATH + PATH_DELIMITER;
     public static final String ZZANGS_PATH_WITH_SLASH = ZZANGS_PATH + PATH_DELIMITER;
+
+    public static final String HOME_PATH = PATH_DELIMITER + "home";
 }

@@ -14,43 +14,52 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wooteco.team.ittabi.legenoaroundhere.dto.NotificationResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
+import wooteco.team.ittabi.legenoaroundhere.service.NotificationService;
 
 @RestController
 @RequestMapping(NOTICE_PATH)
 @AllArgsConstructor
-public class NoticeController {
+public class NotificationController {
 
-    private final static List<NotificationResponse> myNotices = new ArrayList<>();
+    private final static List<NotificationResponse> myNotifications = new ArrayList<>();
+
+    private final NotificationService notificationService;
 
     static {
-        myNotices
+        myNotifications
             .add(NotificationResponse.of(1L, "당신의 글에 5명이 댓글을 달았어요", "/posts/1", Boolean.FALSE));
-        myNotices.add(NotificationResponse.of(2L, "당신의 글에 2명이 짱을 눌렀어요", "/posts/1", Boolean.FALSE));
-        myNotices
+        myNotifications
+            .add(NotificationResponse.of(2L, "당신의 글에 2명이 짱을 눌렀어요", "/posts/1", Boolean.FALSE));
+        myNotifications
             .add(NotificationResponse.of(3L, "당신의 댓글에 3명이 댓글을 달았어요", "/posts/1", Boolean.FALSE));
-        myNotices
+        myNotifications
             .add(NotificationResponse.of(4L, "당신의 댓글에 8명이 짱을 눌렀어요", "/posts/1", Boolean.FALSE));
-        myNotices.add(NotificationResponse.of(5L, "신청한 부문이 승인되었어요", "/sector/1", Boolean.FALSE));
-        myNotices.add(NotificationResponse.of(6L, "신청한 부문이 반려되었어요", "/sector/1", Boolean.FALSE));
-        myNotices.add(NotificationResponse.of(7L, "상을 수상했어요.", "/users/me", Boolean.FALSE));
-        myNotices.add(NotificationResponse.of(8L, "가입을 축하해요.", "/users/me", Boolean.FALSE));
+        myNotifications
+            .add(NotificationResponse.of(5L, "신청한 부문이 승인되었어요", "/sector/1", Boolean.FALSE));
+        myNotifications
+            .add(NotificationResponse.of(6L, "신청한 부문이 반려되었어요", "/sector/1", Boolean.FALSE));
+        myNotifications.add(NotificationResponse.of(7L, "상을 수상했어요.", "/users/me", Boolean.FALSE));
+        myNotifications.add(NotificationResponse.of(8L, "가입을 축하해요.", "/users/me", Boolean.FALSE));
     }
 
     @GetMapping(ME_PATH)
     public ResponseEntity<List<NotificationResponse>> findMyNotices() {
+        List<NotificationResponse> notificationResponses = notificationService.findMyNotice();
+
+        notificationResponses.addAll(myNotifications);
         return ResponseEntity
-            .ok(myNotices);
+            .ok(notificationResponses);
     }
 
     @PutMapping("/{noticeId}/read")
     public ResponseEntity<Void> readMyNotices(@PathVariable Long noticeId) {
-        NotificationResponse notice = myNotices.stream()
-            .filter(myNotice -> myNotice.getId().equals(noticeId))
+        NotificationResponse myNotifications = NotificationController.myNotifications.stream()
+            .filter(myNotification -> myNotification.getId().equals(noticeId))
             .findFirst()
             .orElseThrow(
                 () -> new NotExistsException("ID : " + noticeId + " 에 해당하는 Notice가 없습니다!"));
 
-        notice.setRead(Boolean.TRUE);
+        myNotifications.setRead(Boolean.TRUE);
 
         return ResponseEntity
             .noContent()
