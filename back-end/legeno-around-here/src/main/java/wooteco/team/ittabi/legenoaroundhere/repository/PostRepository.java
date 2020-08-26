@@ -8,10 +8,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
+import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findAllBy(Pageable pageable);
+
+    Page<Post> findAllByCreator(Pageable pageable, User creator);
 
     @Query(value = ""
         + "SELECT * "
