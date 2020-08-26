@@ -34,7 +34,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostReportCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostReportResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserSimpleResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.TestConverterUtils;
@@ -94,7 +94,7 @@ public class ReportServiceTest extends ServiceTest {
         assertThat(postReportResponse.getReportWriting()).isEqualTo(TEST_POST_REPORT_WRITING);
         assertThat(postReportResponse.getPostWriting()).isEqualTo(TEST_POST_WRITING);
         assertThat(postReportResponse.getPostImageUrls()).hasSize(0);
-        assertThat(postReportResponse.getReporter()).isEqualTo(UserResponse.from(user));
+        assertThat(postReportResponse.getReporter()).isEqualTo(UserSimpleResponse.from(user));
     }
 
     @DisplayName("이미지가 있는 글 신고 생성 - 성공")
@@ -118,7 +118,7 @@ public class ReportServiceTest extends ServiceTest {
         assertThat(postReportResponse.getReportWriting()).isEqualTo(TEST_POST_REPORT_WRITING);
         assertThat(postReportResponse.getPostWriting()).isEqualTo(TEST_POST_WRITING);
         assertThat(postReportResponse.getPostImageUrls()).hasSize(1);
-        assertThat(postReportResponse.getReporter()).isEqualTo(UserResponse.from(user));
+        assertThat(postReportResponse.getReporter()).isEqualTo(UserSimpleResponse.from(user));
     }
 
     @DisplayName("글 신고 조회 - 성공")

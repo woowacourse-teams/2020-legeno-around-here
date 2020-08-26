@@ -23,7 +23,7 @@ public class PostReportResponse {
     private String reportWriting;
     private String postWriting;
     private List<String> postImageUrls;
-    private UserResponse reporter;
+    private UserSimpleResponse reporter;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -33,7 +33,7 @@ public class PostReportResponse {
             .reportWriting(postReport.getReportWriting())
             .postWriting(postReport.getPostWriting())
             .postImageUrls(postReport.getPostImageUrls())
-            .reporter(UserResponse.from(postReport.getReporter()))
+            .reporter(UserSimpleResponse.from(postReport.getReporter()))
             .createdAt(postReport.getCreatedAt())
             .modifiedAt(postReport.getModifiedAt())
             .build();
