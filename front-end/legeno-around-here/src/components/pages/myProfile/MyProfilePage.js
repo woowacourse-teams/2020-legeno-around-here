@@ -87,7 +87,7 @@ function MyProfilePage() {
       </AwardsSection>
       <NavSection>
         <NavElement linkTo='/'>수상내역</NavElement>
-        <NavElement linkTo='/'>작성글</NavElement>
+        <NavElement linkTo='/my-posts'>작성글</NavElement>
         <NavElement linkTo='/'>작성 댓글</NavElement>
         <Typography>현재 신청중인 부문</Typography>
         <Divider />
