@@ -35,6 +35,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.utils.TestConverterUtils;
 
 public class PostAcceptanceTest extends AcceptanceTest {
@@ -65,6 +66,8 @@ public class PostAcceptanceTest extends AcceptanceTest {
      * When 글 목록을 조회한다. Then 글 목록을 응답받는다. And 글 목록은 n개이다.
      * <p>
      * When 내 글 목록을 조회한다. Then 글 목록을 응답받는다. And 내 글 목록은 n개이다.
+     * <p>
+     * When 타인이 내 글 목록을 조회한다. Then 글 목록을 응답받는다. And 내 글 목록은 n개이다.
      * <p>
      * When 글을 조회한다. Then 글을 응답 받는다.
      * <p>
@@ -105,6 +108,12 @@ public class PostAcceptanceTest extends AcceptanceTest {
 
         // 내 글 조회
         postResponses = findMyPosts(accessToken);
+        assertThat(postResponses).hasSize(2);
+
+        // 타인이 내 글 조회
+        Long myId = findUser(accessToken).getId();
+
+        postResponses = findPosts(adminToken, myId);
         assertThat(postResponses).hasSize(2);
 
         // 이미지가 포함된 글 수정
@@ -354,6 +363,19 @@ public class PostAcceptanceTest extends AcceptanceTest {
             .getList("content", PostWithCommentsCountResponse.class);
     }
 
+    private List<PostWithCommentsCountResponse> findPosts(String accessToken, Long userId) {
+        return given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("X-AUTH-TOKEN", accessToken)
+            .when()
+            .get("/users/" + userId + "/posts")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .jsonPath()
+            .getList("content", PostWithCommentsCountResponse.class);
+    }
+
     private PostResponse findPost(String accessToken, Long id) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -462,5 +484,16 @@ public class PostAcceptanceTest extends AcceptanceTest {
         postImageIds.addAll(newPostImageIds);
 
         return postImageIds;
+    }
+
+    private UserResponse findUser(String accessToken) {
+        return given()
+            .header("X-AUTH-TOKEN", accessToken)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/users/me")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .extract().as(UserResponse.class);
     }
 }
