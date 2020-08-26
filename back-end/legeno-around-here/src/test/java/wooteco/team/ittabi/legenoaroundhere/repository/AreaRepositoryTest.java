@@ -13,8 +13,6 @@ import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 class AreaRepositoryTest {
 
     private static final int INIT_DATA_SIZE = 493;
-    private static final int SEOUL_SUB_AREA_COUNT = INIT_DATA_SIZE - 1;
-    private static final long SEOUL_AREA_ID = 1L;
 
     @Autowired
     AreaRepository areaRepository;

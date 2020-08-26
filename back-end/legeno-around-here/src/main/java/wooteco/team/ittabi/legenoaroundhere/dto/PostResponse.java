@@ -27,7 +27,7 @@ public class PostResponse {
     private AreaResponse area;
     private SectorResponse sector;
     private PostZzangResponse zzang;
-    private UserResponse creator;
+    private UserSimpleResponse creator;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -39,7 +39,7 @@ public class PostResponse {
             .comments(CommentResponseAssembler.listOf(user, post.getComments()))
             .area(AreaResponse.of(post.getArea()))
             .sector(SectorResponse.of(post.getSector()))
-            .creator(UserResponse.from(post.getCreator()))
+            .creator(UserSimpleResponse.from(post.getCreator()))
             .zzang(PostZzangResponse.of(user, post))
             .createdAt(post.getCreatedAt())
             .modifiedAt(post.getModifiedAt())

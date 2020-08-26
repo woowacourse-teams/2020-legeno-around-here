@@ -1,5 +1,10 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.COMMENTS_PATH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.COMMENTS_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POSTS_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ZZANGS_PATH;
+
 import java.net.URI;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -21,27 +26,28 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/posts/{postId}/comments")
+    @PostMapping(POSTS_PATH_WITH_SLASH + "{postId}" + COMMENTS_PATH)
     public ResponseEntity<Void> createComment(@PathVariable Long postId,
         @RequestBody CommentRequest commentRequest) {
         CommentResponse commentResponse = commentService.createComment(postId, commentRequest);
 
         return ResponseEntity
-            .created(URI.create("/comments/" + commentResponse.getId()))
+            .created(URI.create(COMMENTS_PATH_WITH_SLASH + commentResponse.getId()))
             .build();
     }
 
-    @PostMapping("/posts/{postId}/comments/{commentId}/comments")
+    @PostMapping(POSTS_PATH_WITH_SLASH + "{postId}" + COMMENTS_PATH_WITH_SLASH + "{commentId}"
+        + COMMENTS_PATH)
     public ResponseEntity<Void> createCocomment(@PathVariable Long commentId,
         @RequestBody CommentRequest commentRequest) {
         CommentResponse commentResponse = commentService.createCocomment(commentId, commentRequest);
 
         return ResponseEntity
-            .created(URI.create("/comments/" + commentResponse.getId()))
+            .created(URI.create(COMMENTS_PATH_WITH_SLASH + commentResponse.getId()))
             .build();
     }
 
-    @PutMapping("/comments/{commentId}")
+    @PutMapping(COMMENTS_PATH_WITH_SLASH + "{commentId}")
     public ResponseEntity<CommentResponse> updateComment(@PathVariable Long commentId,
         @RequestBody CommentRequest commentRequest) {
         CommentResponse commentResponse = commentService.updateComment(commentId, commentRequest);
@@ -51,7 +57,7 @@ public class CommentController {
             .body(commentResponse);
     }
 
-    @GetMapping("/comments/{commentId}")
+    @GetMapping(COMMENTS_PATH_WITH_SLASH + "{commentId}")
     public ResponseEntity<CommentResponse> findComment(@PathVariable Long commentId) {
         CommentResponse commentResponse = commentService.findComment(commentId);
 
@@ -60,16 +66,16 @@ public class CommentController {
             .body(commentResponse);
     }
 
-    @GetMapping("/posts/{postId}/comments")
-    public ResponseEntity<List<CommentResponse>> findAllCommentBy(@PathVariable Long postId) {
-        List<CommentResponse> commentResponses = commentService.findAllCommentBy(postId);
+    @GetMapping(POSTS_PATH_WITH_SLASH + "{postId}" + COMMENTS_PATH)
+    public ResponseEntity<List<CommentResponse>> findAllComment(@PathVariable Long postId) {
+        List<CommentResponse> commentResponses = commentService.findAllComment(postId);
 
         return ResponseEntity
             .ok()
             .body(commentResponses);
     }
 
-    @DeleteMapping("/comments/{commentId}")
+    @DeleteMapping(COMMENTS_PATH_WITH_SLASH + "{commentId}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
         commentService.deleteComment(commentId);
 
@@ -78,7 +84,7 @@ public class CommentController {
             .build();
     }
 
-    @PostMapping("/comments/{commentId}/zzangs")
+    @PostMapping(COMMENTS_PATH_WITH_SLASH + "{commentId}" + ZZANGS_PATH)
     public ResponseEntity<Void> pressCommentZzang(@PathVariable Long commentId) {
         commentService.pressZzang(commentId);
 
