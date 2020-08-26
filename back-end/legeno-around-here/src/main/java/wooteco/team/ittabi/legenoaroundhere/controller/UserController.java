@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserCheckRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserOtherResponse;
@@ -32,6 +33,15 @@ import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 public class UserController {
 
     private final UserService userService;
+
+    @GetMapping("/check-joined")
+    public ResponseEntity<Void> checkJoined(UserCheckRequest userCheckRequest) {
+        userService.checkJoined(userCheckRequest);
+
+        return ResponseEntity
+            .noContent()
+            .build();
+    }
 
     @PostMapping("/join")
     public ResponseEntity<Void> join(@RequestBody UserCreateRequest userCreateRequest) {
