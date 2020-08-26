@@ -1,7 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static wooteco.team.ittabi.legenoaroundhere.domain.State.DELETED;
-import static wooteco.team.ittabi.legenoaroundhere.utils.NotificationContentMaker.KEYWORD_ZZANG;
 
 import java.util.List;
 import java.util.Objects;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.comment.Comment;
-import wooteco.team.ittabi.legenoaroundhere.domain.notification.Notification;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.CommentAssembler;
@@ -25,17 +23,17 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.CommentRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.NotificationRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
-import wooteco.team.ittabi.legenoaroundhere.utils.NotificationContentMaker;
 
 @Service
 @AllArgsConstructor
 @Slf4j
 public class CommentService {
 
+    private final NotificationService notificationService;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-    private final IAuthenticationFacade authenticationFacade;
     private final NotificationRepository notificationRepository;
+    private final IAuthenticationFacade authenticationFacade;
 
     @Transactional
     public CommentResponse createComment(Long postId, CommentRequest commentRequest) {
@@ -47,6 +45,8 @@ public class CommentService {
         comment.setPost(post);
 
         Comment savedComment = commentRepository.save(comment);
+
+        notificationService.notifyPostAddCommentNotification(post);
         return CommentResponseAssembler.of(user, savedComment);
     }
 
@@ -113,38 +113,8 @@ public class CommentService {
         comment.pressZzang(user);
 
         if (comment.hasZzangCreator(user)) {
-            notifyCommentZzangNotification(comment);
+            notificationService.notifyCommentZzangNotification(comment);
         }
-    }
-
-    private void notifyCommentZzangNotification(Comment comment) {
-        User receiver = comment.getCreator();
-
-        deleteBeforeCommentNotificationOfKeyword(comment, receiver, KEYWORD_ZZANG);
-
-        String zzangNotificationContent
-            = NotificationContentMaker.makePressZzangNotificationContent(comment);
-        createNewCommentNotificationOfContent(comment, receiver, zzangNotificationContent);
-    }
-
-    private void deleteBeforeCommentNotificationOfKeyword(Comment comment, User receiver,
-        String keyword) {
-        notificationRepository.findAllByReceiverAndComment(receiver, comment)
-            .stream()
-            .filter(notification -> notification.getContent().contains(keyword))
-            .findFirst()
-            .ifPresent(notificationRepository::delete);
-    }
-
-    private void createNewCommentNotificationOfContent(Comment omment, User receiver,
-        String content) {
-        Notification notification = Notification.builder()
-            .content(content)
-            .comment(omment)
-            .receiver(receiver)
-            .build();
-
-        notificationRepository.save(notification);
     }
 
     @Transactional
@@ -166,6 +136,8 @@ public class CommentService {
         cocomment.setSuperComment(comment);
 
         Comment savedCocomment = commentRepository.save(cocomment);
+
+        notificationService.notifyCommentAddCommentNotification(comment);
         return CommentResponseAssembler.of(user, savedCocomment);
     }
 

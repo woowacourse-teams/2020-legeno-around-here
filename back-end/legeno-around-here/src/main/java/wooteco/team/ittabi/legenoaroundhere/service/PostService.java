@@ -1,7 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
-import static wooteco.team.ittabi.legenoaroundhere.utils.NotificationContentMaker.KEYWORD_ZZANG;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -16,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.PostSearch;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
-import wooteco.team.ittabi.legenoaroundhere.domain.notification.Notification;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
@@ -32,23 +29,21 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.repository.AreaRepository;
-import wooteco.team.ittabi.legenoaroundhere.repository.NotificationRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostImageRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.ImageUploader;
-import wooteco.team.ittabi.legenoaroundhere.utils.NotificationContentMaker;
 
 @Service
 @AllArgsConstructor
 @Slf4j
 public class PostService {
 
+    private final NotificationService notificationService;
     private final PostRepository postRepository;
     private final PostImageRepository postImageRepository;
     private final AreaRepository areaRepository;
     private final SectorRepository sectorRepository;
-    private final NotificationRepository notificationRepository;
     private final ImageUploader imageUploader;
     private final IAuthenticationFacade authenticationFacade;
 
@@ -162,36 +157,8 @@ public class PostService {
         post.pressZzang(user);
 
         if (post.hasZzangCreator(user)) {
-            notifyPostZzangNotification(post);
+            notificationService.notifyPostZzangNotification(post);
         }
-    }
-
-    private void notifyPostZzangNotification(Post post) {
-        User receiver = post.getCreator();
-
-        deleteBeforePostNotificationOfKeyword(post, receiver, KEYWORD_ZZANG);
-
-        String zzangNotificationContent
-            = NotificationContentMaker.makePressZzangNotificationContent(post);
-        createNewPostNotificationOfContent(post, receiver, zzangNotificationContent);
-    }
-
-    private void deleteBeforePostNotificationOfKeyword(Post post, User receiver, String keyword) {
-        notificationRepository.findAllByReceiverAndPost(receiver, post)
-            .stream()
-            .filter(notification -> notification.getContent().contains(keyword))
-            .findFirst()
-            .ifPresent(notificationRepository::delete);
-    }
-
-    private void createNewPostNotificationOfContent(Post post, User receiver, String content) {
-        Notification notification = Notification.builder()
-            .content(content)
-            .post(post)
-            .receiver(receiver)
-            .build();
-
-        notificationRepository.save(notification);
     }
 
     @Transactional
