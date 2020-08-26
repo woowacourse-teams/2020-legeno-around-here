@@ -2,6 +2,8 @@ package wooteco.team.ittabi.legenoaroundhere.utils.constants;
 
 public class UserConstants {
 
+    public static final Long TEST_USER_INVALID_ID = -1L;
+
     public static final Long TEST_ADMIN_ID = 1L;
     public static final String TEST_ADMIN_EMAIL = "admin@test.com";
     public static final String TEST_ADMIN_NICKNAME = "adminName";

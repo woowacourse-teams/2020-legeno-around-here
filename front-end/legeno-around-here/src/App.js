@@ -9,8 +9,8 @@ import MyProfileEditPage from './components/pages/myProfileEdit/MyProfileEditPag
 import PostingUpdatePage from './components/pages/posting/PostingUpdatePage';
 import MyProfilePage from './components/pages/myProfile/MyProfilePage';
 import HomePage from './components/pages/HomePage';
-import RankingPage from './components/pages/RankingPage';
-import OthersProfilePage from './components/pages/OthersProfile/OthersProfilePage'
+import RankingPage from './components/pages/ranking/RankingPage';
+import OthersProfilePage from './components/pages/OthersProfile/OthersProfilePage';
 
 function App() {
   const mainArea = localStorage.getItem('mainAreaName');

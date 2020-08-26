@@ -21,6 +21,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PageableAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.SectorSimpleResponse;
 import wooteco.team.ittabi.legenoaroundhere.service.SectorService;
 
 @RestController
@@ -48,6 +49,14 @@ public class SectorController {
             .ok(sectors);
     }
 
+    @GetMapping("/simple")
+    public ResponseEntity<List<SectorSimpleResponse>> findSectorsForKeywordSearch() {
+        List<SectorSimpleResponse> sectors = sectorService.findSectorsForKeywordSearch();
+
+        return ResponseEntity
+            .ok(sectors);
+    }
+
     @PostMapping
     public ResponseEntity<Void> createPendingSector(@RequestBody SectorRequest sectorRequest) {
         SectorResponse sectorResponse = sectorService.createPendingSector(sectorRequest);
@@ -68,12 +77,11 @@ public class SectorController {
     }
 
     @GetMapping("/best")
-    public ResponseEntity<List<SectorResponse>> findBestSectors(
+    public ResponseEntity<List<SectorSimpleResponse>> findBestSectors(
         @RequestParam(defaultValue = "4") int count) {
-        List<SectorResponse> sectorResponses
-            = sectorService.findBestSectors(count);
+        List<SectorSimpleResponse> sectors = sectorService.findBestSectors(count);
 
         return ResponseEntity
-            .ok(sectorResponses);
+            .ok(sectors);
     }
 }
