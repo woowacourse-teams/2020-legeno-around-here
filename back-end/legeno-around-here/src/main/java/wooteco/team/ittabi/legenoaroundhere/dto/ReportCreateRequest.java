@@ -16,5 +16,6 @@ import lombok.ToString;
 @ToString
 public class ReportCreateRequest {
 
+    private Long targetId;
     private String writing;
 }

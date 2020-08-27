@@ -1,7 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.adminController;
 
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ADMIN_PATH;
-import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.REPORTS_PATH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POST_REPORTS_PATH;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,7 +17,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.PostReportResponse;
 import wooteco.team.ittabi.legenoaroundhere.service.report.PostReportService;
 
 @RestController
-@RequestMapping(ADMIN_PATH + REPORTS_PATH)
+@RequestMapping(ADMIN_PATH + POST_REPORTS_PATH)
 @AllArgsConstructor
 public class ReportAdminController {
 
@@ -32,9 +32,9 @@ public class ReportAdminController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<PostReportResponse>> findPostReportByPage(PageRequest pageRequest) {
+    public ResponseEntity<Page<PostReportResponse>> findAllPostReport(PageRequest pageRequest) {
         Page<PostReportResponse> postReports
-            = postReportService.findPostReportByPage(PageableAssembler.assemble(pageRequest));
+            = postReportService.findAllPostReport(PageableAssembler.assemble(pageRequest));
 
         return ResponseEntity
             .ok(postReports);

@@ -87,11 +87,11 @@ public class PostReportServiceTest extends ServiceTest {
             TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postId = postService.createPost(postCreateRequest).getId();
 
-        ReportCreateRequest reportCreateRequest = new ReportCreateRequest(
-            TEST_POST_REPORT_WRITING);
+        ReportCreateRequest reportCreateRequest
+            = new ReportCreateRequest(postId, TEST_POST_REPORT_WRITING);
 
-        PostReportResponse postReportResponse = postReportService
-            .createPostReport(postId, reportCreateRequest);
+        PostReportResponse postReportResponse
+            = postReportService.createPostReport(reportCreateRequest);
 
         assertThat(postReportResponse.getId()).isNotNull();
         assertThat(postReportResponse.getReportWriting()).isEqualTo(TEST_POST_REPORT_WRITING);
@@ -111,11 +111,11 @@ public class PostReportServiceTest extends ServiceTest {
             TestConverterUtils.convertImageIds(postImageResponses), TEST_AREA_ID, sectorId);
         Long postId = postService.createPost(postCreateRequest).getId();
 
-        ReportCreateRequest reportCreateRequest = new ReportCreateRequest(
-            TEST_POST_REPORT_WRITING);
+        ReportCreateRequest reportCreateRequest
+            = new ReportCreateRequest(postId, TEST_POST_REPORT_WRITING);
 
-        PostReportResponse postReportResponse = postReportService
-            .createPostReport(postId, reportCreateRequest);
+        PostReportResponse postReportResponse
+            = postReportService.createPostReport(reportCreateRequest);
 
         assertThat(postReportResponse.getId()).isNotNull();
         assertThat(postReportResponse.getReportWriting()).isEqualTo(TEST_POST_REPORT_WRITING);
@@ -127,14 +127,14 @@ public class PostReportServiceTest extends ServiceTest {
     @DisplayName("글 신고 조회 - 성공")
     @Test
     void findPostReport_SuccessToFind() {
-        ReportCreateRequest reportCreateRequest = new ReportCreateRequest(
-            TEST_POST_REPORT_WRITING);
+        ReportCreateRequest reportCreateRequest
+            = new ReportCreateRequest(postId, TEST_POST_REPORT_WRITING);
 
-        PostReportResponse postReportCreateResponse = postReportService
-            .createPostReport(postId, reportCreateRequest);
+        PostReportResponse postReportCreateResponse
+            = postReportService.createPostReport(reportCreateRequest);
 
-        PostReportResponse postReportResponse = postReportService
-            .findPostReport(postReportCreateResponse.getId());
+        PostReportResponse postReportResponse
+            = postReportService.findPostReport(postReportCreateResponse.getId());
 
         assertThat(postReportResponse.getId()).isNotNull();
         assertThat(postReportResponse.getReportWriting()).isEqualTo(TEST_POST_REPORT_WRITING);
@@ -150,12 +150,12 @@ public class PostReportServiceTest extends ServiceTest {
     @DisplayName("페이지 별 글 신고 조회 - 성공")
     @Test
     void findPostReportByPage_SuccessToFind() {
-        ReportCreateRequest reportCreateRequest = new ReportCreateRequest(
-            TEST_POST_REPORT_WRITING);
-        postReportService.createPostReport(postId, reportCreateRequest);
+        ReportCreateRequest reportCreateRequest
+            = new ReportCreateRequest(postId, TEST_POST_REPORT_WRITING);
+        postReportService.createPostReport(reportCreateRequest);
 
         Page<PostReportResponse> postReportPage = postReportService
-            .findPostReportByPage(Pageable.unpaged());
+            .findAllPostReport(Pageable.unpaged());
 
         assertThat(postReportPage.getContent().size()).isEqualTo(1);
     }
@@ -163,11 +163,11 @@ public class PostReportServiceTest extends ServiceTest {
     @DisplayName("글 신고 삭제 - 성공")
     @Test
     void deletePostReport_SuccessToDelete() {
-        ReportCreateRequest reportCreateRequest = new ReportCreateRequest(
-            TEST_POST_REPORT_WRITING);
+        ReportCreateRequest reportCreateRequest
+            = new ReportCreateRequest(postId, TEST_POST_REPORT_WRITING);
 
-        PostReportResponse postReportCreateResponse = postReportService
-            .createPostReport(postId, reportCreateRequest);
+        PostReportResponse postReportCreateResponse
+            = postReportService.createPostReport(reportCreateRequest);
 
         postReportService.deletePostReport(postReportCreateResponse.getId());
 

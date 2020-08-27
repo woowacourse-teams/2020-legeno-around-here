@@ -25,9 +25,8 @@ public class PostReportService {
     private final IAuthenticationFacade authenticationFacade;
 
     @Transactional
-    public PostReportResponse createPostReport(Long postId,
-        ReportCreateRequest reportCreateRequest) {
-        Post post = findPostBy(postId);
+    public PostReportResponse createPostReport(ReportCreateRequest reportCreateRequest) {
+        Post post = findPostBy(reportCreateRequest.getTargetId());
         User reporter = (User) authenticationFacade.getPrincipal();
 
         PostReport postReport = PostReportAssembler.assemble(reportCreateRequest, reporter, post);
@@ -53,7 +52,7 @@ public class PostReportService {
     }
 
     @Transactional(readOnly = true)
-    public Page<PostReportResponse> findPostReportByPage(Pageable pageable) {
+    public Page<PostReportResponse> findAllPostReport(Pageable pageable) {
         Page<PostReport> postReportPage = postReportRepository.findAll(pageable);
         return postReportPage.map(PostReportResponse::of);
     }

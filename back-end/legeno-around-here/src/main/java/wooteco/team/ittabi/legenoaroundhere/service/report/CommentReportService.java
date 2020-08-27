@@ -23,9 +23,8 @@ public class CommentReportService {
     private final IAuthenticationFacade authenticationFacade;
 
     @Transactional
-    public CommentReportResponse createCommentReport(Long commentId,
-        ReportCreateRequest reportCreateRequest) {
-        Comment comment = findCommentBy(commentId);
+    public CommentReportResponse createCommentReport(ReportCreateRequest reportCreateRequest) {
+        Comment comment = findCommentBy(reportCreateRequest.getTargetId());
         User reporter = (User) authenticationFacade.getPrincipal();
 
         CommentReport commentReport

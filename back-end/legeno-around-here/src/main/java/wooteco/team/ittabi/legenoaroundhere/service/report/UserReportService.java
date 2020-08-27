@@ -22,9 +22,8 @@ public class UserReportService {
     private final IAuthenticationFacade authenticationFacade;
 
     @Transactional
-    public UserReportResponse createUserReport(Long userId,
-        ReportCreateRequest reportCreateRequest) {
-        User user = findUserBy(userId);
+    public UserReportResponse createUserReport(ReportCreateRequest reportCreateRequest) {
+        User user = findUserBy(reportCreateRequest.getTargetId());
         User reporter = (User) authenticationFacade.getPrincipal();
 
         UserReport userReport = UserReportAssembler.assemble(reportCreateRequest, reporter, user);

@@ -21,7 +21,6 @@ public class UserSnapshot {
     @Column(nullable = false)
     private String userNickname;
 
-    @Column(nullable = false)
     private String userImageUrl;
 
     @Builder
