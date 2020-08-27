@@ -126,6 +126,7 @@ const AreaSearch = () => {
               type='search'
               variant='outlined'
               onChange={(event) => getInputArea(event)}
+              inputProps={{ maxLength: 40 }}
             />
             <Button>
               <SearchIcon onClick={() => searchAreaKeyWord()} />
