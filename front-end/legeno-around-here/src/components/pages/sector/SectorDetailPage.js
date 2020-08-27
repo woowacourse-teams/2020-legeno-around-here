@@ -76,6 +76,10 @@ const SectorDetailPage = ({ match }) => {
     creator: {
       id: null,
       nickname: '',
+      image: {
+        id: null,
+        url: "",
+      },
     },
   });
   const [loading, setLoading] = useState(false);
@@ -84,7 +88,7 @@ const SectorDetailPage = ({ match }) => {
   });
 
   const classes = useStyle({
-    photoUrl: sector.creator.image ? sector.creator.image : DEFAULT_IMAGE_URL,
+    photoUrl: sector.creator.image ? sector.creator.image.url : DEFAULT_IMAGE_URL,
   });
 
   const isSectorCreatorMe = () => sector.creator.id === myInfo.id;
