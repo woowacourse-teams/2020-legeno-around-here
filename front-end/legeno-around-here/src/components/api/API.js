@@ -4,6 +4,9 @@ import { setAccessTokenCookie } from '../../util/TokenUtils';
 const HTTP_STATUS_OK = 200;
 const HTTP_STATUS_CREATED = 201;
 const HTTP_STATUS_NO_CONTENT = 204;
+
+const DIRECTION_ASC = 'asc';
+
 const DEFAULT_SIZE = 10;
 const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
@@ -341,7 +344,7 @@ export const findRankedPostsFromPage = async (mainAreaId, criteria, page, access
     });
 };
 
-export const findAllAreas = async (page, accessToken, keyword) => {
+export const findAreasFromPage = async (page, accessToken, keyword) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -354,7 +357,7 @@ export const findAllAreas = async (page, accessToken, keyword) => {
         `page=${page}&` +
         `size=${DEFAULT_SIZE}&` +
         `sortedBy=${DEFAULT_SORTED_BY}&` +
-        `direction=${DEFAULT_DIRECTION}&` +
+        `direction=${DIRECTION_ASC}&` +
         `keyword=${keyword}`,
       config,
     )
