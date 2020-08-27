@@ -321,7 +321,22 @@ export const findMyAwards = async (accessToken) => {
     .then((response) => response.data)
     .catch((error) => {
       redirectLoginWhenUnauthorized(error);
-      console.log(`## 내 수상 정보을 가져올 수 없습니다.`);
+      console.log(`## 내 수상 정보를 가져올 수 없습니다.`);
+    });
+};
+
+export const findAllOtherAwards = async (accessToken, userId) => {
+  const config = {
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
+  };
+  return await axios
+    .get(DEFAULT_URL + `/users/${userId}/awards`, config)
+    .then((response) => response.data)
+    .catch((error) => {
+      redirectLoginWhenUnauthorized(error);
+      console.log(`## 타인의 수상 정보를 가져올 수 없습니다.`);
     });
 };
 
