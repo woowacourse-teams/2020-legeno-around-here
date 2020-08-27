@@ -12,6 +12,7 @@ import PostImages from './PostImages';
 import { convertDateFormat } from '../../../util/TimeUtils';
 import UpdatePostButton from './UpdatePostButton';
 import { Link } from 'react-router-dom';
+import PostReportSection from './PostReportSection';
 
 const PostDetail = ({ post, myInfo }) => {
   const accessToken = getAccessTokenFromCookie();
@@ -65,10 +66,7 @@ const PostDetail = ({ post, myInfo }) => {
           <Typography>{post.area.fullName}</Typography>
         </Grid>
         <Grid container item xs={6} alignItems='flex-start' justify='flex-end' direction='row'>
-          <Typography
-            component={Link}
-            to={isMyPost? '/users/me' : '/users/' + post.creator.id}
-          >
+          <Typography component={Link} to={isMyPost ? '/users/me' : '/users/' + post.creator.id}>
             {post.creator.nickname}
           </Typography>
         </Grid>
@@ -90,6 +88,7 @@ const PostDetail = ({ post, myInfo }) => {
         <Grid container item xs={6} alignItems='flex-start' justify='flex-end' direction='row'>
           <Typography display='inline'>{convertDateFormat(post.createdAt)}</Typography>
           <Typography display='inline'>{isMyPost && <UpdatePostButton post={post} />}</Typography>
+          <PostReportSection post={post} myInfo={myInfo} />
         </Grid>
       </Grid>
 
