@@ -21,7 +21,6 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAvailableException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.CommentRepository;
-import wooteco.team.ittabi.legenoaroundhere.repository.NotificationRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 
 @Service
@@ -32,7 +31,6 @@ public class CommentService {
     private final NotificationService notificationService;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-    private final NotificationRepository notificationRepository;
     private final IAuthenticationFacade authenticationFacade;
 
     @Transactional
