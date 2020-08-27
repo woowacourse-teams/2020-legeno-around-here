@@ -18,7 +18,7 @@ const SectorApplyModal = ({ open, handleClose }) => {
   const NAME_MIN_LENGTH = 2;
   const NAME_MAX_LENGTH = 20;
   const DESCRIPTION_MIN_LENGTH = 2;
-  const DESCRIPTION_MAX_LENGTH = 20;
+  const DESCRIPTION_MAX_LENGTH = 40;
 
   const classes = useStyles();
   const accessToken = getAccessTokenFromCookie();
@@ -38,7 +38,7 @@ const SectorApplyModal = ({ open, handleClose }) => {
     if (validateInputLength(name, NAME_MIN_LENGTH, NAME_MAX_LENGTH)) {
       return (
         <ErrorTypography
-          content={`부문명은 ${NAME_MIN_LENGTH} ~ ${NAME_MAX_LENGTH} 글자 이내로 작성해주세요!`}
+          content={`부문명은 ${NAME_MIN_LENGTH} ~ ${NAME_MAX_LENGTH} 글자 사이로 작성해주세요!`}
         />
       );
     }
@@ -54,7 +54,7 @@ const SectorApplyModal = ({ open, handleClose }) => {
     ) {
       return (
         <ErrorTypography
-          content={`부문설명은 ${DESCRIPTION_MIN_LENGTH} ~ ${DESCRIPTION_MAX_LENGTH} 글자 이내로 작성해주세요!`}
+          content={`부문설명은 ${DESCRIPTION_MIN_LENGTH} ~ ${DESCRIPTION_MAX_LENGTH} 글자 사이로 작성해주세요!`}
         />
       );
     }
@@ -103,6 +103,7 @@ const SectorApplyModal = ({ open, handleClose }) => {
                   placeholder="부문명을 입력해주세요!"
                   onChange={onNameChanged}
                   value={name}
+                  inputProps={{ maxLength: 20 }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -117,6 +118,7 @@ const SectorApplyModal = ({ open, handleClose }) => {
                   placeholder="부문을 간단하게 표현해주세요!"
                   onChange={onDescriptionChanged}
                   value={description}
+                  inputProps={{ maxLength: 40 }}
                 />
               </Grid>
               <Grid item xs={12}>

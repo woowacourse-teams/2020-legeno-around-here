@@ -13,10 +13,11 @@ const MySectorItem = ({ mySector }) => {
           secondary={mySector.description}
         />
         <div>
-          <Typography variant="subtitle1">
-            현재 부문 상태 : {mySector.state}
-          </Typography>
-          <Typography variant="subtitle1">사유 : {mySector.reason}</Typography>
+          {/*<Typography variant="subtitle1">*/}
+          {/*  현재 부문 상태 : {mySector.state}*/}
+          {/*</Typography>*/}
+          {mySector.state === '반려'
+            && <Typography variant="subtitle1">사유 : {mySector.reason}</Typography>}
         </div>
       </ListItem>
       <Divider />
