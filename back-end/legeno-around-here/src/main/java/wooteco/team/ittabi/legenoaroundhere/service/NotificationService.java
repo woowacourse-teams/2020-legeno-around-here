@@ -25,7 +25,7 @@ import wooteco.team.ittabi.legenoaroundhere.utils.NotificationContentMaker;
 @AllArgsConstructor
 public class NotificationService {
 
-    private static final int ONE_WEEK = 7;
+    private static final int DAY_OF_ONE_WEEK = 7;
 
     private final NotificationRepository notificationRepository;
     private final IAuthenticationFacade authenticationFacade;
@@ -34,7 +34,7 @@ public class NotificationService {
     public List<NotificationResponse> findMyNotice() {
         User user = (User) authenticationFacade.getPrincipal();
 
-        LocalDateTime beforeOneWeek = now().minusDays(ONE_WEEK);
+        LocalDateTime beforeOneWeek = now().minusDays(DAY_OF_ONE_WEEK);
         List<Notification> notifications
             = notificationRepository.findAllByReceiverAndCreatedAtIsAfter(user, beforeOneWeek);
 
