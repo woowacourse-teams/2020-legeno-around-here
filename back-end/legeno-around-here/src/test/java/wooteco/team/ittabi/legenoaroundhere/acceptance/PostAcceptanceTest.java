@@ -31,11 +31,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostImageResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.PostReportCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostReportResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostWithCommentsCountResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.ReportCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
@@ -341,12 +341,12 @@ public class PostAcceptanceTest extends AcceptanceTest {
     }
 
     private String createReport(String accessToken, Long postId) {
-        PostReportCreateRequest postReportCreateRequest = new PostReportCreateRequest(
+        ReportCreateRequest reportCreateRequest = new ReportCreateRequest(
             TEST_POST_REPORT_WRITING);
 
         return given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(postReportCreateRequest)
+            .body(reportCreateRequest)
             .header("X-AUTH-TOKEN", accessToken)
             .when()
             .post("/reports/posts/" + postId)

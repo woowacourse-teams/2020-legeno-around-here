@@ -1,4 +1,4 @@
-package wooteco.team.ittabi.legenoaroundhere.service;
+package wooteco.team.ittabi.legenoaroundhere.service.report;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -31,20 +31,23 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.mailauth.MailAuth;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostImageResponse;
-import wooteco.team.ittabi.legenoaroundhere.dto.PostReportCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostReportResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.ReportCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserSimpleResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
+import wooteco.team.ittabi.legenoaroundhere.service.PostService;
+import wooteco.team.ittabi.legenoaroundhere.service.SectorService;
+import wooteco.team.ittabi.legenoaroundhere.service.ServiceTest;
 import wooteco.team.ittabi.legenoaroundhere.utils.TestConverterUtils;
 
-public class ReportServiceTest extends ServiceTest {
+public class PostReportServiceTest extends ServiceTest {
 
     private static final String TEST_PREFIX = "post_";
 
     @Autowired
-    private ReportService reportService;
+    private PostReportService postReportService;
 
     @Autowired
     private PostService postService;
@@ -84,11 +87,11 @@ public class ReportServiceTest extends ServiceTest {
             TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postId = postService.createPost(postCreateRequest).getId();
 
-        PostReportCreateRequest postReportCreateRequest = new PostReportCreateRequest(
+        ReportCreateRequest reportCreateRequest = new ReportCreateRequest(
             TEST_POST_REPORT_WRITING);
 
-        PostReportResponse postReportResponse = reportService
-            .createPostReport(postId, postReportCreateRequest);
+        PostReportResponse postReportResponse = postReportService
+            .createPostReport(postId, reportCreateRequest);
 
         assertThat(postReportResponse.getId()).isNotNull();
         assertThat(postReportResponse.getReportWriting()).isEqualTo(TEST_POST_REPORT_WRITING);
@@ -108,11 +111,11 @@ public class ReportServiceTest extends ServiceTest {
             TestConverterUtils.convertImageIds(postImageResponses), TEST_AREA_ID, sectorId);
         Long postId = postService.createPost(postCreateRequest).getId();
 
-        PostReportCreateRequest postReportCreateRequest = new PostReportCreateRequest(
+        ReportCreateRequest reportCreateRequest = new ReportCreateRequest(
             TEST_POST_REPORT_WRITING);
 
-        PostReportResponse postReportResponse = reportService
-            .createPostReport(postId, postReportCreateRequest);
+        PostReportResponse postReportResponse = postReportService
+            .createPostReport(postId, reportCreateRequest);
 
         assertThat(postReportResponse.getId()).isNotNull();
         assertThat(postReportResponse.getReportWriting()).isEqualTo(TEST_POST_REPORT_WRITING);
@@ -124,13 +127,13 @@ public class ReportServiceTest extends ServiceTest {
     @DisplayName("글 신고 조회 - 성공")
     @Test
     void findPostReport_SuccessToFind() {
-        PostReportCreateRequest postReportCreateRequest = new PostReportCreateRequest(
+        ReportCreateRequest reportCreateRequest = new ReportCreateRequest(
             TEST_POST_REPORT_WRITING);
 
-        PostReportResponse postReportCreateResponse = reportService
-            .createPostReport(postId, postReportCreateRequest);
+        PostReportResponse postReportCreateResponse = postReportService
+            .createPostReport(postId, reportCreateRequest);
 
-        PostReportResponse postReportResponse = reportService
+        PostReportResponse postReportResponse = postReportService
             .findPostReport(postReportCreateResponse.getId());
 
         assertThat(postReportResponse.getId()).isNotNull();
@@ -140,18 +143,18 @@ public class ReportServiceTest extends ServiceTest {
     @DisplayName("글 신고 조회 - 예외 발생, ID가 없는 경우")
     @Test
     void findPostReport_HasNotId_ThrowException() {
-        assertThatThrownBy(() -> reportService.findPostReport(TEST_POST_INVALID_ID))
+        assertThatThrownBy(() -> postReportService.findPostReport(TEST_POST_INVALID_ID))
             .isInstanceOf(NotExistsException.class);
     }
 
     @DisplayName("페이지 별 글 신고 조회 - 성공")
     @Test
     void findPostReportByPage_SuccessToFind() {
-        PostReportCreateRequest postReportCreateRequest = new PostReportCreateRequest(
+        ReportCreateRequest reportCreateRequest = new ReportCreateRequest(
             TEST_POST_REPORT_WRITING);
-        reportService.createPostReport(postId, postReportCreateRequest);
+        postReportService.createPostReport(postId, reportCreateRequest);
 
-        Page<PostReportResponse> postReportPage = reportService
+        Page<PostReportResponse> postReportPage = postReportService
             .findPostReportByPage(Pageable.unpaged());
 
         assertThat(postReportPage.getContent().size()).isEqualTo(1);
@@ -160,21 +163,22 @@ public class ReportServiceTest extends ServiceTest {
     @DisplayName("글 신고 삭제 - 성공")
     @Test
     void deletePostReport_SuccessToDelete() {
-        PostReportCreateRequest postReportCreateRequest = new PostReportCreateRequest(
+        ReportCreateRequest reportCreateRequest = new ReportCreateRequest(
             TEST_POST_REPORT_WRITING);
 
-        PostReportResponse postReportCreateResponse = reportService
-            .createPostReport(postId, postReportCreateRequest);
+        PostReportResponse postReportCreateResponse = postReportService
+            .createPostReport(postId, reportCreateRequest);
 
-        reportService.deletePostReport(postReportCreateResponse.getId());
+        postReportService.deletePostReport(postReportCreateResponse.getId());
 
-        assertThatThrownBy(() -> reportService.findPostReport(postReportCreateResponse.getId()));
+        assertThatThrownBy(
+            () -> postReportService.findPostReport(postReportCreateResponse.getId()));
     }
 
     @DisplayName("글 신고 삭제 - 예외 발생, ID가 없는 경우")
     @Test
     void deletePostReport_HasNotId_ThrowException() {
-        assertThatThrownBy(() -> reportService.deletePostReport(TEST_POST_INVALID_ID))
+        assertThatThrownBy(() -> postReportService.deletePostReport(TEST_POST_INVALID_ID))
             .isInstanceOf(NotExistsException.class);
     }
 }

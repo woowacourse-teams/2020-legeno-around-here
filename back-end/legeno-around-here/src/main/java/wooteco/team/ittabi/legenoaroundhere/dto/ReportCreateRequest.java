@@ -14,7 +14,7 @@ import lombok.ToString;
 @Setter
 @EqualsAndHashCode
 @ToString
-public class PostReportCreateRequest {
+public class ReportCreateRequest {
 
     private String writing;
 }

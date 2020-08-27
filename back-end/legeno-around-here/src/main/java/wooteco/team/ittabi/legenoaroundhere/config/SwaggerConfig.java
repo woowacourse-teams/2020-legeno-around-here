@@ -12,14 +12,16 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.MAIL_A
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.MAIL_AUTH_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ME_PATH_WITH_SLASH;
-import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.NOTICE;
-import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.NOTICE_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.NOTICES;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.NOTICES_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POSTS;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POSTS_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.PROFILE;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.PROFILE_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.RANKING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.RANKING_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.REPORTS;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.REPORTS_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.SECTORS;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.SECTORS_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.USERS;
@@ -89,8 +91,8 @@ public class SwaggerConfig {
 
     @Bean
     public Docket noticeApiDocket() {
-        groupName = NOTICE;
-        return getDocket(groupName, String.format(ALL_ANT_PATTERN_FORMAT, NOTICE_PATH_WITH_SLASH));
+        groupName = NOTICES;
+        return getDocket(groupName, String.format(ALL_ANT_PATTERN_FORMAT, NOTICES_PATH_WITH_SLASH));
     }
 
     @Bean
@@ -109,6 +111,12 @@ public class SwaggerConfig {
     public Docket rankingApiDocket() {
         groupName = RANKING;
         return getDocket(groupName, String.format(ALL_ANT_PATTERN_FORMAT, RANKING_PATH_WITH_SLASH));
+    }
+
+    @Bean
+    public Docket reportApiDocket() {
+        groupName = REPORTS;
+        return getDocket(groupName, String.format(ALL_ANT_PATTERN_FORMAT, REPORTS_PATH_WITH_SLASH));
     }
 
     @Bean
