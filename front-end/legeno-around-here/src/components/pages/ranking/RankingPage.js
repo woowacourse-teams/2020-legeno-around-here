@@ -47,22 +47,25 @@ const RankingPage = () => {
 
   /* 처음에 보여줄 글 목록을 가져옴 */
   useEffect(() => {
-    findRankedPostsFromPage(mainAreaId, criteria, 0, accessToken).then(
-      (firstPosts) => {
-        if (firstPosts.length === 0) {
+    findRankedPostsFromPage(mainAreaId, criteria, 0, accessToken)
+      .then((firstPosts) => {
+        if (!firstPosts || firstPosts.length === 0) {
           setHasMore(false);
           return;
         }
         setPosts(firstPosts);
-      },
-    );
+      })
+      .catch((e) => {
+        console.log(e);
+        setHasMore(false);
+      });
     setPage(1);
   }, [mainAreaId, accessToken, criteria]);
 
   const fetchNextPosts = () => {
     findRankedPostsFromPage(mainAreaId, criteria, page, accessToken)
       .then((nextPosts) => {
-        if (nextPosts.length === 0) {
+        if (!nextPosts || nextPosts.length === 0) {
           setHasMore(false);
           return;
         }
