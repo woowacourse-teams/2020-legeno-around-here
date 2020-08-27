@@ -77,7 +77,7 @@ function MyProfilePage() {
       <NavSection>
         <NavElement linkTo='/home'>수상내역</NavElement>
         <NavElement linkTo='/my-posts'>작성글</NavElement>
-        <NavElement linkTo='/home'>작성 댓글</NavElement>
+        {/*<NavElement linkTo='/home'>작성 댓글</NavElement>*/}
         <MySectorSection />
       </NavSection>
       <BottomBlank />
