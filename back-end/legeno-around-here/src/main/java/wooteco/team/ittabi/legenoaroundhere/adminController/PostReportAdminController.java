@@ -19,7 +19,7 @@ import wooteco.team.ittabi.legenoaroundhere.service.report.PostReportService;
 @RestController
 @RequestMapping(ADMIN_PATH + POST_REPORTS_PATH)
 @AllArgsConstructor
-public class ReportAdminController {
+public class PostReportAdminController {
 
     private final PostReportService postReportService;
 
