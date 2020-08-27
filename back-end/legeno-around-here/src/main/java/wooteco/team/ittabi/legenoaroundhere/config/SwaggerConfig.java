@@ -6,6 +6,8 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.AWARDS
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.AWARDS_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.COMMENTS;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.COMMENTS_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.COMMENT_REPORTS;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.COMMENT_REPORTS_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.IMAGES;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.IMAGES_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.MAIL_AUTH;
@@ -16,6 +18,8 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.NOTIFI
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.NOTIFICATION_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POSTS;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POSTS_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POST_REPORTS;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POST_REPORTS_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.PROFILE;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.PROFILE_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.RANKING;
@@ -24,6 +28,8 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.SECTOR
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.SECTORS_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.USERS;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.USERS_PATH_WITH_SLASH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.USER_REPORTS;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.USER_REPORTS_PATH_WITH_SLASH;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ZZANGS;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ZZANGS_PATH_WITH_SLASH;
 
@@ -68,6 +74,13 @@ public class SwaggerConfig {
     }
 
     @Bean
+    public Docket commentReportApiDocket() {
+        groupName = COMMENT_REPORTS;
+        return getDocket(groupName,
+            String.format(ALL_ANT_PATTERN_FORMAT, COMMENT_REPORTS_PATH_WITH_SLASH));
+    }
+
+    @Bean
     public Docket imageApiDocket() {
         groupName = IMAGES;
         return getDocket(groupName,
@@ -101,6 +114,13 @@ public class SwaggerConfig {
     }
 
     @Bean
+    public Docket postReportApiDocket() {
+        groupName = POST_REPORTS;
+        return getDocket(groupName,
+            String.format(ALL_ANT_PATTERN_FORMAT, POST_REPORTS_PATH_WITH_SLASH));
+    }
+
+    @Bean
     public Docket profileApiDocket() {
         groupName = PROFILE;
         return getDocket(groupName, String.format(ALL_ANT_PATTERN_FORMAT, PROFILE_PATH_WITH_SLASH));
@@ -122,6 +142,13 @@ public class SwaggerConfig {
     public Docket userApiDocket() {
         groupName = USERS;
         return getDocket(groupName, String.format(ALL_ANT_PATTERN_FORMAT, USERS_PATH_WITH_SLASH));
+    }
+
+    @Bean
+    public Docket userReportApiDocket() {
+        groupName = USER_REPORTS;
+        return getDocket(groupName,
+            String.format(ALL_ANT_PATTERN_FORMAT, USER_REPORTS_PATH_WITH_SLASH));
     }
 
     @Bean

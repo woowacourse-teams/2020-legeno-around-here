@@ -14,7 +14,8 @@ import lombok.ToString;
 @Setter
 @EqualsAndHashCode
 @ToString
-public class PostReportCreateRequest {
+public class ReportCreateRequest {
 
+    private Long targetId;
     private String writing;
 }

@@ -1,4 +1,4 @@
-package wooteco.team.ittabi.legenoaroundhere.service;
+package wooteco.team.ittabi.legenoaroundhere.service.report;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -7,44 +7,37 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.PostReport;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.PostSnapshot;
+import wooteco.team.ittabi.legenoaroundhere.domain.report.PostReport;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostReportAssembler;
-import wooteco.team.ittabi.legenoaroundhere.dto.PostReportCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostReportResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.ReportCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostReportRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 
 @Service
 @AllArgsConstructor
-public class ReportService {
+public class PostReportService {
 
     private final PostReportRepository postReportRepository;
     private final PostRepository postRepository;
     private final IAuthenticationFacade authenticationFacade;
 
     @Transactional
-    public PostReportResponse createPostReport(Long postId,
-        PostReportCreateRequest postReportCreateRequest) {
-        User user = (User) authenticationFacade.getPrincipal();
-        Post post = findPostBy(postId);
-        PostSnapshot postSnapshot = PostSnapshot.builder()
-            .postWriting(post.getWriting())
-            .postImageUrls(post.getPostImageUrls())
-            .build();
+    public PostReportResponse createPostReport(ReportCreateRequest reportCreateRequest) {
+        Post post = findPostBy(reportCreateRequest.getTargetId());
+        User reporter = (User) authenticationFacade.getPrincipal();
 
-        PostReport postReport = PostReportAssembler
-            .assemble(postReportCreateRequest, postSnapshot, user);
+        PostReport postReport = PostReportAssembler.assemble(reportCreateRequest, reporter, post);
 
         PostReport savedPostReport = postReportRepository.save(postReport);
         return PostReportResponse.of(savedPostReport);
     }
 
-    private Post findPostBy(Long id) {
-        return postRepository.findById(id)
-            .orElseThrow(() -> new NotExistsException("ID에 해당하는 POST가 없습니다."));
+    private Post findPostBy(Long postId) {
+        return postRepository.findById(postId)
+            .orElseThrow(() -> new NotExistsException("ID : " + postId + " 에 해당하는 Post가 없습니다!"));
     }
 
     @Transactional(readOnly = true)
@@ -59,7 +52,7 @@ public class ReportService {
     }
 
     @Transactional(readOnly = true)
-    public Page<PostReportResponse> findPostReportByPage(Pageable pageable) {
+    public Page<PostReportResponse> findAllPostReport(Pageable pageable) {
         Page<PostReport> postReportPage = postReportRepository.findAll(pageable);
         return postReportPage.map(PostReportResponse::of);
     }
@@ -70,3 +63,4 @@ public class ReportService {
         postReportRepository.delete(postReport);
     }
 }
+

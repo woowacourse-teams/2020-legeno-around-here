@@ -1,4 +1,7 @@
-package wooteco.team.ittabi.legenoaroundhere.controller;
+package wooteco.team.ittabi.legenoaroundhere.adminController;
+
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ADMIN_PATH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POST_REPORTS_PATH;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,27 +14,27 @@ import org.springframework.web.bind.annotation.RestController;
 import wooteco.team.ittabi.legenoaroundhere.dto.PageRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PageableAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostReportResponse;
-import wooteco.team.ittabi.legenoaroundhere.service.ReportService;
+import wooteco.team.ittabi.legenoaroundhere.service.report.PostReportService;
 
 @RestController
-@RequestMapping("/admin/reports")
+@RequestMapping(ADMIN_PATH + POST_REPORTS_PATH)
 @AllArgsConstructor
-public class ReportAdminController {
+public class PostReportAdminController {
 
-    private final ReportService reportService;
+    private final PostReportService postReportService;
 
     @GetMapping("/{id}")
     public ResponseEntity<PostReportResponse> findPostReport(@PathVariable Long id) {
-        PostReportResponse postReport = reportService.findPostReport(id);
+        PostReportResponse postReport = postReportService.findPostReport(id);
 
         return ResponseEntity
             .ok(postReport);
     }
 
     @GetMapping
-    public ResponseEntity<Page<PostReportResponse>> findPostReportByPage(PageRequest pageRequest) {
+    public ResponseEntity<Page<PostReportResponse>> findAllPostReport(PageRequest pageRequest) {
         Page<PostReportResponse> postReports
-            = reportService.findPostReportByPage(PageableAssembler.assemble(pageRequest));
+            = postReportService.findAllPostReport(PageableAssembler.assemble(pageRequest));
 
         return ResponseEntity
             .ok(postReports);
@@ -39,7 +42,7 @@ public class ReportAdminController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePostReport(@PathVariable Long id) {
-        reportService.deletePostReport(id);
+        postReportService.deletePostReport(id);
 
         return ResponseEntity
             .noContent()

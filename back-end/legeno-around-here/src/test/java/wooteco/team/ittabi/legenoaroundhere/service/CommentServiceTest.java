@@ -49,7 +49,7 @@ public class CommentServiceTest extends ServiceTest {
     private static final String TEST_PREFIX = "comment_";
 
     @MockBean
-    MailAuthRepository mailAuthRepository;
+    private MailAuthRepository mailAuthRepository;
 
     @Autowired
     private SectorService sectorService;

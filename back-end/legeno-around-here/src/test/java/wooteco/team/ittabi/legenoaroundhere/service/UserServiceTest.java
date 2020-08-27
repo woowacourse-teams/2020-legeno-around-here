@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AUTH_NUMBER;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_CONTENT_TYPE;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.NotificationConstants.TEST_NOTIFICATION_BEFORE_DATE_TIME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_UPDATE_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
@@ -16,6 +17,7 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_OTHER_PASSWORD;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
+import java.io.IOException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.notification.Notification;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
@@ -32,6 +35,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCheckRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserOtherResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
@@ -41,6 +45,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.NotificationRepository;
+import wooteco.team.ittabi.legenoaroundhere.utils.TestConverterUtils;
 
 class UserServiceTest extends ServiceTest {
 
@@ -192,9 +197,9 @@ class UserServiceTest extends ServiceTest {
         assertThat(userService.findMe().getNickname()).isEqualTo(TEST_USER_NICKNAME);
     }
 
-    @DisplayName("내 정보 수정")
+    @DisplayName("내 정보 수정, 성공 - 사진 없는 경우")
     @Test
-    void updateMe_Success() {
+    void updateMe_NoImage_Success() {
         User theOtherUser = userRepository.findByEmail(new Email(TEST_UPDATE_EMAIL))
             .orElseThrow(() -> new NotExistsException("존재하지 않는 회원입니다."));
         setAuthentication(theOtherUser);
@@ -205,6 +210,26 @@ class UserServiceTest extends ServiceTest {
 
         assertThat(updatedUserResponse.getEmail()).isEqualTo(TEST_UPDATE_EMAIL);
         assertThat(updatedUserResponse.getNickname()).isEqualTo("newname");
+    }
+
+    @DisplayName("내 정보 수정, 성공 - 사진 있는 경우")
+    @Test
+    void updateMe_HasImage_Success() throws IOException {
+        User theOtherUser = userRepository.findByEmail(new Email(TEST_UPDATE_EMAIL))
+            .orElseThrow(() -> new NotExistsException("존재하지 않는 회원입니다."));
+        setAuthentication(theOtherUser);
+
+        MultipartFile multipartFile
+            = TestConverterUtils.convert("image1.jpg", TEST_IMAGE_CONTENT_TYPE);
+        UserImageResponse userImage = userService.uploadUserImage(multipartFile);
+
+        UserUpdateRequest userUpdateRequest
+            = new UserUpdateRequest("newname", TEST_AREA_ID, userImage.getId());
+        UserResponse updatedUserResponse = userService.updateMe(userUpdateRequest);
+
+        assertThat(updatedUserResponse.getEmail()).isEqualTo(TEST_UPDATE_EMAIL);
+        assertThat(updatedUserResponse.getNickname()).isEqualTo("newname");
+        assertThat(updatedUserResponse.getImage()).isEqualTo(userImage);
     }
 
     @DisplayName("내 비밀번호 수정, 성공")

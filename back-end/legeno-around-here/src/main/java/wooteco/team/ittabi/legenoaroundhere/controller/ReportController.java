@@ -1,32 +1,55 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
-import java.net.URI;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.COMMENT_REPORTS;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.POST_REPORTS;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.USER_REPORTS;
+
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import wooteco.team.ittabi.legenoaroundhere.dto.PostReportCreateRequest;
-import wooteco.team.ittabi.legenoaroundhere.dto.PostReportResponse;
-import wooteco.team.ittabi.legenoaroundhere.service.ReportService;
+import wooteco.team.ittabi.legenoaroundhere.dto.ReportCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.service.report.CommentReportService;
+import wooteco.team.ittabi.legenoaroundhere.service.report.PostReportService;
+import wooteco.team.ittabi.legenoaroundhere.service.report.UserReportService;
 
 @RestController
-@RequestMapping("/reports")
 @AllArgsConstructor
 public class ReportController {
 
-    private final ReportService reportService;
+    private final PostReportService postReportService;
+    private final CommentReportService commentReportService;
+    private final UserReportService userReportService;
 
-    @PostMapping("/posts/{postId}")
-    public ResponseEntity<Void> createPostReport(@PathVariable Long postId, @RequestBody
-        PostReportCreateRequest postReportCreateRequest) {
-        PostReportResponse postReportResponse = reportService
-            .createPostReport(postId, postReportCreateRequest);
+    @PostMapping(POST_REPORTS)
+    public ResponseEntity<Void> createPostReport(
+        @RequestBody ReportCreateRequest reportCreateRequest) {
+        postReportService.createPostReport(reportCreateRequest);
 
         return ResponseEntity
-            .created(URI.create("/posts/" + postReportResponse.getId()))
+            .status(HttpStatus.CREATED)
+            .build();
+    }
+
+    @PostMapping(COMMENT_REPORTS)
+    public ResponseEntity<Void> createCommentReport(
+        @RequestBody ReportCreateRequest reportCreateRequest) {
+        commentReportService.createCommentReport(reportCreateRequest);
+
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .build();
+    }
+
+    @PostMapping(USER_REPORTS)
+    public ResponseEntity<Void> createUserReport(
+        @RequestBody ReportCreateRequest reportCreateRequest) {
+        userReportService.createUserReport(reportCreateRequest);
+
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
             .build();
     }
 }
