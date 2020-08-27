@@ -39,5 +39,4 @@
 - [라흐](https://github.com/Hamliet)
 - [빙봉](https://github.com/aegis1920)
 - [제이미](https://github.com/jamie9504)
-- [임루트](https://github.com/ihoph)
 - [히히](https://github.com/yelimkim98)

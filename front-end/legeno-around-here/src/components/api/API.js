@@ -180,7 +180,7 @@ export const updateUser = async (nickname, imageId, accessToken) => {
       config,
     );
     alert('내 정보가 성공적으로 바뀌었습니다!');
-    document.location.href = '/myProfile';
+    document.location.href = '/users/me';
   } catch (error) {
     redirectLoginWhenUnauthorized(error);
     alert(error.response ? error.response.status : error.request);
@@ -468,4 +468,58 @@ const redirectLoginWhenUnauthorized = (error) => {
   if (error.response && error.response.status === 403) {
     document.location.href = '/login';
   }
+};
+
+export const getMyNotice = (accessToken, setNotices) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-Auth-Token': accessToken,
+    },
+  };
+  axios
+    .get(DEFAULT_URL + `/notices/me`, config)
+    .then((response) => {
+      console.log(response.data);
+      setNotices(response.data);
+    })
+    .catch((error) => {
+      alert('알림을 불러오지 못했습니다.');
+      console.log(error);
+    });
+};
+
+export const getUnreadNoticeCount = (accessToken, setUnreadNotice) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-Auth-Token': accessToken,
+    },
+  };
+  axios
+    .get(DEFAULT_URL + `/notices/me`, config)
+    .then((response) => {
+      const unreadCount = response.data.filter((x) => x.isRead === false).length;
+      setUnreadNotice(unreadCount);
+    })
+    .catch((error) => {
+      alert('알림을 불러오지 못했습니다.');
+      console.log(error);
+    });
+};
+
+export const readNotice = (accessToken, id) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-Auth-Token': accessToken,
+    },
+  };
+  axios
+    .put(DEFAULT_URL + `/notices/${id}/read`, null, config)
+    .then((response) => {})
+    .catch((error) => {
+      alert('알림을 읽음 처리하지 못했습니다.');
+      console.log(error);
+    });
 };

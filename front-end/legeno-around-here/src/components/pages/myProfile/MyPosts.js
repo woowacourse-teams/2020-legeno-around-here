@@ -47,7 +47,7 @@ function MyPosts() {
 
   return (
     <>
-      <TopBar backButtonLink='/' />
+      <TopBar backButtonLink='/users/me' />
       <InfiniteScroll
         next={fetchNextPosts}
         hasMore={hasMore}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -14,10 +14,11 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
 import List from '@material-ui/core/List';
-import Loading from '../../Loading'
-import { getAccessTokenFromCookie } from '../../../util/TokenUtils'
-import { findAllAreas } from '../../api/API'
-import AreaItem from '../../AreaItem'
+import Loading from '../../Loading';
+import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
+import { findAllAreas, getUnreadNoticeCount } from '../../api/API';
+import AreaItem from '../../AreaItem';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -52,16 +53,22 @@ const useStyles = makeStyles((theme) => ({
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
   const mainArea = localStorage.getItem('mainAreaName');
+  const accessToken = getAccessTokenFromCookie();
 
   const [page] = useState(0);
   const [open, setOpen] = useState(false);
   const [areas, setAreas] = useState([]);
   const [loading, setLoading] = useState(false);
   const [areaKeyword, setAreaKeyword] = useState(mainArea);
+  const [unreadNotice, setUnreadNotice] = useState(0);
 
   if (!mainArea) {
     localStorage.setItem('mainAreaName', '서울특별시');
   }
+
+  useEffect(() => {
+    getUnreadNoticeCount(accessToken, setUnreadNotice);
+  }, [accessToken]);
 
   const loadAreas = async () => {
     const accessToken = getAccessTokenFromCookie();
@@ -93,23 +100,23 @@ export default function PrimarySearchAppBar() {
   return (
     <>
       {loading && <Loading />}
-      <AppBar position="sticky">
+      <AppBar position='sticky'>
         <Toolbar>
           <IconButton
-            edge="start"
+            edge='start'
             className={classes.menuButton}
-            color="inherit"
-            aria-label="open drawer"
+            color='inherit'
+            aria-label='open drawer'
             onClick={handleOpen}
           >
             <ExpandMoreIcon />
-            <Typography className={classes.title} variant="h6" noWrap>
+            <Typography className={classes.title} variant='h6' noWrap>
               {mainArea} 캡짱은 누구?
             </Typography>
           </IconButton>
           <Modal
-            aria-labelledby="transition-modal-title"
-            aria-describedby="transition-modal-description"
+            aria-labelledby='transition-modal-title'
+            aria-describedby='transition-modal-description'
             className={classes.modal}
             open={open}
             onClose={handleClose}
@@ -121,19 +128,19 @@ export default function PrimarySearchAppBar() {
           >
             <Fade in={open}>
               <div className={classes.paper}>
-                <h2 id="transition-modal-title">지역을 검색해주세요!</h2>
+                <h2 id='transition-modal-title'>지역을 검색해주세요!</h2>
                 <TextField
-                  id="outlined-search"
-                  label="Search field"
-                  type="search"
-                  variant="outlined"
+                  id='outlined-search'
+                  label='Search field'
+                  type='search'
+                  variant='outlined'
                   onChange={(event) => getInputArea(event)}
                 />
                 <Button>
                   <SearchIcon onClick={() => findAllArea()} />
                 </Button>
                 {areas.length > 0 && (
-                  <List component="nav" className={classes.list}>
+                  <List component='nav' className={classes.list}>
                     {areas.map((area) => (
                       <AreaItem key={area.id} area={area} />
                     ))}
@@ -144,17 +151,13 @@ export default function PrimarySearchAppBar() {
           </Modal>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton
-              aria-label="show 17 new notifications"
-              color="inherit"
-              onClick={() => {
-                alert('아직 알람기능이 완성되지 않았습니다!');
-              }}
-            >
-              <Badge badgeContent={0} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+            <Link to='/notice'>
+              <IconButton aria-label='show 17 new notifications' color='inherit'>
+                <Badge badgeContent={unreadNotice} color='secondary'>
+                  <NotificationsIcon style={{ color: 'white' }} />
+                </Badge>
+              </IconButton>
+            </Link>
           </div>
         </Toolbar>
       </AppBar>
