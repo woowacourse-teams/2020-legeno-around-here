@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 
 import { MAIN_COLOR } from '../../constants/Color';
+import LinkWithoutStyle from '../../util/LinkWithoutStyle'
 
 export const ProfilePhoto = styled.div`
   width: 100px;
@@ -31,6 +31,11 @@ export const TopSection = styled.div`
   margin: 20px auto;
 `;
 
+export const TopSectionWithoutPhoto = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 export const PrivacyBox = styled.div`
   display: flex;
   flex-direction: column;
@@ -39,19 +44,22 @@ export const PrivacyBox = styled.div`
   text-align: left;
 `;
 
-export const PrivacyEditBox = styled(Link)`
-  margin: 0px auto;
+export const PrivacyEditBox = styled(LinkWithoutStyle)`
+  margin: 0;
+  margin-right: 7px;
   font-size: 15px;
-  display: block;
+  display: inline;
 `;
 
-export const PrivacySignOutBox = styled(Link)`
-  margin: 0px auto;
+export const PrivacySignOutBox = styled.span`
+  margin: 0;
+  margin-left: 7px;
   font-size: 15px;
-  display: block;
+  display: inline;
+  color: #444444;
 `;
 
-export const PrivacyRightBox = styled.div`
+export const PrivacyRightEditLinks = styled.div`
   margin: 0px auto;
   font-size: 15px;
   display: block;

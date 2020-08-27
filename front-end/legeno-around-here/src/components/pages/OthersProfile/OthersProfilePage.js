@@ -15,8 +15,8 @@ import BottomBlank from '../../BottomBlank';
 function OthersProfilePage({ match }) {
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [userId, setUserId] = useState(null);
-  const [nickname, setNickname] = useState('');
   const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
+  const [nickname, setNickname] = useState('');
   const [loading, setLoading] = useState(false);
   const [awardsCount, setAwardsCount] = useState(null);
 
