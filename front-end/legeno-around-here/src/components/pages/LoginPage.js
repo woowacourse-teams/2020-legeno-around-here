@@ -1,5 +1,4 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { loginUser } from '../api/API';
 
 import Avatar from '@material-ui/core/Avatar';
@@ -13,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { removeAccessTokenCookie } from '../../util/TokenUtils';
+import LinkWithoutStyle from '../../util/LinkWithoutStyle'
 
 const Copyright = () => {
   return (
@@ -119,9 +119,9 @@ function LoginForm() {
           </Button>
           <Grid container>
             <Grid item>
-              <Link to='/join' variant='body2'>
+              <LinkWithoutStyle to='/join' variant='body2'>
                 {'처음이신가요? 회원가입을 해주세요!'}
-              </Link>
+              </LinkWithoutStyle>
             </Grid>
           </Grid>
         </form>

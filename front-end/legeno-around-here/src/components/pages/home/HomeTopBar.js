@@ -10,7 +10,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import { findAllSimpleSectors, getUnreadNotificationCount } from '../../api/API';
 import AreaSearch from '../../AreaSearch';
-import { Link } from 'react-router-dom';
+import LinkWithoutStyle from '../../../util/LinkWithoutStyle'
 
 const useStyles = makeStyles(() => ({
   grow: {
@@ -71,13 +71,13 @@ const HomeTopBar = ({ setter, sectorId }) => {
           />
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <Link to='/notification'>
+            <LinkWithoutStyle to='/notification'>
               <IconButton aria-label='show 17 new notifications' color='inherit'>
                 <Badge badgeContent={unreadNotification} color='secondary'>
                   <NotificationsIcon style={{ color: 'white' }} />
                 </Badge>
               </IconButton>
-            </Link>
+            </LinkWithoutStyle>
           </div>
         </Toolbar>
       </AppBar>

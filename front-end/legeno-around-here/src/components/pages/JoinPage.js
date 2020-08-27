@@ -1,6 +1,4 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
-
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { createUser, checkJoined, sendAuthMail, checkAuthNumber } from '../api/API';
+import LinkWithoutStyle from '../../util/LinkWithoutStyle'
 
 const mailInputStyle = {
   width: '70%',
@@ -295,9 +294,9 @@ function JoinForm() {
           </Button>
           <Grid container justify='flex-end'>
             <Grid item>
-              <Link to='/login' variant='body2'>
+              <LinkWithoutStyle to='/login' variant='body2'>
                 이미 계정이 있으신가요? 로그인을 해주세요!
-              </Link>
+              </LinkWithoutStyle>
             </Grid>
           </Grid>
         </form>
