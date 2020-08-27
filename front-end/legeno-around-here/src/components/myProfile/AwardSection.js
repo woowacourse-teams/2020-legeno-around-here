@@ -30,13 +30,13 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-export const AwardSummary = ({ awardName, awardCount }) => {
+export const AwardSummary = ({ awardName, awardsCount }) => {
   const classes = useStyle();
 
   return (
     <AwardSummaryStyle>
-      <Typography component="h4" variant="h4" className={classes.awardCount}>
-        {awardCount}
+      <Typography component='h4' variant='h4' className={classes.awardCount}>
+        {awardsCount}
       </Typography>
       <Typography className={classes.awardName}>{awardName}</Typography>
     </AwardSummaryStyle>

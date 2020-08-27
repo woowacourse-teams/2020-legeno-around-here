@@ -14,9 +14,11 @@ import BottomBlank from '../../BottomBlank';
 
 function OthersProfilePage({ match }) {
   const [accessToken] = useState(getAccessTokenFromCookie());
+  const [userId, setUserId] = useState(null);
   const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
   const [nickname, setNickname] = useState('');
   const [loading, setLoading] = useState(false);
+  const [awardsCount, setAwardsCount] = useState(null);
 
   useMemo(() => {
     setLoading(true);
@@ -25,7 +27,9 @@ function OthersProfilePage({ match }) {
       userId: match.params.userId,
     }).then((userResponse) => {
       setNickname(userResponse.nickname);
+      setUserId(userResponse.id);
       setProfilePhotoUrl(userResponse.image ? userResponse.image.url : DEFAULT_IMAGE_URL);
+      setAwardsCount(userResponse.awardsCount);
     });
     setLoading(false);
   }, [accessToken, match.params.userId]);
@@ -46,12 +50,12 @@ function OthersProfilePage({ match }) {
         </PrivacyBox>
       </TopSection>
       <AwardsSection>
-        <AwardSummary awardName='TOP3' awardCount={1} />
-        <AwardSummary awardName='TOP10' awardCount={0} />
-        <AwardSummary awardName='TOP50' awardCount={12} />
+        <AwardSummary awardName='TOP1' awardsCount={awardsCount !== null ? awardsCount.topOne : 0} />
+        <AwardSummary awardName='TOP3' awardsCount={awardsCount !== null ? awardsCount.topThree : 0} />
+        <AwardSummary awardName='부문 수상' awardsCount={awardsCount !== null ? awardsCount.sector : 0} />
       </AwardsSection>
       <NavSection>
-        <NavElement linkTo='/home'>수상내역</NavElement>
+        <NavElement linkTo={`/users/${userId}/awards`}>수상내역</NavElement>
         <NavElement linkTo={`${match.params.userId}/posts`}>작성글</NavElement>
       </NavSection>
       <BottomBlank />

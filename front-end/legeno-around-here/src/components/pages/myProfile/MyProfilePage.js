@@ -23,12 +23,13 @@ import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
 import MySectorSection from './MySectorSection';
 import BottomBlank from '../../BottomBlank';
 
-function MyProfilePage() {
+const MyProfilePage = () => {
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
   const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
   const [loading, setLoading] = useState(false);
+  const [awardsCount, setAwardsCount] = useState(null);
 
   useMemo(() => {
     setLoading(true);
@@ -36,6 +37,7 @@ function MyProfilePage() {
       setEmail(userResponse.email);
       setNickname(userResponse.nickname);
       setProfilePhotoUrl(userResponse.image ? userResponse.image.url : DEFAULT_IMAGE_URL);
+      setAwardsCount(userResponse.awardsCount);
     });
     setLoading(false);
   }, [accessToken]);
@@ -70,12 +72,13 @@ function MyProfilePage() {
         </TopSectionWithoutPhoto>
       </TopSection>
       <AwardsSection>
-        <AwardSummary awardName='TOP3' awardCount={1} />
-        <AwardSummary awardName='TOP10' awardCount={0} />
-        <AwardSummary awardName='TOP50' awardCount={12} />
+        <AwardSummary awardName='TOP1' awardsCount={awardsCount !== null ? awardsCount.topOne : 0} />
+        <AwardSummary awardName='TOP3' awardsCount={awardsCount !== null ? awardsCount.topThree : 0} />
+        <AwardSummary awardName='부문 수상' awardsCount={awardsCount !== null ? awardsCount.sector : 0} />
       </AwardsSection>
+
       <NavSection>
-        <NavElement linkTo='/home'>수상내역</NavElement>
+        <NavElement linkTo='/my-awards'>수상내역</NavElement>
         <NavElement linkTo='/my-posts'>작성글</NavElement>
         {/*<NavElement linkTo='/home'>작성 댓글</NavElement>*/}
         <MySectorSection />
@@ -84,6 +87,6 @@ function MyProfilePage() {
       <Bottom selected={PROFILE} />
     </>
   );
-}
+};
 
 export default MyProfilePage;

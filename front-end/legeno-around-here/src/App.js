@@ -16,6 +16,8 @@ import Notification from './components/pages/home/Notification';
 import InitPage from './components/pages/InitPage';
 import OtherPosts from './components/pages/OthersProfile/OtherPosts';
 import ErrorPage from './components/pages/ErrorPage';
+import MyAwardPage from './components/pages/myAward/MyAwardPage';
+import OtherAwardPage from './components/pages/OtherAward/OtherAwardPage';
 import SectorDetailPage from './components/pages/sector/SectorDetailPage';
 
 function App() {
@@ -43,7 +45,9 @@ function App() {
         <Route path='/ranking' exact component={RankingPage} />
         <Route path='/myProfileEdit' exact component={MyProfileEditPage} />
         <Route path='/users/:userId' exact component={OthersProfilePage} />
+        <Route path='/users/:userId/awards' exact component={OtherAwardPage} />
         <Route path='/my-posts' exact component={MyPosts} />
+        <Route path='/my-awards' exact component={MyAwardPage} />
         <Route path='/notification' exact component={Notification} />
         <Route path='/users/:userId/posts' exact component={OtherPosts} />
         <Route path='*' component={ErrorPage} />
