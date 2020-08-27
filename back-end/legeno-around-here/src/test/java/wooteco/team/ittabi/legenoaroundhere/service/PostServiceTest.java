@@ -421,7 +421,7 @@ public class PostServiceTest extends ServiceTest {
         assertThat(notification.getComment()).isNull();
         assertThat(notification.getUser()).isNull();
         assertThat(notification.getSector()).isNull();
-        assertThat(notification.getRead()).isFalse();
+        assertThat(notification.getIsRead()).isFalse();
     }
 
     @DisplayName("짱 비활성화시 작성자에게 알림 발송하지 않음")
@@ -482,7 +482,7 @@ public class PostServiceTest extends ServiceTest {
         assertThat(notification.getComment()).isNull();
         assertThat(notification.getUser()).isNull();
         assertThat(notification.getSector()).isNull();
-        assertThat(notification.getRead()).isFalse();
+        assertThat(notification.getIsRead()).isFalse();
     }
 
     @DisplayName("내가 쓴 글 검색 - 성공")

@@ -137,7 +137,7 @@ public class CommentServiceTest extends ServiceTest {
         assertThat(notification.getComment()).isNull();
         assertThat(notification.getUser()).isNull();
         assertThat(notification.getSector()).isNull();
-        assertThat(notification.getRead()).isFalse();
+        assertThat(notification.getIsRead()).isFalse();
     }
 
     @DisplayName("댓글 생성시 기존 알림이 있을 경우, 글 작성자에게 새 알림 & 기존 알림 삭제")
@@ -168,7 +168,7 @@ public class CommentServiceTest extends ServiceTest {
         assertThat(notification.getComment()).isNull();
         assertThat(notification.getUser()).isNull();
         assertThat(notification.getSector()).isNull();
-        assertThat(notification.getRead()).isFalse();
+        assertThat(notification.getIsRead()).isFalse();
     }
 
     @DisplayName("대댓글 작성, 성공")
@@ -240,7 +240,7 @@ public class CommentServiceTest extends ServiceTest {
         assertThat(notification.getComment()).isEqualTo(comment);
         assertThat(notification.getUser()).isNull();
         assertThat(notification.getSector()).isNull();
-        assertThat(notification.getRead()).isFalse();
+        assertThat(notification.getIsRead()).isFalse();
     }
 
     @DisplayName("대댓글 생성시 기존 알림이 있을 경우, 댓글 작성자에게 새 알림 & 기존 알림 삭제")
@@ -272,7 +272,7 @@ public class CommentServiceTest extends ServiceTest {
         assertThat(notification.getComment()).isEqualTo(comment);
         assertThat(notification.getUser()).isNull();
         assertThat(notification.getSector()).isNull();
-        assertThat(notification.getRead()).isFalse();
+        assertThat(notification.getIsRead()).isFalse();
     }
 
     @DisplayName("댓글 조회 - 성공")
@@ -491,7 +491,7 @@ public class CommentServiceTest extends ServiceTest {
         assertThat(notification.getComment()).isEqualTo(comment);
         assertThat(notification.getUser()).isNull();
         assertThat(notification.getSector()).isNull();
-        assertThat(notification.getRead()).isFalse();
+        assertThat(notification.getIsRead()).isFalse();
     }
 
     @DisplayName("짱 비활성화시 작성자에게 알림 발송하지 않음")
@@ -551,7 +551,7 @@ public class CommentServiceTest extends ServiceTest {
         assertThat(notification.getComment()).isEqualTo(comment);
         assertThat(notification.getUser()).isNull();
         assertThat(notification.getSector()).isNull();
-        assertThat(notification.getRead()).isFalse();
+        assertThat(notification.getIsRead()).isFalse();
     }
 
     @DisplayName("코멘트 내용 변경, 성공")

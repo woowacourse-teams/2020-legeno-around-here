@@ -26,7 +26,7 @@ public class NotificationResponseAssembler {
         return NotificationResponse.builder()
             .id(notification.getId())
             .content(notification.getContent())
-            .isRead(notification.getRead())
+            .isRead(notification.getIsRead())
             .location(makeLocation(notification))
             .build();
     }
