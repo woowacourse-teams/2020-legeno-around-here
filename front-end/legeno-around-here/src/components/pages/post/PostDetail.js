@@ -21,7 +21,11 @@ const PostDetail = ({ post, myInfo }) => {
   const [loading, setLoading] = useState(false);
   const [zzang, setZzang] = useState(post.zzang.activated);
   const [zzangCount, setZzangCount] = useState(post.zzang.count);
-  const isMyPost = post.creator.id === myInfo.id;
+  const isMyPost = false;
+  // const isMyPost = await (post.creator.id === myInfo.id);
+  console.log(post.creator.id);
+  console.log(myInfo.id);
+
   let keyValue = 0;
 
   const onWritingChanged = (e) => {

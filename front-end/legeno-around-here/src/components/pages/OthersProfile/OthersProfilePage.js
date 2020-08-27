@@ -14,8 +14,8 @@ import BottomBlank from '../../BottomBlank';
 
 function OthersProfilePage({ match }) {
   const [accessToken] = useState(getAccessTokenFromCookie());
-  const [nickname, setNickname] = useState('');
   const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
+  const [nickname, setNickname] = useState('');
   const [loading, setLoading] = useState(false);
 
   useMemo(() => {
