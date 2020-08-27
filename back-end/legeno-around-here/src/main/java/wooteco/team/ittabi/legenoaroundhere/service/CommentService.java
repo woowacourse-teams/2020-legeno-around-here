@@ -21,6 +21,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAvailableException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.CommentRepository;
+import wooteco.team.ittabi.legenoaroundhere.repository.NotificationRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 
 @Service
@@ -28,8 +29,10 @@ import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 @Slf4j
 public class CommentService {
 
+    private final NotificationService notificationService;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final NotificationRepository notificationRepository;
     private final IAuthenticationFacade authenticationFacade;
 
     @Transactional
@@ -42,6 +45,8 @@ public class CommentService {
         comment.setPost(post);
 
         Comment savedComment = commentRepository.save(comment);
+
+        notificationService.notifyPostAddCommentNotification(post);
         return CommentResponseAssembler.of(user, savedComment);
     }
 
@@ -106,6 +111,10 @@ public class CommentService {
 
         Comment comment = findAvailableCommentBy(commentId);
         comment.pressZzang(user);
+
+        if (comment.hasZzangCreator(user)) {
+            notificationService.notifyCommentZzangNotification(comment);
+        }
     }
 
     @Transactional
@@ -127,6 +136,8 @@ public class CommentService {
         cocomment.setSuperComment(comment);
 
         Comment savedCocomment = commentRepository.save(cocomment);
+
+        notificationService.notifyCommentAddCommentNotification(comment);
         return CommentResponseAssembler.of(user, savedCocomment);
     }
 

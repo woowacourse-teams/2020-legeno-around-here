@@ -10,8 +10,9 @@ import PostingUpdatePage from './components/pages/posting/PostingUpdatePage';
 import MyProfilePage from './components/pages/myProfile/MyProfilePage';
 import RankingPage from './components/pages/ranking/RankingPage';
 import OthersProfilePage from './components/pages/OthersProfile/OthersProfilePage';
-import MyPosts from './components/pages/myProfile/MyPosts.js';
+import MyPosts from './components/pages/myProfile/MyPosts';
 import HomePage from './components/pages/home/HomePage';
+import Notice from './components/pages/home/Notice';
 
 function App() {
   const mainArea = localStorage.getItem('mainAreaName');
@@ -27,7 +28,7 @@ function App() {
         <Route path='/' exact component={HomePage} />
         <Route path='/join' exact component={Join} />
         <Route path='/login' exact component={Login} />
-        <Route path='/myProfile' exact component={MyProfilePage} />
+        <Route path='/users/me' exact component={MyProfilePage} />
         <Route path='/posting' exact component={PostingPage} />
         <Route path='/posts/:postId/update' exact component={PostingUpdatePage} />
         <Route path='/sector' exact component={SectorPage} />
@@ -37,6 +38,7 @@ function App() {
         <Route path='/myProfileEdit' exact component={MyProfileEditPage} />
         <Route path='/profile/:userId' exact component={OthersProfilePage} />
         <Route path='/my-posts' exact component={MyPosts} />
+        <Route path='/notice' exact component={Notice} />
         <Redirect path='*' to='/' />
       </Switch>
     </BrowserRouter>

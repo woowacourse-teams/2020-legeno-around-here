@@ -37,7 +37,7 @@ public class PostWithCommentsCountResponse {
             .images(PostImageResponse.listOf(post.getPostImages()))
             .area(AreaResponse.of(post.getArea()))
             .sector(SectorResponse.of(post.getSector()))
-            .commentsCount(post.getAvailableCommentsSize())
+            .commentsCount(post.getAvailableCommentsCount())
             .creator(UserSimpleResponse.from(post.getCreator()))
             .zzang(PostZzangResponse.of(user, post))
             .createdAt(post.getCreatedAt())

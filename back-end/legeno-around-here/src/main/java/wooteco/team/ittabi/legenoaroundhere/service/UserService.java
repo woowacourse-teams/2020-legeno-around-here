@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
+import wooteco.team.ittabi.legenoaroundhere.domain.notification.Notification;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.UserImage;
@@ -32,9 +33,11 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
 import wooteco.team.ittabi.legenoaroundhere.repository.AreaRepository;
+import wooteco.team.ittabi.legenoaroundhere.repository.NotificationRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.UserImageRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.ImageUploader;
+import wooteco.team.ittabi.legenoaroundhere.utils.NotificationContentMaker;
 
 @Service
 @AllArgsConstructor
@@ -49,6 +52,7 @@ public class UserService implements UserDetailsService {
     private final IAuthenticationFacade authenticationFacade;
     private final ImageUploader imageUploader;
     private final MailAuthService mailAuthService;
+    private final NotificationRepository notificationRepository;
 
     @Transactional
     public void checkJoined(UserCheckRequest userCheckRequest) {
@@ -67,11 +71,20 @@ public class UserService implements UserDetailsService {
         User user = UserAssembler.assemble(userCreateRequest, area);
         try {
             User createdUser = userRepository.save(user);
+            notifyJoinNotification(createdUser);
             return createdUser.getId();
         } catch (DataIntegrityViolationException e) {
             throw new WrongUserInputException(
                 "[" + userCreateRequest.getEmail() + "] 이메일은 이미 사용중입니다.");
         }
+    }
+
+    private void notifyJoinNotification(User user) {
+        Notification notification = Notification.builder()
+            .content(NotificationContentMaker.makeJoinNotificationContent(user))
+            .receiver(user)
+            .build();
+        notificationRepository.save(notification);
     }
 
     private Area findAreaBy(Long areaId) {

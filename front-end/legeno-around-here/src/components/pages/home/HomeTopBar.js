@@ -18,7 +18,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import Loading from '../../Loading';
 import AreaItem from '../../AreaItem';
-import { findAllAreas, findAllSimpleSectors } from '../../api/API';
+import { findAllAreas, findAllSimpleSectors, getUnreadNoticeCount } from '../../api/API';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -61,17 +62,21 @@ const HomeTopBar = ({ setSectorId }) => {
   const [loading, setLoading] = useState(false);
   const [simpleSectors, setSimpleSectors] = useState([]);
   const [areaKeyword, setAreaKeyword] = useState(mainArea);
+  const [unreadNotice, setUnreadNotice] = useState(0);
 
   if (!mainArea) {
     localStorage.setItem('mainAreaName', '서울특별시');
   }
 
   useEffect(() => {
-    const loadAllSimpleSectors = async () => {
-      const foundSimpleSectors = await findAllSimpleSectors(accessToken);
-      await setSimpleSectors(foundSimpleSectors);
+    const loadAllSimpleSectors = () => {
+      findAllSimpleSectors(accessToken, setSimpleSectors);
     };
     loadAllSimpleSectors();
+  }, [accessToken]);
+
+  useEffect(() => {
+    getUnreadNoticeCount(accessToken, setUnreadNotice);
   }, [accessToken]);
 
   const loadAreas = async () => {
@@ -166,17 +171,13 @@ const HomeTopBar = ({ setSectorId }) => {
           </Modal>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton
-              aria-label='show 17 new notifications'
-              color='inherit'
-              onClick={() => {
-                alert('아직 알람기능이 완성되지 않았습니다!');
-              }}
-            >
-              <Badge badgeContent={0} color='secondary'>
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+            <Link to='/notice'>
+              <IconButton aria-label='show 17 new notifications' color='inherit'>
+                <Badge badgeContent={unreadNotice} color='secondary'>
+                  <NotificationsIcon style={{ color: 'white' }} />
+                </Badge>
+              </IconButton>
+            </Link>
           </div>
         </Toolbar>
       </AppBar>

@@ -56,15 +56,17 @@ public class AwardController {
     public ResponseEntity<List<AwardResponse>> findAwards(@PathVariable Long userId) {
         List<AwardResponse> awards = awardService.findAwards(userId);
 
+        awards.addAll(AwardController.awards);
         return ResponseEntity
-            .ok(AwardController.awards);
+            .ok(awards);
     }
 
     @GetMapping(AWARDS_PATH_WITH_SLASH + ME_PATH)
     public ResponseEntity<List<AwardResponse>> findMyAwards() {
         List<AwardResponse> awards = awardService.findMyAwards();
 
+        awards.addAll(AwardController.awards);
         return ResponseEntity
-            .ok(AwardController.awards);
+            .ok(awards);
     }
 }

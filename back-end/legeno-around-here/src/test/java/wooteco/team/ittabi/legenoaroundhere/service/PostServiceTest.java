@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static wooteco.team.ittabi.legenoaroundhere.utils.NotificationContentMaker.KEYWORD_ZZANG;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_OTHER_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AUTH_NUMBER;
@@ -31,6 +32,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
+import wooteco.team.ittabi.legenoaroundhere.domain.notification.Notification;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.mailauth.MailAuth;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
@@ -45,6 +48,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserSimpleResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
+import wooteco.team.ittabi.legenoaroundhere.repository.NotificationRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.TestConverterUtils;
 
@@ -60,6 +64,9 @@ public class PostServiceTest extends ServiceTest {
 
     @Autowired
     private SectorService sectorService;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     @MockBean
     private MailAuthRepository mailAuthRepository;
@@ -359,7 +366,7 @@ public class PostServiceTest extends ServiceTest {
 
     @DisplayName("비활성화된 좋아요를 활성화")
     @Test
-    void pressPostZzang_activePostZzang_SuccessToActivePostZzang() {
+    void pressPostZzang_ActivePostZzang_SuccessToActivePostZzang() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
             TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postId = postService.createPost(postCreateRequest).getId();
@@ -375,7 +382,7 @@ public class PostServiceTest extends ServiceTest {
 
     @DisplayName("활성화된 좋아요를 비활성화")
     @Test
-    void pressPostZzang_inactivePostZzang_SuccessToInactivePostZzang() {
+    void pressPostZzang_InactivePostZzang_SuccessToInactivePostZzang() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
             TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
         Long postId = postService.createPost(postCreateRequest).getId();
@@ -388,6 +395,94 @@ public class PostServiceTest extends ServiceTest {
 
         assertThat(zzang.getCount()).isEqualTo(0L);
         assertThat(zzang.isActivated()).isFalse();
+    }
+
+    @DisplayName("짱 활성화시 작성자에게 알림 발송")
+    @Test
+    void pressZzang_ActivePostZzang_NotifyPostZzangNotification() {
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
+        Long postId = postService.createPost(postCreateRequest).getId();
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new NotExistsException("Post가 존재하지 않습니다."));
+
+        setAuthentication(another);
+        postService.pressZzang(postId);
+
+        List<Notification> notifications
+            = notificationRepository.findAllByReceiverAndPost(user, post);
+        assertThat(notifications).hasSize(1);
+
+        Notification notification = notifications.get(0);
+        assertThat(notification.getId()).isNotNull();
+        assertThat(notification.getContent()).contains(KEYWORD_ZZANG);
+        assertThat(notification.getReceiver()).isEqualTo(user);
+        assertThat(notification.getPost()).isEqualTo(post);
+        assertThat(notification.getComment()).isNull();
+        assertThat(notification.getUser()).isNull();
+        assertThat(notification.getSector()).isNull();
+        assertThat(notification.getIsRead()).isFalse();
+    }
+
+    @DisplayName("짱 비활성화시 작성자에게 알림 발송하지 않음")
+    @Test
+    void pressZzang_InactivePostZzang_NotifyNothing() {
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
+        Long postId = postService.createPost(postCreateRequest).getId();
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new NotExistsException("Post가 존재하지 않습니다."));
+
+        setAuthentication(another);
+        postService.pressZzang(postId);
+
+        List<Notification> notifications
+            = notificationRepository.findAllByReceiverAndPost(user, post);
+        assertThat(notifications).hasSize(1);
+
+        Long notificationId = notifications.get(0).getId();
+
+        postService.pressZzang(postId);
+        notifications = notificationRepository.findAllByReceiverAndPost(user, post);
+        assertThat(notifications).hasSize(1);
+
+        Notification notification = notifications.get(0);
+        assertThat(notification.getId()).isEqualTo(notificationId);
+    }
+
+    @DisplayName("짱 활성화시 기존 알림이 있을 경우, 새 알림 & 기존 알림 삭제")
+    @Test
+    void pressZzang_ActivePostZzangAndExistsNotification_NotifyPostZzangNotification() {
+        PostCreateRequest postCreateRequest = new PostCreateRequest(TEST_POST_WRITING,
+            TEST_EMPTY_IMAGES, TEST_AREA_ID, sectorId);
+        Long postId = postService.createPost(postCreateRequest).getId();
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new NotExistsException("Post가 존재하지 않습니다."));
+
+        setAuthentication(another);
+        postService.pressZzang(postId);
+
+        List<Notification> notifications
+            = notificationRepository.findAllByReceiverAndPost(user, post);
+        assertThat(notifications).hasSize(1);
+
+        Long notificationId = notifications.get(0).getId();
+
+        setAuthentication(user);
+        postService.pressZzang(postId);
+        notifications = notificationRepository.findAllByReceiverAndPost(user, post);
+        assertThat(notifications).hasSize(1);
+
+        Notification notification = notifications.get(0);
+        assertThat(notification.getId()).isNotEqualTo(notificationId);
+        assertThat(notification.getId()).isNotNull();
+        assertThat(notification.getContent()).contains(KEYWORD_ZZANG);
+        assertThat(notification.getReceiver()).isEqualTo(user);
+        assertThat(notification.getPost()).isEqualTo(post);
+        assertThat(notification.getComment()).isNull();
+        assertThat(notification.getUser()).isNull();
+        assertThat(notification.getSector()).isNull();
+        assertThat(notification.getIsRead()).isFalse();
     }
 
     @DisplayName("내가 쓴 글 검색 - 성공")

@@ -12,10 +12,8 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostAssembler {
 
-    public static Post assemble(PostCreateRequest postCreateRequest,
-        List<PostImage> postImages,
-        Area area, Sector sector,
-        User user) {
+    public static Post assemble(PostCreateRequest postCreateRequest, List<PostImage> postImages,
+        Area area, Sector sector, User user) {
         return Post.builder()
             .writing(postCreateRequest.getWriting())
             .postImages(postImages)
