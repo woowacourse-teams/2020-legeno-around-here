@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Join from './components/pages/JoinPage';
 import Login from './components/pages/LoginPage';
 import PostingPage from './components/pages/posting/PostingPage';
@@ -15,6 +15,7 @@ import HomePage from './components/pages/home/HomePage';
 import Notification from './components/pages/home/Notification';
 import InitPage from './components/pages/InitPage';
 import OtherPosts from './components/pages/OthersProfile/OtherPosts';
+import ErrorPage from './components/pages/ErrorPage';
 
 function App() {
   const mainArea = localStorage.getItem('mainAreaName');
@@ -43,7 +44,7 @@ function App() {
         <Route path='/my-posts' exact component={MyPosts} />
         <Route path='/notification' exact component={Notification} />
         <Route path='/users/:userId/posts' exact component={OtherPosts} />
-        <Redirect path='*' to='/' />
+        <Route path='*' component={ErrorPage} />
       </Switch>
     </BrowserRouter>
   );
