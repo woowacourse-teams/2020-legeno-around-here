@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.post;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,6 +41,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 public class Post extends BaseEntity {
 
     private static final int MAX_LENGTH = 2000;
+    protected static final int ZERO = 0;
 
     @Lob
     @Column(nullable = false)
@@ -127,7 +127,7 @@ public class Post extends BaseEntity {
         this.comments.remove(comment);
     }
 
-    public int getAvailableCommentsSize() {
+    public int getAvailableCommentsCount() {
         return (int) this.comments.stream()
             .filter(Comment::isAvailable)
             .count();
@@ -175,19 +175,6 @@ public class Post extends BaseEntity {
         return this.zzangs.size();
     }
 
-    public int getPostZzangCountByDate(LocalDateTime startDate, LocalDateTime endDate) {
-        long zzangCount = this.zzangs.stream()
-            .filter(postZzang -> isDateBetween(postZzang.getCreatedAt(), startDate, endDate))
-            .count();
-        return Math.toIntExact(zzangCount);
-    }
-
-    private boolean isDateBetween(LocalDateTime targetDate, LocalDateTime startDate,
-        LocalDateTime endDate) {
-        return targetDate.isAfter(startDate)
-            && targetDate.isBefore(endDate);
-    }
-
     public boolean hasZzangCreator(User user) {
         return this.zzangs.stream()
             .anyMatch(zzang -> zzang.isSameCreator(user));
@@ -217,13 +204,5 @@ public class Post extends BaseEntity {
 
     public void setState(State state) {
         this.state = state;
-    }
-
-    public String getAreaLastDepthName() {
-        return area.getLastDepthName();
-    }
-
-    public String getSectorName() {
-        return sector.getName();
     }
 }

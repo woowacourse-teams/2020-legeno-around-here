@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AUTH_NUMBER;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_CONTENT_TYPE;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.NotificationConstants.TEST_NOTIFICATION_BEFORE_DATE_TIME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_UPDATE_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_ID;
@@ -17,6 +18,7 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import java.io.IOException;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +27,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
+import wooteco.team.ittabi.legenoaroundhere.domain.notification.Notification;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.mailauth.MailAuth;
@@ -41,6 +44,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.AlreadyExistUserException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
+import wooteco.team.ittabi.legenoaroundhere.repository.NotificationRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.TestConverterUtils;
 
 class UserServiceTest extends ServiceTest {
@@ -51,6 +55,9 @@ class UserServiceTest extends ServiceTest {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     @Autowired
     private IAuthenticationFacade authenticationFacade;
@@ -103,6 +110,36 @@ class UserServiceTest extends ServiceTest {
         Long userId = userService.createUser(userCreateRequest);
 
         assertThat(userId).isNotNull();
+    }
+
+    @DisplayName("User 생성, 알림 생성")
+    @Test
+    void createUser_notifyJoinNotification() {
+        UserCreateRequest userCreateRequest =
+            new UserCreateRequest(
+                "createuser_" + TEST_USER_EMAIL,
+                TEST_USER_NICKNAME,
+                TEST_USER_PASSWORD,
+                TEST_AREA_ID,
+                TEST_AUTH_NUMBER
+            );
+        Long userId = userService.createUser(userCreateRequest);
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new NotExistsException("유저가 없습니다."));
+
+        List<Notification> notifications = notificationRepository
+            .findAllByReceiverAndCreatedAtIsAfter(user, TEST_NOTIFICATION_BEFORE_DATE_TIME);
+        assertThat(notifications.size()).isEqualTo(1);
+
+        Notification notification = notifications.get(0);
+        assertThat(notification.getId()).isNotNull();
+        assertThat(notification.getContent()).contains(TEST_USER_NICKNAME);
+        assertThat(notification.getRead()).isFalse();
+        assertThat(notification.getComment()).isNull();
+        assertThat(notification.getPost()).isNull();
+        assertThat(notification.getSector()).isNull();
+        assertThat(notification.getUser()).isNull();
+        assertThat(notification.getReceiver().getId()).isEqualTo(userId);
     }
 
     @DisplayName("User 생성, 실패 - 중복된 이메일")
@@ -238,7 +275,6 @@ class UserServiceTest extends ServiceTest {
         UserOtherResponse user = userService.findUser(TEST_USER_ID);
 
         assertThat(user.getId()).isEqualTo(TEST_USER_ID);
-        assertThat(user.getEmail()).isEqualTo(TEST_USER_EMAIL);
         assertThat(user.getNickname()).isEqualTo(TEST_USER_NICKNAME);
         assertThat(user.getAwardsCount()).isNotNull();
     }
