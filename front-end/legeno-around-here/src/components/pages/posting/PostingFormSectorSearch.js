@@ -106,7 +106,7 @@ const PostingFormSectorSearch = ({ setSector }) => {
               loader={<Loading />}
               dataLength={sectors.length}
               height={'400px'}
-              endMessage={<Typography>모든 지역을 확인하셨습니다!</Typography>}
+              endMessage={<Typography>모든 부문을 확인하셨습니다!</Typography>}
             >
               {sectors && sectors.length > 0 && <PostingFormSectors selectSector={selectSector} sectors={sectors} />}
             </InfiniteScroll>
