@@ -43,7 +43,7 @@ const Bottom = ({ selected }) => {
       <BottomNavigationAction
         style={bottomWarpStyle}
         component={Link}
-        to='/'
+        to='/home'
         label='홈'
         value={HOME}
         icon={<HomeIcon />}
