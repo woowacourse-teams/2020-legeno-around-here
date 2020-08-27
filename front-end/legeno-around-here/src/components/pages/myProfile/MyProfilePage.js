@@ -21,6 +21,7 @@ import { AwardsSection, AwardSummary } from '../../myProfile/AwardSection';
 import { NavElement, NavSection } from '../../myProfile/LinksSection';
 import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
 import MySectorSection from './MySectorSection';
+import BottomBlank from '../../BottomBlank'
 
 function MyProfilePage() {
   const [accessToken] = useState(getAccessTokenFromCookie());
@@ -50,7 +51,7 @@ function MyProfilePage() {
 
   return (
     <>
-      <TopBar backButtonLink='/home' />
+      <TopBar />
       <TopSection>
         <ProfilePhoto photoUrl={profilePhotoUrl} />
         <PrivacyBox>
@@ -75,6 +76,7 @@ function MyProfilePage() {
         <NavElement linkTo='/home'>작성 댓글</NavElement>
         <MySectorSection />
       </NavSection>
+      <BottomBlank />
       <Bottom selected={PROFILE} />
     </>
   );

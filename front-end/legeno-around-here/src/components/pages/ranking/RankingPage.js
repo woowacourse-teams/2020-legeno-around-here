@@ -49,7 +49,6 @@ const RankingPage = () => {
   useEffect(() => {
     findRankedPostsFromPage(mainAreaId, criteria, 0, accessToken).then(
       (firstPosts) => {
-        console.log(firstPosts);
         if (firstPosts.length === 0) {
           setHasMore(false);
           return;
@@ -81,7 +80,7 @@ const RankingPage = () => {
   };
 
   /* 공동순위 처리를 위해서 필요한 변수들 */
-  let zzangCountOfBeforePost = 0;
+  let zzangCountOfBeforePost = -1;
   let rankOfBeforePost = 0;
 
   return (
@@ -111,10 +110,8 @@ const RankingPage = () => {
             post.zzang.count === zzangCountOfBeforePost
               ? rankOfBeforePost
               : index + 1;
-          console.log(post.zzang.count === zzangCountOfBeforePost);
           zzangCountOfBeforePost = post.zzang.count;
           rankOfBeforePost = rank;
-          console.log('###');
           return (
             <RankingItem
               key={post.id}
