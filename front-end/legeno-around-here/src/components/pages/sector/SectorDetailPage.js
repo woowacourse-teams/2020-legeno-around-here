@@ -1,17 +1,18 @@
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import { MAIN_COLOR } from '../../../constants/Color'
-import { getAccessTokenFromCookie } from '../../../util/TokenUtils'
-import React, { useEffect, useState } from 'react'
-import { findMyInfo, findSector } from '../../api/API'
-import Loading from '../../Loading'
-import PostDetailTopBar from '../post/PostDetailTopBar'
-import Container from '@material-ui/core/Container'
-import Typography from '@material-ui/core/Typography'
-import LinkWithoutStyle from '../../../util/LinkWithoutStyle'
-import BottomBlank from '../../BottomBlank'
-import Button from '@material-ui/core/Button'
-import Bottom from '../../Bottom'
-import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage'
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import { MAIN_COLOR } from '../../../constants/Color';
+import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
+import React, { useEffect, useState } from 'react';
+import { findMyInfo, findSector } from '../../api/API';
+import Loading from '../../Loading';
+import PostDetailTopBar from '../post/PostDetailTopBar';
+import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
+import LinkWithoutStyle from '../../../util/LinkWithoutStyle';
+import BottomBlank from '../../BottomBlank';
+import Button from '@material-ui/core/Button';
+import Bottom from '../../Bottom';
+import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
+import { Link } from 'react-router-dom';
 
 const useStyle = makeStyles({
   sectorNameSection: {
@@ -140,9 +141,11 @@ const SectorDetailPage = ({ match }) => {
           </LinkWithoutStyle>
         </div>
         <div className={classes.buttonSection}>
-          <Button variant="contained" color="primary" className={classes.goToPostsButton} size='large'>
-            자랑글 보러 가기
-          </Button>
+          <Link to={`/home?sectorId=${sectorId}`}>
+            <Button variant='contained' color='primary' className={classes.goToPostsButton} size='large'>
+              자랑글 보러 가기
+            </Button>
+          </Link>
         </div>
         <BottomBlank />
       </Container>

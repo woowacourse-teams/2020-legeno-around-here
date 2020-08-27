@@ -9,14 +9,14 @@ import MyProfileEditPage from './components/pages/myProfileEdit/MyProfileEditPag
 import PostingUpdatePage from './components/pages/posting/PostingUpdatePage';
 import MyProfilePage from './components/pages/myProfile/MyProfilePage';
 import RankingPage from './components/pages/ranking/RankingPage';
-import OthersProfilePage from './components/pages/OthersProfile/OthersProfilePage';
+import OthersProfilePage from './components/pages/othersProfile/OthersProfilePage';
 import MyPosts from './components/pages/myProfile/MyPosts';
 import HomePage from './components/pages/home/HomePage';
 import Notification from './components/pages/home/Notification';
 import InitPage from './components/pages/InitPage';
-import OtherPosts from './components/pages/OthersProfile/OtherPosts';
+import OtherPosts from './components/pages/othersProfile/OtherPosts';
 import ErrorPage from './components/pages/ErrorPage';
-import SectorDetailPage from './components/pages/sector/SectorDetailPage'
+import SectorDetailPage from './components/pages/sector/SectorDetailPage';
 
 function App() {
   const mainArea = localStorage.getItem('mainAreaName');

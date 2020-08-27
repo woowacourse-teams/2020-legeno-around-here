@@ -12,21 +12,31 @@ import BottomBlank from '../../BottomBlank';
 import Container from '@material-ui/core/Container';
 import PostItem from '../../PostItem';
 
-const HomePage = () => {
+const HomePage = (match) => {
   const accessToken = getAccessTokenFromCookie();
 
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(false);
-  const [sectorId, setSectorId] = useState('');
+  const [sectorId, setSectorId] = useState('none');
+  const [locationParams, setLocationParams] = useState(match.location.search);
 
-  const setter = { setPage, setPosts, setSectorId };
+  const setter = { setPage, setPosts, setSectorId, setLocationParams };
 
   const mainAreaId = localStorage.getItem('mainAreaId');
 
   const loadNextPosts = async () => {
     try {
-      const nextPosts = await findCurrentPostsFromPage(page, accessToken, mainAreaId, sectorId);
+      let selectedSectorId = '';
+      if (locationParams.includes('?sectorId=')) {
+        selectedSectorId = locationParams.split('?sectorId=')[1];
+      } else if (sectorId === 'none') {
+        selectedSectorId = '';
+      } else {
+        selectedSectorId = sectorId;
+      }
+
+      const nextPosts = await findCurrentPostsFromPage(page, accessToken, mainAreaId, selectedSectorId);
       if (nextPosts.length === 0) {
         setHasMore(false);
         return;
