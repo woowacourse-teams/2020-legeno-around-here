@@ -45,7 +45,7 @@ export const PrivacyEditBox = styled(LinkWithoutStyle)`
   display: block;
 `;
 
-export const PrivacySignOutBox = styled(LinkWithoutStyle)`
+export const PrivacySignOutBox = styled.div`
   margin: 0px auto;
   font-size: 15px;
   display: block;
