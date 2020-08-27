@@ -66,7 +66,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/check-joined",
                 "/join",
                 "/login",
-                "/mail-auth/**").permitAll()
+                "/mail-auth/**",
+                "/profile").permitAll()
             .antMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest().hasAnyRole("USER", "ADMIN")
             .and()
