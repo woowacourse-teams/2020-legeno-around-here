@@ -79,6 +79,7 @@ function MyProfileEditPage() {
                 className={classes.newNicknameInput}
                 onChange={handleNicknameInputChanging}
                 helperText='공란이면 닉네임이 바뀌지 않습니다.'
+                inputProps={{ maxLength: 10 }}
               />
             </Typography>
           </div>
