@@ -10,6 +10,7 @@ import { Nickname, PrivacyBox, ProfilePhoto, TopSection } from '../../myProfile/
 import { AwardsSection, AwardSummary } from '../../myProfile/AwardSection';
 import { NavElement, NavSection } from '../../myProfile/LinksSection';
 import Bottom from '../../Bottom';
+import BottomBlank from '../../BottomBlank'
 
 function OthersProfilePage({ match }) {
   const [accessToken] = useState(getAccessTokenFromCookie());
@@ -53,6 +54,7 @@ function OthersProfilePage({ match }) {
         <NavElement linkTo='/home'>수상내역</NavElement>
         <NavElement linkTo='/home'>작성글</NavElement>
       </NavSection>
+      <BottomBlank />
       <Bottom />
     </>
   );
