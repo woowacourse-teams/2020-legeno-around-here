@@ -1,7 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NOTIFICATION_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import io.restassured.RestAssured;
@@ -12,10 +12,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import wooteco.team.ittabi.legenoaroundhere.dto.NoticeResponse;
+import wooteco.team.ittabi.legenoaroundhere.dto.NotificationResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 
-public class NoticeAcceptanceTest extends AcceptanceTest {
+public class NotificationAcceptanceTest extends AcceptanceTest {
 
     private String accessToken;
 
@@ -23,7 +23,7 @@ public class NoticeAcceptanceTest extends AcceptanceTest {
     void setUp() {
         RestAssured.port = port;
         // 로그인
-        TokenResponse tokenResponse = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
+        TokenResponse tokenResponse = login(TEST_USER_NOTIFICATION_EMAIL, TEST_USER_PASSWORD);
         accessToken = tokenResponse.getAccessToken();
     }
 
@@ -42,11 +42,11 @@ public class NoticeAcceptanceTest extends AcceptanceTest {
     @Test
     void manageMyNotices() {
         // 알림 조회 - 읽은 알림 0
-        List<NoticeResponse> notices = findMyNotice(accessToken);
-        assertThat(notices).hasSize(8);
+        List<NotificationResponse> notices = findMyNotice(accessToken);
+        assertThat(notices).hasSize(7);
 
-        List<NoticeResponse> readNotices = notices.stream()
-            .filter(NoticeResponse::getIsRead)
+        List<NotificationResponse> readNotices = notices.stream()
+            .filter(NotificationResponse::getIsRead)
             .collect(Collectors.toList());
         assertThat(readNotices).hasSize(0);
 
@@ -55,10 +55,10 @@ public class NoticeAcceptanceTest extends AcceptanceTest {
         readMyNotices(accessToken, noticeId);
 
         notices = findMyNotice(accessToken);
-        assertThat(notices).hasSize(8);
+        assertThat(notices).hasSize(7);
 
         readNotices = notices.stream()
-            .filter(NoticeResponse::getIsRead)
+            .filter(NotificationResponse::getIsRead)
             .collect(Collectors.toList());
         assertThat(readNotices).hasSize(1);
 
@@ -66,26 +66,26 @@ public class NoticeAcceptanceTest extends AcceptanceTest {
         readMyNotices(accessToken, noticeId);
 
         notices = findMyNotice(accessToken);
-        assertThat(notices).hasSize(8);
+        assertThat(notices).hasSize(7);
 
         readNotices = notices.stream()
-            .filter(NoticeResponse::getIsRead)
+            .filter(NotificationResponse::getIsRead)
             .collect(Collectors.toList());
         assertThat(readNotices).hasSize(1);
     }
 
-    private List<NoticeResponse> findMyNotice(String accessToken) {
+    private List<NotificationResponse> findMyNotice(String accessToken) {
         return given()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
             .when()
-            .get("/notices/me")
+            .get("/notifications/me")
             .then()
             .log().all()
             .statusCode(HttpStatus.OK.value())
             .extract()
             .jsonPath()
-            .getList(".", NoticeResponse.class);
+            .getList(".", NotificationResponse.class);
     }
 
     private void readMyNotices(String accessToken, Long noticeId) {
@@ -93,7 +93,7 @@ public class NoticeAcceptanceTest extends AcceptanceTest {
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
             .when()
-            .put("/notices/" + noticeId + "/read")
+            .put("/notifications/" + noticeId + "/read")
             .then()
             .log().all()
             .statusCode(HttpStatus.NO_CONTENT.value());

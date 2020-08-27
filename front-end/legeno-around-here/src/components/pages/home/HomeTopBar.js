@@ -8,8 +8,9 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
-import { findAllSimpleSectors } from '../../api/API';
+import { findAllSimpleSectors, getUnreadNoticeCount } from '../../api/API';
 import AreaSearch from '../../AreaSearch';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
   grow: {
@@ -24,13 +25,17 @@ const HomeTopBar = ({ setSectorId }) => {
   const classes = useStyles();
   const accessToken = getAccessTokenFromCookie();
   const [simpleSectors, setSimpleSectors] = useState([]);
+  const [unreadNotice, setUnreadNotice] = useState(0);
 
   useEffect(() => {
-    const loadAllSimpleSectors = async () => {
-      const foundSimpleSectors = await findAllSimpleSectors(accessToken);
-      await setSimpleSectors(foundSimpleSectors);
+    const loadAllSimpleSectors = () => {
+      findAllSimpleSectors(accessToken, setSimpleSectors);
     };
     loadAllSimpleSectors();
+  }, [accessToken]);
+
+  useEffect(() => {
+    getUnreadNoticeCount(accessToken, setUnreadNotice);
   }, [accessToken]);
 
   return (
@@ -48,18 +53,14 @@ const HomeTopBar = ({ setSectorId }) => {
             renderInput={(params) => <TextField {...params} placeholder='부문을 검색하세요!' />}
           />
           <div className={classes.grow} />
-          <div className={classes.flex}>
-            <IconButton
-              aria-label='show 17 new notifications'
-              color='inherit'
-              onClick={() => {
-                alert('아직 알람기능이 완성되지 않았습니다!');
-              }}
-            >
-              <Badge badgeContent={0} color='secondary'>
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+          <div className={classes.sectionDesktop}>
+            <Link to='/notice'>
+              <IconButton aria-label='show 17 new notifications' color='inherit'>
+                <Badge badgeContent={unreadNotice} color='secondary'>
+                  <NotificationsIcon style={{ color: 'white' }} />
+                </Badge>
+              </IconButton>
+            </Link>
           </div>
         </Toolbar>
       </AppBar>

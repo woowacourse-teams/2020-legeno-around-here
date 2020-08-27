@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -6,6 +6,9 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
+import { getUnreadNoticeCount } from '../../api/API';
+import { Link } from 'react-router-dom';
 import AreaSearch from '../../AreaSearch';
 
 const useStyles = makeStyles((theme) => ({
@@ -40,29 +43,34 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
+  const mainArea = localStorage.getItem('mainAreaName');
+  const accessToken = getAccessTokenFromCookie();
+  const [unreadNotice, setUnreadNotice] = useState(0);
+
+  if (!mainArea) {
+    localStorage.setItem('mainAreaName', '서울특별시');
+  }
+
+  useEffect(() => {
+    getUnreadNoticeCount(accessToken, setUnreadNotice);
+  }, [accessToken]);
 
   return (
-    <>
-      <AppBar position='sticky'>
-        <Toolbar>
-          <AreaSearch />
-          <Typography>캡짱은 누구?</Typography>
-          <div className={classes.grow} />
-          <div className={classes.sectionDesktop}>
-            <IconButton
-              aria-label='show 17 new notifications'
-              color='inherit'
-              onClick={() => {
-                alert('아직 알람기능이 완성되지 않았습니다!');
-              }}
-            >
-              <Badge badgeContent={0} color='secondary'>
-                <NotificationsIcon />
+    <AppBar position='sticky'>
+      <Toolbar>
+        <AreaSearch />
+        <Typography>캡짱은 누구?</Typography>
+        <div className={classes.grow} />
+        <div className={classes.sectionDesktop}>
+          <Link to='/notice'>
+            <IconButton aria-label='show 17 new notifications' color='inherit'>
+              <Badge badgeContent={unreadNotice} color='secondary'>
+                <NotificationsIcon style={{ color: 'white' }} />
               </Badge>
             </IconButton>
-          </div>
-        </Toolbar>
-      </AppBar>
-    </>
+          </Link>
+        </div>
+      </Toolbar>
+    </AppBar>
   );
 }

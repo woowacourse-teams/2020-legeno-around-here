@@ -16,4 +16,6 @@ public class SectorConstants {
     public static final String TEST_SECTOR_ANOTHER_DESCRIPTION = "AnotherSectorDescription";
     public static final SectorRequest TEST_SECTOR_ANOTHER_REQUEST
         = new SectorRequest(TEST_SECTOR_ANOTHER_NAME, TEST_SECTOR_ANOTHER_DESCRIPTION);
+
+    public static final String TEST_SECTOR_REASON = "이유";
 }

@@ -132,6 +132,10 @@ public class Comment extends BaseEntity {
         return this.zzangs.size();
     }
 
+    public int getCocommentsCount() {
+        return this.cocomments.size();
+    }
+
     public void setWriting(String writing) {
         this.writing = writing;
     }

@@ -39,6 +39,7 @@ import wooteco.team.ittabi.legenoaroundhere.utils.ImageUploader;
 @Slf4j
 public class PostService {
 
+    private final NotificationService notificationService;
     private final PostRepository postRepository;
     private final PostImageRepository postImageRepository;
     private final AreaRepository areaRepository;
@@ -154,6 +155,10 @@ public class PostService {
 
         Post post = findPostBy(postId);
         post.pressZzang(user);
+
+        if (post.hasZzangCreator(user)) {
+            notificationService.notifyPostZzangNotification(post);
+        }
     }
 
     @Transactional

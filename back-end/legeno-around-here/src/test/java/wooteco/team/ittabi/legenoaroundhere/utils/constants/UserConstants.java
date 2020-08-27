@@ -27,4 +27,7 @@ public class UserConstants {
     public static final String TEST_RANKING_EMAIL_A = "a@capzzang.co.kr";
     public static final String TEST_RANKING_EMAIL_B = "b@capzzang.co.kr";
     public static final String TEST_RANKING_EMAIL_C = "c@capzzang.co.kr";
+
+    public static final Long TEST_USER_NOTIFICATION_ID = 9L;
+    public static final String TEST_USER_NOTIFICATION_EMAIL = "notices2@capzzang.co.kr";
 }
