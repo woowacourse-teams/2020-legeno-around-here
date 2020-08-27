@@ -46,7 +46,7 @@ public class PageableAssembler {
             return DEFAULT_SIZE;
         }
         if (size < MINIMUM_SIZE || size > MAXIMUM_SIZE) {
-            throw new WrongUserInputException("Page를 잘못 [" + size + "] 입력하셨습니다.");
+            throw new WrongUserInputException("Size를 잘못 [" + size + "] 입력하셨습니다.");
         }
         return size;
     }
