@@ -16,6 +16,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const setMainArea = (area) => {
+  console.log('mainAreaId : ' + area.id);
+  console.log('mainAreaName : ' + area.lastDepthName);
   localStorage.setItem('mainAreaId', area.id);
   localStorage.setItem('mainAreaName', area.lastDepthName);
   refreshPage();
@@ -27,7 +29,7 @@ const AreaItem = ({ area }) => {
   return (
     <>
       <div className={classes.root}>
-        <ListItem button alignItems="center" onClick={() => setMainArea(area)}>
+        <ListItem button alignItems='center' onClick={() => setMainArea(area)}>
           <ListItemText primary={area.fullName} />
         </ListItem>
       </div>
