@@ -57,13 +57,13 @@ public class Notification extends BaseEntity {
 
     @Column(nullable = false, columnDefinition = "tinyint(1) default 0")
     @Builder.Default
-    private Boolean read = Boolean.FALSE;
+    private Boolean isRead = Boolean.FALSE;
 
     public boolean isDifferentReceiver(User user) {
         return !this.receiver.equals(user);
     }
 
     public void read() {
-        this.read = Boolean.TRUE;
+        this.isRead = Boolean.TRUE;
     }
 }

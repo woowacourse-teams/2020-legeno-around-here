@@ -129,7 +129,7 @@ class UserServiceTest extends ServiceTest {
         Notification notification = notifications.get(0);
         assertThat(notification.getId()).isNotNull();
         assertThat(notification.getContent()).contains(TEST_USER_NICKNAME);
-        assertThat(notification.getRead()).isFalse();
+        assertThat(notification.getIsRead()).isFalse();
         assertThat(notification.getComment()).isNull();
         assertThat(notification.getPost()).isNull();
         assertThat(notification.getSector()).isNull();
