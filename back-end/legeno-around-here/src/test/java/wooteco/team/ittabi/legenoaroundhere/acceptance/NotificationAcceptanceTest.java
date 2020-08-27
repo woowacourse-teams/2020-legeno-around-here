@@ -79,7 +79,7 @@ public class NotificationAcceptanceTest extends AcceptanceTest {
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
             .when()
-            .get("/notices/me")
+            .get("/notifications/me")
             .then()
             .log().all()
             .statusCode(HttpStatus.OK.value())
@@ -93,7 +93,7 @@ public class NotificationAcceptanceTest extends AcceptanceTest {
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("X-AUTH-TOKEN", accessToken)
             .when()
-            .put("/notices/" + noticeId + "/read")
+            .put("/notifications/" + noticeId + "/read")
             .then()
             .log().all()
             .statusCode(HttpStatus.NO_CONTENT.value());
