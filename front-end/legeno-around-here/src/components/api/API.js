@@ -268,7 +268,7 @@ export const findMyInfo = (accessToken) => {
     });
 };
 
-export const findCurrentPostsFromPage = async (mainAreaId, page, sectorId, accessToken) => {
+export const findCurrentPostsFromPage = async (page, accessToken, mainAreaId, sectorId) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
