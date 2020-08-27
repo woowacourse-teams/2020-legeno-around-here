@@ -12,7 +12,7 @@ import PostImages from './PostImages';
 import { convertDateFormat } from '../../../util/TimeUtils';
 import UpdatePostButton from './UpdatePostButton';
 import PostReportSection from './PostReportSection';
-import LinkWithoutStyle from '../../../util/LinkWithoutStyle'
+import LinkWithoutStyle from '../../../util/LinkWithoutStyle';
 
 const PostDetail = ({ post, myInfo }) => {
   const accessToken = getAccessTokenFromCookie();
