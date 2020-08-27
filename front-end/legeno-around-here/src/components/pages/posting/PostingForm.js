@@ -149,6 +149,7 @@ const PostingForm = () => {
           placeholder='자신의 자랑을 입력해주세요!'
           onChange={onWritingChanged}
           value={writing}
+          inputProps={{ maxLength: 2000 }}
         />
         <Button onClick={handleOpen} className={classes.selectSectorButton}>
           부문 설정
