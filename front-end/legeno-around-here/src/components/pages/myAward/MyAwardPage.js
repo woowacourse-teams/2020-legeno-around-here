@@ -17,7 +17,6 @@ const MyAwardPage = () => {
     const loadMyAwards = async () => {
       setLoading(true);
       const foundMyAwards = await findMyAwards(accessToken);
-      console.log(foundMyAwards);
       setAwards(foundMyAwards);
       setLoading(false);
     };

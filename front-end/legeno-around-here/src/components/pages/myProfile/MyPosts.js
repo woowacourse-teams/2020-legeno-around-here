@@ -40,7 +40,6 @@ function MyPosts() {
         setPage(page + 1);
       })
       .catch((e) => {
-        console.log(e);
         setHasMore(false);
       });
   };

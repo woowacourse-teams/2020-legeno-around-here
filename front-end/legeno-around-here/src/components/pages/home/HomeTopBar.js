@@ -36,7 +36,6 @@ const HomeTopBar = ({ setter, sectorId }) => {
     const loadAllSimpleSectors = async () => {
       const foundSimpleSectors = await findAllSimpleSectors(accessToken);
       await foundSimpleSectors.unshift(SIMPLE_ALL_SECTOR);
-      console.log(foundSimpleSectors);
       await setSimpleSectors(foundSimpleSectors);
     };
     loadAllSimpleSectors();

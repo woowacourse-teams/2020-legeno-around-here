@@ -18,7 +18,6 @@ const OtherAwardPage = ({ match }) => {
     const loadOtherAwards = async () => {
       setLoading(true);
       const foundMyAwards = await findAllOtherAwards(accessToken, userId);
-      console.log(foundMyAwards);
       setAwards(foundMyAwards);
       setLoading(false);
     };
