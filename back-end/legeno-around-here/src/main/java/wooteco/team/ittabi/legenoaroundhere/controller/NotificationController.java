@@ -1,7 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ME_PATH;
-import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.NOTICE_PATH;
+import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.NOTIFICATION_PATH;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.NotificationResponse;
 import wooteco.team.ittabi.legenoaroundhere.service.NotificationService;
 
 @RestController
-@RequestMapping(NOTICE_PATH)
+@RequestMapping(NOTIFICATION_PATH)
 @AllArgsConstructor
 public class NotificationController {
 
