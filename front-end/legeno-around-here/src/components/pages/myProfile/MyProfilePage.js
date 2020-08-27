@@ -23,7 +23,7 @@ import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
 import MySectorSection from './MySectorSection';
 import BottomBlank from '../../BottomBlank';
 
-function MyProfilePage() {
+const MyProfilePage = () => {
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
@@ -72,8 +72,9 @@ function MyProfilePage() {
         <AwardSummary awardName='TOP3' awardsCount={awardsCount !== null ? awardsCount.topThree : 0} />
         <AwardSummary awardName='부문 수상' awardsCount={awardsCount !== null ? awardsCount.sector : 0} />
       </AwardsSection>
+
       <NavSection>
-        <NavElement linkTo='/home'>수상내역</NavElement>
+        <NavElement linkTo='/my-awards'>수상내역</NavElement>
         <NavElement linkTo='/my-posts'>작성글</NavElement>
         <NavElement linkTo='/home'>작성 댓글</NavElement>
         <MySectorSection />
@@ -82,6 +83,6 @@ function MyProfilePage() {
       <Bottom selected={PROFILE} />
     </>
   );
-}
+};
 
 export default MyProfilePage;
