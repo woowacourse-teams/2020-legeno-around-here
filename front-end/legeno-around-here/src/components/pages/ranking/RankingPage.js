@@ -56,7 +56,6 @@ const RankingPage = () => {
         setPosts(firstPosts);
       })
       .catch((e) => {
-        console.log(e);
         setHasMore(false);
       });
     setPage(1);
@@ -73,7 +72,6 @@ const RankingPage = () => {
         setPage(page + 1);
       })
       .catch((e) => {
-        console.log(e);
         setHasMore(false);
       });
   };
@@ -92,10 +90,10 @@ const RankingPage = () => {
       <div className={classes.filterSection}>
         <FormControl className={classes.durationFilter}>
           <Select native value={criteria} onChange={handleChange}>
-            <option value="total">역대</option>
-            <option value="month">월간</option>
-            <option value="week">주간</option>
-            <option value="yesterday">어제</option>
+            <option value='total'>역대</option>
+            <option value='month'>월간</option>
+            <option value='week'>주간</option>
+            <option value='yesterday'>어제</option>
           </Select>
         </FormControl>
 
@@ -109,20 +107,10 @@ const RankingPage = () => {
         endMessage={<h3>모두 읽으셨습니다!</h3>}
       >
         {posts.map((post, index) => {
-          const rank =
-            post.zzang.count === zzangCountOfBeforePost
-              ? rankOfBeforePost
-              : index + 1;
+          const rank = post.zzang.count === zzangCountOfBeforePost ? rankOfBeforePost : index + 1;
           zzangCountOfBeforePost = post.zzang.count;
           rankOfBeforePost = rank;
-          return (
-            <RankingItem
-              key={post.id}
-              post={post}
-              rank={rank}
-              whetherToPrintZzangCount={criteria === `total`}
-            />
-          );
+          return <RankingItem key={post.id} post={post} rank={rank} whetherToPrintZzangCount={criteria === `total`} />;
         })}
       </InfiniteScroll>
       <BottomBlank />

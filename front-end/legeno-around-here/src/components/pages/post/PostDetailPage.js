@@ -19,7 +19,6 @@ const PostDetailPage = ({ match }) => {
     const loadMyInfo = async () => {
       setLoading(true);
       const foundMyInfo = await findMyInfo(accessToken);
-      console.log(foundMyInfo);
       setMyInfo(foundMyInfo);
       setLoading(false);
     };
@@ -27,7 +26,6 @@ const PostDetailPage = ({ match }) => {
     const loadPost = async () => {
       setLoading(true);
       const post = await findPost(accessToken, postId);
-      console.log(post);
       setPost(post);
       setLoading(false);
     };

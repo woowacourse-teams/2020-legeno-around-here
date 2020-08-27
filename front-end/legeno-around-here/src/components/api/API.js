@@ -39,13 +39,11 @@ export const savePostImages = async (formData, accessToken) => {
   try {
     return await axios.post(DEFAULT_URL + '/posts/images', formData, config).then((response) => {
       if (response.status === HTTP_STATUS_CREATED) {
-        console.log('이미지 전송에 성공했습니다!');
         return response;
       }
     });
   } catch (error) {
     redirectLoginWhenUnauthorized(error);
-    console.log(error);
   }
 };
 
@@ -63,7 +61,6 @@ export const createPost = async (postData, accessToken) => {
     }
   } catch (error) {
     redirectLoginWhenUnauthorized(error);
-    console.log(error);
   }
 };
 
@@ -80,7 +77,6 @@ export const createPostReport = async (postId, data, accessToken) => {
     }
   } catch (error) {
     redirectLoginWhenUnauthorized(error);
-    console.log(error);
   }
 };
 
@@ -98,7 +94,6 @@ export const updatePost = async (postId, postUpdateData, accessToken) => {
     }
   } catch (error) {
     redirectLoginWhenUnauthorized(error);
-    console.log(error);
   }
 };
 
@@ -116,7 +111,6 @@ export const createUser = (email, nickname, password, authNumber, handleReset) =
     })
     .catch((error) => {
       alert('회원가입에 실패하였습니다.');
-      console.log(error);
       handleReset();
     });
 };
@@ -130,7 +124,6 @@ export const checkJoined = (email) => {
     .catch((error) => {
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
-      console.log(error);
     });
 };
 
@@ -147,7 +140,6 @@ export const sendAuthMail = (email, setIsEmailDisabled, setMailAuthToggle, setIs
     })
     .catch((error) => {
       alert('인증 메일 발송 실패하였습니다.');
-      console.log(error);
     });
 };
 
@@ -163,7 +155,6 @@ export const checkAuthNumber = (email, authNumber, setIsAuthNumberDisabled) => {
     })
     .catch((error) => {
       alert('인증번호를 확인해주세요.');
-      console.log(error);
     });
 };
 export const saveProfilePhoto = async (formData, accessToken) => {
@@ -180,7 +171,6 @@ export const saveProfilePhoto = async (formData, accessToken) => {
     }
   } catch (error) {
     redirectLoginWhenUnauthorized(error);
-    console.log(error);
   }
 };
 
@@ -204,7 +194,6 @@ export const updateUser = async (nickname, imageId, accessToken) => {
   } catch (error) {
     redirectLoginWhenUnauthorized(error);
     alert(error.response ? error.response.status : error.request);
-    console.log(error);
   }
 };
 
@@ -223,7 +212,6 @@ export const createComment = async (postId, writing, accessToken) => {
   } catch (error) {
     redirectLoginWhenUnauthorized(error);
     alert('댓글이 작성되지 않았습니다! 다시 작성해주세요!');
-    console.log(error);
   }
   return false;
 };
@@ -242,7 +230,6 @@ export const createPendingSector = async (sector, accessToken) => {
     }
   } catch (error) {
     alert('부문 신청 중 오류가 발생했습니다! 다시 신청해주세요!');
-    console.log(error);
   }
 };
 
@@ -260,7 +247,6 @@ export const pressPostZzang = async (postId, accessToken) => {
   } catch (error) {
     redirectLoginWhenUnauthorized(error);
     alert('짱이 눌러지지 않았습니다! 다시 작성해주세요!');
-    console.log(error);
   }
   return false;
 };
@@ -276,7 +262,6 @@ export const findMyInfo = (accessToken) => {
     .get(DEFAULT_URL + '/users/me', config)
     .then(async (response) => {
       const userResponse = await response.data;
-      console.log(userResponse);
       return userResponse;
     })
     .catch((error) => {
@@ -306,7 +291,6 @@ export const findCurrentPostsFromPage = async (page, accessToken, mainAreaId, se
     .then((response) => response.data.content)
     .catch((error) => {
       redirectLoginWhenUnauthorized(error);
-      console.log(`## 최근 글을 가져올 수 없습니다.`);
     });
 };
 
@@ -321,7 +305,6 @@ export const findMyAwards = async (accessToken) => {
     .then((response) => response.data)
     .catch((error) => {
       redirectLoginWhenUnauthorized(error);
-      console.log(`## 내 수상 정보를 가져올 수 없습니다.`);
     });
 };
 
@@ -336,7 +319,6 @@ export const findAllOtherAwards = async (accessToken, userId) => {
     .then((response) => response.data)
     .catch((error) => {
       redirectLoginWhenUnauthorized(error);
-      console.log(`## 타인의 수상 정보를 가져올 수 없습니다.`);
     });
 };
 
@@ -361,7 +343,6 @@ export const findMyPostsFromPage = async (mainAreaId, page, accessToken) => {
     .then((response) => response.data.content)
     .catch((error) => {
       redirectLoginWhenUnauthorized(error);
-      console.log(`## 내 글을 가져올 수 없습니다.`);
     });
 };
 
@@ -384,7 +365,6 @@ export const findOtherPostsFromPage = async (otherUserId, page, accessToken) => 
     .then((response) => response.data.content)
     .catch((error) => {
       redirectLoginWhenUnauthorized(error);
-      console.log(`## 해당 유저의 글을 가져올 수 없습니다.`);
     });
 };
 
@@ -410,7 +390,6 @@ export const findRankedPostsFromPage = async (mainAreaId, criteria, page, access
     .then((response) => response.data.content)
     .catch((error) => {
       redirectLoginWhenUnauthorized(error);
-      console.log(`## 랭킹을 가져올 수 없습니다.`);
     });
 };
 
@@ -473,7 +452,6 @@ export const findSectorsFromPage = async (page, accessToken) => {
       redirectLoginWhenUnauthorized(error);
       alert(`부문정보를 가져올 수 없습니다.${error}`);
     });
-  console.log(response.data.content);
   return response.data.content;
 };
 
@@ -527,7 +505,6 @@ export const findCommentsByPostId = async (accessToken, postId) => {
     .get(DEFAULT_URL + `/posts/${postId}/comments`, config)
     .then((response) => {
       if (response.status === HTTP_STATUS_OK) {
-        console.log('findCommentsByPostId : ' + response.data);
         return response.data;
       }
     })
@@ -548,7 +525,6 @@ export const findOthersProfileById = async ({ accessToken, userId }) => {
     .get(DEFAULT_URL + '/users/' + userId, config)
     .then(async (response) => {
       const userResponse = await response.data;
-      console.log(userResponse);
       return userResponse;
     })
     .catch((error) => {
@@ -567,12 +543,10 @@ export const getMyNotification = (accessToken, setNotifications) => {
   axios
     .get(DEFAULT_URL + `/notifications/me`, config)
     .then((response) => {
-      console.log(response.data);
       setNotifications(response.data);
     })
     .catch((error) => {
       alert('알림을 불러오지 못했습니다.');
-      console.log(error);
     });
 };
 
@@ -591,7 +565,6 @@ export const getUnreadNotificationCount = (accessToken, setUnreadNotification) =
     })
     .catch((error) => {
       alert('알림을 불러오지 못했습니다.');
-      console.log(error);
     });
 };
 
@@ -607,7 +580,6 @@ export const readNotification = (accessToken, id) => {
     .then((response) => {})
     .catch((error) => {
       alert('알림을 읽음 처리하지 못했습니다.');
-      console.log(error);
     });
 };
 

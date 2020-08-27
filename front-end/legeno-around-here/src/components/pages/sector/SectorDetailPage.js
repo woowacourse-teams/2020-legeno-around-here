@@ -79,7 +79,7 @@ const SectorDetailPage = ({ match }) => {
       nickname: '',
       image: {
         id: null,
-        url: "",
+        url: '',
       },
     },
   });
@@ -105,7 +105,6 @@ const SectorDetailPage = ({ match }) => {
     const loadSector = async () => {
       setLoading(true);
       const sector = await findSector(accessToken, sectorId);
-      console.log(sector);
       secSector(sector);
       setLoading(false);
     };

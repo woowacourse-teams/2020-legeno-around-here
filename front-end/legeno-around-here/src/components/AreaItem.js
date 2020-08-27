@@ -16,8 +16,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const setMainArea = (area) => {
-  console.log('mainAreaId : ' + area.id);
-  console.log('mainAreaName : ' + area.lastDepthName);
   localStorage.setItem('mainAreaId', area.id);
   localStorage.setItem('mainAreaName', area.lastDepthName);
   refreshPage();
