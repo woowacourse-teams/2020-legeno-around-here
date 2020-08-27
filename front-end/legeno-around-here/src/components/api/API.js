@@ -478,7 +478,7 @@ export const getMyNotice = (accessToken, setNotices) => {
     },
   };
   axios
-    .get(DEFAULT_URL + `/notices/me`, config)
+    .get(DEFAULT_URL + `/notifications/me`, config)
     .then((response) => {
       console.log(response.data);
       setNotices(response.data);
@@ -497,7 +497,7 @@ export const getUnreadNoticeCount = (accessToken, setUnreadNotice) => {
     },
   };
   axios
-    .get(DEFAULT_URL + `/notices/me`, config)
+    .get(DEFAULT_URL + `/notifications/me`, config)
     .then((response) => {
       const unreadCount = response.data.filter((x) => x.isRead === false).length;
       setUnreadNotice(unreadCount);
@@ -516,7 +516,7 @@ export const readNotice = (accessToken, id) => {
     },
   };
   axios
-    .put(DEFAULT_URL + `/notices/${id}/read`, null, config)
+    .put(DEFAULT_URL + `/notifications/${id}/read`, null, config)
     .then((response) => {})
     .catch((error) => {
       alert('알림을 읽음 처리하지 못했습니다.');

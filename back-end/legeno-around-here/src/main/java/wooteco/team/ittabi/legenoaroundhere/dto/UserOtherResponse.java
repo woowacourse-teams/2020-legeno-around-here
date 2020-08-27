@@ -18,7 +18,6 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 public class UserOtherResponse {
 
     private Long id;
-    private String email;
     private String nickname;
     private UserImageResponse image;
     private AwardsCountResponse awardsCount;
@@ -26,7 +25,6 @@ public class UserOtherResponse {
     public static UserOtherResponse from(User user) {
         return UserOtherResponse.builder()
             .id(user.getId())
-            .email(user.getEmail().getEmail())
             .nickname(user.getNickname())
             .image(UserImageResponse.of(user.getImage()))
             .awardsCount(AwardsCountResponse.of(user))

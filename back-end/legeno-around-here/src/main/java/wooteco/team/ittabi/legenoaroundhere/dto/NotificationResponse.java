@@ -14,15 +14,16 @@ import lombok.ToString;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class NoticeResponse {
+public class NotificationResponse {
 
     private Long id;
     private String content;
     private String location;
     private Boolean isRead;
 
-    public static NoticeResponse of(Long id, String content, String location, Boolean isRead) {
-        return NoticeResponse.builder()
+    public static NotificationResponse of(Long id, String content, String location,
+        Boolean isRead) {
+        return NotificationResponse.builder()
             .id(id)
             .content(content)
             .location(location)

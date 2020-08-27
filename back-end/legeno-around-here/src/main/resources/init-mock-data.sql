@@ -81,3 +81,18 @@ VALUES (1, '탕수육 사진1',
        (6, '짜장면 사진',
         'https://legeno-around-here.s3.ap-northeast-2.amazonaws.com/posts/images/mock/z1.png', 3,
         now(), now());
+
+INSERT INTO notification
+(id, created_at, deleted_at, modified_at, comment_id, content, post_id, read, receiver_id,
+ sector_id, user_id)
+VALUES (1, now(), null, now(), null, '이것은 안읽은 글 짱 알림.', 1, false, 3, null, null),
+       (2, now() - 1, null, now(), null, '이것은 읽은 글 짱 알림', 1, false, 3, null, null),
+       (3, now() - 2, null, now(), null, '이것은 안읽은 글 댓글 알림', 1, false, 3, null, null),
+       (4, now() - 3, null, now(), null, '이것은 안읽은 유저 수상 알림', null, false, 3, null, 3),
+       (5, now() - 4, null, now(), null, '이것은 안읽은 부문 승인 알림', null, false, 3, 1, null),
+       (6, now() - 5, null, now(), null, '이것은 읽은 부문 반려 알림', null, false, 3, 2, null),
+       (7, now() - 6, null, now(), null, '유저씨님, 가입을 진심으로 축하드립니다.', null, false, 3, null, null),
+       (8, now() - 7, null, now(), null, '유저씨님, 가입을 진심으로 축하드립니다.', null, false, 3, null, null),
+       (9, now() - 8, null, now(), null, '유저씨님, 가입을 진심으로 축하드립니다.', null, false, 3, null, null),
+       (10, now() - 9, null, now(), null, '유저씨님, 가입을 진심으로 축하드립니다.', null, false, 3, null,
+        null);
