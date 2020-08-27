@@ -10,7 +10,7 @@ import { Nickname, PrivacyBox, ProfilePhoto, TopSection } from '../../myProfile/
 import { AwardsSection, AwardSummary } from '../../myProfile/AwardSection';
 import { NavElement, NavSection } from '../../myProfile/LinksSection';
 import Bottom from '../../Bottom';
-import BottomBlank from '../../BottomBlank'
+import BottomBlank from '../../BottomBlank';
 
 function OthersProfilePage({ match }) {
   const [accessToken] = useState(getAccessTokenFromCookie());
@@ -22,7 +22,7 @@ function OthersProfilePage({ match }) {
     setLoading(true);
     findOthersProfileById({
       accessToken: accessToken,
-      userId: match.params.userId
+      userId: match.params.userId,
     }).then((userResponse) => {
       setNickname(userResponse.nickname);
       setProfilePhotoUrl(userResponse.image ? userResponse.image.url : DEFAULT_IMAGE_URL);
@@ -52,7 +52,7 @@ function OthersProfilePage({ match }) {
       </AwardsSection>
       <NavSection>
         <NavElement linkTo='/home'>수상내역</NavElement>
-        <NavElement linkTo='/home'>작성글</NavElement>
+        <NavElement linkTo={`${match.params.userId}/posts`}>작성글</NavElement>
       </NavSection>
       <BottomBlank />
       <Bottom />

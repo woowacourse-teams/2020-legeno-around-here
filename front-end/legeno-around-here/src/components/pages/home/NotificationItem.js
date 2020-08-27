@@ -5,7 +5,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
-import { readNotice } from '../../api/API';
+import { readNotification } from '../../api/API';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -20,13 +20,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const NoticeItem = ({ notice }) => {
+const NotificationItem = ({ notification }) => {
   const accessToken = getAccessTokenFromCookie();
   const classes = useStyles();
 
   const [cardColor, setCardColor] = useState('#FFFFFF');
 
-  const { id, content, location, isRead } = notice;
+  const { id, content, location, isRead } = notification;
 
   useEffect(() => {
     if (isRead === false) {
@@ -34,8 +34,8 @@ const NoticeItem = ({ notice }) => {
     }
   }, [isRead]);
 
-  const noticeItemOnclick = useCallback(() => {
-    readNotice(accessToken, id);
+  const notificationItemOnclick = useCallback(() => {
+    readNotification(accessToken, id);
     document.location.href = location;
   }, [accessToken, id, location]);
 
@@ -48,7 +48,7 @@ const NoticeItem = ({ notice }) => {
         margin: '10px auto',
         height: '50px',
       }}
-      onClick={noticeItemOnclick}
+      onClick={notificationItemOnclick}
     >
       <div className={classes.details}>
         <CardContent className={classes.content}>
@@ -62,4 +62,4 @@ const NoticeItem = ({ notice }) => {
   );
 };
 
-export default NoticeItem;
+export default NotificationItem;

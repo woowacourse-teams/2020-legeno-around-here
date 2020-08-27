@@ -2,28 +2,28 @@ import React, { useState, useEffect } from 'react';
 
 import Bottom from '../../Bottom';
 
-import { getMyNotice } from '../../api/API';
+import { getMyNotification } from '../../api/API';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import { HOME } from '../../../constants/BottomItems';
 import BottomBlank from '../../BottomBlank';
 import Container from '@material-ui/core/Container';
-import TopBar from './NoticeTopBar';
-import NoticeItem from './NoticeItem';
+import TopBar from './NotificationTopBar';
+import NotificationItem from './NotificationItem';
 
-const Notice = () => {
+const Notification = () => {
   const accessToken = getAccessTokenFromCookie();
-  const [notices, setNotices] = useState([]);
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    getMyNotice(accessToken, setNotices);
+    getMyNotification(accessToken, setNotifications);
   }, [accessToken]);
 
   return (
     <>
       <TopBar backButtonLink='/home' />
       <Container>
-        {notices.map((notice) => (
-          <NoticeItem key={notice.id} notice={notice} />
+        {notifications.map((notification) => (
+          <NotificationItem key={notification.id} notification={notification} />
         ))}
         <BottomBlank />
       </Container>
@@ -32,4 +32,4 @@ const Notice = () => {
   );
 };
 
-export default Notice;
+export default Notification;
