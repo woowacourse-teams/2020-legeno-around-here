@@ -318,6 +318,29 @@ export const findMyPostsFromPage = async (mainAreaId, page, accessToken) => {
     });
 };
 
+export const findOtherPostsFromPage = async (otherUserId, page, accessToken) => {
+  const config = {
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
+  };
+  return await axios
+    .get(
+      DEFAULT_URL +
+        `/users/${otherUserId}/posts?` +
+        `page=${page}&` +
+        `size=${DEFAULT_SIZE}&` +
+        `sortedBy=${DEFAULT_SORTED_BY}&` +
+        `direction=${DEFAULT_DIRECTION}`,
+      config,
+    )
+    .then((response) => response.data.content)
+    .catch((error) => {
+      redirectLoginWhenUnauthorized(error);
+      console.log(`## 해당 유저의 글을 가져올 수 없습니다.`);
+    });
+};
+
 export const findRankedPostsFromPage = async (mainAreaId, criteria, page, accessToken) => {
   const config = {
     headers: {
@@ -493,7 +516,7 @@ const redirectLoginWhenUnauthorized = (error) => {
   }
 };
 
-export const getMyNotice = (accessToken, setNotices) => {
+export const getMyNotification = (accessToken, setNotifications) => {
   const config = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -504,7 +527,7 @@ export const getMyNotice = (accessToken, setNotices) => {
     .get(DEFAULT_URL + `/notifications/me`, config)
     .then((response) => {
       console.log(response.data);
-      setNotices(response.data);
+      setNotifications(response.data);
     })
     .catch((error) => {
       alert('알림을 불러오지 못했습니다.');
@@ -512,7 +535,7 @@ export const getMyNotice = (accessToken, setNotices) => {
     });
 };
 
-export const getUnreadNoticeCount = (accessToken, setUnreadNotice) => {
+export const getUnreadNotificationCount = (accessToken, setUnreadNotification) => {
   const config = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -523,7 +546,7 @@ export const getUnreadNoticeCount = (accessToken, setUnreadNotice) => {
     .get(DEFAULT_URL + `/notifications/me`, config)
     .then((response) => {
       const unreadCount = response.data.filter((x) => x.isRead === false).length;
-      setUnreadNotice(unreadCount);
+      setUnreadNotification(unreadCount);
     })
     .catch((error) => {
       alert('알림을 불러오지 못했습니다.');
@@ -531,7 +554,7 @@ export const getUnreadNoticeCount = (accessToken, setUnreadNotice) => {
     });
 };
 
-export const readNotice = (accessToken, id) => {
+export const readNotification = (accessToken, id) => {
   const config = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',

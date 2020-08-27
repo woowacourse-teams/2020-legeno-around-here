@@ -59,5 +59,5 @@ public class UrlPathConstants {
     public static final String ZZANGS_PATH_WITH_SLASH = ZZANGS_PATH + PATH_DELIMITER;
 
     public static final String HOME_PATH = PATH_DELIMITER + "home";
-    public static final String MY_PROFILE_PATH = PATH_DELIMITER + "myProfile";
+    public static final String MY_PROFILE_PATH = PATH_DELIMITER + "users/me";
 }

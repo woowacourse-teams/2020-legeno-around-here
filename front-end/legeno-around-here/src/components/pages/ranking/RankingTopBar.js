@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
-import { getUnreadNoticeCount } from '../../api/API';
+import { getUnreadNotificationCount } from '../../api/API';
 import { Link } from 'react-router-dom';
 import AreaSearch from '../../AreaSearch';
 
@@ -45,14 +45,14 @@ export default function PrimarySearchAppBar() {
   const classes = useStyles();
   const mainArea = localStorage.getItem('mainAreaName');
   const accessToken = getAccessTokenFromCookie();
-  const [unreadNotice, setUnreadNotice] = useState(0);
+  const [unreadNotification, setUnreadNotification] = useState(0);
 
   if (!mainArea) {
     localStorage.setItem('mainAreaName', '서울특별시');
   }
 
   useEffect(() => {
-    getUnreadNoticeCount(accessToken, setUnreadNotice);
+    getUnreadNotificationCount(accessToken, setUnreadNotification);
   }, [accessToken]);
 
   return (
@@ -62,9 +62,9 @@ export default function PrimarySearchAppBar() {
         <Typography>캡짱은 누구?</Typography>
         <div className={classes.grow} />
         <div className={classes.sectionDesktop}>
-          <Link to='/notice'>
+          <Link to='/notification'>
             <IconButton aria-label='show 17 new notifications' color='inherit'>
-              <Badge badgeContent={unreadNotice} color='secondary'>
+              <Badge badgeContent={unreadNotification} color='secondary'>
                 <NotificationsIcon style={{ color: 'white' }} />
               </Badge>
             </IconButton>

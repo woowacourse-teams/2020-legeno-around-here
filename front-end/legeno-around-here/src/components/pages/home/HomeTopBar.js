@@ -8,7 +8,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
-import { findAllSimpleSectors, getUnreadNoticeCount } from '../../api/API';
+import { findAllSimpleSectors, getUnreadNotificationCount } from '../../api/API';
 import AreaSearch from '../../AreaSearch';
 import { Link } from 'react-router-dom';
 
@@ -30,7 +30,7 @@ const HomeTopBar = ({ setter, sectorId }) => {
   const classes = useStyles();
   const accessToken = getAccessTokenFromCookie();
   const [simpleSectors, setSimpleSectors] = useState([SIMPLE_ALL_SECTOR]);
-  const [unreadNotice, setUnreadNotice] = useState(0);
+  const [unreadNotification, setUnreadNotification] = useState(0);
 
   useEffect(() => {
     const loadAllSimpleSectors = async () => {
@@ -52,7 +52,7 @@ const HomeTopBar = ({ setter, sectorId }) => {
   };
 
   useEffect(() => {
-    getUnreadNoticeCount(accessToken, setUnreadNotice);
+    getUnreadNotificationCount(accessToken, setUnreadNotification);
   }, [accessToken]);
 
   return (
@@ -71,9 +71,9 @@ const HomeTopBar = ({ setter, sectorId }) => {
           />
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <Link to='/notice'>
+            <Link to='/notification'>
               <IconButton aria-label='show 17 new notifications' color='inherit'>
-                <Badge badgeContent={unreadNotice} color='secondary'>
+                <Badge badgeContent={unreadNotification} color='secondary'>
                   <NotificationsIcon style={{ color: 'white' }} />
                 </Badge>
               </IconButton>
