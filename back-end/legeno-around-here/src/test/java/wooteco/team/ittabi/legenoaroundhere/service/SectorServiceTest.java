@@ -3,8 +3,12 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static wooteco.team.ittabi.legenoaroundhere.utils.NotificationContentMaker.KEYWORD_AWARD;
+import static wooteco.team.ittabi.legenoaroundhere.utils.NotificationContentMaker.KEYWORD_SECTOR_APPROVED;
+import static wooteco.team.ittabi.legenoaroundhere.utils.NotificationContentMaker.KEYWORD_SECTOR_REJECTED;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_EMPTY_IMAGES;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.NotificationConstants.TEST_NOTIFICATION_BEFORE_DATE_TIME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.PostConstants.TEST_POST_WRITING;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ANOTHER_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_ANOTHER_NAME;
@@ -27,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import wooteco.team.ittabi.legenoaroundhere.domain.award.SectorCreatorAward;
+import wooteco.team.ittabi.legenoaroundhere.domain.notification.Notification;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
@@ -39,6 +44,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.SectorUpdateStateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserSimpleResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotUniqueException;
+import wooteco.team.ittabi.legenoaroundhere.repository.NotificationRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.SectorCreatorAwardRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 
@@ -55,6 +61,9 @@ class SectorServiceTest extends ServiceTest {
 
     @Autowired
     private SectorCreatorAwardRepository sectorCreatorAwardRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     private Long adminId;
     private User admin;
@@ -381,6 +390,80 @@ class SectorServiceTest extends ServiceTest {
         sectorService.updateSectorState(sectorId, sectorStateApprovedRequest);
         awards = sectorCreatorAwardRepository.findAllByAwardee_Id(adminId);
         assertThat(awards).hasSize(1);
+    }
+
+    @DisplayName("SectorState 업데이트 - 수상알림, Approve로 변경하여 상 받았을 때")
+    @Test
+    void updateSectorState_TurnApprovedAndAward_NotifySectorCreateAward() {
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        Long sectorId = sectorService.createPendingSector(sectorRequest).getId();
+
+        String state = SectorState.APPROVED.getName();
+        SectorUpdateStateRequest sectorStateApprovedRequest
+            = new SectorUpdateStateRequest(state, TEST_SECTOR_REASON);
+        sectorService.updateSectorState(sectorId, sectorStateApprovedRequest);
+
+        List<Notification> notifications = notificationRepository
+            .findAllByReceiverAndCreatedAtIsAfter(admin, TEST_NOTIFICATION_BEFORE_DATE_TIME)
+            .stream()
+            .filter(notification -> notification.getContent().contains(KEYWORD_AWARD))
+            .collect(Collectors.toList());
+
+        assertThat(notifications).hasSize(1);
+
+        Notification notification = notifications.get(0);
+        assertThat(notification.getId()).isNotNull();
+        assertThat(notification.getReceiver().getId()).isEqualTo(admin.getId());
+    }
+
+    @DisplayName("SectorState 업데이트 - Approved 알림, Approved 변경")
+    @Test
+    void updateSectorState_TurnApproved_NotifySectorApproved() {
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        Long sectorId = sectorService.createPendingSector(sectorRequest).getId();
+
+        String state = SectorState.APPROVED.getName();
+        SectorUpdateStateRequest sectorStateApprovedRequest
+            = new SectorUpdateStateRequest(state, TEST_SECTOR_REASON);
+        sectorService.updateSectorState(sectorId, sectorStateApprovedRequest);
+
+        List<Notification> notifications = notificationRepository
+            .findAllByReceiverAndCreatedAtIsAfter(admin, TEST_NOTIFICATION_BEFORE_DATE_TIME)
+            .stream()
+            .filter(notification -> notification.getContent().contains(KEYWORD_SECTOR_APPROVED))
+            .collect(Collectors.toList());
+
+        assertThat(notifications).hasSize(1);
+
+        Notification notification = notifications.get(0);
+        assertThat(notification.getId()).isNotNull();
+        assertThat(notification.getSector().getId()).isEqualTo(sectorId);
+        assertThat(notification.getReceiver().getId()).isEqualTo(admin.getId());
+    }
+
+    @DisplayName("SectorState 업데이트 - Rejected 알림, Rejected 변경")
+    @Test
+    void updateSectorState_TurnRejected_NotifySectorRejected() {
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        Long sectorId = sectorService.createPendingSector(sectorRequest).getId();
+
+        String state = SectorState.REJECTED.getName();
+        SectorUpdateStateRequest sectorStateApprovedRequest
+            = new SectorUpdateStateRequest(state, TEST_SECTOR_REASON);
+        sectorService.updateSectorState(sectorId, sectorStateApprovedRequest);
+
+        List<Notification> notifications = notificationRepository
+            .findAllByReceiverAndCreatedAtIsAfter(admin, TEST_NOTIFICATION_BEFORE_DATE_TIME)
+            .stream()
+            .filter(notification -> notification.getContent().contains(KEYWORD_SECTOR_REJECTED))
+            .collect(Collectors.toList());
+
+        assertThat(notifications).hasSize(1);
+
+        Notification notification = notifications.get(0);
+        assertThat(notification.getId()).isNotNull();
+        assertThat(notification.getSector().getId()).isEqualTo(sectorId);
+        assertThat(notification.getReceiver().getId()).isEqualTo(admin.getId());
     }
 
     @DisplayName("인기 부문 N개 조회 - 성공, 게시글 요청 개수만큼 조회되는지 확인")

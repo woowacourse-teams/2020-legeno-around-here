@@ -36,6 +36,7 @@ public class SectorService {
     private static final String DB_LIKE_FORMAT = "%%%s%%";
     private static final int DEFAULT_PAGING_NUMBER = 0;
 
+    private final NotificationService notificationService;
     private final SectorRepository sectorRepository;
     private final SectorCreatorAwardRepository sectorCreatorAwardRepository;
     private final IAuthenticationFacade authenticationFacade;
@@ -149,6 +150,11 @@ public class SectorService {
 
         if (sectorState.equals(SectorState.APPROVED)) {
             giveASectorCreatorAward(sector);
+            notificationService.notifySectorApproved(sector);
+        }
+
+        if (sectorState.equals(SectorState.REJECTED)) {
+            notificationService.notifySectorRejected(sector);
         }
     }
 
@@ -165,6 +171,7 @@ public class SectorService {
             .date(LocalDate.now())
             .build();
         sectorCreatorAwardRepository.save(sectorCreatorAward);
+        notificationService.notifyGiveASectorCreatorAward(sectorCreatorAward);
     }
 
     @Transactional(readOnly = true)

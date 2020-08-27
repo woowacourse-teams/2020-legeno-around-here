@@ -96,3 +96,21 @@ VALUES (1, now(), null, now(), null, '이것은 안읽은 글 짱 알림.', 1, f
        (9, now() - 8, null, now(), null, '유저씨님, 가입을 진심으로 축하드립니다.', null, false, 3, null, null),
        (10, now() - 9, null, now(), null, '유저씨님, 가입을 진심으로 축하드립니다.', null, false, 3, null,
         null);
+
+INSERT INTO popularity_post_creator_award(name, post_id, ranking, start_date, end_date, awardee_id)
+VALUES ('월간 서울특별시 비싼 음식 냠냠쓰 부문 1위', 1, 1, NOW() - 30, NOW(), 3),
+       ('월간 서울특별시 비싼 음식 냠냠쓰 부문 2위', 2, 2, NOW() - 30, NOW(), 3),
+       ('월간 서울특별시 비싼 음식 냠냠쓰 부문 3위', 3, 3, NOW() - 30, NOW(), 3),
+       ('월간 서울특별시 비싼 음식 냠냠쓰 부문 1위', 4, 1, NOW() - 60, NOW() - 30, 3),
+       ('월간 서울특별시 음식 빨리 챱챱쓰 부문 2위', 5, 2, NOW() - 60, NOW() - 30, 3),
+       ('월간 서울특별시 음식 빨리 챱챱쓰 부문 1위', 6, 1, NOW() - 30, NOW(), 3),
+       ('월간 서울특별시 음식 빨리 챱챱쓰 부문 3위', 7, 3, NOW() - 30, NOW(), 3),
+       ('월간 서울특별시 카트 존잘러 부문 3위', 8, 3, NOW() - 30, NOW(), 3);
+
+INSERT
+INTO sector_creator_award(name, sector_id, date, awardee_id)
+VALUES ('비싼 음식 냠냠쓰 부문 창시자', 1, NOW() - 5, 3),
+       ('음식 빨리 챱챱쓰 부문 창시자', 2, NOW() - 4, 3),
+       ('카트 존잘러 부문 창시자', 2, NOW() - 3, 3),
+       ('모바일 카트 존잘 부문 창시자', 2, NOW() - 2, 3),
+       ('썩은 사과 부문 창시자', 2, NOW() - 1, 3);

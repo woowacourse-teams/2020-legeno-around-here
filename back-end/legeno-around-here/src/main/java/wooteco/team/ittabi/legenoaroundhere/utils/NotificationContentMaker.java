@@ -11,8 +11,11 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NotificationContentMaker {
 
-    public static String KEYWORD_ZZANG = "짱";
-    public static String KEYWORD_COMMENT = "댓글";
+    public static final String KEYWORD_ZZANG = "짱";
+    public static final String KEYWORD_COMMENT = "댓글";
+    public static final String KEYWORD_AWARD = "수상";
+    public static final String KEYWORD_SECTOR_APPROVED = "부문이 승인";
+    public static final String KEYWORD_SECTOR_REJECTED = "부문이 반려";
 
     public static String makeJoinNotificationContent(User user) {
         return user.getNickname() + "님, 가입을 진심으로 축하드립니다.";
@@ -35,14 +38,14 @@ public class NotificationContentMaker {
     }
 
     public static String makeApprovedSectorNotificationContent(Sector sector) {
-        return "신청한 [" + sector.getName() + "] 부문이 승인되었습니다.";
+        return "신청한 [" + sector.getName() + "] " + KEYWORD_SECTOR_APPROVED + "되었습니다.";
     }
 
     public static String makeRejectedSectorNotificationContent(Sector sector) {
-        return "신청한 [" + sector.getName() + "] 부문이 반려되었습니다.";
+        return "신청한 [" + sector.getName() + "] " + KEYWORD_SECTOR_REJECTED + "되었습니다.";
     }
 
     public static String makeGivenAwardNotificationContent(AwardEntity awardEntity) {
-        return "[" + awardEntity.getName() + "] 상을 수상하셨습니다.";
+        return "[" + awardEntity.getName() + "] 상을 " + KEYWORD_AWARD + "하셨습니다.";
     }
 }
