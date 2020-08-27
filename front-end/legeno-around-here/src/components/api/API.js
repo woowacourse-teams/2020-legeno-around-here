@@ -442,7 +442,7 @@ export const findPost = async (accessToken, postId) => {
     .catch((error) => {
       redirectLoginWhenUnauthorized(error);
       alert(`자랑글을 가져올 수 없습니다.${error}`);
-      document.location.href = '/';
+      document.location.href = '/home';
     });
 };
 
