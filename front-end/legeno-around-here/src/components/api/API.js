@@ -67,6 +67,23 @@ export const createPost = async (postData, accessToken) => {
   }
 };
 
+export const createPostReport = async (postId, data, accessToken) => {
+  const config = {
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
+  };
+  try {
+    const response = await axios.post(DEFAULT_URL + '/post-reports', data, config);
+    if (response.status === HTTP_STATUS_CREATED) {
+      alert('전송에 성공했습니다!');
+    }
+  } catch (error) {
+    redirectLoginWhenUnauthorized(error);
+    console.log(error);
+  }
+};
+
 export const updatePost = async (postId, postUpdateData, accessToken) => {
   const config = {
     headers: {

@@ -12,6 +12,9 @@ import FormLabel from '@material-ui/core/FormLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
+import { createPostReport } from '../../api/API';
+import Loading from '../../Loading';
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -38,9 +41,11 @@ const useStyles = makeStyles((theme) => ({
 
 const PostReportSection = ({ post }) => {
   const classes = useStyles();
+  const accessToken = getAccessTokenFromCookie();
   const [value, setValue] = useState('부적절한 홍보 게시글');
   const [open, setOpen] = useState(false);
   const [writing, setWriting] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const reportText = [
     { id: 1, value: '부적절한 홍보 게시글' },
@@ -48,6 +53,17 @@ const PostReportSection = ({ post }) => {
     { id: 3, value: '명예훼손/사생활 침해 및 저작권 침해등' },
     { id: 4, value: '기타' },
   ];
+
+  const submitReport = async () => {
+    const data = {
+      targetId: post.id,
+      writing: writing,
+    };
+    setLoading(true);
+    await createPostReport(post.id, data, accessToken);
+    setLoading(false);
+    handleClose();
+  };
 
   const onWritingChanged = (e) => {
     setWriting(e.target.value);
@@ -67,7 +83,7 @@ const PostReportSection = ({ post }) => {
   };
 
   const handleClose = () => {
-    setWriting('');
+    setWriting('부적절한 홍보 게시글');
     setOpen(false);
   };
 
@@ -90,36 +106,42 @@ const PostReportSection = ({ post }) => {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <h4>내 용 : {post.writing}</h4>
-            <h4>작성자 : {post.creator.nickname}</h4>
-            <FormControl component='fieldset'>
-              <FormLabel component='legend'>사유선택</FormLabel>
-              <h5>여러 사유에 해당하는 경우, 대표적인 사유 1개를 선택해주세요!</h5>
-              <RadioGroup aria-label='gender' value={value} onChange={handleChange}>
-                {reportText.map((report) => (
-                  <FormControlLabel key={report.id} value={report.value} control={<Radio />} label={report.value} />
-                ))}
-              </RadioGroup>
-            </FormControl>
-            {value === '기타' ? (
-              <TextField
-                type='text'
-                id='standard-multiline-static'
-                fullWidth
-                multiline
-                rows={4}
-                placeholder='신고할 내용을 입력해주세요!'
-                onChange={onWritingChanged}
-                value={writing}
-              />
+            {loading === true ? (
+              <Loading />
             ) : (
-              ''
+              <>
+                <h4>내 용 : {post.writing}</h4>
+                <h4>작성자 : {post.creator.nickname}</h4>
+                <FormControl component='fieldset'>
+                  <FormLabel component='legend'>사유선택</FormLabel>
+                  <h5>여러 사유에 해당하는 경우, 대표적인 사유 1개를 선택해주세요!</h5>
+                  <RadioGroup aria-label='gender' value={value} onChange={handleChange}>
+                    {reportText.map((report) => (
+                      <FormControlLabel key={report.id} value={report.value} control={<Radio />} label={report.value} />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+                {value === '기타' ? (
+                  <TextField
+                    type='text'
+                    id='standard-multiline-static'
+                    fullWidth
+                    multiline
+                    rows={4}
+                    placeholder='신고할 내용을 입력해주세요!'
+                    onChange={onWritingChanged}
+                    value={writing}
+                  />
+                ) : (
+                  ''
+                )}
+                <Grid container>
+                  <Button onClick={() => submitReport()}>신고</Button>
+                  <div className={classes.grow} />
+                  <Button onClick={() => handleClose()}>취소</Button>
+                </Grid>
+              </>
             )}
-            <Grid container>
-              <Button>신고</Button>
-              <div className={classes.grow} />
-              <Button>취소</Button>
-            </Grid>
           </div>
         </Fade>
       </Modal>
