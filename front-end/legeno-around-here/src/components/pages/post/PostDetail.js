@@ -67,7 +67,7 @@ const PostDetail = ({ post, myInfo }) => {
         <Grid container item xs={6} alignItems='flex-start' justify='flex-end' direction='row'>
           <Typography
             component={Link}
-            to={isMyPost? '/myProfile' : '/profile/' + post.creator.id}
+            to={isMyPost? '/users/me' : '/users/' + post.creator.id}
           >
             {post.creator.nickname}
           </Typography>

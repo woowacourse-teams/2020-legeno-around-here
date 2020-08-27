@@ -59,7 +59,7 @@ export const createPost = async (postData, accessToken) => {
     const response = await axios.post(DEFAULT_URL + '/posts', postData, config);
     if (response.status === HTTP_STATUS_CREATED) {
       alert('전송에 성공했습니다!');
-      document.location.href = '/posts/' + response.headers.location;
+      document.location.href = response.headers.location;
     }
   } catch (error) {
     redirectLoginWhenUnauthorized(error);

@@ -38,7 +38,7 @@ function App() {
         <Route path='/home' exact component={HomePage} />
         <Route path='/ranking' exact component={RankingPage} />
         <Route path='/myProfileEdit' exact component={MyProfileEditPage} />
-        <Route path='/profile/:userId' exact component={OthersProfilePage} />
+        <Route path='/users/:userId' exact component={OthersProfilePage} />
         <Route path='/my-posts' exact component={MyPosts} />
         <Route path='/notice' exact component={Notice} />
         <Redirect path='*' to='/' />

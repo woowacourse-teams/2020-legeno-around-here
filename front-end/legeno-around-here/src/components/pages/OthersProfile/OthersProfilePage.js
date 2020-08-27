@@ -50,8 +50,8 @@ function OthersProfilePage({ match }) {
         <AwardSummary awardName='TOP50' awardCount={12} />
       </AwardsSection>
       <NavSection>
-        <NavElement linkTo='/'>수상내역</NavElement>
-        <NavElement linkTo='/'>작성글</NavElement>
+        <NavElement linkTo='/home'>수상내역</NavElement>
+        <NavElement linkTo='/home'>작성글</NavElement>
       </NavSection>
       <Bottom />
     </>
