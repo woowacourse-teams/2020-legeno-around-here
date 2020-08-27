@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
+import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
@@ -10,6 +11,7 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstan
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_DESCRIPTION;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_INVALID_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.SectorConstants.TEST_SECTOR_REASON;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_ID;
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import wooteco.team.ittabi.legenoaroundhere.domain.award.SectorCreatorAward;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
@@ -36,6 +39,8 @@ import wooteco.team.ittabi.legenoaroundhere.dto.SectorUpdateStateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserSimpleResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotUniqueException;
+import wooteco.team.ittabi.legenoaroundhere.repository.SectorCreatorAwardRepository;
+import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 
 class SectorServiceTest extends ServiceTest {
 
@@ -45,11 +50,19 @@ class SectorServiceTest extends ServiceTest {
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private SectorCreatorAwardRepository sectorCreatorAwardRepository;
+
+    private Long adminId;
     private User admin;
 
     @BeforeEach
     void setUp() {
-        admin = userRepository.findById(TEST_ADMIN_ID)
+        adminId = TEST_ADMIN_ID;
+        admin = userRepository.findById(adminId)
             .orElseThrow(() -> new NotExistsException(TEST_ADMIN_ID + "에 해당하는 User가 없습니다."));
         setAuthentication(admin);
     }
@@ -297,14 +310,77 @@ class SectorServiceTest extends ServiceTest {
         Long sectorId = sectorService.createSector(sectorRequest).getId();
 
         String state = SectorState.APPROVED.getName();
-        String reason = "이유";
         SectorUpdateStateRequest sectorUpdateStateRequest
-            = new SectorUpdateStateRequest(state, reason);
+            = new SectorUpdateStateRequest(state, TEST_SECTOR_REASON);
         sectorService.updateSectorState(sectorId, sectorUpdateStateRequest);
 
         AdminSectorResponse sector = sectorService.findSector(sectorId);
         assertThat(sector.getState()).isEqualTo(state);
-        assertThat(sector.getReason()).isEqualTo(reason);
+        assertThat(sector.getReason()).isEqualTo(TEST_SECTOR_REASON);
+    }
+
+    @DisplayName("SectorState 업데이트 - 수상, Approve로 변경")
+    @Test
+    void updateSectorState_TurnApproved_giveASectorCreatorAward() {
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        Long sectorId = sectorService.createPendingSector(sectorRequest).getId();
+
+        String state = SectorState.APPROVED.getName();
+        SectorUpdateStateRequest sectorStateApprovedRequest
+            = new SectorUpdateStateRequest(state, TEST_SECTOR_REASON);
+        sectorService.updateSectorState(sectorId, sectorStateApprovedRequest);
+
+        List<SectorCreatorAward> awards
+            = sectorCreatorAwardRepository.findAllByAwardee_Id(adminId);
+        assertThat(awards).hasSize(1);
+
+        SectorCreatorAward sectorCreatorAward = awards.get(0);
+        assertThat(sectorCreatorAward.getId()).isNotNull();
+        assertThat(sectorCreatorAward.getDate()).isEqualTo(now());
+        assertThat(sectorCreatorAward.getAwardee().getId()).isEqualTo(adminId);
+        assertThat(sectorCreatorAward.getSector().getId()).isEqualTo(sectorId);
+        assertThat(sectorCreatorAward.getName()).contains(sectorCreatorAward.getSector().getName());
+    }
+
+    @DisplayName("SectorState 업데이트 - 수상 안함, Rejected 변경")
+    @Test
+    void updateSectorState_TurnRejected_GiveNothing() {
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        Long sectorId = sectorService.createPendingSector(sectorRequest).getId();
+
+        String state = SectorState.REJECTED.getName();
+        SectorUpdateStateRequest sectorStateApprovedRequest
+            = new SectorUpdateStateRequest(state, TEST_SECTOR_REASON);
+        sectorService.updateSectorState(sectorId, sectorStateApprovedRequest);
+
+        List<SectorCreatorAward> awards
+            = sectorCreatorAwardRepository.findAllByAwardee_Id(adminId);
+        assertThat(awards).hasSize(0);
+    }
+
+    @DisplayName("SectorState 업데이트 - 수상 안함, 이미 수상내역 있음")
+    @Test
+    void updateSectorState_ExistsAward_GiveNothing() {
+        SectorRequest sectorRequest = new SectorRequest(TEST_SECTOR_NAME, TEST_SECTOR_DESCRIPTION);
+        Long sectorId = sectorService.createPendingSector(sectorRequest).getId();
+
+        String state = SectorState.APPROVED.getName();
+        SectorUpdateStateRequest sectorStateApprovedRequest
+            = new SectorUpdateStateRequest(state, TEST_SECTOR_REASON);
+        sectorService.updateSectorState(sectorId, sectorStateApprovedRequest);
+
+        List<SectorCreatorAward> awards
+            = sectorCreatorAwardRepository.findAllByAwardee_Id(adminId);
+        assertThat(awards).hasSize(1);
+
+        state = SectorState.PENDING.getName();
+        SectorUpdateStateRequest sectorStatePendingRequest
+            = new SectorUpdateStateRequest(state, TEST_SECTOR_REASON);
+        sectorService.updateSectorState(sectorId, sectorStatePendingRequest);
+
+        sectorService.updateSectorState(sectorId, sectorStateApprovedRequest);
+        awards = sectorCreatorAwardRepository.findAllByAwardee_Id(adminId);
+        assertThat(awards).hasSize(1);
     }
 
     @DisplayName("인기 부문 N개 조회 - 성공, 게시글 요청 개수만큼 조회되는지 확인")
