@@ -9,13 +9,7 @@ import CategoryIcon from '@material-ui/icons/Category';
 import PersonIcon from '@material-ui/icons/Person';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
 
-import {
-  HOME,
-  PROFILE,
-  WRITING,
-  SECTOR,
-  RANKING,
-} from '../constants/BottomItems';
+import { HOME, PROFILE, WRITING, SECTOR, RANKING } from '../constants/BottomItems';
 
 const bottomWarpStyle = {
   padding: '0px',
@@ -44,45 +38,45 @@ const Bottom = ({ selected }) => {
       onChange={handleChange}
       className={classes.bottomBarStyle}
       showLabels
-      position="fixed"
+      position='fixed'
     >
       <BottomNavigationAction
         style={bottomWarpStyle}
         component={Link}
-        to="/"
-        label="홈"
+        to='/'
+        label='홈'
         value={HOME}
         icon={<HomeIcon />}
       />
       <BottomNavigationAction
         style={bottomWarpStyle}
         component={Link}
-        to="/ranking"
-        label="랭킹"
+        to='/ranking'
+        label='랭킹'
         value={RANKING}
         icon={<EqualizerIcon />}
       />
       <BottomNavigationAction
         style={bottomWarpStyle}
         component={Link}
-        to="/posting"
-        label="글쓰기"
+        to='/posting'
+        label='글쓰기'
         value={WRITING}
         icon={<CreateIcon />}
       />
       <BottomNavigationAction
         style={bottomWarpStyle}
         component={Link}
-        to="/sector"
-        label="부문"
+        to='/sector'
+        label='부문'
         value={SECTOR}
         icon={<CategoryIcon />}
       />
       <BottomNavigationAction
         style={bottomWarpStyle}
         component={Link}
-        to="/myProfile"
-        label="프로필"
+        to='/users/me'
+        label='프로필'
         value={PROFILE}
         icon={<PersonIcon />}
       />
