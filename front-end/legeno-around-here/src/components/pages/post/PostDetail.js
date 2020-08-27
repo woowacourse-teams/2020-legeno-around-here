@@ -116,6 +116,7 @@ const PostDetail = ({ post, myInfo }) => {
               placeholder='댓글을 입력해주세요!'
               onChange={onWritingChanged}
               value={writing}
+              inputProps={{ maxLength: 200 }}
             />
           </Grid>
           <Grid container item xs={1}>
