@@ -466,7 +466,7 @@ export const findSectorsFromPage = async (page, accessToken) => {
         `page=${page}&` +
         `size=${DEFAULT_SIZE}&` +
         `sortedBy=${DEFAULT_SORTED_BY}&` +
-        `direction=${DEFAULT_DIRECTION}`,
+        `direction=${DIRECTION_ASC}`,
       config,
     )
     .catch((error) => {
