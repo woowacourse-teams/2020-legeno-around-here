@@ -59,10 +59,10 @@ public class AwardAcceptanceTest extends AcceptanceTest {
     @Test
     void findAward() {
         List<AwardResponse> awards = findAllAward(accessToken, userId);
-        assertThat(awards).hasSize(9);
+        assertThat(awards).hasSize(0);
 
         awards = findMyAward(accessToken);
-        assertThat(awards).hasSize(9);
+        assertThat(awards).hasSize(0);
     }
 
     /**
