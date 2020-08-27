@@ -9,9 +9,11 @@ import MyProfileEditPage from './components/pages/myProfileEdit/MyProfileEditPag
 import PostingUpdatePage from './components/pages/posting/PostingUpdatePage';
 import MyProfilePage from './components/pages/myProfile/MyProfilePage';
 import RankingPage from './components/pages/ranking/RankingPage';
+import OthersProfilePage from './components/pages/OthersProfile/OthersProfilePage';
 import MyPosts from './components/pages/myProfile/MyPosts';
 import HomePage from './components/pages/home/HomePage';
 import Notice from './components/pages/home/Notice';
+import InitPage from './components/pages/InitPage';
 
 function App() {
   const mainArea = localStorage.getItem('mainAreaName');
@@ -24,7 +26,8 @@ function App() {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path='/' exact component={HomePage} />
+        <Route path='/' exact component={InitPage} />
+        <Route path='/home' exact component={HomePage} />
         <Route path='/join' exact component={Join} />
         <Route path='/login' exact component={Login} />
         <Route path='/users/me' exact component={MyProfilePage} />
@@ -35,6 +38,7 @@ function App() {
         <Route path='/home' exact component={HomePage} />
         <Route path='/ranking' exact component={RankingPage} />
         <Route path='/myProfileEdit' exact component={MyProfileEditPage} />
+        <Route path='/users/:userId' exact component={OthersProfilePage} />
         <Route path='/my-posts' exact component={MyPosts} />
         <Route path='/notice' exact component={Notice} />
         <Redirect path='*' to='/' />

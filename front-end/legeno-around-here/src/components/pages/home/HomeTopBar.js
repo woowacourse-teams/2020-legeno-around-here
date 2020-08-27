@@ -28,8 +28,9 @@ const HomeTopBar = ({ setSectorId }) => {
   const [unreadNotice, setUnreadNotice] = useState(0);
 
   useEffect(() => {
-    const loadAllSimpleSectors = () => {
-      findAllSimpleSectors(accessToken, setSimpleSectors);
+    const loadAllSimpleSectors = async () => {
+      const foundSimpleSectors = await findAllSimpleSectors(accessToken);
+      await setSimpleSectors(foundSimpleSectors);
     };
     loadAllSimpleSectors();
   }, [accessToken]);

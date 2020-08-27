@@ -11,6 +11,7 @@ import Comments from './Comments';
 import PostImages from './PostImages';
 import { convertDateFormat } from '../../../util/TimeUtils';
 import UpdatePostButton from './UpdatePostButton';
+import { Link } from 'react-router-dom';
 
 const PostDetail = ({ post, myInfo }) => {
   const accessToken = getAccessTokenFromCookie();
@@ -19,6 +20,7 @@ const PostDetail = ({ post, myInfo }) => {
   const [loading, setLoading] = useState(false);
   const [zzang, setZzang] = useState(post.zzang.activated);
   const [zzangCount, setZzangCount] = useState(post.zzang.count);
+  const isMyPost = post.creator.id === myInfo.id;
 
   const onWritingChanged = (e) => {
     setWriting(e.target.value);
@@ -63,7 +65,12 @@ const PostDetail = ({ post, myInfo }) => {
           <Typography>{post.area.fullName}</Typography>
         </Grid>
         <Grid container item xs={6} alignItems='flex-start' justify='flex-end' direction='row'>
-          <Typography>{post.creator.nickname}</Typography>
+          <Typography
+            component={Link}
+            to={isMyPost? '/users/me' : '/users/' + post.creator.id}
+          >
+            {post.creator.nickname}
+          </Typography>
         </Grid>
       </Grid>
       <Typography variant='h5'>{post.sector.name} 부문</Typography>
@@ -82,7 +89,7 @@ const PostDetail = ({ post, myInfo }) => {
         </Grid>
         <Grid container item xs={6} alignItems='flex-start' justify='flex-end' direction='row'>
           <Typography display='inline'>{convertDateFormat(post.createdAt)}</Typography>
-          <Typography display='inline'>{post.creator.id === myInfo.id && <UpdatePostButton post={post} />}</Typography>
+          <Typography display='inline'>{isMyPost && <UpdatePostButton post={post} />}</Typography>
         </Grid>
       </Grid>
 

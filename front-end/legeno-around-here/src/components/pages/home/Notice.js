@@ -20,7 +20,7 @@ const Notice = () => {
 
   return (
     <>
-      <TopBar backButtonLink='/' />
+      <TopBar backButtonLink='/home' />
       <Container>
         {notices.map((notice) => (
           <NoticeItem key={notice.id} notice={notice} />
