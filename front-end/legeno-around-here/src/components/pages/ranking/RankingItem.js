@@ -1,6 +1,5 @@
 import React from 'react';
 import Card from '@material-ui/core/Card';
-import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
@@ -40,7 +39,6 @@ const RankingItem = ({ post, rank, whetherToPrintZzangCount }) => {
     commentsCount,
     createdAt,
     creator,
-    images,
     id,
     zzang,
     sector,
@@ -100,17 +98,6 @@ const RankingItem = ({ post, rank, whetherToPrintZzangCount }) => {
           </IconButton>
         </CardActions>
       </div>
-      {images.length > 0 && (
-        <CardMedia
-          className={classes.cover}
-          image={images[0].url}
-          title="Live from space album cover"
-        >
-          {images.length > 1 && (
-            <div className={classes.photoText}>+{images.length - 1}</div>
-          )}
-        </CardMedia>
-      )}
     </Card>
   );
 };

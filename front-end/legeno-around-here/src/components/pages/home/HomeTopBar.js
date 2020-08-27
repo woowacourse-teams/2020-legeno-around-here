@@ -21,18 +21,35 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const HomeTopBar = ({ setSectorId }) => {
+const SIMPLE_ALL_SECTOR = {
+  id: '',
+  name: '전체 부문',
+};
+
+const HomeTopBar = ({ setter, sectorId }) => {
   const classes = useStyles();
   const accessToken = getAccessTokenFromCookie();
-  const [simpleSectors, setSimpleSectors] = useState([]);
+  const [simpleSectors, setSimpleSectors] = useState([SIMPLE_ALL_SECTOR]);
   const [unreadNotice, setUnreadNotice] = useState(0);
 
   useEffect(() => {
-    const loadAllSimpleSectors = () => {
-      findAllSimpleSectors(accessToken, setSimpleSectors);
+    const loadAllSimpleSectors = async () => {
+      const foundSimpleSectors = await findAllSimpleSectors(accessToken);
+      await foundSimpleSectors.unshift(SIMPLE_ALL_SECTOR);
+      console.log(foundSimpleSectors);
+      await setSimpleSectors(foundSimpleSectors);
     };
     loadAllSimpleSectors();
   }, [accessToken]);
+
+  const changeSector = (optionId) => {
+    if (sectorId === optionId) {
+      return;
+    }
+    setter.setPage(0);
+    setter.setPosts([]);
+    setter.setSectorId(optionId);
+  };
 
   useEffect(() => {
     getUnreadNoticeCount(accessToken, setUnreadNotice);
@@ -47,7 +64,7 @@ const HomeTopBar = ({ setSectorId }) => {
             id='sector-search'
             freeSolo
             options={simpleSectors}
-            onChange={(event, option) => option && setSectorId(option.id)}
+            onChange={(event, option) => option && changeSector(option.id)}
             getOptionLabel={(option) => option.name}
             fullWidth
             renderInput={(params) => <TextField {...params} placeholder='부문을 검색하세요!' />}

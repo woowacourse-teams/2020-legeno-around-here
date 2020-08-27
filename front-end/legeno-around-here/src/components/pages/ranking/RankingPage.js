@@ -47,23 +47,25 @@ const RankingPage = () => {
 
   /* 처음에 보여줄 글 목록을 가져옴 */
   useEffect(() => {
-    findRankedPostsFromPage(mainAreaId, criteria, 0, accessToken).then(
-      (firstPosts) => {
-        console.log(firstPosts);
-        if (firstPosts.length === 0) {
+    findRankedPostsFromPage(mainAreaId, criteria, 0, accessToken)
+      .then((firstPosts) => {
+        if (!firstPosts || firstPosts.length === 0) {
           setHasMore(false);
           return;
         }
         setPosts(firstPosts);
-      },
-    );
+      })
+      .catch((e) => {
+        console.log(e);
+        setHasMore(false);
+      });
     setPage(1);
   }, [mainAreaId, accessToken, criteria]);
 
   const fetchNextPosts = () => {
     findRankedPostsFromPage(mainAreaId, criteria, page, accessToken)
       .then((nextPosts) => {
-        if (nextPosts.length === 0) {
+        if (!nextPosts || nextPosts.length === 0) {
           setHasMore(false);
           return;
         }
@@ -81,7 +83,7 @@ const RankingPage = () => {
   };
 
   /* 공동순위 처리를 위해서 필요한 변수들 */
-  let zzangCountOfBeforePost = 0;
+  let zzangCountOfBeforePost = -1;
   let rankOfBeforePost = 0;
 
   return (
@@ -111,10 +113,8 @@ const RankingPage = () => {
             post.zzang.count === zzangCountOfBeforePost
               ? rankOfBeforePost
               : index + 1;
-          console.log(post.zzang.count === zzangCountOfBeforePost);
           zzangCountOfBeforePost = post.zzang.count;
           rankOfBeforePost = rank;
-          console.log('###');
           return (
             <RankingItem
               key={post.id}

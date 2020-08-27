@@ -59,7 +59,7 @@ export const createPost = async (postData, accessToken) => {
     const response = await axios.post(DEFAULT_URL + '/posts', postData, config);
     if (response.status === HTTP_STATUS_CREATED) {
       alert('전송에 성공했습니다!');
-      document.location.href = '/posts/' + response.headers.location;
+      document.location.href = response.headers.location;
     }
   } catch (error) {
     redirectLoginWhenUnauthorized(error);
@@ -268,7 +268,7 @@ export const findMyInfo = (accessToken) => {
     });
 };
 
-export const findCurrentPostsFromPage = async (mainAreaId, page, sectorId, accessToken) => {
+export const findCurrentPostsFromPage = async (page, accessToken, mainAreaId, sectorId) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -442,7 +442,7 @@ export const findPost = async (accessToken, postId) => {
     .catch((error) => {
       redirectLoginWhenUnauthorized(error);
       alert(`자랑글을 가져올 수 없습니다.${error}`);
-      document.location.href = '/';
+      document.location.href = '/home';
     });
 };
 
@@ -464,6 +464,26 @@ export const findCommentsByPostId = async (accessToken, postId) => {
     .catch((error) => {
       redirectLoginWhenUnauthorized(error);
       alert(`해당 글의 댓글을 가져올 수 없습니다.${error}`);
+    });
+};
+
+export const findOthersProfileById = async ({ accessToken, userId }) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-Auth-Token': accessToken,
+    },
+  };
+  return axios
+    .get(DEFAULT_URL + '/users/' + userId, config)
+    .then(async (response) => {
+      const userResponse = await response.data;
+      console.log(userResponse);
+      return userResponse;
+    })
+    .catch((error) => {
+      redirectLoginWhenUnauthorized(error);
+      alert(`회원정보를 가져올 수 없습니다.${error}`);
     });
 };
 
