@@ -11,8 +11,9 @@ const AwardItem = ({ award }) => {
       <ListItem alignItems='flex-start'>
         <ListItemText primary={award.name + ' 부문'} secondary={award.date} />
         <div>
-          <Link to={award.location}>더 보기...</Link>
-          <Typography variant='subtitle1'>{award.location}</Typography>
+          <Link to={award.location}>
+            <Typography>부문 상세</Typography>
+          </Link>
         </div>
       </ListItem>
       <Divider />
