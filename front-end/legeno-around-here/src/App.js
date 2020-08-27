@@ -16,7 +16,7 @@ import Notification from './components/pages/home/Notification';
 import InitPage from './components/pages/InitPage';
 import OtherPosts from './components/pages/OthersProfile/OtherPosts';
 import ErrorPage from './components/pages/ErrorPage';
-import SectorDetailPage from './components/pages/sector/SectorDetailPage'
+import SectorDetailPage from './components/pages/sector/SectorDetailPage';
 
 function App() {
   const mainArea = localStorage.getItem('mainAreaName');

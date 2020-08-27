@@ -10,7 +10,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import { findAllSimpleSectors, getUnreadNotificationCount } from '../../api/API';
 import AreaSearch from '../../AreaSearch';
-import LinkWithoutStyle from '../../../util/LinkWithoutStyle'
+import LinkWithoutStyle from '../../../util/LinkWithoutStyle';
 
 const useStyles = makeStyles(() => ({
   grow: {
@@ -49,6 +49,7 @@ const HomeTopBar = ({ setter, sectorId }) => {
     setter.setPage(0);
     setter.setPosts([]);
     setter.setSectorId(optionId);
+    setter.setLocationParams('');
   };
 
   useEffect(() => {

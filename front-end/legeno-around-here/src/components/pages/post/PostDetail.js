@@ -12,7 +12,7 @@ import PostImages from './PostImages';
 import { convertDateFormat } from '../../../util/TimeUtils';
 import UpdatePostButton from './UpdatePostButton';
 import PostReportSection from './PostReportSection';
-import LinkWithoutStyle from '../../../util/LinkWithoutStyle'
+import LinkWithoutStyle from '../../../util/LinkWithoutStyle';
 
 const PostDetail = ({ post, myInfo }) => {
   const accessToken = getAccessTokenFromCookie();
@@ -22,6 +22,7 @@ const PostDetail = ({ post, myInfo }) => {
   const [zzang, setZzang] = useState(post.zzang.activated);
   const [zzangCount, setZzangCount] = useState(post.zzang.count);
   const isMyPost = post.creator.id === myInfo.id;
+
   let keyValue = 0;
 
   const onWritingChanged = (e) => {

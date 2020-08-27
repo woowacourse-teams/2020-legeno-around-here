@@ -13,7 +13,9 @@ const PostDetailPage = ({ match }) => {
   const accessToken = getAccessTokenFromCookie();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [myInfo, setMyInfo] = useState(null);
+  const [myInfo, setMyInfo] = useState({
+    id: '',
+  });
 
   useEffect(() => {
     const loadMyInfo = async () => {
