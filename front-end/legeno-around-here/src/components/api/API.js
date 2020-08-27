@@ -527,12 +527,6 @@ export const findOthersProfileById = async ({ accessToken, userId }) => {
     });
 };
 
-const redirectLoginWhenUnauthorized = (error) => {
-  if (error.response && error.response.status === 403) {
-    document.location.href = '/login';
-  }
-};
-
 export const getMyNotification = (accessToken, setNotifications) => {
   const config = {
     headers: {
@@ -585,4 +579,31 @@ export const readNotification = (accessToken, id) => {
       alert('알림을 읽음 처리하지 못했습니다.');
       console.log(error);
     });
+};
+
+export const findSector = async (accessToken, sectorId) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-Auth-Token': accessToken,
+    },
+  };
+  return await axios
+    .get(DEFAULT_URL + '/sectors/' + sectorId, config)
+    .then((response) => {
+      if (response.status === HTTP_STATUS_OK) {
+        return response.data;
+      }
+    })
+    .catch((error) => {
+      redirectLoginWhenUnauthorized(error);
+      alert(`부문 상세정보를 가져올 수 없습니다.${error}`);
+      document.location.href = '/home';
+    });
+};
+
+const redirectLoginWhenUnauthorized = (error) => {
+  if (error.response && error.response.status === 403) {
+    document.location.href = '/login';
+  }
 };

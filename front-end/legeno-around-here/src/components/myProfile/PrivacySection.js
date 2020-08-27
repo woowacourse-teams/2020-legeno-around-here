@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 
 import { MAIN_COLOR } from '../../constants/Color';
+import LinkWithoutStyle from '../../util/LinkWithoutStyle'
 
 export const ProfilePhoto = styled.div`
   width: 100px;
@@ -39,13 +39,13 @@ export const PrivacyBox = styled.div`
   text-align: left;
 `;
 
-export const PrivacyEditBox = styled(Link)`
+export const PrivacyEditBox = styled(LinkWithoutStyle)`
   margin: 0px auto;
   font-size: 15px;
   display: block;
 `;
 
-export const PrivacySignOutBox = styled(Link)`
+export const PrivacySignOutBox = styled.div`
   margin: 0px auto;
   font-size: 15px;
   display: block;
