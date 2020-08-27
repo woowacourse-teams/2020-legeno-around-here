@@ -20,7 +20,7 @@ const PostDetailTopBar = () => {
   return (
     <AppBar position='sticky'>
       <Toolbar>
-        <IconButton color='inherit' edge='start' onClick={() => (document.location.href = '/')}>
+        <IconButton color='inherit' edge='start' onClick={() => (document.location.href = '/home')}>
           <ArrowBackIosIcon />
         </IconButton>
         <div className={classes.grow} />

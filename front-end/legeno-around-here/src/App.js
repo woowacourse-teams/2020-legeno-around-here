@@ -12,6 +12,7 @@ import RankingPage from './components/pages/ranking/RankingPage';
 import MyPosts from './components/pages/myProfile/MyPosts';
 import HomePage from './components/pages/home/HomePage';
 import Notice from './components/pages/home/Notice';
+import InitPage from './components/pages/InitPage';
 
 function App() {
   const mainArea = localStorage.getItem('mainAreaName');
@@ -24,7 +25,8 @@ function App() {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path='/' exact component={HomePage} />
+        <Route path='/' exact component={InitPage} />
+        <Route path='/home' exact component={HomePage} />
         <Route path='/join' exact component={Join} />
         <Route path='/login' exact component={Login} />
         <Route path='/users/me' exact component={MyProfilePage} />

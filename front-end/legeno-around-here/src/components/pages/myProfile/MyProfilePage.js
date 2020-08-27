@@ -50,7 +50,7 @@ function MyProfilePage() {
 
   return (
     <>
-      <TopBar backButtonLink='/' />
+      <TopBar backButtonLink='/home' />
       <TopSection>
         <ProfilePhoto photoUrl={profilePhotoUrl} />
         <PrivacyBox>
@@ -70,9 +70,9 @@ function MyProfilePage() {
         <AwardSummary awardName='TOP50' awardCount={12} />
       </AwardsSection>
       <NavSection>
-        <NavElement linkTo='/'>수상내역</NavElement>
+        <NavElement linkTo='/home'>수상내역</NavElement>
         <NavElement linkTo='/my-posts'>작성글</NavElement>
-        <NavElement linkTo='/'>작성 댓글</NavElement>
+        <NavElement linkTo='/home'>작성 댓글</NavElement>
         <MySectorSection />
       </NavSection>
       <Bottom selected={PROFILE} />
