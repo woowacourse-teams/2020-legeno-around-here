@@ -83,7 +83,7 @@ VALUES (1, '탕수육 사진1',
         now(), now());
 
 INSERT INTO notification
-(id, created_at, deleted_at, modified_at, comment_id, content, post_id, read, receiver_id,
+(id, created_at, deleted_at, modified_at, comment_id, content, post_id, is_read, receiver_id,
  sector_id, user_id)
 VALUES (1, now(), null, now(), null, '이것은 안읽은 글 짱 알림.', 1, false, 3, null, null),
        (2, now() - 1, null, now(), null, '이것은 읽은 글 짱 알림', 1, false, 3, null, null),
