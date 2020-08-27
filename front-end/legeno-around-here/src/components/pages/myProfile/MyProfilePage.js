@@ -12,11 +12,11 @@ import {
   Nickname,
   PrivacyBox,
   PrivacyEditBox,
-  PrivacyRightBox,
+  PrivacyRightEditLinks,
   PrivacySignOutBox,
   ProfilePhoto,
-  TopSection,
-} from '../../myProfile/PrivacySection';
+  TopSection, TopSectionWithoutPhoto,
+} from '../../myProfile/PrivacySection'
 import { AwardsSection, AwardSummary } from '../../myProfile/AwardSection';
 import { NavElement, NavSection } from '../../myProfile/LinksSection';
 import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
@@ -54,16 +54,20 @@ function MyProfilePage() {
       <TopBar />
       <TopSection>
         <ProfilePhoto photoUrl={profilePhotoUrl} />
-        <PrivacyBox>
-          <Typography component='h1' variant='h5'>
-            <Nickname>{nickname}</Nickname>
-          </Typography>
-          <Email>{email}</Email>
-        </PrivacyBox>
-        <PrivacyRightBox>
-          <PrivacyEditBox to='/myProfileEdit'>수정</PrivacyEditBox>
-          <PrivacySignOutBox onClick={logout}>로그아웃</PrivacySignOutBox>
-        </PrivacyRightBox>
+        <TopSectionWithoutPhoto>
+          <PrivacyBox>
+            <Typography component='h1' variant='h5'>
+              <Nickname>{nickname}</Nickname>
+            </Typography>
+            <Email>{email}</Email>
+          </PrivacyBox>
+          <PrivacyRightEditLinks>
+            <Typography>
+              <PrivacyEditBox to='/myProfileEdit'>수정</PrivacyEditBox>
+              <PrivacySignOutBox onClick={logout}>로그아웃</PrivacySignOutBox>
+            </Typography>
+          </PrivacyRightEditLinks>
+        </TopSectionWithoutPhoto>
       </TopSection>
       <AwardsSection>
         <AwardSummary awardName='TOP3' awardCount={1} />
@@ -73,7 +77,7 @@ function MyProfilePage() {
       <NavSection>
         <NavElement linkTo='/home'>수상내역</NavElement>
         <NavElement linkTo='/my-posts'>작성글</NavElement>
-        <NavElement linkTo='/home'>작성 댓글</NavElement>
+        {/*<NavElement linkTo='/home'>작성 댓글</NavElement>*/}
         <MySectorSection />
       </NavSection>
       <BottomBlank />
