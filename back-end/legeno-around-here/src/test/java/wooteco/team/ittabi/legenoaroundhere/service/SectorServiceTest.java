@@ -404,7 +404,8 @@ class SectorServiceTest extends ServiceTest {
         sectorService.updateSectorState(sectorId, sectorStateApprovedRequest);
 
         List<Notification> notifications = notificationRepository
-            .findAllByReceiverAndCreatedAtIsAfter(admin, TEST_NOTIFICATION_BEFORE_DATE_TIME)
+            .findAllByReceiverAndCreatedAtIsAfterOrderByIdDesc(admin,
+                TEST_NOTIFICATION_BEFORE_DATE_TIME)
             .stream()
             .filter(notification -> notification.getContent().contains(KEYWORD_AWARD))
             .collect(Collectors.toList());
@@ -428,7 +429,8 @@ class SectorServiceTest extends ServiceTest {
         sectorService.updateSectorState(sectorId, sectorStateApprovedRequest);
 
         List<Notification> notifications = notificationRepository
-            .findAllByReceiverAndCreatedAtIsAfter(admin, TEST_NOTIFICATION_BEFORE_DATE_TIME)
+            .findAllByReceiverAndCreatedAtIsAfterOrderByIdDesc(admin,
+                TEST_NOTIFICATION_BEFORE_DATE_TIME)
             .stream()
             .filter(notification -> notification.getContent().contains(KEYWORD_SECTOR_APPROVED))
             .collect(Collectors.toList());
@@ -453,7 +455,8 @@ class SectorServiceTest extends ServiceTest {
         sectorService.updateSectorState(sectorId, sectorStateApprovedRequest);
 
         List<Notification> notifications = notificationRepository
-            .findAllByReceiverAndCreatedAtIsAfter(admin, TEST_NOTIFICATION_BEFORE_DATE_TIME)
+            .findAllByReceiverAndCreatedAtIsAfterOrderByIdDesc(admin,
+                TEST_NOTIFICATION_BEFORE_DATE_TIME)
             .stream()
             .filter(notification -> notification.getContent().contains(KEYWORD_SECTOR_REJECTED))
             .collect(Collectors.toList());

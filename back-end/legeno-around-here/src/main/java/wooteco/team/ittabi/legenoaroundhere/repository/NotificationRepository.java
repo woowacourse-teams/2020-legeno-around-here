@@ -10,7 +10,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-    List<Notification> findAllByReceiverAndCreatedAtIsAfter(User receiver,
+    List<Notification> findAllByReceiverAndCreatedAtIsAfterOrderByIdDesc(User receiver,
         LocalDateTime afterDateTime);
 
     List<Notification> findAllByReceiverAndPost(User receiver, Post post);
