@@ -43,7 +43,8 @@ public class NotificationService {
 
         LocalDateTime beforeOneWeek = now().minusDays(DAY_OF_ONE_WEEK);
         List<Notification> notifications
-            = notificationRepository.findAllByReceiverAndCreatedAtIsAfter(user, beforeOneWeek);
+            = notificationRepository
+            .findAllByReceiverAndCreatedAtIsAfterOrderByIdDesc(user, beforeOneWeek);
 
         return NotificationResponseAssembler.listAssemble(notifications);
     }

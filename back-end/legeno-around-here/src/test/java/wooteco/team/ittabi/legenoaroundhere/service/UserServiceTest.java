@@ -128,7 +128,8 @@ class UserServiceTest extends ServiceTest {
             .orElseThrow(() -> new NotExistsException("유저가 없습니다."));
 
         List<Notification> notifications = notificationRepository
-            .findAllByReceiverAndCreatedAtIsAfter(user, TEST_NOTIFICATION_BEFORE_DATE_TIME);
+            .findAllByReceiverAndCreatedAtIsAfterOrderByIdDesc(user,
+                TEST_NOTIFICATION_BEFORE_DATE_TIME);
         assertThat(notifications.size()).isEqualTo(1);
 
         Notification notification = notifications.get(0);
