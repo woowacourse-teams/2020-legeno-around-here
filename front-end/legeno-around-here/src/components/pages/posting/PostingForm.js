@@ -127,6 +127,7 @@ const PostingForm = () => {
           placeholder='자신의 자랑을 입력해주세요!'
           onChange={onWritingChanged}
           value={writing}
+          variant='outlined'
           inputProps={{ maxLength: 2000 }}
         />
         <PostingFormSectorSearch setSector={setSector} />
