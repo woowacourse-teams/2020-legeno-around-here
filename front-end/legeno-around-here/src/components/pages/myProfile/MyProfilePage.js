@@ -6,7 +6,7 @@ import { PROFILE } from '../../../constants/BottomItems';
 import { findMyInfo } from '../../api/API';
 import Loading from '../../Loading';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
-import { Typography } from '@material-ui/core';
+import { Typography, Container } from '@material-ui/core';
 import {
   Email,
   Nickname,
@@ -15,8 +15,9 @@ import {
   PrivacyRightEditLinks,
   PrivacySignOutBox,
   ProfilePhoto,
-  TopSection, TopSectionWithoutPhoto,
-} from '../../myProfile/PrivacySection'
+  TopSection,
+  TopSectionWithoutPhoto,
+} from '../../myProfile/PrivacySection';
 import { AwardsSection, AwardSummary } from '../../myProfile/AwardSection';
 import { NavElement, NavSection } from '../../myProfile/LinksSection';
 import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
@@ -54,36 +55,38 @@ const MyProfilePage = () => {
   return (
     <>
       <TopBar />
-      <TopSection>
-        <ProfilePhoto photoUrl={profilePhotoUrl} />
-        <TopSectionWithoutPhoto>
-          <PrivacyBox>
-            <Typography component='h1' variant='h5'>
-              <Nickname>{nickname}</Nickname>
-            </Typography>
-            <Email>{email}</Email>
-          </PrivacyBox>
-          <PrivacyRightEditLinks>
-            <Typography>
-              <PrivacyEditBox to='/myProfileEdit'>수정</PrivacyEditBox>
-              <PrivacySignOutBox onClick={logout}>로그아웃</PrivacySignOutBox>
-            </Typography>
-          </PrivacyRightEditLinks>
-        </TopSectionWithoutPhoto>
-      </TopSection>
-      <AwardsSection>
-        <AwardSummary awardName='TOP1' awardsCount={awardsCount !== null ? awardsCount.topOne : 0} />
-        <AwardSummary awardName='TOP3' awardsCount={awardsCount !== null ? awardsCount.topThree : 0} />
-        <AwardSummary awardName='부문 수상' awardsCount={awardsCount !== null ? awardsCount.sector : 0} />
-      </AwardsSection>
+      <Container>
+        <TopSection>
+          <ProfilePhoto photoUrl={profilePhotoUrl} />
+          <TopSectionWithoutPhoto>
+            <PrivacyBox>
+              <Typography component='h1' variant='h5'>
+                <Nickname>{nickname}</Nickname>
+              </Typography>
+              <Email>{email}</Email>
+            </PrivacyBox>
+            <PrivacyRightEditLinks>
+              <Typography>
+                <PrivacyEditBox to='/myProfileEdit'>수정</PrivacyEditBox>
+                <PrivacySignOutBox onClick={logout}>로그아웃</PrivacySignOutBox>
+              </Typography>
+            </PrivacyRightEditLinks>
+          </TopSectionWithoutPhoto>
+        </TopSection>
+        <AwardsSection>
+          <AwardSummary awardName='TOP1' awardsCount={awardsCount !== null ? awardsCount.topOne : 0} />
+          <AwardSummary awardName='TOP3' awardsCount={awardsCount !== null ? awardsCount.topThree : 0} />
+          <AwardSummary awardName='부문 수상' awardsCount={awardsCount !== null ? awardsCount.sector : 0} />
+        </AwardsSection>
 
-      <NavSection>
-        <NavElement linkTo='/my-awards'>수상내역</NavElement>
-        <NavElement linkTo='/my-posts'>작성글</NavElement>
-        {/*<NavElement linkTo='/home'>작성 댓글</NavElement>*/}
-        <MySectorSection />
-      </NavSection>
-      <BottomBlank />
+        <NavSection>
+          <NavElement linkTo='/my-awards'>수상내역</NavElement>
+          <NavElement linkTo='/my-posts'>작성글</NavElement>
+          {/*<NavElement linkTo='/home'>작성 댓글</NavElement>*/}
+          <MySectorSection />
+        </NavSection>
+        <BottomBlank />
+      </Container>
       <Bottom selected={PROFILE} />
     </>
   );

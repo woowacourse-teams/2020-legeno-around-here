@@ -13,6 +13,7 @@ import RankingItem from './RankingItem';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import Container from '@material-ui/core/Container';
 
 const useStyle = makeStyles(() => ({
   filterSection: {
@@ -87,33 +88,37 @@ const RankingPage = () => {
   return (
     <>
       <TopBar />
-      <div className={classes.filterSection}>
-        <FormControl className={classes.durationFilter}>
-          <Select native value={criteria} onChange={handleChange}>
-            <option value='total'>역대</option>
-            <option value='month'>월간</option>
-            <option value='week'>주간</option>
-            <option value='yesterday'>어제</option>
-          </Select>
-        </FormControl>
+      <Container>
+        <div className={classes.filterSection}>
+          <FormControl className={classes.durationFilter}>
+            <Select native value={criteria} onChange={handleChange}>
+              <option value='total'>역대</option>
+              <option value='month'>월간</option>
+              <option value='week'>주간</option>
+              <option value='yesterday'>어제</option>
+            </Select>
+          </FormControl>
 
-        <Typography className={classes.sectorFilter}>부문 전체</Typography>
-      </div>
-      <InfiniteScroll
-        next={fetchNextPosts}
-        hasMore={hasMore}
-        loader={<Loading />}
-        dataLength={posts.length}
-        endMessage={<h3>모두 읽으셨습니다!</h3>}
-      >
-        {posts.map((post, index) => {
-          const rank = post.zzang.count === zzangCountOfBeforePost ? rankOfBeforePost : index + 1;
-          zzangCountOfBeforePost = post.zzang.count;
-          rankOfBeforePost = rank;
-          return <RankingItem key={post.id} post={post} rank={rank} whetherToPrintZzangCount={criteria === `total`} />;
-        })}
-      </InfiniteScroll>
-      <BottomBlank />
+          <Typography className={classes.sectorFilter}>부문 전체</Typography>
+        </div>
+        <InfiniteScroll
+          next={fetchNextPosts}
+          hasMore={hasMore}
+          loader={<Loading />}
+          dataLength={posts.length}
+          endMessage={<h3>모두 읽으셨습니다!</h3>}
+        >
+          {posts.map((post, index) => {
+            const rank = post.zzang.count === zzangCountOfBeforePost ? rankOfBeforePost : index + 1;
+            zzangCountOfBeforePost = post.zzang.count;
+            rankOfBeforePost = rank;
+            return (
+              <RankingItem key={post.id} post={post} rank={rank} whetherToPrintZzangCount={criteria === `total`} />
+            );
+          })}
+        </InfiniteScroll>
+        <BottomBlank />
+      </Container>
       <Bottom selected={RANKING} />
     </>
   );

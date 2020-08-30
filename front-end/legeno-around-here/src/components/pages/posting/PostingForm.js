@@ -123,7 +123,7 @@ const PostingForm = () => {
           id='standard-multiline-static'
           label=''
           multiline
-          rows={20}
+          rows={10}
           placeholder='자신의 자랑을 입력해주세요!'
           onChange={onWritingChanged}
           value={writing}
