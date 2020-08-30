@@ -40,17 +40,17 @@ export default function PrimarySearchAppBar() {
 
   return (
     <>
-      <AppBar position="sticky">
+      <AppBar position='absolute'>
         <Toolbar>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <IconButton
-              edge="start"
+              edge='start'
               className={classes.menuButton}
-              color="inherit"
-              aria-label="open drawer"
-              type="submit"
-              form="posting-form"
+              color='inherit'
+              aria-label='open drawer'
+              type='submit'
+              form='posting-form'
             >
               <SendIcon />
             </IconButton>
