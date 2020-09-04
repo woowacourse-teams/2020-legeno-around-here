@@ -3,7 +3,7 @@
   <property name="ERR_LOG_FILE_NAME" value="err_log"/>
   <property name="LOG_PATTERN"
     value="%-5level %d{yy-MM-dd HH:mm:ss}[%thread] [%logger{0}:%line] - %msg%n"/>
-  <property name="LOG_PATH" value="~/logs/"/>
+  <property name="LOG_PATH" value="logs"/>
   <property name="LOG_FILE_NAME" value="normal_log"/>
   <appender class="ch.qos.logback.core.ConsoleAppender" name="CONSOLE">
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
