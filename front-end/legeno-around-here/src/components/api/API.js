@@ -585,6 +585,8 @@ export const deletePost = (accessToken, postId) => {
       if (response.status !== HTTP_STATUS_NO_CONTENT) {
         throw new Error("올바르지 않은 응답코드 수신");
       }
+      alert("자랑글이 정상적으로 삭제되었습니다!");
+      document.location.href = '/home';
     })
     .catch((error) => {
       redirectLoginWhenUnauthorized(error);
