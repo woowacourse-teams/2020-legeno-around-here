@@ -575,7 +575,6 @@ export const findSector = async (accessToken, sectorId) => {
 export const deletePost = (accessToken, postId) => {
   const config = {
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
       'X-Auth-Token': accessToken,
     },
   };

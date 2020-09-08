@@ -7,7 +7,6 @@ const onDeletePost = (accessToken, postId) => {
 };
 
 const DeletePostButton = ({accessToken, postId}) => {
-  console.log(postId)
   return (
     <Button onClick={() => onDeletePost(accessToken, postId)}>
       글 삭제
