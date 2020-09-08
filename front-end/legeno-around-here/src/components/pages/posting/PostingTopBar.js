@@ -4,13 +4,12 @@ import IconButton from '@material-ui/core/IconButton';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import SendIcon from '@material-ui/icons/Send';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import handleBackButtonClicked from '../../../util/BackButtonHandler';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(0),
   },
   title: {
     display: 'block',
@@ -39,24 +38,16 @@ export default function PrimarySearchAppBar() {
   const classes = useStyles();
 
   return (
-    <>
-      <AppBar position='absolute'>
-        <Toolbar>
-          <div className={classes.grow} />
-          <div className={classes.sectionDesktop}>
-            <IconButton
-              edge='start'
-              className={classes.menuButton}
-              color='inherit'
-              aria-label='open drawer'
-              type='submit'
-              form='posting-form'
-            >
-              <SendIcon />
-            </IconButton>
-          </div>
-        </Toolbar>
-      </AppBar>
-    </>
+    <AppBar position='absolute'>
+      <Toolbar>
+        <IconButton edge='start' color='inherit' aria-label='open drawer' onClick={handleBackButtonClicked}>
+          <ArrowBackIcon />
+        </IconButton>
+        <div className={classes.grow} />
+        <IconButton edge='end' color='inherit' aria-label='open drawer' type='submit' form='posting-form'>
+          <SendIcon />
+        </IconButton>
+      </Toolbar>
+    </AppBar>
   );
 }

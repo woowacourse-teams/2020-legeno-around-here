@@ -70,7 +70,7 @@ const HomeTopBar = ({ setter, sectorId }) => {
             renderInput={(params) => <TextField {...params} placeholder='부문을 검색하세요!' />}
           />
           <div className={classes.grow} />
-          <div className={classes.sectionDesktop}>
+          <div>
             <LinkWithoutStyle to='/notification'>
               <IconButton aria-label='show 17 new notifications' color='inherit'>
                 <Badge badgeContent={unreadNotification} color='secondary'>

@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-import TopBar from '../myProfile/myProfileTopBar';
+import MyProfileEditTopBar from '../myProfileEdit/MyProfileEditTopBar';
 import Bottom from '../../Bottom';
 import { PROFILE } from '../../../constants/BottomItems';
 import { findMyInfo, updateUser } from '../../api/API';
@@ -63,7 +63,7 @@ function MyProfileEditPage() {
 
   return (
     <>
-      <TopBar />
+      <MyProfileEditTopBar />
       <form className={classes.basicLayout} onSubmit={onSubmit}>
         <PhotoEditSection profilePhoto={profilePhoto} setProfilePhoto={setProfilePhoto} accessToken={accessToken} />
         <div className={classes.infoEditSection}>

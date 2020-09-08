@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PostDetailTopBar = () => {
+const MyProfileEditTopBar = () => {
   const classes = useStyles();
 
   return (
@@ -30,4 +30,4 @@ const PostDetailTopBar = () => {
   );
 };
 
-export default PostDetailTopBar;
+export default MyProfileEditTopBar;
