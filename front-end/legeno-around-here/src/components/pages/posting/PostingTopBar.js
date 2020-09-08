@@ -40,7 +40,7 @@ export default function PrimarySearchAppBar() {
 
   return (
     <>
-      <AppBar position='absolute'>
+      <AppBar position='sticky'>
         <Toolbar>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
