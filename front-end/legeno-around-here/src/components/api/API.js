@@ -572,6 +572,28 @@ export const findSector = async (accessToken, sectorId) => {
     });
 };
 
+export const deletePost = (accessToken, postId) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-Auth-Token': accessToken,
+    },
+  };
+  axios
+    .delete(DEFAULT_URL + '/posts/' + postId, config)
+    .then((response) => {
+      if (response.status !== HTTP_STATUS_NO_CONTENT) {
+        throw new Error("올바르지 않은 응답코드 수신");
+      }
+    })
+    .catch((error) => {
+      redirectLoginWhenUnauthorized(error);
+      if (error.response && error.response.status !== 403) {
+        alert("비정상적인 원인에 의해 글 삭제에 실패하였습니다. 사이트 운영자에게 문의해주세요..");
+      }
+    });
+};
+
 const redirectLoginWhenUnauthorized = (error) => {
   if (error.response && error.response.status === 403) {
     document.location.href = '/login';
