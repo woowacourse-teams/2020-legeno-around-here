@@ -17,12 +17,6 @@ import { createPostReport } from '../../api/API';
 import Loading from '../../Loading';
 
 const useStyles = makeStyles((theme) => ({
-  menuButton: {
-    marginRight: theme.spacing(0),
-  },
-  title: {
-    display: 'block',
-  },
   modal: {
     display: 'flex',
     alignItems: 'center',

@@ -16,9 +16,6 @@ const useStyles = makeStyles(() => ({
   grow: {
     flexGrow: 1,
   },
-  flex: {
-    display: 'flex',
-  },
 }));
 
 const SIMPLE_ALL_SECTOR = {

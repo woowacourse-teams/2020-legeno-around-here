@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import LinkWithoutStyle from '../../util/LinkWithoutStyle'
+import LinkWithoutStyle from '../../util/LinkWithoutStyle';
 
 export const NavSection = styled.div`
   width: 97%;

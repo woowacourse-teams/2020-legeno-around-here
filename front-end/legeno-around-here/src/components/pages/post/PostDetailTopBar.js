@@ -10,9 +10,6 @@ const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
   },
-  sectionDesktop: {
-    display: 'flex',
-  },
 }));
 
 const PostDetailTopBar = () => {
