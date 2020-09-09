@@ -9,6 +9,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
 import { convertDateFormat } from '../../../util/TimeUtils';
 import useStyle from './RankingItemStyle';
+import LinesEllipsis from 'react-lines-ellipsis';
 
 const FIRST_PRIZE_IMAGE_URL = '/images/gold.png';
 const SECOND_PRIZE_IMAGE_URL = '/images/silver.png';
@@ -34,26 +35,13 @@ const RankingItem = ({ post, rank, whetherToPrintZzangCount }) => {
   };
   const classes = useStyle(props);
 
-  const {
-    area,
-    commentsCount,
-    createdAt,
-    creator,
-    id,
-    zzang,
-    sector,
-    writing,
-  } = post;
+  const { area, commentsCount, createdAt, creator, id, zzang, sector, writing } = post;
 
   return (
-    <Card
-      className={classes.card}
-      data-id={id}
-      onClick={() => (document.location.href = `/posts/${id}`)}
-    >
+    <Card className={classes.card} data-id={id} onClick={() => (document.location.href = `/posts/${id}`)}>
       <div className={classes.rank}>
         {rank > 3 ? (
-          <Typography component="h5" variant="h5">
+          <Typography component='h5' variant='h5'>
             {rank}
           </Typography>
         ) : (
@@ -62,34 +50,25 @@ const RankingItem = ({ post, rank, whetherToPrintZzangCount }) => {
       </div>
       <div className={classes.details}>
         <CardContent className={classes.content}>
-          <Typography component="h6" variant="h5">
+          <Typography component='h6' variant='h5'>
             {sector.name} 부문
           </Typography>
-          <Typography variant="subtitle1" color="textSecondary">
+          <Typography variant='subtitle1' color='textSecondary'>
             {convertDateFormat(createdAt)}
           </Typography>
-          <Typography variant="subtitle1" color="textSecondary">
+          <Typography variant='subtitle1' color='textSecondary'>
             작성자 : {creator.nickname}
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
+          <Typography variant='body2' color='textSecondary'>
             작성 지역 : {area.fullName}
           </Typography>
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            component="p"
-            className={classes.writing}
-          >
-            {writing}
+          <Typography variant='subtitle2' color='textSecondary' className={classes.writing}>
+            <LinesEllipsis text={writing} maxLine='3' ellipsis='...' trimRight basedOn='letters' />
           </Typography>
         </CardContent>
         <CardActions className={classes.reactions} disableSpacing>
           <IconButton className={classes.reactionIconSpace}>
-            {zzang.activated === true ? (
-              <FavoriteIcon className={classes.reactionIcon} />
-            ) : (
-              <FavoriteBorderIcon />
-            )}
+            {zzang.activated === true ? <FavoriteIcon className={classes.reactionIcon} /> : <FavoriteBorderIcon />}
             {zzang.count}
           </IconButton>
           <IconButton>
