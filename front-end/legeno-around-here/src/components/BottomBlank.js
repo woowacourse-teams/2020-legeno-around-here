@@ -10,7 +10,7 @@ const useStyles = makeStyles(() => ({
 const BottomBlank = () => {
   const classes = useStyles();
 
-  return <div className={classes.blankMarginBottom}></div>;
+  return <div className={classes.blankMarginBottom} />;
 };
 
 export default BottomBlank;
