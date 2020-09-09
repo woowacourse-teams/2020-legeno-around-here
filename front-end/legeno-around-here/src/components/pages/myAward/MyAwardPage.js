@@ -7,6 +7,7 @@ import { findMyAwards } from '../../api/API';
 import Loading from '../../Loading';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import Awards from './Awards';
+import Container from '@material-ui/core/Container';
 
 const MyAwardPage = () => {
   const accessToken = getAccessTokenFromCookie();
@@ -29,9 +30,11 @@ const MyAwardPage = () => {
   return (
     <>
       <MyAwardTopBar />
-      <Awards awards={awards} />
-      <BottomBlank />
-      <Bottom selected={PROFILE} />
+      <Container>
+        <Awards awards={awards} />
+        <BottomBlank />
+        <Bottom selected={PROFILE} />
+      </Container>
     </>
   );
 };
