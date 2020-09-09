@@ -35,7 +35,7 @@ public class Name {
 
     private static void validate(String name) {
         if (Objects.isNull(name) || isInvalid(name.trim().replaceAll("  +", " "))) {
-            throw new WrongUserInputException("SectorName이 유효하지 않습니다.");
+            throw new WrongUserInputException("부문명을 입력해주세요!");
         }
     }
 

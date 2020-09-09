@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-import TopBar from './myProfileTopBar';
+import MyPostsTopBar from './MyPostsTopBar';
 import Bottom from '../../Bottom';
 import { PROFILE } from '../../../constants/BottomItems';
 import Loading from '../../Loading';
@@ -9,6 +9,7 @@ import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import { findMyPostsFromPage } from '../../api/API';
 import PostItem from '../../PostItem';
 import BottomBlank from '../../BottomBlank';
+import Container from '@material-ui/core/Container';
 
 function MyPosts() {
   const [page, setPage] = useState(0);
@@ -46,20 +47,22 @@ function MyPosts() {
 
   return (
     <>
-      <TopBar backButtonLink='/users/me' />
-      <InfiniteScroll
-        next={fetchNextPosts}
-        hasMore={hasMore}
-        loader={<Loading />}
-        dataLength={posts.length}
-        endMessage={<h3>모두 읽으셨습니다!</h3>}
-      >
-        {posts.map((post) => (
-          <PostItem key={post.id} post={post} />
-        ))}
-      </InfiniteScroll>
-      <BottomBlank />
-      <Bottom selected={PROFILE} />
+      <MyPostsTopBar backButtonLink='/users/me' />
+      <Container>
+        <InfiniteScroll
+          next={fetchNextPosts}
+          hasMore={hasMore}
+          loader={<Loading />}
+          dataLength={posts.length}
+          endMessage={<h3>모두 읽으셨습니다!</h3>}
+        >
+          {posts.map((post) => (
+            <PostItem key={post.id} post={post} />
+          ))}
+        </InfiniteScroll>
+        <BottomBlank />
+        <Bottom selected={PROFILE} />
+      </Container>
     </>
   );
 }

@@ -27,7 +27,7 @@ public class Description {
 
     private void validate(String description) {
         if (Objects.isNull(description) || isInvalid(description.trim().replaceAll(" +", " "))) {
-            throw new WrongUserInputException("SectorDescription이 유효하지 않습니다.");
+            throw new WrongUserInputException("부문 설명을 작성해주세요!");
         }
     }
 

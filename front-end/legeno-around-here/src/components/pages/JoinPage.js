@@ -144,7 +144,7 @@ function JoinForm() {
 
   const mailAuthToggleFunction = useCallback(() => {
     if (isMailSent === false) {
-      alert('인증 메일을 전송합니다. 잠시만 기다려주세요.');
+      alert('인증 메일을 전송했습니다.');
       sendAuthMail(email, setIsEmailDisabled, setMailAuthToggle, setIsMailSent);
       return;
     }

@@ -41,7 +41,7 @@ public class PostSearch {
                 .distinct()
                 .collect(Collectors.toList());
         } catch (NumberFormatException e) {
-            throw new WrongUserInputException("sectorIds 필터에 올바르지 않은 Id가 입력되었습니다.");
+            throw new WrongUserInputException("존재하지 않는 부문입니다.");
         }
     }
 

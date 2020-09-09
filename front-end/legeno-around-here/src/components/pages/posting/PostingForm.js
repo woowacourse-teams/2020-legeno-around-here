@@ -91,7 +91,7 @@ const PostingForm = () => {
     if (writing === '' && images.length === 0) {
       throw new Error('아무것도 안 쓴 글을 올릴 수 없습니다! 뭔가 써주세요 :)');
     }
-    if (sector.id === null) {
+    if (sector === null || sector.id === null) {
       throw new Error('부문을 선택해주세요!');
     }
   };
