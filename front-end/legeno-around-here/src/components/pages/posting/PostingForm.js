@@ -11,6 +11,7 @@ import useStyles from './PostingFormStyles';
 import SectorApplyButton from '../sector/SectorApplyButton';
 import PostingFormImages from './PostingFormImages';
 import PostingFormSectorSearch from './PostingFormSectorSearch';
+import { List } from 'immutable';
 
 const PostingForm = () => {
   const classes = useStyles();
@@ -22,7 +23,7 @@ const PostingForm = () => {
     id: localStorage.getItem('mainAreaId'),
     name: localStorage.getItem('mainAreaName'),
   });
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState(List([]));
   const [loading, setLoading] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
 
@@ -38,7 +39,7 @@ const PostingForm = () => {
 
     setImageLoading(true);
     await savePostImages(formData, accessToken).then((response) => {
-      setImages(response.data);
+      setImages(images.concat(List(response.data)));
     });
     setImageLoading(false);
   };
@@ -53,7 +54,7 @@ const PostingForm = () => {
   };
 
   const countImages = () => {
-    return <Typography display='inline'>총 {images.length} 개의 사진을 올렸습니다!</Typography>;
+    return <Typography display='inline'>총 {images.size} 개의 사진을 올렸습니다!</Typography>;
   };
 
   const submitPost = (e) => {
@@ -90,7 +91,7 @@ const PostingForm = () => {
     if (writing === '' && images.length === 0) {
       throw new Error('아무것도 안 쓴 글을 올릴 수 없습니다! 뭔가 써주세요 :)');
     }
-    if (sector.id === null) {
+    if (sector === null || sector.id === null) {
       throw new Error('부문을 선택해주세요!');
     }
   };
@@ -116,7 +117,7 @@ const PostingForm = () => {
         />
         {countImages()}
         {imageLoading && <Loading />}
-        {images.length > 0 && <PostingFormImages handleImageDelete={handleImageDelete} images={images} />}
+        {images.size > 0 && <PostingFormImages handleImageDelete={handleImageDelete} images={images.toJS()} />}
         <TextField
           type='text'
           fullWidth

@@ -22,12 +22,6 @@ const useStyles = makeStyles((theme) => ({
   center: {
     textAlign: 'center',
   },
-  menuButton: {
-    marginRight: theme.spacing(0),
-  },
-  title: {
-    display: 'block',
-  },
   modal: {
     display: 'flex',
     alignItems: 'center',

@@ -2,20 +2,21 @@ import React, { useEffect, useState } from 'react';
 import Loading from '../../Loading';
 import { Typography } from '@material-ui/core';
 
-import { findPost, savePostImages, updatePost } from '../../api/API';
+import { updatePost, findPost, savePostImages } from '../../api/API';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import useStyles from '../posting/PostingFormStyles';
 import PostingFormImages from './PostingFormImages';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
+import { List } from 'immutable';
 
 const PostingUpdateForm = ({ postId }) => {
   const classes = useStyles();
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [writing, setWriting] = useState('');
   const [post, setPost] = useState(null);
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState(List([]));
   const [sectorName, setSectorName] = useState(null);
   const [areaName, setAreaName] = useState(null);
   const [imageLoading, setImageLoading] = useState(false);
@@ -27,7 +28,7 @@ const PostingUpdateForm = ({ postId }) => {
       const foundPost = await findPost(accessToken, postId);
       setPost(foundPost);
       setWriting(foundPost.writing);
-      setImages(foundPost.images);
+      setImages(List(foundPost.images));
       setSectorName(foundPost.sector.name);
       setAreaName(localStorage.getItem('mainAreaName'));
       setLoading(false);
@@ -47,7 +48,7 @@ const PostingUpdateForm = ({ postId }) => {
 
     setImageLoading(true);
     await savePostImages(formData, accessToken).then((response) => {
-      setImages(response.data);
+      setImages(images.concat(List(response.data)));
     });
     setImageLoading(false);
   };
@@ -62,7 +63,7 @@ const PostingUpdateForm = ({ postId }) => {
   };
 
   const countImages = () => {
-    return <Typography display='inline'>총 {images.length} 개의 사진이 있습니다!</Typography>;
+    return <Typography display='inline'>총 {images.size} 개의 사진이 있습니다!</Typography>;
   };
 
   const submitPost = (e) => {
@@ -91,7 +92,7 @@ const PostingUpdateForm = ({ postId }) => {
   };
 
   const validateForm = () => {
-    if (writing === '' && images.length === 0) {
+    if (writing === '') {
       throw new Error('아무것도 안 쓴 글을 올릴 수 없습니다! 뭔가 써주세요 :)');
     }
   };
@@ -116,14 +117,14 @@ const PostingUpdateForm = ({ postId }) => {
       />
       {countImages()}
       {imageLoading && <Loading />}
-      {images.length > 0 && <PostingFormImages handleImageDelete={handleImageDelete} images={images} />}
+      {images.size > 0 && <PostingFormImages handleImageDelete={handleImageDelete} images={images.toJS()} />}
       <TextField
         type='text'
         fullWidth
         id='standard-multiline-static'
         helperText={`${writing.length}/2000`}
         multiline
-        rows={10}
+        rows={20}
         placeholder='자신의 자랑을 입력해주세요!'
         onChange={onWritingChanged}
         value={writing}

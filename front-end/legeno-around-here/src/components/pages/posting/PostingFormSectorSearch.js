@@ -12,12 +12,6 @@ import Loading from '../../Loading';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 
 const useStyles = makeStyles((theme) => ({
-  menuButton: {
-    marginRight: theme.spacing(0),
-  },
-  title: {
-    display: 'block',
-  },
   modal: {
     display: 'flex',
     alignItems: 'center',
