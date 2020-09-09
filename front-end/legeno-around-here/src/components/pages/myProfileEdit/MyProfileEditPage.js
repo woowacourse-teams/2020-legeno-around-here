@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-import TopBar from '../myProfile/myProfileTopBar';
+import MyProfileEditTopBar from '../myProfileEdit/MyProfileEditTopBar';
 import Bottom from '../../Bottom';
 import { PROFILE } from '../../../constants/BottomItems';
 import { findMyInfo, updateUser } from '../../api/API';
@@ -11,6 +11,7 @@ import Loading from '../../Loading';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import PhotoEditSection from './PhotoEditSection';
 import useStyle from './MyProfileEditStyles';
+import Container from '@material-ui/core/Container';
 
 export const DEFAULT_IMAGE_URL = '/images/default-profile.png';
 
@@ -63,32 +64,34 @@ function MyProfileEditPage() {
 
   return (
     <>
-      <TopBar />
-      <form className={classes.basicLayout} onSubmit={onSubmit}>
-        <PhotoEditSection profilePhoto={profilePhoto} setProfilePhoto={setProfilePhoto} accessToken={accessToken} />
-        <div className={classes.infoEditSection}>
-          <Typography component='div'>{email}</Typography>
-          <div className={classes.nicknameEditSection}>
-            <Typography component='h1' variant='h5'>
-              {originalNickname}
-            </Typography>
-            <Typography component='h1' variant='h5'>
-              <TextField
-                id='standard-helperText'
-                label='새 닉네임'
-                className={classes.newNicknameInput}
-                onChange={handleNicknameInputChanging}
-                helperText='공란이면 닉네임이 바뀌지 않습니다.'
-                inputProps={{ maxLength: 10 }}
-              />
-            </Typography>
+      <MyProfileEditTopBar />
+      <Container>
+        <form className={classes.basicLayout} onSubmit={onSubmit}>
+          <PhotoEditSection profilePhoto={profilePhoto} setProfilePhoto={setProfilePhoto} accessToken={accessToken} />
+          <div className={classes.infoEditSection}>
+            <Typography component='div'>{email}</Typography>
+            <div className={classes.nicknameEditSection}>
+              <Typography component='h1' variant='h5'>
+                {originalNickname}
+              </Typography>
+              <Typography component='h1' variant='h5'>
+                <TextField
+                  id='standard-helperText'
+                  label='새 닉네임'
+                  className={classes.newNicknameInput}
+                  onChange={handleNicknameInputChanging}
+                  helperText='공란이면 닉네임이 바뀌지 않습니다.'
+                  inputProps={{ maxLength: 10 }}
+                />
+              </Typography>
+            </div>
           </div>
-        </div>
-        <Button type='submit' variant='contained' color='primary' className={classes.submit}>
-          저장
-        </Button>
-      </form>
-      <Bottom selected={PROFILE} />
+          <Button type='submit' variant='contained' color='primary' className={classes.submit}>
+            저장
+          </Button>
+        </form>
+        <Bottom selected={PROFILE} />
+      </Container>
     </>
   );
 }

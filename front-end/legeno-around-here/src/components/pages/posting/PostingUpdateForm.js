@@ -124,6 +124,7 @@ const PostingUpdateForm = ({ postId }) => {
         id='standard-multiline-static'
         label=''
         multiline
+        variant='outlined'
         rows={20}
         placeholder='자신의 자랑을 입력해주세요!'
         onChange={onWritingChanged}

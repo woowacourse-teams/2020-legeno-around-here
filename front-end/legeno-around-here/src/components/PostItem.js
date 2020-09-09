@@ -12,9 +12,6 @@ import CommentIcon from '@material-ui/icons/Comment';
 import { convertDateFormat } from '../util/TimeUtils';
 
 const useStyles = makeStyles(() => ({
-  grow: {
-    flexGrow: 1,
-  },
   root: {
     display: 'flex',
   },

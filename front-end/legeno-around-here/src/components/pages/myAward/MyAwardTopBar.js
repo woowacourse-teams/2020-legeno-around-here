@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PostDetailTopBar = () => {
+const MyAwardTopBar = () => {
   const classes = useStyles();
 
   return (
@@ -27,4 +27,4 @@ const PostDetailTopBar = () => {
   );
 };
 
-export default PostDetailTopBar;
+export default MyAwardTopBar;

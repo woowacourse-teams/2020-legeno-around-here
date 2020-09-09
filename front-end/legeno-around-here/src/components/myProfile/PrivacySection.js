@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { MAIN_COLOR } from '../../constants/Color';
-import LinkWithoutStyle from '../../util/LinkWithoutStyle'
+import LinkWithoutStyle from '../../util/LinkWithoutStyle';
 
 export const ProfilePhoto = styled.div`
   width: 100px;
