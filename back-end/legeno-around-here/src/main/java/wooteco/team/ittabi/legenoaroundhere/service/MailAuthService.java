@@ -63,7 +63,7 @@ public class MailAuthService {
     public void checkAuth(MailAuthCheckRequest mailAuthCheckRequest) {
         Email email = new Email(mailAuthCheckRequest.getEmail());
         MailAuth mailAuth = mailAuthRepository.findByEmail(email)
-            .orElseThrow(() -> new NotExistsException("올바르지 않은 이메일입니다."));
+            .orElseThrow(() -> new NotExistsException("인증되지 않은 이메일입니다."));
 
         validateAuthNumber(mailAuth, mailAuthCheckRequest.getAuthNumber());
     }

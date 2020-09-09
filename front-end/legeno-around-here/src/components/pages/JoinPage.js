@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { createUser, checkJoined, sendAuthMail, checkAuthNumber } from '../api/API';
-import LinkWithoutStyle from '../../util/LinkWithoutStyle'
+import LinkWithoutStyle from '../../util/LinkWithoutStyle';
 
 const mailInputStyle = {
   width: '70%',
@@ -150,7 +150,7 @@ function JoinForm() {
 
   const mailAuthToggleFunction = useCallback(() => {
     if (isMailSent === false) {
-      alert('인증 메일을 전송합니다. 잠시만 기다려주세요.');
+      alert('인증 메일을 전송했습니다.');
       sendAuthMail(email, setIsEmailDisabled, setMailAuthToggle, setIsMailSent);
       return;
     }
