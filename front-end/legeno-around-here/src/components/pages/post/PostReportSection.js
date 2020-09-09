@@ -15,8 +15,13 @@ import Grid from '@material-ui/core/Grid';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import { createPostReport } from '../../api/API';
 import Loading from '../../Loading';
+import LinesEllipsis from 'react-lines-ellipsis';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
+  center: {
+    textAlign: 'center',
+  },
   menuButton: {
     marginRight: theme.spacing(0),
   },
@@ -110,11 +115,19 @@ const PostReportSection = ({ post }) => {
               <Loading />
             ) : (
               <>
-                <h4>내 용 : {post.writing}</h4>
-                <h4>작성자 : {post.creator.nickname}</h4>
+                <Typography variant='subtitle1'>
+                  <div className={classes.center}>내용</div>
+                  <LinesEllipsis text={post.writing} maxLine='2' ellipsis='...' trimRight basedOn='letters' />
+                </Typography>
+                <Typography variant='subtitle1'>
+                  <div className={classes.center}>작성자</div>
+                  <div className={classes.center}>{post.creator.nickname}</div>
+                </Typography>
                 <FormControl component='fieldset'>
                   <FormLabel component='legend'>사유선택</FormLabel>
-                  <h5>여러 사유에 해당하는 경우, 대표적인 사유 1개를 선택해주세요!</h5>
+                  <Typography variant='subtitle2'>
+                    여러 사유에 해당하는 경우, 대표적인 사유 1개를 선택해주세요!
+                  </Typography>
                   <RadioGroup aria-label='gender' value={value} onChange={handleChange}>
                     {reportText.map((report) => (
                       <FormControlLabel key={report.id} value={report.value} control={<Radio />} label={report.value} />

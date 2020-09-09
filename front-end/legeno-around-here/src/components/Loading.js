@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 import ReactLoading from 'react-loading';
+import Typography from '@material-ui/core/Typography';
 
 const CenterAlign = styled.div`
   width: 98%;
@@ -28,10 +29,12 @@ const Loading = () => {
 
   return (
     <CenterAlign>
-      <TextForWait>잠시만 기다려주세요...</TextForWait>
+      <TextForWait>
+        <Typography>잠시만 기다려주세요...</Typography>
+      </TextForWait>
       <ReactLoading
         type={'bars'}
-        color="#0123B4"
+        color='#0123B4'
         height={'20%'}
         width={'20%'}
         delay={500}
