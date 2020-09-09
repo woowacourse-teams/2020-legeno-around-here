@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import BottomBlank from '../../BottomBlank';
 import Bottom from '../../Bottom';
 import { PROFILE } from '../../../constants/BottomItems';
-import TopBar from '../myProfile/myProfileTopBar';
+import MyAwardTopBar from '../myAward/MyAwardTopBar';
 import { findMyAwards } from '../../api/API';
 import Loading from '../../Loading';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
@@ -28,7 +28,7 @@ const MyAwardPage = () => {
   }
   return (
     <>
-      <TopBar />
+      <MyAwardTopBar />
       <Awards awards={awards} />
       <BottomBlank />
       <Bottom selected={PROFILE} />
