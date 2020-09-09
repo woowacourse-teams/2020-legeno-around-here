@@ -8,7 +8,7 @@ const PostingPage = () => {
   return (
     <>
       <PostingTopBar />
-      <Container>
+      <Container style={{ paddingTop: '60px' }}>
         <PostingForm />
       </Container>
     </>

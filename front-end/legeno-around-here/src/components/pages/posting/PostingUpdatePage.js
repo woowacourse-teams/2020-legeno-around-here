@@ -9,7 +9,7 @@ const PostingUpdatePage = ({ match }) => {
   return (
     <>
       <PostingTopBar />
-      <Container style={{ paddingTop: '55px' }}>
+      <Container style={{ paddingTop: '60px' }}>
         <PostingUpdateForm postId={match.params.postId} />
       </Container>
       <Bottom selected={WRITING} />
