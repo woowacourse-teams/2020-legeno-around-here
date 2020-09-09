@@ -121,7 +121,7 @@ const PostingForm = () => {
           type='text'
           fullWidth
           id='standard-multiline-static'
-          label=''
+          helperText={`${writing.length}/2000`}
           multiline
           rows={10}
           placeholder='자신의 자랑을 입력해주세요!'

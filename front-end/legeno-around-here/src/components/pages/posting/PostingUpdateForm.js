@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Loading from '../../Loading';
 import { Typography } from '@material-ui/core';
 
-import { updatePost, findPost, savePostImages } from '../../api/API';
+import { findPost, savePostImages, updatePost } from '../../api/API';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import useStyles from '../posting/PostingFormStyles';
 import PostingFormImages from './PostingFormImages';
@@ -121,12 +121,14 @@ const PostingUpdateForm = ({ postId }) => {
         type='text'
         fullWidth
         id='standard-multiline-static'
-        label=''
+        helperText={`${writing.length}/2000`}
         multiline
-        rows={20}
+        rows={10}
         placeholder='자신의 자랑을 입력해주세요!'
         onChange={onWritingChanged}
         value={writing}
+        variant='outlined'
+        inputProps={{ maxLength: 2000 }}
       />
       {sectorName && <Typography className={classes.sector}>{sectorName}</Typography>}
       {areaName && <Typography className={classes.area}>{areaName}</Typography>}
