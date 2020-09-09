@@ -10,15 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { createUser, checkJoined, sendAuthMail, checkAuthNumber } from '../api/API';
-import LinkWithoutStyle from '../../util/LinkWithoutStyle'
-
-const mailInputStyle = {
-  width: '70%',
-};
-
-const mailCheckStyle = {
-  width: '30%',
-};
+import LinkWithoutStyle from '../../util/LinkWithoutStyle';
 
 const Copyright = () => {
   return (
@@ -56,6 +48,8 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  input: { width: '58%' },
+  check: { width: '38%', border: '1px solid gray', marginLeft: '4%', marginTop: '2%' },
 }));
 
 function JoinForm() {
@@ -187,7 +181,7 @@ function JoinForm() {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                style={mailInputStyle}
+                className={classes.input}
                 variant='outlined'
                 required
                 fullWidth
@@ -200,7 +194,7 @@ function JoinForm() {
                 disabled={isEmailDisabled}
                 onChange={handleChangeEmail}
               />
-              <Button style={mailCheckStyle} onClick={checkEmail}>
+              <Button variant='contained' color='primary' className={classes.check} onClick={checkEmail}>
                 메일 중복 확인
               </Button>
             </Grid>
@@ -211,7 +205,7 @@ function JoinForm() {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                style={mailInputStyle}
+                className={classes.input}
                 variant='outlined'
                 required
                 fullWidth
@@ -224,7 +218,7 @@ function JoinForm() {
                 disabled={isAuthNumberDisabled}
                 onChange={handleChangeAuthNumber}
               />
-              <Button style={mailCheckStyle} onClick={mailAuthToggleFunction}>
+              <Button variant='contained' color='primary' className={classes.check} onClick={mailAuthToggleFunction}>
                 {mailAuthToggle}
               </Button>
             </Grid>
