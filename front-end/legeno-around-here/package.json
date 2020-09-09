@@ -10,6 +10,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.2",
+    "immutable": "^4.0.0-rc.12",
     "material-ui": "^0.20.2",
     "prettier": "^2.0.5",
     "react": "^16.13.1",

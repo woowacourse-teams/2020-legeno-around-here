@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PrimarySearchAppBar() {
+const PostingTopBar = () => {
   const classes = useStyles();
 
   return (
@@ -29,4 +29,6 @@ export default function PrimarySearchAppBar() {
       </Toolbar>
     </AppBar>
   );
-}
+};
+
+export default PostingTopBar;
