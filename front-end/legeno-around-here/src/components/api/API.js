@@ -7,7 +7,7 @@ const HTTP_STATUS_NO_CONTENT = 204;
 
 const DIRECTION_ASC = 'asc';
 
-const DEFAULT_SIZE = 10;
+const DEFAULT_SIZE = 20;
 const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
 const DEFAULT_URL = 'https://back.capzzang.co.kr';
