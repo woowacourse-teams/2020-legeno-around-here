@@ -9,7 +9,7 @@ const useStyles = makeStyles(() => ({
   text: {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    width: '50%',
+    width: '55%',
   },
 }));
 

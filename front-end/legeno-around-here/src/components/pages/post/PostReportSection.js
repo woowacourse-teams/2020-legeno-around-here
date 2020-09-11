@@ -19,9 +19,6 @@ import LinesEllipsis from 'react-lines-ellipsis';
 import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
-  center: {
-    textAlign: 'center',
-  },
   modal: {
     display: 'flex',
     alignItems: 'center',
@@ -109,13 +106,13 @@ const PostReportSection = ({ post }) => {
               <Loading />
             ) : (
               <>
+                <Typography color='textSecondary'>내용</Typography>
                 <Typography variant='subtitle1'>
-                  <div className={classes.center}>내용</div>
                   <LinesEllipsis text={post.writing} maxLine='2' ellipsis='...' trimRight basedOn='letters' />
                 </Typography>
+                <Typography color='textSecondary'>작성자</Typography>
                 <Typography variant='subtitle1'>
-                  <div className={classes.center}>작성자</div>
-                  <div className={classes.center}>{post.creator.nickname}</div>
+                  <div>{post.creator.nickname}</div>
                 </Typography>
                 <FormControl component='fieldset'>
                   <FormLabel component='legend'>사유선택</FormLabel>

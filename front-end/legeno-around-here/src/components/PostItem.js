@@ -11,7 +11,7 @@ import LinesEllipsis from 'react-lines-ellipsis';
 
 const useStyles = makeStyles(() => ({
   root: {
-    borderBottom: '1px solid black',
+    borderBottom: '1.5px solid darkgray',
     marginTop: '5px',
   },
   cover: {
