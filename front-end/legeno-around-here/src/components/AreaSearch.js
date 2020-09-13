@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 const DEFAULT_SIZE = 10;
 
-const AreaSearch = ({history}) => {
+const AreaSearch = ({history, selected}) => {
   const mainArea = localStorage.getItem('mainAreaName');
 
   if (!mainArea) {
@@ -140,7 +140,7 @@ const AreaSearch = ({history}) => {
                 height={'400px'}
                 endMessage={<Typography>모든 지역을 확인하셨습니다!</Typography>}
               >
-                {areas && areas.length > 0 && <Areas areas={areas} history={history} />}
+                {areas && areas.length > 0 && <Areas areas={areas} history={history} selected={selected} />}
               </InfiniteScroll>
             )}
           </div>

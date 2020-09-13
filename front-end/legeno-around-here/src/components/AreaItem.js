@@ -3,8 +3,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { makeStyles } from '@material-ui/core/styles';
 
-function refreshHome(history) {
-  history.push('/home-reload');
+function refreshHome(history, selected) {
+  history.push('/' + selected + '-reload');
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -15,19 +15,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const setMainArea = (area, history) => {
+const setMainArea = (area, history, selected) => {
   localStorage.setItem('mainAreaId', area.id);
   localStorage.setItem('mainAreaName', area.lastDepthName);
-  refreshHome(history);
+  refreshHome(history, selected);
 };
 
-const AreaItem = ({ area, history }) => {
+const AreaItem = ({ area, history, selected }) => {
   const classes = useStyles();
 
   return (
     <>
       <div className={classes.root}>
-        <ListItem button alignItems='center' onClick={() => setMainArea(area, history)}>
+        <ListItem button alignItems='center' onClick={() => setMainArea(area, history, selected)}>
           <ListItemText primary={area.fullName} />
         </ListItem>
       </div>

@@ -56,7 +56,7 @@ const HomeTopBar = ({ setter, sectorId, history }) => {
     <>
       <AppBar position='sticky'>
         <Toolbar>
-          <AreaSearch history={history} />
+          <AreaSearch history={history} selected='home'/>
           <Autocomplete
             id='sector-search'
             freeSolo

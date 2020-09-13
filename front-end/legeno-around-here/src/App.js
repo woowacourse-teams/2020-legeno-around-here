@@ -9,6 +9,7 @@ import MyProfileEditPage from './components/pages/myProfileEdit/MyProfileEditPag
 import PostingUpdatePage from './components/pages/posting/PostingUpdatePage';
 import MyProfilePage from './components/pages/myProfile/MyProfilePage';
 import RankingPage from './components/pages/ranking/RankingPage';
+import RankingPageReload from './components/pages/ranking/RankingPageReload';
 import OthersProfilePage from './components/pages/OthersProfile/OthersProfilePage';
 import MyPosts from './components/pages/myProfile/MyPosts';
 import HomePage from './components/pages/home/HomePage';
@@ -45,6 +46,7 @@ function App() {
         <Route path='/posts/:postId' exact component={PostDetailPage} />
         <Route path='/home' exact component={HomePage} />
         <Route path='/ranking' exact component={RankingPage} />
+        <Route path='/ranking-reload' exact component={RankingPageReload} />
         <Route path='/myProfileEdit' exact component={MyProfileEditPage} />
         <Route path='/users/:userId' exact component={OthersProfilePage} />
         <Route path='/users/:userId/awards' exact component={OtherAwardPage} />

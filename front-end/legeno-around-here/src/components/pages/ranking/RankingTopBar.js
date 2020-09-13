@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   return (
     <AppBar position='sticky'>
       <Toolbar>
-        <AreaSearch history={history} />
+        <AreaSearch history={history} selected='ranking'/>
         <Typography>캡짱은 누구?</Typography>
         <div className={classes.grow} />
         <div className={classes.sectionDesktop}>

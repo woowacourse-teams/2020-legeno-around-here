@@ -49,8 +49,8 @@ const PostDetail = ({ post, myInfo, history }) => {
       setLoading(true);
       const isCommentCreated = await createComment(post.id, writing, accessToken, history);
       if (isCommentCreated) {
-        const loadedComments = await loadComments();
-        setComments(loadedComments);
+        await loadComments();
+        setWriting('');
       }
       setLoading(false);
     };
@@ -108,7 +108,7 @@ const PostDetail = ({ post, myInfo, history }) => {
         </Grid>
       </Grid>
 
-      <form onSubmit={submitForm}>
+      <form onSubmit={(e) => {e.preventDefault(); submitForm();}}>
         <Grid container>
           <Grid container item xs={11}>
             <TextField
