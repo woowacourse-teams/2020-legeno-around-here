@@ -12,14 +12,14 @@ import BottomBlank from '../../BottomBlank';
 import Container from '@material-ui/core/Container';
 import PostItem from '../../PostItem';
 
-const HomePage = (match) => {
+const HomePage = ({location, history}) => {
   const accessToken = getAccessTokenFromCookie();
 
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const [sectorId, setSectorId] = useState('none');
-  const [locationParams, setLocationParams] = useState(match.location.search);
+  const [locationParams, setLocationParams] = useState(location.search);
 
   const setter = { setPage, setPosts, setSectorId, setLocationParams };
 
@@ -36,7 +36,7 @@ const HomePage = (match) => {
         selectedSectorId = sectorId;
       }
 
-      const nextPosts = await findCurrentPostsFromPage(page, accessToken, mainAreaId, selectedSectorId);
+      const nextPosts = await findCurrentPostsFromPage(page, accessToken, mainAreaId, selectedSectorId, history);
       if (nextPosts.length === 0) {
         setHasMore(false);
         return;
@@ -56,7 +56,7 @@ const HomePage = (match) => {
 
   return (
     <>
-      <HomeTopBar setter={setter} sectorId={sectorId} />
+      <HomeTopBar setter={setter} sectorId={sectorId} history={history} />
       <Container>
         <InfiniteScroll
           next={loadNextPosts}
@@ -66,7 +66,7 @@ const HomePage = (match) => {
           endMessage={<h3>모두 읽으셨습니다!</h3>}
         >
           {posts.map((post) => (
-            <PostItem key={post.id} post={post} />
+            <PostItem key={post.id} post={post} history={history} />
           ))}
         </InfiniteScroll>
         <BottomBlank />

@@ -9,6 +9,7 @@ const PhotoEditSection = ({
   profilePhoto,
   setProfilePhoto,
   accessToken,
+  history,
 }) => {
   const props = {
     profilePhoto: profilePhoto,
@@ -25,7 +26,7 @@ const PhotoEditSection = ({
   const onImagesChanged = (e) => {
     const formData = new FormData();
     formData.append('image', e.target.files[0]);
-    saveProfilePhoto(formData, accessToken).then((responseData) => {
+    saveProfilePhoto(formData, accessToken, history).then((responseData) => {
       if (responseData) {
         setProfilePhoto({
           id: responseData.id,

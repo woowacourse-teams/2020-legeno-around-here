@@ -12,7 +12,7 @@ import { NavElement, NavSection } from '../../myProfile/LinksSection';
 import Bottom from '../../Bottom';
 import BottomBlank from '../../BottomBlank';
 
-function OthersProfilePage({ match }) {
+function OthersProfilePage({ match, history }) {
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [userId, setUserId] = useState(null);
   const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
@@ -25,6 +25,7 @@ function OthersProfilePage({ match }) {
     findOthersProfileById({
       accessToken: accessToken,
       userId: match.params.userId,
+      history: {history},
     }).then((userResponse) => {
       setNickname(userResponse.nickname);
       setUserId(userResponse.id);
@@ -32,7 +33,7 @@ function OthersProfilePage({ match }) {
       setAwardsCount(userResponse.awardsCount);
     });
     setLoading(false);
-  }, [accessToken, match.params.userId]);
+  }, [accessToken, match.params.userId, history]);
 
   if (loading) {
     return <Loading />;

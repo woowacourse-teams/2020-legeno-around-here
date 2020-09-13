@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 const DEFAULT_SIZE = 10;
 
-const AreaSearch = () => {
+const AreaSearch = ({history}) => {
   const mainArea = localStorage.getItem('mainAreaName');
 
   if (!mainArea) {
@@ -55,7 +55,7 @@ const AreaSearch = () => {
 
   const loadNextAreas = async () => {
     try {
-      const nextAreas = await findAreasFromPage(page, accessToken, areaKeyword);
+      const nextAreas = await findAreasFromPage(page, accessToken, areaKeyword, history);
       if (nextAreas.length < DEFAULT_SIZE) {
         setAreas(areas.concat(nextAreas));
         setPage(page + 1);
@@ -140,7 +140,7 @@ const AreaSearch = () => {
                 height={'400px'}
                 endMessage={<Typography>모든 지역을 확인하셨습니다!</Typography>}
               >
-                {areas && areas.length > 0 && <Areas areas={areas} />}
+                {areas && areas.length > 0 && <Areas areas={areas} history={history} />}
               </InfiniteScroll>
             )}
           </div>

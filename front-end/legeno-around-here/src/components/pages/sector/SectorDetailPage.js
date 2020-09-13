@@ -68,7 +68,7 @@ const useStyle = makeStyles({
   },
 });
 
-const SectorDetailPage = ({ match }) => {
+const SectorDetailPage = ({ match, history }) => {
   const sectorId = match.params.sectorId;
   const accessToken = getAccessTokenFromCookie();
   const [sector, secSector] = useState({
@@ -97,20 +97,20 @@ const SectorDetailPage = ({ match }) => {
   useEffect(() => {
     const loadMyInfo = async () => {
       setLoading(true);
-      const foundMyInfo = await findMyInfo(accessToken);
+      const foundMyInfo = await findMyInfo(accessToken, history);
       setMyInfo(foundMyInfo);
       setLoading(false);
     };
 
     const loadSector = async () => {
       setLoading(true);
-      const sector = await findSector(accessToken, sectorId);
+      const sector = await findSector(accessToken, sectorId, history);
       secSector(sector);
       setLoading(false);
     };
     loadMyInfo();
     loadSector();
-  }, [accessToken, sectorId]);
+  }, [accessToken, sectorId, history]);
 
   if (loading) {
     return <Loading />;

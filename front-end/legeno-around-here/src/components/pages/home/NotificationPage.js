@@ -20,7 +20,7 @@ const useStyle = makeStyles({
   },
 });
 
-const Notification = () => {
+const NotificationPage = ({history}) => {
   const classes = useStyle();
   const accessToken = getAccessTokenFromCookie();
   const [notifications, setNotifications] = useState([]);
@@ -36,7 +36,7 @@ const Notification = () => {
         {(notifications.length === 0) ?
           <Typography className={classes.nothingToNotice}>확인하실 알림이 없습니다!</Typography> : ""}
         {notifications.map((notification) => (
-          <NotificationItem key={notification.id} notification={notification} />
+          <NotificationItem key={notification.id} notification={notification} history={history} />
         ))}
         <BottomBlank />
       </Container>
@@ -45,4 +45,4 @@ const Notification = () => {
   );
 };
 
-export default Notification;
+export default NotificationPage;

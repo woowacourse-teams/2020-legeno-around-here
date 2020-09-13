@@ -11,7 +11,7 @@ import PostItem from '../../PostItem';
 import BottomBlank from '../../BottomBlank';
 import Container from '@material-ui/core/Container';
 
-function MyPosts() {
+function MyPosts({history}) {
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
@@ -20,7 +20,7 @@ function MyPosts() {
   const mainAreaId = localStorage.getItem('mainAreaId');
 
   useEffect(() => {
-    findMyPostsFromPage(mainAreaId, 0, accessToken).then((firstPosts) => {
+    findMyPostsFromPage(mainAreaId, 0, accessToken, history).then((firstPosts) => {
       if (firstPosts.length === 0) {
         setHasMore(false);
         return;
@@ -28,10 +28,10 @@ function MyPosts() {
       setPosts(firstPosts);
     });
     setPage(1);
-  }, [mainAreaId, accessToken]);
+  }, [mainAreaId, accessToken, history]);
 
   const fetchNextPosts = () => {
-    findMyPostsFromPage(mainAreaId, page, accessToken)
+    findMyPostsFromPage(mainAreaId, page, accessToken, history)
       .then((nextPosts) => {
         if (nextPosts.length === 0) {
           setHasMore(false);
@@ -57,7 +57,7 @@ function MyPosts() {
           endMessage={<h3>모두 읽으셨습니다!</h3>}
         >
           {posts.map((post) => (
-            <PostItem key={post.id} post={post} />
+            <PostItem key={post.id} post={post} history={history}/>
           ))}
         </InfiniteScroll>
         <BottomBlank />

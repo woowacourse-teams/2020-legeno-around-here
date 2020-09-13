@@ -9,13 +9,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Areas = ({ areas }) => {
+const Areas = ({ areas, history }) => {
   const classes = useStyles();
 
   return (
     <List component='nav' className={classes.list}>
       {areas.map((area) => {
-        return <AreaItem key={area.id} area={area} />;
+        return <AreaItem key={area.id} area={area} history={history} />;
       })}
     </List>
   );

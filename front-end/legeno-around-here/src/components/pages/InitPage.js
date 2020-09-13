@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function InitPage() {
+const InitPage = ({history}) => {
   const classes = useStyles();
 
   const sleep = (milliseconds) => {
@@ -51,12 +51,12 @@ function InitPage() {
     const accessToken = getAccessTokenFromCookie();
     sleep(2000).then(() => {
       if (accessToken === '') {
-        document.location.href = '/login';
+        history.push('/login');
         return;
       }
-      document.location.href = '/home';
+      history.push('/home');
     });
-  }, []);
+  }, [history]);
 
   return (
     <div className={classes.logo}>

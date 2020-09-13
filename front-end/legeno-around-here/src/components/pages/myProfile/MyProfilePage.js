@@ -24,7 +24,7 @@ import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
 import MySectorSection from './MySectorSection';
 import BottomBlank from '../../BottomBlank';
 
-const MyProfilePage = () => {
+const MyProfilePage = ({history}) => {
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
@@ -34,19 +34,19 @@ const MyProfilePage = () => {
 
   useMemo(() => {
     setLoading(true);
-    findMyInfo(accessToken).then((userResponse) => {
+    findMyInfo(accessToken, history).then((userResponse) => {
       setEmail(userResponse.email);
       setNickname(userResponse.nickname);
       setProfilePhotoUrl(userResponse.image ? userResponse.image.url : DEFAULT_IMAGE_URL);
       setAwardsCount(userResponse.awardsCount);
     });
     setLoading(false);
-  }, [accessToken]);
+  }, [accessToken, history]);
 
   const logout = useCallback(() => {
     alert('로그아웃 되었습니다.');
-    document.location.href = '/login';
-  }, []);
+    history.push('/login');
+  }, [history]);
 
   if (loading) {
     return <Loading />;

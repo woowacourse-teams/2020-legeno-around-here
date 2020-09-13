@@ -23,7 +23,7 @@ const SIMPLE_ALL_SECTOR = {
   name: '전체 부문',
 };
 
-const HomeTopBar = ({ setter, sectorId }) => {
+const HomeTopBar = ({ setter, sectorId, history }) => {
   const classes = useStyles();
   const accessToken = getAccessTokenFromCookie();
   const [simpleSectors, setSimpleSectors] = useState([SIMPLE_ALL_SECTOR]);
@@ -31,12 +31,12 @@ const HomeTopBar = ({ setter, sectorId }) => {
 
   useEffect(() => {
     const loadAllSimpleSectors = async () => {
-      const foundSimpleSectors = await findAllSimpleSectors(accessToken);
+      const foundSimpleSectors = await findAllSimpleSectors(accessToken, history);
       await foundSimpleSectors.unshift(SIMPLE_ALL_SECTOR);
       await setSimpleSectors(foundSimpleSectors);
     };
     loadAllSimpleSectors();
-  }, [accessToken]);
+  }, [accessToken, history]);
 
   const changeSector = (optionId) => {
     if (sectorId === optionId) {
@@ -56,7 +56,7 @@ const HomeTopBar = ({ setter, sectorId }) => {
     <>
       <AppBar position='sticky'>
         <Toolbar>
-          <AreaSearch />
+          <AreaSearch history={history} />
           <Autocomplete
             id='sector-search'
             freeSolo

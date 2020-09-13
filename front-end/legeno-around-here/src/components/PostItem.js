@@ -12,7 +12,7 @@ import LinesEllipsis from 'react-lines-ellipsis';
 const useStyles = makeStyles(() => ({
   root: {
     borderBottom: '1.5px solid darkgray',
-    marginTop: '5px',
+    padding: '10px'
   },
   cover: {
     position: 'relative',
@@ -35,7 +35,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const PostItem = ({ post }) => {
+const PostItem = ({ post, history }) => {
   const classes = useStyles();
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -48,7 +48,7 @@ const PostItem = ({ post }) => {
       justify='flex-start'
       alignItems='center'
       spacing={2}
-      onClick={() => (document.location.href = `/posts/${id}`)}
+      onClick={() => (history.push(`/posts/${id}`))}
       className={classes.root}
     >
       <Grid item xs>

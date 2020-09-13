@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function LoginForm() {
+const LoginForm = ({history}) => {
   const classes = useStyles();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -59,10 +59,10 @@ function LoginForm() {
     setEmail('');
     setPassword('');
   }, []);
-
+  
   const login = useCallback(() => {
-    loginUser(email, password, handleReset);
-  }, [email, password, handleReset]);
+    loginUser(email, password, handleReset, history);
+  }, [email, password, handleReset, history]);
 
   const handleSubmit = useCallback(
     (event) => {

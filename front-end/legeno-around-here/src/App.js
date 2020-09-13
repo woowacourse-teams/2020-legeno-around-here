@@ -12,7 +12,8 @@ import RankingPage from './components/pages/ranking/RankingPage';
 import OthersProfilePage from './components/pages/OthersProfile/OthersProfilePage';
 import MyPosts from './components/pages/myProfile/MyPosts';
 import HomePage from './components/pages/home/HomePage';
-import Notification from './components/pages/home/Notification';
+import HomePageReload from './components/pages/home/HomePageReload';
+import NotificationPage from './components/pages/home/NotificationPage';
 import InitPage from './components/pages/InitPage';
 import OtherPosts from './components/pages/OthersProfile/OtherPosts';
 import ErrorPage from './components/pages/ErrorPage';
@@ -33,6 +34,7 @@ function App() {
       <Switch>
         <Route path='/' exact component={InitPage} />
         <Route path='/home' exact component={HomePage} />
+        <Route path='/home-reload' exact component={HomePageReload} />
         <Route path='/join' exact component={Join} />
         <Route path='/login' exact component={Login} />
         <Route path='/users/me' exact component={MyProfilePage} />
@@ -48,7 +50,7 @@ function App() {
         <Route path='/users/:userId/awards' exact component={OtherAwardPage} />
         <Route path='/my-posts' exact component={MyPosts} />
         <Route path='/my-awards' exact component={MyAwardPage} />
-        <Route path='/notification' exact component={Notification} />
+        <Route path='/notification' exact component={NotificationPage} />
         <Route path='/users/:userId/posts' exact component={OtherPosts} />
         <Route path='*' component={ErrorPage} />
       </Switch>

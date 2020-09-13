@@ -10,7 +10,7 @@ import { findOtherPostsFromPage } from '../../api/API';
 import PostItem from '../../PostItem';
 import BottomBlank from '../../BottomBlank';
 
-function OtherPosts({ match }) {
+function OtherPosts({ match, history }) {
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
@@ -19,7 +19,7 @@ function OtherPosts({ match }) {
   const accessToken = getAccessTokenFromCookie();
 
   useEffect(() => {
-    findOtherPostsFromPage(otherUserId, 0, accessToken).then((firstPosts) => {
+    findOtherPostsFromPage(otherUserId, 0, accessToken, history).then((firstPosts) => {
       if (firstPosts.length === 0) {
         setHasMore(false);
         return;
@@ -27,10 +27,10 @@ function OtherPosts({ match }) {
       setPosts(firstPosts);
     });
     setPage(1);
-  }, [otherUserId, accessToken]);
+  }, [otherUserId, accessToken, history]);
 
   const fetchNextPosts = () => {
-    findOtherPostsFromPage(otherUserId, page, accessToken)
+    findOtherPostsFromPage(otherUserId, page, accessToken, history)
       .then((nextPosts) => {
         if (nextPosts.length === 0) {
           setHasMore(false);
@@ -55,7 +55,7 @@ function OtherPosts({ match }) {
         endMessage={<h3>모두 읽으셨습니다!</h3>}
       >
         {posts.map((post) => (
-          <PostItem key={post.id} post={post} />
+          <PostItem key={post.id} post={post} history={history}/>
         ))}
       </InfiniteScroll>
       <BottomBlank />

@@ -15,7 +15,7 @@ import Container from '@material-ui/core/Container';
 
 export const DEFAULT_IMAGE_URL = '/images/default-profile.png';
 
-function MyProfileEditPage() {
+function MyProfileEditPage({history}) {
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
@@ -31,7 +31,7 @@ function MyProfileEditPage() {
 
   useMemo(() => {
     setLoading(true);
-    findMyInfo(accessToken).then((userResponse) => {
+    findMyInfo(accessToken, history).then((userResponse) => {
       setEmail(userResponse.email);
       setNickname(userResponse.nickname);
       if (userResponse.image) {
@@ -43,7 +43,7 @@ function MyProfileEditPage() {
       setOriginalNickname(userResponse.nickname);
     });
     setLoading(false);
-  }, [accessToken]);
+  }, [accessToken, history]);
 
   if (loading) {
     return <Loading />;
@@ -59,7 +59,7 @@ function MyProfileEditPage() {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    updateUser(nickname, profilePhoto.id, accessToken);
+    updateUser(nickname, profilePhoto.id, accessToken, history);
   };
 
   return (
@@ -67,7 +67,7 @@ function MyProfileEditPage() {
       <MyProfileEditTopBar />
       <Container>
         <form className={classes.basicLayout} onSubmit={onSubmit}>
-          <PhotoEditSection profilePhoto={profilePhoto} setProfilePhoto={setProfilePhoto} accessToken={accessToken} />
+          <PhotoEditSection profilePhoto={profilePhoto} setProfilePhoto={setProfilePhoto} accessToken={accessToken} history={history} />
           <div className={classes.infoEditSection}>
             <Typography component='div'>{email}</Typography>
             <div className={classes.nicknameEditSection}>

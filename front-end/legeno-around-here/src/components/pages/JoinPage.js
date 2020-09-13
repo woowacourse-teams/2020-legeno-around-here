@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   check: { width: '38%', border: '1px solid gray', marginLeft: '4%', marginTop: '2%' },
 }));
 
-function JoinForm() {
+const JoinPage = ({history}) => {
   const classes = useStyles();
   const NICKNAME_MIN_LENGTH = 1;
   const NICKNAME_MAX_LENGTH = 10;
@@ -152,8 +152,8 @@ function JoinForm() {
   }, [email, authNumber, isMailSent]);
 
   const join = useCallback(() => {
-    createUser(email, nickname, password, authNumber, handleReset);
-  }, [email, nickname, password, authNumber, handleReset]);
+    createUser(email, nickname, password, authNumber, handleReset, history);
+  }, [email, nickname, password, authNumber, handleReset, history]);
 
   const handleSubmit = useCallback(
     (event) => {
@@ -302,4 +302,4 @@ function JoinForm() {
   );
 }
 
-export default JoinForm;
+export default JoinPage;

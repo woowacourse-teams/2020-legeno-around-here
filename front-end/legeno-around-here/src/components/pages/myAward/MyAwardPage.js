@@ -9,7 +9,7 @@ import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import Awards from './Awards';
 import Container from '@material-ui/core/Container';
 
-const MyAwardPage = () => {
+const MyAwardPage = ({history}) => {
   const accessToken = getAccessTokenFromCookie();
   const [awards, setAwards] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -17,12 +17,12 @@ const MyAwardPage = () => {
   useEffect(() => {
     const loadMyAwards = async () => {
       setLoading(true);
-      const foundMyAwards = await findMyAwards(accessToken);
+      const foundMyAwards = await findMyAwards(accessToken, history);
       setAwards(foundMyAwards);
       setLoading(false);
     };
     loadMyAwards();
-  }, [accessToken]);
+  }, [accessToken, history]);
 
   if (loading) {
     return <Loading />;
