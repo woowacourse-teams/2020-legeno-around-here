@@ -1,90 +1,103 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
 import { convertDateFormat } from '../util/TimeUtils';
+import Grid from '@material-ui/core/Grid';
+import LinesEllipsis from 'react-lines-ellipsis';
 
 const useStyles = makeStyles(() => ({
   root: {
-    display: 'flex',
-  },
-  details: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  content: {
-    flex: '1 0 auto',
+    borderBottom: '1.5px solid darkgray',
+    marginTop: '5px',
   },
   cover: {
-    flex: '1 0 auto',
+    position: 'relative',
     opacity: 0.7,
     backgroundSize: 'contain',
   },
   photoText: {
-    textAlign: 'center',
-    marginTop: 100,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    color: 'black',
+    fontSize: '2rem',
+  },
+  img: {
+    margin: 'auto',
+    display: 'block',
+    maxWidth: '100%',
+    maxHeight: '100%',
   },
 }));
 
 const PostItem = ({ post }) => {
   const classes = useStyles();
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const { area, commentsCount, createdAt, creator, images, id, zzang, sector, writing } = post;
 
   return (
-    <Card className={classes.root} data-id={id} onClick={() => (document.location.href = `/posts/${id}`)}>
-      <div className={classes.details}>
-        <CardContent className={classes.content}>
-          <Typography component='h6' variant='h5'>
-            {sector.name} 부문
+    <Grid
+      container
+      direction='row'
+      justify='flex-start'
+      alignItems='center'
+      spacing={2}
+      onClick={() => (document.location.href = `/posts/${id}`)}
+      className={classes.root}
+    >
+      <Grid item xs>
+        <Grid item xs>
+          <Typography variant='h6'>{sector.name} 부문</Typography>
+          <Typography variant='subtitle1'>
+            <LinesEllipsis text={writing} maxLine='3' ellipsis='...' trimRight basedOn='letters' />
           </Typography>
-          <Typography variant='subtitle1' color='textSecondary'>
-            {convertDateFormat(createdAt)}
-          </Typography>
-
-          <Typography
-            variant='body2'
-            color='textSecondary'
-            component='p'
-            style={{
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              width: '190px',
-            }}
-          >
-            {writing}
-          </Typography>
-          <Typography variant='subtitle1' color='textSecondary'>
-            작성자 : {creator.nickname}
-          </Typography>
-          <Typography variant='body2' color='textSecondary' component='p'>
-            작성 지역 : {area.fullName}
-          </Typography>
-        </CardContent>
-        <CardActions disableSpacing>
-          <IconButton>
-            {zzang.activated === true ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-            {zzang.count}
-          </IconButton>
-          <IconButton>
-            <CommentIcon />
-            {commentsCount}
-          </IconButton>
-        </CardActions>
-      </div>
+        </Grid>
+        <Grid container direction='column' justify='space-between'>
+          <Grid item xs>
+            <Typography variant='body2' color='textSecondary'>
+              {convertDateFormat(createdAt)}
+            </Typography>
+          </Grid>
+          <Grid item xs>
+            <Typography variant='body2' color='textSecondary' component='p'>
+              <span>'{area.fullName}'에서</span>
+            </Typography>
+          </Grid>
+          <Grid item xs>
+            <Typography variant='body2' color='textSecondary'>
+              <span>'{creator.nickname}'님이 작성하셨습니다.</span>
+            </Typography>
+          </Grid>
+          <Grid item xs>
+            <IconButton size='small'>
+              {zzang.activated === true ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+              {zzang.count}
+            </IconButton>
+            <IconButton size='small'>
+              <CommentIcon />
+              {commentsCount}
+            </IconButton>
+          </Grid>
+        </Grid>
+      </Grid>
       {images.length > 0 && (
-        <CardMedia className={classes.cover} image={images[0].url} title='Live from space album cover'>
-          {images.length > 1 && <div className={classes.photoText}>+{images.length - 1}</div>}
-        </CardMedia>
+        <Grid item xs className={classes.cover}>
+          <img
+            className={classes.img}
+            alt='이미지를 불러오지 못했습니다!'
+            onLoad={() => setIsLoaded(true)}
+            src={images[0].url}
+          />
+          {images.length > 1 && isLoaded && <Typography className={classes.photoText}>+{images.length - 1}</Typography>}
+        </Grid>
       )}
-    </Card>
+    </Grid>
   );
 };
 
