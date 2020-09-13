@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 const HomePageReload = ({history}) => {
     useEffect(() => {
-        history.push('/home');
+        history.replace('/home');
     }, [history]);
 
   return (

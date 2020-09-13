@@ -4,7 +4,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { makeStyles } from '@material-ui/core/styles';
 
 function refreshHome(history, selected) {
-  history.push('/' + selected + '-reload');
+  history.replace('/' + selected + '-reload');
 }
 
 const useStyles = makeStyles((theme) => ({
