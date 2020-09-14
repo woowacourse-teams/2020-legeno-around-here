@@ -11,7 +11,7 @@ import TextField from '@material-ui/core/TextField';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import { List } from 'immutable';
 
-const PostingUpdateForm = ({ postId }) => {
+const PostingUpdateForm = ({ postId, history }) => {
   const classes = useStyles();
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [writing, setWriting] = useState('');
@@ -25,7 +25,7 @@ const PostingUpdateForm = ({ postId }) => {
   useEffect(() => {
     const loadPost = async () => {
       setLoading(true);
-      const foundPost = await findPost(accessToken, postId);
+      const foundPost = await findPost(accessToken, postId, history);
       setPost(foundPost);
       setWriting(foundPost.writing);
       setImages(List(foundPost.images));
@@ -34,7 +34,7 @@ const PostingUpdateForm = ({ postId }) => {
       setLoading(false);
     };
     loadPost();
-  }, [accessToken, postId]);
+  }, [accessToken, postId, history]);
 
   const onImagesChanged = async (e) => {
     const localImages = e.target.files;
@@ -47,7 +47,7 @@ const PostingUpdateForm = ({ postId }) => {
     }
 
     setImageLoading(true);
-    await savePostImages(formData, accessToken).then((response) => {
+    await savePostImages(formData, accessToken, history).then((response) => {
       setImages(images.concat(List(response.data)));
     });
     setImageLoading(false);
@@ -85,7 +85,7 @@ const PostingUpdateForm = ({ postId }) => {
 
     const sendUpdatePost = async () => {
       setLoading(true);
-      await updatePost(post.id, postUpdateData, accessToken);
+      await updatePost(post.id, postUpdateData, accessToken, history);
       setLoading(false);
     };
     sendUpdatePost();

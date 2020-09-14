@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PrimarySearchAppBar() {
+const SectorTopBar = () => {
   const classes = useStyles();
 
   return (
@@ -28,4 +28,6 @@ export default function PrimarySearchAppBar() {
       </AppBar>
     </>
   );
-}
+};
+
+export default SectorTopBar;

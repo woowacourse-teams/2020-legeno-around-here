@@ -13,7 +13,7 @@ import PostingFormImages from './PostingFormImages';
 import PostingFormSectorSearch from './PostingFormSectorSearch';
 import { List } from 'immutable';
 
-const PostingForm = () => {
+const PostingForm = ({ history }) => {
   const classes = useStyles();
   const [accessToken] = useState(getAccessTokenFromCookie());
 
@@ -38,7 +38,7 @@ const PostingForm = () => {
     }
 
     setImageLoading(true);
-    await savePostImages(formData, accessToken).then((response) => {
+    await savePostImages(formData, accessToken, history).then((response) => {
       setImages(images.concat(List(response.data)));
     });
     setImageLoading(false);
@@ -78,7 +78,7 @@ const PostingForm = () => {
 
     const sendPost = async () => {
       setLoading(true);
-      await createPost(postData, accessToken);
+      await createPost(postData, accessToken, history);
       setLoading(false);
     };
     sendPost();
@@ -131,7 +131,7 @@ const PostingForm = () => {
           variant='outlined'
           inputProps={{ maxLength: 2000 }}
         />
-        <PostingFormSectorSearch setSector={setSector} />
+        <PostingFormSectorSearch setSector={setSector} history={history} />
         {sector && sector.id !== null ? <Typography className={classes.sector}>{sector.name}</Typography> : ''}
         <br />
         <Button className={classes.selectAreaButton}>지역 설정</Button>

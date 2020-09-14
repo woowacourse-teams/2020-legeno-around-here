@@ -13,13 +13,7 @@ const useStyles = makeStyles((theme) => ({
 const PostImageItem = ({ image }) => {
   const classes = useStyles();
 
-  return (
-    <CardMedia
-      image={image.url}
-      title={`image id : ${image.id}`}
-      className={classes.image}
-    ></CardMedia>
-  );
+  return <CardMedia image={image.url} title={`image id : ${image.id}`} className={classes.image}></CardMedia>;
 };
 
 export default PostImageItem;

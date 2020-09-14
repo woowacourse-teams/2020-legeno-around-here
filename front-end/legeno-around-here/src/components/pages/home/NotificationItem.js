@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const NotificationItem = ({ notification }) => {
+const NotificationItem = ({ notification, history }) => {
   const accessToken = getAccessTokenFromCookie();
   const classes = useStyles();
 
@@ -36,8 +36,8 @@ const NotificationItem = ({ notification }) => {
 
   const notificationItemOnclick = useCallback(() => {
     readNotification(accessToken, id);
-    document.location.href = location;
-  }, [accessToken, id, location]);
+    history.push(location);
+  }, [accessToken, id, location, history]);
 
   return (
     <Card

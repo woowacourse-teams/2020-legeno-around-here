@@ -13,9 +13,9 @@ import { convertDateFormat } from '../../../util/TimeUtils';
 import UpdatePostButton from './UpdatePostButton';
 import PostReportSection from './PostReportSection';
 import LinkWithoutStyle from '../../../util/LinkWithoutStyle';
-import DeletePostButton from './DeletePostButton'
+import DeletePostButton from './DeletePostButton';
 
-const PostDetail = ({ post, myInfo }) => {
+const PostDetail = ({ post, myInfo, history }) => {
   const accessToken = getAccessTokenFromCookie();
   const [writing, setWriting] = useState('');
   const [comments, setComments] = useState(post.comments);
@@ -31,7 +31,7 @@ const PostDetail = ({ post, myInfo }) => {
   };
 
   const pressZzang = async () => {
-    const isPressed = await pressPostZzang(post.id, accessToken);
+    const isPressed = await pressPostZzang(post.id, accessToken, history);
     if (isPressed) {
       if (zzang) {
         setZzangCount(zzangCount - 1);
@@ -47,10 +47,10 @@ const PostDetail = ({ post, myInfo }) => {
   const submitForm = () => {
     const sendComment = async () => {
       setLoading(true);
-      const isCommentCreated = await createComment(post.id, writing, accessToken);
+      const isCommentCreated = await createComment(post.id, writing, accessToken, history);
       if (isCommentCreated) {
-        const loadedComments = await loadComments();
-        setComments(loadedComments);
+        await loadComments();
+        setWriting('');
       }
       setLoading(false);
     };
@@ -58,7 +58,7 @@ const PostDetail = ({ post, myInfo }) => {
   };
 
   const loadComments = async () => {
-    const foundComments = await findCommentsByPostId(accessToken, post.id);
+    const foundComments = await findCommentsByPostId(accessToken, post.id, history);
     setComments(foundComments);
   };
 
@@ -102,13 +102,18 @@ const PostDetail = ({ post, myInfo }) => {
           <Typography display='inline'>{convertDateFormat(post.createdAt)}</Typography>
           <Typography display='inline'>
             {isMyPost && <UpdatePostButton post={post} />}
-            {isMyPost && <DeletePostButton postId={post.id} accessToken={accessToken}/>}
+            {isMyPost && <DeletePostButton postId={post.id} accessToken={accessToken} history={history} />}
           </Typography>
-          <PostReportSection post={post} myInfo={myInfo} />
+          <PostReportSection post={post} myInfo={myInfo} history={history} />
         </Grid>
       </Grid>
 
-      <form onSubmit={submitForm}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          submitForm();
+        }}
+      >
         <Grid container>
           <Grid container item xs={11}>
             <TextField

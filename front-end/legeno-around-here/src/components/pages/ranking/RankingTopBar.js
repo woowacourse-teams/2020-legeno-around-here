@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PrimarySearchAppBar() {
+const RankingTopBar = ({ history }) => {
   const classes = useStyles();
   const mainArea = localStorage.getItem('mainAreaName');
   const accessToken = getAccessTokenFromCookie();
@@ -37,7 +37,7 @@ export default function PrimarySearchAppBar() {
   return (
     <AppBar position='sticky'>
       <Toolbar>
-        <AreaSearch />
+        <AreaSearch history={history} selected='ranking' />
         <Typography>캡짱은 누구?</Typography>
         <div className={classes.grow} />
         <div className={classes.sectionDesktop}>
@@ -52,4 +52,6 @@ export default function PrimarySearchAppBar() {
       </Toolbar>
     </AppBar>
   );
-}
+};
+
+export default RankingTopBar;

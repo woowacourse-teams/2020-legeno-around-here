@@ -8,7 +8,7 @@ import Loading from '../../Loading';
 import { Container } from '@material-ui/core';
 import BottomBlank from '../../BottomBlank';
 
-const PostDetailPage = ({ match }) => {
+const PostDetailPage = ({ match, history }) => {
   const postId = match.params.postId;
   const accessToken = getAccessTokenFromCookie();
   const [post, setPost] = useState(null);
@@ -18,27 +18,27 @@ const PostDetailPage = ({ match }) => {
   useEffect(() => {
     const loadMyInfo = async () => {
       setLoading(true);
-      const foundMyInfo = await findMyInfo(accessToken);
+      const foundMyInfo = await findMyInfo(accessToken, history);
       setMyInfo(foundMyInfo);
       setLoading(false);
     };
 
     const loadPost = async () => {
       setLoading(true);
-      const post = await findPost(accessToken, postId);
+      const post = await findPost(accessToken, postId, history);
       setPost(post);
       setLoading(false);
     };
     loadMyInfo();
     loadPost();
-  }, [accessToken, postId]);
+  }, [accessToken, postId, history]);
 
   if (loading) return <Loading />;
   return (
     <>
       <PostDetailTopBar />
       <Container>
-        {post && <PostDetail post={post} myInfo={myInfo} />}
+        {post && <PostDetail post={post} myInfo={myInfo} history={history} />}
         <BottomBlank />
       </Container>
       <Bottom />

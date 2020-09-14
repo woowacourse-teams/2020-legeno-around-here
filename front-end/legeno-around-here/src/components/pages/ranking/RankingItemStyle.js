@@ -1,5 +1,5 @@
-import { makeStyles } from '@material-ui/core/styles'
-import { MAIN_COLOR } from '../../../constants/Color'
+import { makeStyles } from '@material-ui/core/styles';
+import { MAIN_COLOR } from '../../../constants/Color';
 
 const useStyle = makeStyles({
   grow: {
@@ -9,10 +9,10 @@ const useStyle = makeStyles({
     display: 'flex',
   },
   rank: (props) => ({
-    height: `${props.prizeImageUrl?'90px':'65px'}`,
+    height: `${props.prizeImageUrl ? '90px' : '65px'}`,
     width: '65px',
-    borderRadius: `${props.prizeImageUrl?'0':'300px'}`,
-    border: `${props.prizeImageUrl? 0 :('1px solid ' + MAIN_COLOR)}`,
+    borderRadius: `${props.prizeImageUrl ? '0' : '300px'}`,
+    border: `${props.prizeImageUrl ? 0 : '1px solid ' + MAIN_COLOR}`,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',

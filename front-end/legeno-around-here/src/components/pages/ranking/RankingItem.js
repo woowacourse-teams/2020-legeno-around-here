@@ -15,7 +15,7 @@ const FIRST_PRIZE_IMAGE_URL = '/images/gold.png';
 const SECOND_PRIZE_IMAGE_URL = '/images/silver.png';
 const THIRD_PRIZE_IMAGE_URL = '/images/bronze.png';
 
-const RankingItem = ({ post, rank, whetherToPrintZzangCount }) => {
+const RankingItem = ({ post, rank, whetherToPrintZzangCount, history }) => {
   const matchRankToPrizeUrl = (rank) => {
     if (rank === 1) {
       return FIRST_PRIZE_IMAGE_URL;
@@ -38,7 +38,7 @@ const RankingItem = ({ post, rank, whetherToPrintZzangCount }) => {
   const { area, commentsCount, createdAt, creator, id, zzang, sector, writing } = post;
 
   return (
-    <Card className={classes.card} data-id={id} onClick={() => (document.location.href = `/posts/${id}`)}>
+    <Card className={classes.card} data-id={id} onClick={() => history.push(`/posts/${id}`)}>
       <div className={classes.rank}>
         {rank > 3 ? (
           <Typography component='h5' variant='h5'>

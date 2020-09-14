@@ -12,7 +12,7 @@ const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
 const DEFAULT_URL = 'https://back.capzzang.co.kr';
 
-export const loginUser = (email, password, handleReset) => {
+export const loginUser = (email, password, handleReset, history) => {
   axios
     .post(DEFAULT_URL + '/login', {
       email,
@@ -21,7 +21,7 @@ export const loginUser = (email, password, handleReset) => {
     .then(async (response) => {
       const tokenResponse = await response.data;
       setAccessTokenCookie(tokenResponse.accessToken);
-      document.location.href = '/home';
+      history.push('/home');
     })
     .catch((error) => {
       const errorResponse = error.response.data;
@@ -30,7 +30,7 @@ export const loginUser = (email, password, handleReset) => {
     });
 };
 
-export const savePostImages = async (formData, accessToken) => {
+export const savePostImages = async (formData, accessToken, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -45,11 +45,11 @@ export const savePostImages = async (formData, accessToken) => {
   } catch (error) {
     const errorResponse = error.response.data;
     alert(errorResponse.errorMessage);
-    redirectLoginWhenUnauthorized(error);
+    redirectLoginWhenUnauthorized(error, history);
   }
 };
 
-export const createPost = async (postData, accessToken) => {
+export const createPost = async (postData, accessToken, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -58,16 +58,17 @@ export const createPost = async (postData, accessToken) => {
   try {
     const response = await axios.post(DEFAULT_URL + '/posts', postData, config);
     if (response.status === HTTP_STATUS_CREATED) {
-      document.location.href = response.headers.location;
+      history.push(response.headers.location);
     }
   } catch (error) {
+    console.log(error);
     const errorResponse = error.response.data;
     alert(errorResponse.errorMessage);
-    redirectLoginWhenUnauthorized(error);
+    redirectLoginWhenUnauthorized(error, history);
   }
 };
 
-export const createPostReport = async (postId, data, accessToken) => {
+export const createPostReport = async (data, accessToken, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -80,11 +81,11 @@ export const createPostReport = async (postId, data, accessToken) => {
   } catch (error) {
     const errorResponse = error.response.data;
     alert(errorResponse.errorMessage);
-    redirectLoginWhenUnauthorized(error);
+    redirectLoginWhenUnauthorized(error, history);
   }
 };
 
-export const updatePost = async (postId, postUpdateData, accessToken) => {
+export const updatePost = async (postId, postUpdateData, accessToken, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -93,16 +94,16 @@ export const updatePost = async (postId, postUpdateData, accessToken) => {
   try {
     const response = await axios.put(DEFAULT_URL + `/posts/${postId}`, postUpdateData, config);
     if (response.status === HTTP_STATUS_OK) {
-      document.location.href = `/posts/${postId}`;
+      history.push(`/posts/${postId}`);
     }
   } catch (error) {
     const errorResponse = error.response.data;
     alert(errorResponse.errorMessage);
-    redirectLoginWhenUnauthorized(error);
+    redirectLoginWhenUnauthorized(error, history);
   }
 };
 
-export const createUser = (email, nickname, password, authNumber, handleReset) => {
+export const createUser = (email, nickname, password, authNumber, handleReset, history) => {
   axios
     .post(DEFAULT_URL + '/join', {
       email,
@@ -112,7 +113,7 @@ export const createUser = (email, nickname, password, authNumber, handleReset) =
     })
     .then((response) => {
       alert('회원가입을 축하드립니다.');
-      document.location.href = '/login';
+      history.push(`/login`);
     })
     .catch((error) => {
       const errorResponse = error.response.data;
@@ -164,7 +165,7 @@ export const checkAuthNumber = (email, authNumber, setIsAuthNumberDisabled) => {
       alert(errorResponse.errorMessage);
     });
 };
-export const saveProfilePhoto = async (formData, accessToken) => {
+export const saveProfilePhoto = async (formData, accessToken, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -178,11 +179,11 @@ export const saveProfilePhoto = async (formData, accessToken) => {
   } catch (error) {
     const errorResponse = error.response.data;
     alert(errorResponse.errorMessage);
-    redirectLoginWhenUnauthorized(error);
+    redirectLoginWhenUnauthorized(error, history);
   }
 };
 
-export const updateUser = async (nickname, imageId, accessToken) => {
+export const updateUser = async (nickname, imageId, accessToken, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -197,15 +198,15 @@ export const updateUser = async (nickname, imageId, accessToken) => {
       },
       config,
     );
-    document.location.href = '/users/me';
+    history.push('/users/me');
   } catch (error) {
     const errorResponse = error.response.data;
     alert(errorResponse.errorMessage);
-    redirectLoginWhenUnauthorized(error);
+    redirectLoginWhenUnauthorized(error, history);
   }
 };
 
-export const createComment = async (postId, writing, accessToken) => {
+export const createComment = async (postId, writing, accessToken, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -219,7 +220,7 @@ export const createComment = async (postId, writing, accessToken) => {
   } catch (error) {
     const errorResponse = error.response.data;
     alert(errorResponse.errorMessage);
-    redirectLoginWhenUnauthorized(error);
+    redirectLoginWhenUnauthorized(error, history);
   }
   return false;
 };
@@ -242,7 +243,7 @@ export const createPendingSector = async (sector, accessToken) => {
   }
 };
 
-export const pressPostZzang = async (postId, accessToken) => {
+export const pressPostZzang = async (postId, accessToken, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -256,12 +257,12 @@ export const pressPostZzang = async (postId, accessToken) => {
   } catch (error) {
     const errorResponse = error.response.data;
     alert(errorResponse.errorMessage);
-    redirectLoginWhenUnauthorized(error);
+    redirectLoginWhenUnauthorized(error, history);
   }
   return false;
 };
 
-export const findMyInfo = (accessToken) => {
+export const findMyInfo = (accessToken, history) => {
   const config = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -277,11 +278,11 @@ export const findMyInfo = (accessToken) => {
     .catch((error) => {
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
-      redirectLoginWhenUnauthorized(error);
+      redirectLoginWhenUnauthorized(error, history);
     });
 };
 
-export const findCurrentPostsFromPage = async (page, accessToken, mainAreaId, sectorId) => {
+export const findCurrentPostsFromPage = async (page, accessToken, mainAreaId, sectorId, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -303,11 +304,11 @@ export const findCurrentPostsFromPage = async (page, accessToken, mainAreaId, se
     .catch((error) => {
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
-      redirectLoginWhenUnauthorized(error);
+      redirectLoginWhenUnauthorized(error, history);
     });
 };
 
-export const findMyAwards = async (accessToken) => {
+export const findMyAwards = async (accessToken, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -319,11 +320,11 @@ export const findMyAwards = async (accessToken) => {
     .catch((error) => {
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
-      redirectLoginWhenUnauthorized(error);
+      redirectLoginWhenUnauthorized(error, history);
     });
 };
 
-export const findAllOtherAwards = async (accessToken, userId) => {
+export const findAllOtherAwards = async (accessToken, userId, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -335,11 +336,11 @@ export const findAllOtherAwards = async (accessToken, userId) => {
     .catch((error) => {
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
-      redirectLoginWhenUnauthorized(error);
+      redirectLoginWhenUnauthorized(error, history);
     });
 };
 
-export const findMyPostsFromPage = async (mainAreaId, page, accessToken) => {
+export const findMyPostsFromPage = async (mainAreaId, page, accessToken, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -361,11 +362,11 @@ export const findMyPostsFromPage = async (mainAreaId, page, accessToken) => {
     .catch((error) => {
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
-      redirectLoginWhenUnauthorized(error);
+      redirectLoginWhenUnauthorized(error, history);
     });
 };
 
-export const findOtherPostsFromPage = async (otherUserId, page, accessToken) => {
+export const findOtherPostsFromPage = async (otherUserId, page, accessToken, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -385,11 +386,11 @@ export const findOtherPostsFromPage = async (otherUserId, page, accessToken) => 
     .catch((error) => {
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
-      redirectLoginWhenUnauthorized(error);
+      redirectLoginWhenUnauthorized(error, history);
     });
 };
 
-export const findRankedPostsFromPage = async (mainAreaId, criteria, page, accessToken) => {
+export const findRankedPostsFromPage = async (mainAreaId, criteria, page, accessToken, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -412,11 +413,11 @@ export const findRankedPostsFromPage = async (mainAreaId, criteria, page, access
     .catch((error) => {
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
-      redirectLoginWhenUnauthorized(error);
+      redirectLoginWhenUnauthorized(error, history);
     });
 };
 
-export const findAreasFromPage = async (page, accessToken, keyword) => {
+export const findAreasFromPage = async (page, accessToken, keyword, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -439,24 +440,24 @@ export const findAreasFromPage = async (page, accessToken, keyword) => {
     .catch((error) => {
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
-      redirectLoginWhenUnauthorized(error);
+      redirectLoginWhenUnauthorized(error, history);
       throw error.response;
     });
 };
 
-export const findAllSimpleSectors = async (accessToken) => {
+export const findAllSimpleSectors = async (accessToken, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
     },
   };
   const response = await axios.get(DEFAULT_URL + `/sectors/simple`, config).catch((error) => {
-    redirectLoginWhenUnauthorized(error);
+    redirectLoginWhenUnauthorized(error, history);
   });
   return response.data;
 };
 
-export const findSectorsFromPage = async (page, accessToken) => {
+export const findSectorsFromPage = async (page, accessToken, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -475,7 +476,7 @@ export const findSectorsFromPage = async (page, accessToken) => {
     .catch((error) => {
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
-      redirectLoginWhenUnauthorized(error);
+      redirectLoginWhenUnauthorized(error, history);
     });
   return response.data.content;
 };
@@ -499,7 +500,7 @@ export const findAllMySector = async (accessToken) => {
     });
 };
 
-export const findPost = async (accessToken, postId) => {
+export const findPost = async (accessToken, postId, history) => {
   const config = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -516,12 +517,12 @@ export const findPost = async (accessToken, postId) => {
     .catch((error) => {
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
-      redirectLoginWhenUnauthorized(error);
-      document.location.href = '/home';
+      redirectLoginWhenUnauthorized(error, history);
+      history.push('/home');
     });
 };
 
-export const findCommentsByPostId = async (accessToken, postId) => {
+export const findCommentsByPostId = async (accessToken, postId, history) => {
   const config = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -538,11 +539,11 @@ export const findCommentsByPostId = async (accessToken, postId) => {
     .catch((error) => {
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
-      redirectLoginWhenUnauthorized(error);
+      redirectLoginWhenUnauthorized(error, history);
     });
 };
 
-export const findOthersProfileById = async ({ accessToken, userId }) => {
+export const findOthersProfileById = async ({ accessToken, userId, history }) => {
   const config = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -558,7 +559,7 @@ export const findOthersProfileById = async ({ accessToken, userId }) => {
     .catch((error) => {
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
-      redirectLoginWhenUnauthorized(error);
+      redirectLoginWhenUnauthorized(error, history);
     });
 };
 
@@ -615,7 +616,7 @@ export const readNotification = (accessToken, id) => {
     });
 };
 
-export const findSector = async (accessToken, sectorId) => {
+export const findSector = async (accessToken, sectorId, history) => {
   const config = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -632,12 +633,12 @@ export const findSector = async (accessToken, sectorId) => {
     .catch((error) => {
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
-      redirectLoginWhenUnauthorized(error);
-      document.location.href = '/home';
+      redirectLoginWhenUnauthorized(error, history);
+      history.push('/home');
     });
 };
 
-export const deletePost = (accessToken, postId) => {
+export const deletePost = (accessToken, postId, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -647,17 +648,17 @@ export const deletePost = (accessToken, postId) => {
     .delete(DEFAULT_URL + '/posts/' + postId, config)
     .then((response) => {
       alert('정상적으로 삭제되었습니다!');
-      document.location.href = '/home';
+      history.push('/home');
     })
     .catch((error) => {
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
-      redirectLoginWhenUnauthorized(error);
+      redirectLoginWhenUnauthorized(error, history);
     });
 };
 
-const redirectLoginWhenUnauthorized = (error) => {
+const redirectLoginWhenUnauthorized = (error, history) => {
   if (error.response && error.response.status === 403) {
-    document.location.href = '/login';
+    history.push('/login');
   }
 };

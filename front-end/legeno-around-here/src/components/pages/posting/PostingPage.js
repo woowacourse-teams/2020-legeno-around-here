@@ -4,12 +4,12 @@ import PostingTopBar from './PostingTopBar';
 import PostingForm from './PostingForm';
 import Container from '@material-ui/core/Container';
 
-const PostingPage = () => {
+const PostingPage = (match) => {
   return (
     <>
       <PostingTopBar />
       <Container style={{ paddingTop: '60px' }}>
-        <PostingForm />
+        <PostingForm history={match.history} />
       </Container>
     </>
   );

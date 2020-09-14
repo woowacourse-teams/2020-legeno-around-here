@@ -5,12 +5,12 @@ import Bottom from '../../Bottom';
 import { WRITING } from '../../../constants/BottomItems';
 import PostingUpdateForm from './PostingUpdateForm';
 
-const PostingUpdatePage = ({ match }) => {
+const PostingUpdatePage = ({ match, history }) => {
   return (
     <>
       <PostingTopBar />
       <Container style={{ paddingTop: '60px' }}>
-        <PostingUpdateForm postId={match.params.postId} />
+        <PostingUpdateForm postId={match.params.postId} history={history} />
       </Container>
       <Bottom selected={WRITING} />
     </>
