@@ -1,14 +1,11 @@
 import React, { useEffect } from 'react';
 
-const RankingPageReload = ({history}) => {
-    useEffect(() => {
-        history.replace('/ranking');
-    }, [history]);
+const RankingPageReload = ({ history }) => {
+  useEffect(() => {
+    history.replace('/ranking');
+  }, [history]);
 
-  return (
-    <>
-    </>
-  );
+  return <></>;
 };
 
 export default RankingPageReload;

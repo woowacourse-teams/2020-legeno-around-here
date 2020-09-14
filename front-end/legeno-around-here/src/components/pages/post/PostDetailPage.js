@@ -38,7 +38,7 @@ const PostDetailPage = ({ match, history }) => {
     <>
       <PostDetailTopBar />
       <Container>
-        {post && <PostDetail post={post} myInfo={myInfo} history={history}/>}
+        {post && <PostDetail post={post} myInfo={myInfo} history={history} />}
         <BottomBlank />
       </Container>
       <Bottom />

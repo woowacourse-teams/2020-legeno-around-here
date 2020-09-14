@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
- const RankingTopBar = ({history}) => {
+const RankingTopBar = ({ history }) => {
   const classes = useStyles();
   const mainArea = localStorage.getItem('mainAreaName');
   const accessToken = getAccessTokenFromCookie();
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   return (
     <AppBar position='sticky'>
       <Toolbar>
-        <AreaSearch history={history} selected='ranking'/>
+        <AreaSearch history={history} selected='ranking' />
         <Typography>캡짱은 누구?</Typography>
         <div className={classes.grow} />
         <div className={classes.sectionDesktop}>
@@ -52,6 +52,6 @@ const useStyles = makeStyles((theme) => ({
       </Toolbar>
     </AppBar>
   );
-}
+};
 
 export default RankingTopBar;

@@ -24,7 +24,7 @@ import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
 import MySectorSection from './MySectorSection';
 import BottomBlank from '../../BottomBlank';
 
-const MyProfilePage = ({history}) => {
+const MyProfilePage = ({ history }) => {
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');

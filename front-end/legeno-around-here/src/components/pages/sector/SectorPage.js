@@ -10,7 +10,7 @@ import Loading from '../../Loading';
 import { Container, Typography } from '@material-ui/core';
 import BottomBlank from '../../BottomBlank';
 
-const SectorPage = ({history}) => {
+const SectorPage = ({ history }) => {
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [sectors, setSectors] = useState([]);
   const [page, setPage] = useState(0);
@@ -51,7 +51,7 @@ const SectorPage = ({history}) => {
         </InfiniteScroll>
         <BottomBlank />
       </Container>
-      <Bottom selected="sector"/>
+      <Bottom selected='sector' />
     </>
   );
 };

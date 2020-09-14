@@ -9,7 +9,7 @@ import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import Awards from './Awards';
 import Container from '@material-ui/core/Container';
 
-const MyAwardPage = ({history}) => {
+const MyAwardPage = ({ history }) => {
   const accessToken = getAccessTokenFromCookie();
   const [awards, setAwards] = useState([]);
   const [loading, setLoading] = useState(false);

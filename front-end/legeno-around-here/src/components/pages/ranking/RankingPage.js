@@ -36,7 +36,7 @@ const useStyle = makeStyles(() => ({
   },
 }));
 
-const RankingPage = ({history}) => {
+const RankingPage = ({ history }) => {
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
@@ -113,7 +113,13 @@ const RankingPage = ({history}) => {
             zzangCountOfBeforePost = post.zzang.count;
             rankOfBeforePost = rank;
             return (
-              <RankingItem key={post.id} post={post} rank={rank} whetherToPrintZzangCount={criteria === `total`} history={history} />
+              <RankingItem
+                key={post.id}
+                post={post}
+                rank={rank}
+                whetherToPrintZzangCount={criteria === `total`}
+                history={history}
+              />
             );
           })}
         </InfiniteScroll>

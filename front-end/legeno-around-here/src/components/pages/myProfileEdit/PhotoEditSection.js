@@ -2,15 +2,10 @@ import React from 'react';
 import { saveProfilePhoto } from '../../api/API';
 import Typography from '@material-ui/core/Typography';
 import useStyle from './PhotoEditSectionStyle';
-import Button from '@material-ui/core/Button'
-import { DEFAULT_IMAGE_URL } from './MyProfileEditPage'
+import Button from '@material-ui/core/Button';
+import { DEFAULT_IMAGE_URL } from './MyProfileEditPage';
 
-const PhotoEditSection = ({
-  profilePhoto,
-  setProfilePhoto,
-  accessToken,
-  history,
-}) => {
+const PhotoEditSection = ({ profilePhoto, setProfilePhoto, accessToken, history }) => {
   const props = {
     profilePhoto: profilePhoto,
   };
@@ -19,9 +14,9 @@ const PhotoEditSection = ({
   const applyDefaultImage = () => {
     setProfilePhoto({
       id: null,
-      url: DEFAULT_IMAGE_URL
+      url: DEFAULT_IMAGE_URL,
     });
-  }
+  };
 
   const onImagesChanged = (e) => {
     const formData = new FormData();
@@ -41,7 +36,7 @@ const PhotoEditSection = ({
       <div className={classes.photo} />
       <div>
         <Button className={classes.button}>
-          <label htmlFor="upload-photo">
+          <label htmlFor='upload-photo'>
             <Typography className={classes.photoEditButton}>수정</Typography>
           </label>
         </Button>
@@ -50,13 +45,7 @@ const PhotoEditSection = ({
             <Typography className={classes.usingDefaultPhotoButton}>기본이미지 사용</Typography>
           </label>
         </Button>
-        <input
-          type="file"
-          name="photo"
-          id="upload-photo"
-          className={classes.uploadPhoto}
-          onChange={onImagesChanged}
-        />
+        <input type='file' name='photo' id='upload-photo' className={classes.uploadPhoto} onChange={onImagesChanged} />
       </div>
     </div>
   );

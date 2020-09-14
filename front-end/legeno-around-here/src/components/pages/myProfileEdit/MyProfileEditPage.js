@@ -15,7 +15,7 @@ import Container from '@material-ui/core/Container';
 
 export const DEFAULT_IMAGE_URL = '/images/default-profile.png';
 
-function MyProfileEditPage({history}) {
+function MyProfileEditPage({ history }) {
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
@@ -67,7 +67,12 @@ function MyProfileEditPage({history}) {
       <MyProfileEditTopBar />
       <Container>
         <form className={classes.basicLayout} onSubmit={onSubmit}>
-          <PhotoEditSection profilePhoto={profilePhoto} setProfilePhoto={setProfilePhoto} accessToken={accessToken} history={history} />
+          <PhotoEditSection
+            profilePhoto={profilePhoto}
+            setProfilePhoto={setProfilePhoto}
+            accessToken={accessToken}
+            history={history}
+          />
           <div className={classes.infoEditSection}>
             <Typography component='div'>{email}</Typography>
             <div className={classes.nicknameEditSection}>

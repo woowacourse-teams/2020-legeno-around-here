@@ -9,7 +9,7 @@ const PostingPage = (match) => {
     <>
       <PostingTopBar />
       <Container style={{ paddingTop: '60px' }}>
-        <PostingForm history={match.history}/>
+        <PostingForm history={match.history} />
       </Container>
     </>
   );

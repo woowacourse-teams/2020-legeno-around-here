@@ -11,7 +11,7 @@ import TextField from '@material-ui/core/TextField';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import { List } from 'immutable';
 
-const PostingUpdateForm = ({postId, history}) => {
+const PostingUpdateForm = ({ postId, history }) => {
   const classes = useStyles();
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [writing, setWriting] = useState('');

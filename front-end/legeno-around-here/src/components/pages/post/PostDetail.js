@@ -13,7 +13,7 @@ import { convertDateFormat } from '../../../util/TimeUtils';
 import UpdatePostButton from './UpdatePostButton';
 import PostReportSection from './PostReportSection';
 import LinkWithoutStyle from '../../../util/LinkWithoutStyle';
-import DeletePostButton from './DeletePostButton'
+import DeletePostButton from './DeletePostButton';
 
 const PostDetail = ({ post, myInfo, history }) => {
   const accessToken = getAccessTokenFromCookie();
@@ -101,14 +101,19 @@ const PostDetail = ({ post, myInfo, history }) => {
         <Grid container item xs={6} alignItems='flex-start' justify='flex-end' direction='row'>
           <Typography display='inline'>{convertDateFormat(post.createdAt)}</Typography>
           <Typography display='inline'>
-            {isMyPost && <UpdatePostButton post={post}/>}
-            {isMyPost && <DeletePostButton postId={post.id} accessToken={accessToken} history={history}/>}
+            {isMyPost && <UpdatePostButton post={post} />}
+            {isMyPost && <DeletePostButton postId={post.id} accessToken={accessToken} history={history} />}
           </Typography>
-          <PostReportSection post={post} myInfo={myInfo} history={history}/>
+          <PostReportSection post={post} myInfo={myInfo} history={history} />
         </Grid>
       </Grid>
 
-      <form onSubmit={(e) => {e.preventDefault(); submitForm();}}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          submitForm();
+        }}
+      >
         <Grid container>
           <Grid container item xs={11}>
             <TextField

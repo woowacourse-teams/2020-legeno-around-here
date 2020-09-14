@@ -9,8 +9,8 @@ import BottomBlank from '../../BottomBlank';
 import Container from '@material-ui/core/Container';
 import TopBar from './NotificationTopBar';
 import NotificationItem from './NotificationItem';
-import Typography from '@material-ui/core/Typography'
-import makeStyles from '@material-ui/core/styles/makeStyles'
+import Typography from '@material-ui/core/Typography';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 
 const useStyle = makeStyles({
   nothingToNotice: {
@@ -20,7 +20,7 @@ const useStyle = makeStyles({
   },
 });
 
-const NotificationPage = ({history}) => {
+const NotificationPage = ({ history }) => {
   const classes = useStyle();
   const accessToken = getAccessTokenFromCookie();
   const [notifications, setNotifications] = useState([]);
@@ -33,8 +33,11 @@ const NotificationPage = ({history}) => {
     <>
       <TopBar backButtonLink='/home' />
       <Container>
-        {(notifications.length === 0) ?
-          <Typography className={classes.nothingToNotice}>확인하실 알림이 없습니다!</Typography> : ""}
+        {notifications.length === 0 ? (
+          <Typography className={classes.nothingToNotice}>확인하실 알림이 없습니다!</Typography>
+        ) : (
+          ''
+        )}
         {notifications.map((notification) => (
           <NotificationItem key={notification.id} notification={notification} history={history} />
         ))}

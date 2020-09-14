@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const InitPage = ({history}) => {
+const InitPage = ({ history }) => {
   const classes = useStyles();
 
   const sleep = (milliseconds) => {
@@ -76,6 +76,6 @@ const InitPage = ({history}) => {
       </Container>
     </div>
   );
-}
+};
 
 export default InitPage;

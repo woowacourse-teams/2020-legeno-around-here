@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 const DEFAULT_SIZE = 10;
 
-const AreaSearch = ({history, selected}) => {
+const AreaSearch = ({ history, selected }) => {
   const mainArea = localStorage.getItem('mainAreaName');
 
   if (!mainArea) {

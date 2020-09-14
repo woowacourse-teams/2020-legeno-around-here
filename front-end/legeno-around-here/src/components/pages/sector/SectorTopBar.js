@@ -28,6 +28,6 @@ const SectorTopBar = () => {
       </AppBar>
     </>
   );
-}
+};
 
 export default SectorTopBar;

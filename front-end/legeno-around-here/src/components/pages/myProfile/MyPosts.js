@@ -11,7 +11,7 @@ import PostItem from '../../PostItem';
 import BottomBlank from '../../BottomBlank';
 import Container from '@material-ui/core/Container';
 
-function MyPosts({history}) {
+function MyPosts({ history }) {
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
@@ -57,7 +57,7 @@ function MyPosts({history}) {
           endMessage={<h3>모두 읽으셨습니다!</h3>}
         >
           {posts.map((post) => (
-            <PostItem key={post.id} post={post} history={history}/>
+            <PostItem key={post.id} post={post} history={history} />
           ))}
         </InfiniteScroll>
         <BottomBlank />

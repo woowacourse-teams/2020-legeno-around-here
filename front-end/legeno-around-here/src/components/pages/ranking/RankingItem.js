@@ -38,7 +38,7 @@ const RankingItem = ({ post, rank, whetherToPrintZzangCount, history }) => {
   const { area, commentsCount, createdAt, creator, id, zzang, sector, writing } = post;
 
   return (
-    <Card className={classes.card} data-id={id} onClick={() => (history.push(`/posts/${id}`))}>
+    <Card className={classes.card} data-id={id} onClick={() => history.push(`/posts/${id}`)}>
       <div className={classes.rank}>
         {rank > 3 ? (
           <Typography component='h5' variant='h5'>

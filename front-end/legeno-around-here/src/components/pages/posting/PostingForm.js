@@ -13,7 +13,7 @@ import PostingFormImages from './PostingFormImages';
 import PostingFormSectorSearch from './PostingFormSectorSearch';
 import { List } from 'immutable';
 
-const PostingForm = ({history}) => {
+const PostingForm = ({ history }) => {
   const classes = useStyles();
   const [accessToken] = useState(getAccessTokenFromCookie());
 

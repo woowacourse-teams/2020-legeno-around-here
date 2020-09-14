@@ -1,14 +1,11 @@
 import React, { useEffect } from 'react';
 
-const HomePageReload = ({history}) => {
-    useEffect(() => {
-        history.replace('/home');
-    }, [history]);
+const HomePageReload = ({ history }) => {
+  useEffect(() => {
+    history.replace('/home');
+  }, [history]);
 
-  return (
-    <>
-    </>
-  );
+  return <></>;
 };
 
 export default HomePageReload;

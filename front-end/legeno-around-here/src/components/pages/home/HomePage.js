@@ -12,7 +12,7 @@ import BottomBlank from '../../BottomBlank';
 import Container from '@material-ui/core/Container';
 import PostItem from '../../PostItem';
 
-const HomePage = ({location, history}) => {
+const HomePage = ({ location, history }) => {
   const accessToken = getAccessTokenFromCookie();
 
   const [page, setPage] = useState(0);

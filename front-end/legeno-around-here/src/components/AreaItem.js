@@ -3,7 +3,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { makeStyles } from '@material-ui/core/styles';
 
-function refreshHome(history, selected) {
+function refreshPage(history, selected) {
   history.replace('/' + selected + '-reload');
 }
 
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 const setMainArea = (area, history, selected) => {
   localStorage.setItem('mainAreaId', area.id);
   localStorage.setItem('mainAreaName', area.lastDepthName);
-  refreshHome(history, selected);
+  refreshPage(history, selected);
 };
 
 const AreaItem = ({ area, history, selected }) => {
