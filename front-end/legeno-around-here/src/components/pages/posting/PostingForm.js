@@ -16,7 +16,6 @@ import { List } from 'immutable';
 const PostingForm = () => {
   const classes = useStyles();
   const [accessToken] = useState(getAccessTokenFromCookie());
-
   const [writing, setWriting] = useState('');
   const [sector, setSector] = useState(null);
   const [area] = useState({
@@ -27,8 +26,43 @@ const PostingForm = () => {
   const [loading, setLoading] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
 
+  const maxImagesLength = 10;
+  const maxImageMBSize = 5;
+
+  const validateImages = (localImages) => {
+    if (isOverImagesLength(localImages)) {
+      throw new Error(`이미지는 ${maxImagesLength}개까지 등록 가능합니다!`);
+    }
+    if (isOverImagesVolume(localImages)) {
+      throw new Error(`이미지는 ${maxImageMBSize}MB 이내로 등록 가능합니다!`);
+    }
+  };
+
+  const isOverImagesLength = (localImages) => {
+    return localImages.length > maxImagesLength;
+  };
+
+  const isOverImagesVolume = (localImages) => {
+    const images = Array.from(localImages);
+    for (let image of images) {
+      const imageMBSize = image.size / 1024 / 1024; // MB Size로 바꿈
+      const parsingImageSize = parseFloat(imageMBSize.toFixed(2));
+      if (parsingImageSize > maxImageMBSize) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const onImagesChanged = async (e) => {
     const localImages = e.target.files;
+
+    try {
+      validateImages(localImages);
+    } catch (e) {
+      alert(e.message);
+      return;
+    }
 
     const formData = new FormData();
     if (localImages.length > 0) {
@@ -54,7 +88,7 @@ const PostingForm = () => {
   };
 
   const countImages = () => {
-    return <Typography display='inline'>총 {images.size} 개의 사진을 올렸습니다!</Typography>;
+    return <Typography display='inline'>{`${images.size}/${maxImagesLength}`}</Typography>;
   };
 
   const submitPost = (e) => {
