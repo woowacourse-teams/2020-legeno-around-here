@@ -10,7 +10,7 @@ const DIRECTION_ASC = 'asc';
 const DEFAULT_SIZE = 10;
 const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
-const DEFAULT_URL = 'https://back.capzzang.co.kr';
+const DEFAULT_URL = `${process.env.REACT_APP_API_SERVER_HOST}`;
 
 export const loginUser = (email, password, handleReset) => {
   axios
