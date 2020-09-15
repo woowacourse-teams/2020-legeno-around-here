@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PostReportSection = ({ post }) => {
+const PostReportSection = ({ post, history }) => {
   const classes = useStyles();
   const accessToken = getAccessTokenFromCookie();
   const [value, setValue] = useState('부적절한 홍보 게시글');
@@ -50,13 +50,13 @@ const PostReportSection = ({ post }) => {
     { id: 4, value: '기타' },
   ];
 
-  const submitReport = async () => {
+  const submitReport = async (history) => {
     const data = {
       targetId: post.id,
       writing: writing,
     };
     setLoading(true);
-    await createPostReport(post.id, data, accessToken);
+    await createPostReport(data, accessToken, history);
     setLoading(false);
     handleClose();
   };

@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 
 const DEFAULT_SIZE = 10;
 
-const PostingFormSectorSearch = ({ setSector }) => {
+const PostingFormSectorSearch = ({ setSector, history }) => {
   const classes = useStyles();
   const accessToken = getAccessTokenFromCookie();
   const [page, setPage] = useState(0);
@@ -42,7 +42,7 @@ const PostingFormSectorSearch = ({ setSector }) => {
 
   const loadNextSectors = async () => {
     try {
-      const nextSectors = await findSectorsFromPage(page, accessToken);
+      const nextSectors = await findSectorsFromPage(page, accessToken, history);
       if (nextSectors.length < DEFAULT_SIZE) {
         setSectors(sectors.concat(nextSectors));
         setPage(page + 1);

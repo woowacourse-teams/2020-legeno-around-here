@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 100,
     backgroundColor: 'skyblue',
     padding: '5px 8px 5px 8px',
-  }
+  },
 }));
 
 export default useStyles;

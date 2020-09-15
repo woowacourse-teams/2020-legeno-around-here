@@ -1,5 +1,5 @@
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import { MAIN_COLOR } from '../../../constants/Color'
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import { MAIN_COLOR } from '../../../constants/Color';
 
 const useStyle = makeStyles({
   photo: (props) => ({
@@ -30,7 +30,7 @@ const useStyle = makeStyles({
   },
   usingDefaultPhotoButton: {
     color: '#888888',
-  }
+  },
 });
 
 export default useStyle;

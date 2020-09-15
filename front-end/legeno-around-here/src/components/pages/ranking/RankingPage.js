@@ -36,7 +36,7 @@ const useStyle = makeStyles(() => ({
   },
 }));
 
-const RankingPage = () => {
+const RankingPage = ({ history }) => {
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
@@ -48,7 +48,7 @@ const RankingPage = () => {
 
   /* 처음에 보여줄 글 목록을 가져옴 */
   useEffect(() => {
-    findRankedPostsFromPage(mainAreaId, criteria, 0, accessToken)
+    findRankedPostsFromPage(mainAreaId, criteria, 0, accessToken, history)
       .then((firstPosts) => {
         if (!firstPosts || firstPosts.length === 0) {
           setHasMore(false);
@@ -60,10 +60,10 @@ const RankingPage = () => {
         setHasMore(false);
       });
     setPage(1);
-  }, [mainAreaId, accessToken, criteria]);
+  }, [mainAreaId, accessToken, criteria, history]);
 
   const fetchNextPosts = () => {
-    findRankedPostsFromPage(mainAreaId, criteria, page, accessToken)
+    findRankedPostsFromPage(mainAreaId, criteria, page, accessToken, history)
       .then((nextPosts) => {
         if (!nextPosts || nextPosts.length === 0) {
           setHasMore(false);
@@ -87,7 +87,7 @@ const RankingPage = () => {
 
   return (
     <>
-      <TopBar />
+      <TopBar history={history} />
       <Container>
         <div className={classes.filterSection}>
           <FormControl className={classes.durationFilter}>
@@ -113,7 +113,13 @@ const RankingPage = () => {
             zzangCountOfBeforePost = post.zzang.count;
             rankOfBeforePost = rank;
             return (
-              <RankingItem key={post.id} post={post} rank={rank} whetherToPrintZzangCount={criteria === `total`} />
+              <RankingItem
+                key={post.id}
+                post={post}
+                rank={rank}
+                whetherToPrintZzangCount={criteria === `total`}
+                history={history}
+              />
             );
           })}
         </InfiniteScroll>

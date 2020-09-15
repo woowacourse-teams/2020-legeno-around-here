@@ -15,13 +15,8 @@ const SectorApplyButton = () => {
 
   return (
     <>
-      <Button
-        edge="start"
-        color="inherit"
-        aria-label="open drawer"
-        onClick={handleOpen}
-      >
-        <Typography variant="h6" noWrap>
+      <Button edge='start' color='inherit' aria-label='open drawer' onClick={handleOpen}>
+        <Typography variant='h6' noWrap>
           부문신청
         </Typography>
       </Button>

@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { removeAccessTokenCookie } from '../../util/TokenUtils';
-import LinkWithoutStyle from '../../util/LinkWithoutStyle'
+import LinkWithoutStyle from '../../util/LinkWithoutStyle';
 
 const Copyright = () => {
   return (
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function LoginForm() {
+const LoginForm = ({ history }) => {
   const classes = useStyles();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -61,8 +61,8 @@ function LoginForm() {
   }, []);
 
   const login = useCallback(() => {
-    loginUser(email, password, handleReset);
-  }, [email, password, handleReset]);
+    loginUser(email, password, handleReset, history);
+  }, [email, password, handleReset, history]);
 
   const handleSubmit = useCallback(
     (event) => {
@@ -131,6 +131,6 @@ function LoginForm() {
       </Box>
     </Container>
   );
-}
+};
 
 export default LoginForm;
