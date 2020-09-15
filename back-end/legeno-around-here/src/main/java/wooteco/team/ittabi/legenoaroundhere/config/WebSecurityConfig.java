@@ -37,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    @Value("${cors.origin}")
+    @Value("${security.cors.origin}")
     @Bean
     public CorsConfigurationSource corsConfigurationSource(String corsOrigin) {
         log.info("crossOrigin: {}", corsOrigin);
