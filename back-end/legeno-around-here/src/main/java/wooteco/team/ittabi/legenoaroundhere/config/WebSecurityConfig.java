@@ -2,6 +2,8 @@ package wooteco.team.ittabi.legenoaroundhere.config;
 
 import java.util.Collections;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,6 +20,7 @@ import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenDecoder;
 
 @EnableWebSecurity
 @AllArgsConstructor
+@Slf4j
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenDecoder jwtTokenDecoder;
@@ -34,11 +37,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    @Value("${security.cors.origin}")
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource(String corsOrigin) {
+        log.info("crossOrigin: {}", corsOrigin);
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedOrigin("https://www.capzzang.co.kr");
+        configuration.addAllowedOrigin(corsOrigin);
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
