@@ -1,20 +1,11 @@
-import React, { useEffect } from 'react';
-import { useCookies } from 'react-cookie';
+import React from 'react';
+import Token from '../components/validation/Token';
 
 const MainPage = ({ history }) => {
-  const [cookies] = useCookies(['accessToken']);
-
-  useEffect(() => {
-    if (cookies.accessToken && cookies.accessToken !== 'undefined') {
-      return;
-    }
-    history.push('/login');
-  }, [history, cookies.accessToken]);
-
-  console.log(cookies);
 
   return (
     <>
+      <Token history={history}/>
       <div>메인 페이지</div>
     </>
   );
