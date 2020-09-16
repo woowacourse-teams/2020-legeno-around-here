@@ -14,24 +14,24 @@ const useStyles = makeStyles({
   },
 });
 
-const Deposits = () => {
+const Profit = () => {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Title>Recent Deposits</Title>
+      <Title>우리동네캡짱 수익</Title>
       <Typography component="p" variant="h4">
-        $3,024.00
+        1,000,000$
       </Typography>
       <Typography color="textSecondary" className={classes.depositContext}>
-        on 15 March, 2019
+        on 17 September, 2022
       </Typography>
       <div>
         <Link color="primary" href="#" onClick={preventDefault}>
-          View balance
+          수익 내역 상세보기
         </Link>
       </div>
     </React.Fragment>
   );
 }
 
-export default Deposits;
+export default Profit;

@@ -11,7 +11,6 @@ const Token = ({ history }) => {
     history.push('/login');
   }, [history, cookies.accessToken]);
 
-  console.log(cookies);
   return <></>;
 };
 

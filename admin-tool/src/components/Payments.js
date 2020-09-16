@@ -14,11 +14,11 @@ const createData = (id, date, name, shipTo, paymentMethod, amount) => {
 }
 
 const rows = [
-  createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
-  createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99),
-  createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-  createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39),
-  createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
+  createData(0, '17 Sep, 2022', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
+  createData(1, '17 Sep, 2022', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99),
+  createData(2, '17 Sep, 2022', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
+  createData(3, '17 Sep, 2022', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39),
+  createData(4, '17 Sep, 2022', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
 ];
 
 const preventDefault = (event) => {
@@ -31,11 +31,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Orders = () => {
+const Payments = () => {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Title>Recent Orders</Title>
+      <Title>우리동네캡짱 사용자 결제 내역</Title>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -60,11 +60,11 @@ const Orders = () => {
       </Table>
       <div className={classes.seeMore}>
         <Link color="primary" href="#" onClick={preventDefault}>
-          See more orders
+          사용자 결제내역 더보기
         </Link>
       </div>
     </React.Fragment>
   );
 }
 
-export default Orders;
+export default Payments;
