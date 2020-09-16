@@ -13,9 +13,10 @@ import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { drawerWidth } from '../constants/drawerConstants';
 import SecondaryListItems from './sidebaritem/SecondaryListItems';
 import MainListItems from './sidebaritem/MainListItems';
+
+const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
