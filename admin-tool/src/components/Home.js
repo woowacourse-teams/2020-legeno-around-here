@@ -21,8 +21,7 @@ import { mainListItems, secondaryListItems } from '../libs/listItems';
 import Deposits from './Deposits';
 import Orders from './Orders';
 import Copyright from './Copyright';
-
-const drawerWidth = 240;
+import { drawerWidth } from '../constants/drawerConstants';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -103,7 +102,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Dashboard = () => {
+const Home = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -129,7 +128,7 @@ const Dashboard = () => {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Dashboard
+            Home
           </Typography>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
@@ -187,4 +186,4 @@ const Dashboard = () => {
   );
 }
 
-export default Dashboard;
+export default Home;

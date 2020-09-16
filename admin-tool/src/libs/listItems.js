@@ -3,68 +3,76 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import PeopleIcon from '@material-ui/icons/People';
-import BarChartIcon from '@material-ui/icons/BarChart';
-import LayersIcon from '@material-ui/icons/Layers';
-import AssignmentIcon from '@material-ui/icons/Assignment';
+import HomeIcon from '@material-ui/icons/Home';
+import CategoryIcon from '@material-ui/icons/Category';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import ReportIcon from '@material-ui/icons/Report';
+import PostAddIcon from '@material-ui/icons/PostAdd';
+import TocIcon from '@material-ui/icons/Toc';
+import PersonIcon from '@material-ui/icons/Person';
 
 export const mainListItems = (
   <div>
     <ListItem button>
       <ListItemIcon>
-        <DashboardIcon/>
+        <HomeIcon/>
       </ListItemIcon>
-      <ListItemText primary="Dashboard"/>
+      <ListItemText primary="홈"/>
     </ListItem>
     <ListItem button>
       <ListItemIcon>
-        <ShoppingCartIcon/>
+        <CategoryIcon/>
       </ListItemIcon>
-      <ListItemText primary="Orders"/>
+      <ListItemText primary="부문 관리"/>
     </ListItem>
     <ListItem button>
       <ListItemIcon>
-        <PeopleIcon/>
+        <PersonAddIcon/>
       </ListItemIcon>
-      <ListItemText primary="Customers"/>
+      <ListItemText primary="사용자 권한 관리"/>
     </ListItem>
     <ListItem button>
       <ListItemIcon>
-        <BarChartIcon/>
+        <HelpOutlineIcon/>
       </ListItemIcon>
-      <ListItemText primary="Reports"/>
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <LayersIcon/>
-      </ListItemIcon>
-      <ListItemText primary="Integrations"/>
+      <ListItemText primary="1:1 문의 관리"/>
     </ListItem>
   </div>
 );
 
 export const secondaryListItems = (
   <div>
-    <ListSubheader inset>Saved reports</ListSubheader>
+    <ListSubheader inset>
+      신고 관리
+    </ListSubheader>
     <ListItem button>
       <ListItemIcon>
-        <AssignmentIcon/>
+        <PostAddIcon/>
+        <ReportIcon/>
       </ListItemIcon>
-      <ListItemText primary="Current month"/>
+      <ListItemText primary="글 신고"/>
     </ListItem>
     <ListItem button>
       <ListItemIcon>
-        <AssignmentIcon/>
+        <TocIcon/>
+        <ReportIcon/>
       </ListItemIcon>
-      <ListItemText primary="Last quarter"/>
+      <ListItemText primary="댓글 신고"/>
     </ListItem>
     <ListItem button>
       <ListItemIcon>
-        <AssignmentIcon/>
+        <CategoryIcon/>
+        <ReportIcon/>
       </ListItemIcon>
-      <ListItemText primary="Year-end sale"/>
+      <ListItemText primary="부문 신고"/>
+    </ListItem>
+    <ListItem button>
+      <ListItemIcon>
+        <PersonIcon/>
+        <ReportIcon/>
+      </ListItemIcon>
+      <ListItemText primary="사용자 신고"/>
     </ListItem>
   </div>
 );
