@@ -1,12 +1,13 @@
 import React from 'react';
 import Token from '../components/validation/Token';
+import Dashboard from '../components/Dashboard';
 
 const MainPage = ({ history }) => {
 
   return (
     <>
       <Token history={history}/>
-      <div>메인 페이지</div>
+      <Dashboard/>
     </>
   );
 };
