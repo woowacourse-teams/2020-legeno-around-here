@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
+import wooteco.team.ittabi.legenoaroundhere.domain.user.Role;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.UserImage;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
@@ -85,12 +86,34 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public TokenResponse login(LoginRequest loginRequest) {
-        User user = userRepository.findByEmail(new Email(loginRequest.getEmail()))
+    public TokenResponse adminLogin(LoginRequest loginRequest) {
+        User user = findUserByEmail(loginRequest);
+
+        validateAdmin(user);
+        return getTokenResponse(loginRequest, user);
+    }
+
+    private User findUserByEmail(LoginRequest loginRequest) {
+        return userRepository.findByEmail(new Email(loginRequest.getEmail()))
             .orElseThrow(() -> new NotExistsException("가입되지 않은 회원입니다."));
+    }
+
+    private TokenResponse getTokenResponse(LoginRequest loginRequest, User user) {
         checkPassword(loginRequest, user);
         String token = jwtTokenGenerator.createToken(user.getUsername(), user.getRoles());
         return new TokenResponse(token);
+    }
+
+    private void validateAdmin(User user) {
+        if (user.hasNotRole(Role.ADMIN)) {
+            throw new NotExistsException("가입되지 않은 관리자입니다.");
+        }
+    }
+
+    @Transactional
+    public TokenResponse login(LoginRequest loginRequest) {
+        User user = findUserByEmail(loginRequest);
+        return getTokenResponse(loginRequest, user);
     }
 
     private void checkPassword(LoginRequest loginRequest, User user) {

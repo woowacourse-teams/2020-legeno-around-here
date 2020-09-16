@@ -129,6 +129,10 @@ public class User extends BaseEntity implements UserDetails {
         return sectorCreatorAwards.size();
     }
 
+    public boolean hasNotRole(Role role) {
+        return !this.roles.contains(role.getRoleName());
+    }
+
     @Override
     public String getUsername() {
         return this.email.getEmail();
@@ -180,5 +184,4 @@ public class User extends BaseEntity implements UserDetails {
     public void setArea(Area area) {
         this.area = area;
     }
-
 }
