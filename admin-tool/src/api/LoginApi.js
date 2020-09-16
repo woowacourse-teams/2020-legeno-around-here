@@ -1,7 +1,6 @@
 import { API } from './Api';
-import { setAccessTokenCookie } from '../util/TokenUtil';
 
-export const loginAdmin = ({ email, password }, initPassword, history ) => {
+export const loginAdmin = ({ email, password }, initPassword, setCookie, history) => {
   console.log(email, password);
 
   API.post('/login', {
@@ -10,7 +9,8 @@ export const loginAdmin = ({ email, password }, initPassword, history ) => {
   })
     .then(response => {
       const tokenResponse = response.data;
-      setAccessTokenCookie(tokenResponse.accessToken);
+      setCookie('accessToken', tokenResponse.accessToken);
+
       history.push('/');
     })
     .catch(() => {

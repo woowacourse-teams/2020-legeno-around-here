@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { produce } from 'immer';
 import { loginAdmin } from '../api/LoginApi';
 
@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { isEmail } from '../util/Validation';
+import { useCookies } from 'react-cookie';
 
 const Copyright = () => {
   return (
@@ -55,6 +56,14 @@ const LoginPage = ({ history }) => {
     password: '',
   });
 
+  const [cookies, setCookie] = useCookies(['accessToken']);
+
+  useEffect(() => {
+    if (cookies.accessToken && cookies.accessToken !== 'undefined') {
+      history.push('/');
+    }
+  }, [history, cookies.accessToken]);
+
   const onChange = (event) => {
     const { name, value } = event.target;
     setForm(
@@ -79,7 +88,7 @@ const LoginPage = ({ history }) => {
   };
 
   const login = () => {
-    loginAdmin(form, initPassword, history);
+    loginAdmin(form, initPassword, setCookie, history);
   };
 
   const initPassword = () => {
