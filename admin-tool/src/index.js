@@ -4,12 +4,22 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom';
+import { ThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core';
+
+const theme = createMuiTheme({
+  typography: {
+    fontFamily: '"DoHyeon", "Noto Sans KR", serif',
+  },
+});
 
 ReactDOM.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
-  document.getElementById('root')
+  <ThemeProvider theme={theme}>
+    <BrowserRouter>
+      <App/>
+    </BrowserRouter>
+  </ThemeProvider>,
+  document.getElementById('root'),
 );
 
 // If you want your app to work offline and load faster, you can change
