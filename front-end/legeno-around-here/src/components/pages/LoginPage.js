@@ -97,7 +97,7 @@ const LoginForm = ({ history }) => {
             name='email'
             autoComplete='email'
             autoFocus
-            type='email'
+            type="email"
             value={email}
             onChange={handleChangeEmail}
           />

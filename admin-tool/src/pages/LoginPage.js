@@ -11,7 +11,6 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { isEmail } from '../util/Validation';
 import { useCookies } from 'react-cookie';
 import Copyright from '../components/Copyright';
 
@@ -62,15 +61,6 @@ const LoginPage = ({ history }) => {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    const { email, password } = form;
-    if ([email, password].includes('')) {
-      alert('빈 칸을 모두 입력하세요.');
-      return;
-    }
-    if (!isEmail(email)) {
-      alert('올바른 이메일 형식이 아닙니다.');
-      return;
-    }
     login();
   };
 
@@ -96,10 +86,11 @@ const LoginPage = ({ history }) => {
         <Typography component='h1' variant='h5'>
           우리동네캡짱 관리도구
         </Typography>
-        <form className={classes.form} onSubmit={onSubmit} noValidate>
+        <form className={classes.form} onSubmit={onSubmit} noValidate={false}>
           <TextField
             variant='outlined'
             margin='normal'
+            type='email'
             required
             fullWidth
             id='email'

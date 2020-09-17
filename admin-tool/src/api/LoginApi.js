@@ -10,7 +10,6 @@ export const loginAdmin = ({ email, password }, initPassword, setCookie, history
     .then((response) => {
       const tokenResponse = response.data;
       setCookie('accessToken', tokenResponse.accessToken);
-
       history.push('/');
     })
     .catch(() => {
