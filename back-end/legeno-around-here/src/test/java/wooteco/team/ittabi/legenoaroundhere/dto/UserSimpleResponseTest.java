@@ -3,6 +3,7 @@ package wooteco.team.ittabi.legenoaroundhere.dto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +22,7 @@ class UserSimpleResponseTest {
     @Autowired
     private UserRepository userRepository;
 
+    @DisplayName("정적 팩터리 메서드, 활성화(일반) 유저일경우")
     @Test
     void from_ActivatedUser() {
         User user = userRepository.findByEmail(TEST_EMAIL)
@@ -35,8 +37,9 @@ class UserSimpleResponseTest {
         assertThat(userSimpleResponse.getImage()).isEqualTo(UserImageResponse.of(user.getImage()));
     }
 
+    @DisplayName("정적 팩터리 메서드, 비활성화(탈퇴) 유저일 경우, 필드 대체")
     @Test
-    void from_DeactivatedUser() {
+    void from_DeactivatedUser_Replace() {
         User user = userRepository.findByEmail(TEST_EMAIL)
             .orElseThrow(() -> new NotExistsException("존재하지 않는 회원입니다."));
         user.deactivate();
