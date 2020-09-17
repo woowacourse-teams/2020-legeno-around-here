@@ -30,13 +30,17 @@ const ErrorPage = ({ location }) => {
     <div className={classes.root}>
       <CssBaseline />
       <Container component='main' className={classes.main} maxWidth='sm'>
-        <Typography variant='h2' component='h1' gutterBottom>
-          {`${location.pathname} 페이지를`}
+        <Typography variant='h4' component='h2' gutterBottom>
+          {`${location.pathname}`}
         </Typography>
-        <Typography variant='h2' component='h1' gutterBottom>
-          {'찾을 수 없습니다! :('}
+        <Typography variant='h4' component='h1' gutterBottom>
+          {'페이지를 찾을 수 없습니다.'}
         </Typography>
-        <Typography variant='h5' component='h2' gutterBottom>
+        <br />
+        <Typography variant='h4' component='h1' gutterBottom>
+          {'주소를 다시 확인 하신 후,'}
+        </Typography>
+        <Typography variant='h4' component='h2' gutterBottom>
           {'다른 페이지로 이동해주시기 바랍니다.'}
         </Typography>
       </Container>
