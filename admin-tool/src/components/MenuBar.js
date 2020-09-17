@@ -79,7 +79,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const MenuBar = ({ menuName, history }) => {
-
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -91,30 +90,30 @@ const MenuBar = ({ menuName, history }) => {
 
   return (
     <div className={classes.root}>
-      <CssBaseline/>
-      <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+      <CssBaseline />
+      <AppBar position='absolute' className={clsx(classes.appBar, open && classes.appBarShift)}>
         <Toolbar className={classes.toolbar}>
           <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
+            edge='start'
+            color='inherit'
+            aria-label='open drawer'
             onClick={handleDrawerOpen}
             className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
           >
-            <MenuIcon/>
+            <MenuIcon />
           </IconButton>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+          <Typography component='h1' variant='h6' color='inherit' noWrap className={classes.title}>
             {menuName}
           </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon/>
+          <IconButton color='inherit'>
+            <Badge badgeContent={4} color='secondary'>
+              <NotificationsIcon />
             </Badge>
           </IconButton>
         </Toolbar>
       </AppBar>
       <Drawer
-        variant="permanent"
+        variant='permanent'
         classes={{
           paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
         }}
@@ -122,13 +121,17 @@ const MenuBar = ({ menuName, history }) => {
       >
         <div className={classes.toolbarIcon}>
           <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon/>
+            <ChevronLeftIcon />
           </IconButton>
         </div>
-        <Divider/>
-        <List><MainListItems history={history}/></List>
-        <Divider/>
-        <List><SecondaryListItems history={history}/></List>
+        <Divider />
+        <List>
+          <MainListItems history={history} />
+        </List>
+        <Divider />
+        <List>
+          <SecondaryListItems history={history} />
+        </List>
       </Drawer>
     </div>
   );

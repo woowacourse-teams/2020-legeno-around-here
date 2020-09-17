@@ -11,7 +11,7 @@ import Title from './Title';
 // Generate Order Data
 const createData = (id, date, name, shipTo, paymentMethod, amount) => {
   return { id, date, name, shipTo, paymentMethod, amount };
-}
+};
 
 const rows = [
   createData(0, '17 Sep, 2022', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
@@ -23,7 +23,7 @@ const rows = [
 
 const preventDefault = (event) => {
   event.preventDefault();
-}
+};
 
 const useStyles = makeStyles((theme) => ({
   seeMore: {
@@ -36,14 +36,14 @@ const Payments = () => {
   return (
     <React.Fragment>
       <Title>우리동네캡짱 사용자 결제 내역</Title>
-      <Table size="small">
+      <Table size='small'>
         <TableHead>
           <TableRow>
             <TableCell>Date</TableCell>
             <TableCell>Name</TableCell>
             <TableCell>Ship To</TableCell>
             <TableCell>Payment Method</TableCell>
-            <TableCell align="right">Sale Amount</TableCell>
+            <TableCell align='right'>Sale Amount</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -53,18 +53,18 @@ const Payments = () => {
               <TableCell>{row.name}</TableCell>
               <TableCell>{row.shipTo}</TableCell>
               <TableCell>{row.paymentMethod}</TableCell>
-              <TableCell align="right">{row.amount}</TableCell>
+              <TableCell align='right'>{row.amount}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
       <div className={classes.seeMore}>
-        <Link color="primary" href="#" onClick={preventDefault}>
+        <Link color='primary' href='#' onClick={preventDefault}>
           사용자 결제내역 더보기
         </Link>
       </div>
     </React.Fragment>
   );
-}
+};
 
 export default Payments;

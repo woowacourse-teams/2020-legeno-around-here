@@ -6,7 +6,7 @@ import Title from './Title';
 
 const preventDefault = (event) => {
   event.preventDefault();
-}
+};
 
 const useStyles = makeStyles({
   depositContext: {
@@ -19,19 +19,19 @@ const Profit = () => {
   return (
     <React.Fragment>
       <Title>우리동네캡짱 수익</Title>
-      <Typography component="p" variant="h4">
+      <Typography component='p' variant='h4'>
         1,000,000$
       </Typography>
-      <Typography color="textSecondary" className={classes.depositContext}>
+      <Typography color='textSecondary' className={classes.depositContext}>
         on 17 September, 2022
       </Typography>
       <div>
-        <Link color="primary" href="#" onClick={preventDefault}>
+        <Link color='primary' href='#' onClick={preventDefault}>
           수익 내역 상세보기
         </Link>
       </div>
     </React.Fragment>
   );
-}
+};
 
 export default Profit;

@@ -17,36 +17,34 @@ const secondaryListItems = ({ history }) => {
 
   return (
     <div>
-      <ListSubheader inset>
-        신고 관리
-      </ListSubheader>
+      <ListSubheader inset>신고 관리</ListSubheader>
       <ListItem button link='/post-report' onClick={(event) => moveTo(event, '/post-report')}>
         <ListItemIcon>
-          <PostAddIcon/>
-          <ReportIcon/>
+          <PostAddIcon />
+          <ReportIcon />
         </ListItemIcon>
-        <ListItemText primary="글 신고"/>
+        <ListItemText primary='글 신고' />
       </ListItem>
       <ListItem button link='/comment-report' onClick={(event) => moveTo(event, '/comment-report')}>
         <ListItemIcon>
-          <TocIcon/>
-          <ReportIcon/>
+          <TocIcon />
+          <ReportIcon />
         </ListItemIcon>
-        <ListItemText primary="댓글 신고"/>
+        <ListItemText primary='댓글 신고' />
       </ListItem>
       <ListItem button link='/sector-report' onClick={(event) => moveTo(event, '/sector-report')}>
         <ListItemIcon>
-          <CategoryIcon/>
-          <ReportIcon/>
+          <CategoryIcon />
+          <ReportIcon />
         </ListItemIcon>
-        <ListItemText primary="부문 신고"/>
+        <ListItemText primary='부문 신고' />
       </ListItem>
       <ListItem button link='/user-report' onClick={(event) => moveTo(event, '/user-report')}>
         <ListItemIcon>
-          <PersonIcon/>
-          <ReportIcon/>
+          <PersonIcon />
+          <ReportIcon />
         </ListItemIcon>
-        <ListItemText primary="사용자 신고"/>
+        <ListItemText primary='사용자 신고' />
       </ListItem>
     </div>
   );

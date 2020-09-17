@@ -54,7 +54,7 @@ const LoginPage = ({ history }) => {
   const onChange = (event) => {
     const { name, value } = event.target;
     setForm(
-      produce(form, draft => {
+      produce(form, (draft) => {
         draft[name] = value;
       }),
     );
@@ -80,62 +80,56 @@ const LoginPage = ({ history }) => {
 
   const initPassword = () => {
     setForm(
-      produce(form, draft => {
+      produce(form, (draft) => {
         draft['password'] = '';
       }),
     );
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline/>
+    <Container component='main' maxWidth='xs'>
+      <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
-          <LockOutlinedIcon/>
+          <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
+        <Typography component='h1' variant='h5'>
           우리동네캡짱 관리도구
         </Typography>
         <form className={classes.form} onSubmit={onSubmit} noValidate>
           <TextField
-            variant="outlined"
-            margin="normal"
+            variant='outlined'
+            margin='normal'
             required
             fullWidth
-            id="email"
-            label="관리자 이메일"
-            name="email"
-            autoComplete="email"
+            id='email'
+            label='관리자 이메일'
+            name='email'
+            autoComplete='email'
             autoFocus
             onChange={onChange}
             value={form.email}
           />
           <TextField
-            variant="outlined"
-            margin="normal"
+            variant='outlined'
+            margin='normal'
             required
             fullWidth
-            name="password"
-            label="비밀번호"
-            type="password"
-            id="password"
-            autoComplete="current-password"
+            name='password'
+            label='비밀번호'
+            type='password'
+            id='password'
+            autoComplete='current-password'
             onChange={onChange}
             value={form.password}
           />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
+          <Button type='submit' fullWidth variant='contained' color='primary' className={classes.submit}>
             로그인
           </Button>
         </form>
       </div>
       <Box mt={8}>
-        <Copyright/>
+        <Copyright />
       </Box>
     </Container>
   );

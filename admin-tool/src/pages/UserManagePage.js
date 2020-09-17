@@ -15,11 +15,11 @@ const UserManagePage = ({ history }) => {
 
   return (
     <div className={classes.root}>
-      <Token history={history}/>
-      <MenuBar menuName='User Management' history={history}/>
+      <Token history={history} />
+      <MenuBar menuName='User Management' history={history} />
       <main className={classes.content}>
-        <div className={classes.appBarSpacer}/>
-        <Container maxWidth="lg" className={classes.container}>
+        <div className={classes.appBarSpacer} />
+        <Container maxWidth='lg' className={classes.container}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <Paper className={fixedHeightPaper}>
@@ -28,7 +28,7 @@ const UserManagePage = ({ history }) => {
             </Grid>
           </Grid>
           <Box pt={4}>
-            <Copyright/>
+            <Copyright />
           </Box>
         </Container>
       </main>

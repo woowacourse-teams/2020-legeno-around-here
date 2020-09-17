@@ -4,9 +4,9 @@ import Link from '@material-ui/core/Link';
 
 const Copyright = () => {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
+    <Typography variant='body2' color='textSecondary' align='center'>
       {'Copyright © '}
-      <Link color="inherit" href="https://capzzang.co.kr">
+      <Link color='inherit' href='https://capzzang.co.kr'>
         ITTABI
       </Link>{' '}
       2020.08

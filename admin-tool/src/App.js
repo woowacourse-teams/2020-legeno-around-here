@@ -13,15 +13,15 @@ import UserReportPage from './pages/UserReportPage';
 const App = () => {
   return (
     <>
-      <Route path={['/', '/home']} component={HomePage} exact/>
-      <Route path={['/sectors']} component={SectorManagePage} exact/>
-      <Route path={['/users']} component={UserManagePage} exact/>
-      <Route path={['/question']} component={QuestionManagePage} exact/>
-      <Route path={['/post-report']} component={PostReportPage} exact/>
-      <Route path={['/comment-report']} component={CommentReportPage} exact/>
-      <Route path={['/sector-report']} component={SectorReportPage} exact/>
-      <Route path={['/user-report']} component={UserReportPage} exact/>
-      <Route path="/login" component={LoginPage}/>
+      <Route path={['/', '/home']} component={HomePage} exact />
+      <Route path={['/sectors']} component={SectorManagePage} exact />
+      <Route path={['/users']} component={UserManagePage} exact />
+      <Route path={['/question']} component={QuestionManagePage} exact />
+      <Route path={['/post-report']} component={PostReportPage} exact />
+      <Route path={['/comment-report']} component={CommentReportPage} exact />
+      <Route path={['/sector-report']} component={SectorReportPage} exact />
+      <Route path={['/user-report']} component={UserReportPage} exact />
+      <Route path='/login' component={LoginPage} />
     </>
   );
 };

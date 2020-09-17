@@ -17,27 +17,27 @@ const MainListItems = ({ history }) => {
     <div>
       <ListItem button onClick={(event) => moveTo(event, '/home')}>
         <ListItemIcon>
-          <HomeIcon/>
+          <HomeIcon />
         </ListItemIcon>
-        <ListItemText primary="홈"/>
+        <ListItemText primary='홈' />
       </ListItem>
       <ListItem button onClick={(event) => moveTo(event, '/sectors')}>
         <ListItemIcon>
-          <CategoryIcon/>
+          <CategoryIcon />
         </ListItemIcon>
-        <ListItemText primary="부문 관리"/>
+        <ListItemText primary='부문 관리' />
       </ListItem>
       <ListItem button onClick={(event) => moveTo(event, '/users')}>
         <ListItemIcon>
-          <PersonAddIcon/>
+          <PersonAddIcon />
         </ListItemIcon>
-        <ListItemText primary="사용자 관리"/>
+        <ListItemText primary='사용자 관리' />
       </ListItem>
       <ListItem button onClick={(event) => moveTo(event, '/question')}>
         <ListItemIcon>
-          <HelpOutlineIcon/>
+          <HelpOutlineIcon />
         </ListItemIcon>
-        <ListItemText primary="1:1 문의 관리"/>
+        <ListItemText primary='1:1 문의 관리' />
       </ListItem>
     </div>
   );
