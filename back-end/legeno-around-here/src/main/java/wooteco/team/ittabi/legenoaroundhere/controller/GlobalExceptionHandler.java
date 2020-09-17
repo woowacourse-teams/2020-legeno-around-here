@@ -58,18 +58,16 @@ public class GlobalExceptionHandler {
             .body(new ErrorResponse(e.getMessage()));
     }
 
-    @ExceptionHandler(NotAuthorizedException.class)
-    public ResponseEntity<ErrorResponse> handleForbidden(NotAuthorizedException e) {
-        log.info(e.getMessage());
-
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequest(
+        ConstraintViolationException constraintViolationException) {
+        String errorMessage = getErrorMessage(constraintViolationException);
         return ResponseEntity
-            .status(HttpStatus.FORBIDDEN)
-            .body(new ErrorResponse(e.getMessage()));
+            .status(HttpStatus.BAD_REQUEST)
+            .body(new ErrorResponse(errorMessage));
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleBadRequestForConstraintViolationException(
-        ConstraintViolationException constraintViolationException) {
+    private String getErrorMessage(ConstraintViolationException constraintViolationException) {
         Set<ConstraintViolation<?>> violations = constraintViolationException
             .getConstraintViolations();
         violations.forEach(violation -> log.info(violation.getMessage()));
@@ -80,10 +78,16 @@ public class GlobalExceptionHandler {
             violations.forEach(violation -> builder.append(violation.getMessage()));
             errorMessage = builder.toString();
         }
-        return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(new ErrorResponse(errorMessage));
+        return errorMessage;
+    }
 
+    @ExceptionHandler(NotAuthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleForbidden(NotAuthorizedException e) {
+        log.info(e.getMessage());
+
+        return ResponseEntity
+            .status(HttpStatus.FORBIDDEN)
+            .body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler({Exception.class, NotFoundAlgorithmException.class})

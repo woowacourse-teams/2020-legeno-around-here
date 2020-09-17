@@ -11,12 +11,12 @@ public class ImageConstraintValidator implements
 
     public static final int MAX_IMAGE_MB_VOLUME = 5;
     public static final int MAX_IMAGE_LENGTH = 10;
-    public static final int IEC_PREFIX_UNIT = 1024;
+    private static final int IEC_PREFIX_UNIT = 1024;
 
     @Override
     public boolean isValid(List<MultipartFile> images, ConstraintValidatorContext context) {
         if (Objects.isNull(images)) {
-            addConstraintViolation(context, "이미지가 Null 값입니다!");
+            addConstraintViolation(context, "이미지가 비어있습니다!");
             return false;
         }
 
@@ -25,21 +25,26 @@ public class ImageConstraintValidator implements
             return false;
         }
 
-        if (isOverImagesVolume(images)) {
+        if (isOverImagesSize(images)) {
             addConstraintViolation(context, "이미지는 " + MAX_IMAGE_MB_VOLUME + "MB를 넘을 수 없습니다!");
             return false;
         }
         return true;
     }
 
-    private boolean isOverImagesVolume(List<MultipartFile> images) {
-        return images.stream().anyMatch(this::isOverImageVolume);
+    private boolean isOverImagesSize(List<MultipartFile> images) {
+        return images.stream()
+            .anyMatch(this::isOverImageSize);
     }
 
-    private boolean isOverImageVolume(MultipartFile image) {
+    private boolean isOverImageSize(MultipartFile image) {
         double accurateImageSize = image.getSize();
-        double imageMbSize = accurateImageSize / IEC_PREFIX_UNIT / IEC_PREFIX_UNIT;
+        double imageMbSize = convertMbSize(accurateImageSize);
         return imageMbSize > MAX_IMAGE_MB_VOLUME;
+    }
+
+    private double convertMbSize(double accurateImageSize) {
+        return accurateImageSize / IEC_PREFIX_UNIT / IEC_PREFIX_UNIT;
     }
 
     private boolean isOverImagesLength(List<MultipartFile> images) {
@@ -48,6 +53,7 @@ public class ImageConstraintValidator implements
 
     private void addConstraintViolation(ConstraintValidatorContext context, String errorMessage) {
         context.disableDefaultConstraintViolation();
-        context.buildConstraintViolationWithTemplate(errorMessage).addConstraintViolation();
+        context.buildConstraintViolationWithTemplate(errorMessage)
+            .addConstraintViolation();
     }
 }

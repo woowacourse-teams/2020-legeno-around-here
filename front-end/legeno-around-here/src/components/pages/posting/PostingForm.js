@@ -33,7 +33,7 @@ const PostingForm = ({ history }) => {
     if (isOverImagesLength(localImages)) {
       throw new Error(`이미지는 ${maxImagesLength}개까지 등록 가능합니다!`);
     }
-    if (isOverImagesVolume(localImages)) {
+    if (isOverImagesSize(localImages)) {
       throw new Error(`이미지는 ${maxImageMBSize}MB 이내로 등록 가능합니다!`);
     }
   };
@@ -42,7 +42,7 @@ const PostingForm = ({ history }) => {
     return localImages.length > maxImagesLength;
   };
 
-  const isOverImagesVolume = (localImages) => {
+  const isOverImagesSize = (localImages) => {
     const images = Array.from(localImages);
     for (let image of images) {
       const imageMBSize = image.size / 1024 / 1024; // MB Size로 바꿈
