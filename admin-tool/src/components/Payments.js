@@ -8,9 +8,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Title from './Title';
 
-// Generate Order Data
-const createData = (id, date, name, shipTo, paymentMethod, amount) => {
-  return { id, date, name, shipTo, paymentMethod, amount };
+const createData = (id, date, name, area, paymentMethod, amount) => {
+  return { id, date, name, area, paymentMethod, amount };
 }
 
 const rows = [
