@@ -13,11 +13,11 @@ const createData = (id, date, name, area, paymentMethod, amount) => {
 }
 
 const rows = [
-  createData(0, '17 Sep, 2022', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
-  createData(1, '17 Sep, 2022', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99),
-  createData(2, '17 Sep, 2022', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-  createData(3, '17 Sep, 2022', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39),
-  createData(4, '17 Sep, 2022', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
+  createData(0, '17 Sep, 2022', '김고객', '서울특별시 종로구', 'VISA ⠀•••• 3719', 312.44),
+  createData(1, '17 Sep, 2022', '이회원', '서울특별시 송파구', 'VISA ⠀•••• 2574', 866.99),
+  createData(2, '17 Sep, 2022', '박유저', '경기도 성남시 분당구', 'MC ⠀•••• 1253', 100.81),
+  createData(3, '17 Sep, 2022', '최사용자', '서울특별시 강동구', 'AMEX ⠀•••• 2000', 654.39),
+  createData(4, '17 Sep, 2022', 'Bruce Springsteen', '서울특별시 은평구', 'VISA ⠀•••• 5919', 212.79),
 ];
 
 const preventDefault = (event) => {
@@ -38,11 +38,11 @@ const Payments = () => {
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Ship To</TableCell>
-            <TableCell>Payment Method</TableCell>
-            <TableCell align="right">Sale Amount</TableCell>
+            <TableCell>결제 일자</TableCell>
+            <TableCell>사용자명</TableCell>
+            <TableCell>사용자 기본 지역</TableCell>
+            <TableCell>결제 수단</TableCell>
+            <TableCell align="right">금액(달러)</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -50,7 +50,7 @@ const Payments = () => {
             <TableRow key={row.id}>
               <TableCell>{row.date}</TableCell>
               <TableCell>{row.name}</TableCell>
-              <TableCell>{row.shipTo}</TableCell>
+              <TableCell>{row.area}</TableCell>
               <TableCell>{row.paymentMethod}</TableCell>
               <TableCell align="right">{row.amount}</TableCell>
             </TableRow>
