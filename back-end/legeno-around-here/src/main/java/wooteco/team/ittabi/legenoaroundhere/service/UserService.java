@@ -205,6 +205,7 @@ public class UserService implements UserDetailsService {
     @Transactional(readOnly = true)
     public UserOtherResponse findUser(Long userId) {
         User user = findById(userId);
+        validateDeactivated(user);
         return UserOtherResponse.from(user);
     }
 }

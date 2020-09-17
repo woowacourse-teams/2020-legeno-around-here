@@ -291,6 +291,22 @@ class UserServiceTest extends ServiceTest {
         assertThat(user.getAwardsCount()).isNotNull();
     }
 
+    @DisplayName("회원 조회, 예외 발생 - 탈퇴 회원")
+    @Test
+    void findUser_Deactivated_ThrownException() {
+        String deactivatedEmail = "deactivated@email.com";
+        User user = User.builder()
+            .email(deactivatedEmail)
+            .nickname("daNickname")
+            .password("daPassword")
+            .build();
+        user.deactivate();
+        User deactivatedUser = userRepository.save(user);
+
+        assertThatThrownBy(() -> userService.findUser(deactivatedUser.getId()))
+            .isInstanceOf(NotExistsException.class);
+    }
+
     @DisplayName("회원 조회, 예외 발생 - 유효하지 않은 ID")
     @Test
     void findUser_InvalidId_ThrownException() {
