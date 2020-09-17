@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ErrorPage = ({ path }) => {
+const ErrorPage = ({ location }) => {
   const classes = useStyles();
 
   return (
@@ -31,7 +31,7 @@ const ErrorPage = ({ path }) => {
       <CssBaseline />
       <Container component='main' className={classes.main} maxWidth='sm'>
         <Typography variant='h2' component='h1' gutterBottom>
-          {`${path} 페이지를`}
+          {`${location.pathname} 페이지를`}
         </Typography>
         <Typography variant='h2' component='h1' gutterBottom>
           {'찾을 수 없습니다! :('}
