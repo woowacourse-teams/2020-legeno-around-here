@@ -44,6 +44,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.AlreadyExistUserException;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
@@ -303,7 +304,7 @@ class UserServiceTest extends ServiceTest {
         assertThat(user.hasNotRole(Role.ADMIN)).isFalse();
 
         LoginRequest loginRequest = new LoginRequest(adminUser, TEST_ADMIN_PASSWORD);
-        TokenResponse response = userService.login(loginRequest);
+        TokenResponse response = userService.loginAdmin(loginRequest);
         assertThat(response.getAccessToken()).isNotEmpty();
         assertThat(response.getAccessToken()).hasSizeGreaterThan(TOKEN_MIN_SIZE);
     }
@@ -317,8 +318,7 @@ class UserServiceTest extends ServiceTest {
         assertThat(user.hasNotRole(Role.ADMIN)).isTrue();
 
         LoginRequest loginRequest = new LoginRequest(notAdminUser, TEST_USER_PASSWORD);
-        TokenResponse response = userService.login(loginRequest);
-        assertThat(response.getAccessToken()).isNotEmpty();
-        assertThat(response.getAccessToken()).hasSizeGreaterThan(TOKEN_MIN_SIZE);
+        assertThatThrownBy(() -> userService.loginAdmin(loginRequest))
+            .isInstanceOf(NotAuthorizedException.class);
     }
 }

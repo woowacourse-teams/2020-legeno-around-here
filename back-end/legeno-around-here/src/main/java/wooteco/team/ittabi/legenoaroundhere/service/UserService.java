@@ -29,6 +29,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.AlreadyExistUserException;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
@@ -86,7 +87,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public TokenResponse adminLogin(LoginRequest loginRequest) {
+    public TokenResponse loginAdmin(LoginRequest loginRequest) {
         User user = findUserByEmail(loginRequest);
 
         validateAdmin(user);
@@ -106,7 +107,7 @@ public class UserService implements UserDetailsService {
 
     private void validateAdmin(User user) {
         if (user.hasNotRole(Role.ADMIN)) {
-            throw new NotExistsException("가입되지 않은 관리자입니다.");
+            throw new NotAuthorizedException("관리자가 아닙니다.");
         }
     }
 

@@ -3,7 +3,6 @@ package wooteco.team.ittabi.legenoaroundhere.adminController;
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.ADMIN_PATH;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,8 +20,8 @@ public class UserAdminController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> adminLogin(@RequestBody LoginRequest loginRequest) {
-        TokenResponse token = userService.adminLogin(loginRequest);
+    public ResponseEntity<TokenResponse> loginAdmin(@RequestBody LoginRequest loginRequest) {
+        TokenResponse token = userService.loginAdmin(loginRequest);
 
         return ResponseEntity
             .ok(token);
