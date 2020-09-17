@@ -3,7 +3,7 @@ import { API } from './Api';
 export const loginAdmin = ({ email, password }, initPassword, setCookie, history) => {
   console.log(email, password);
 
-  API.post('/login', {
+  API.post('/admin/login', {
     email,
     password,
   })
