@@ -5,7 +5,7 @@ const API = axios.create({
   timeout: 1000,
 });
 
-export const makeHeaderConfig = (cookies) => {
+export const makeHeader = (cookies) => {
   const accessToken = cookies['accessToken'];
   return {
     headers: {
