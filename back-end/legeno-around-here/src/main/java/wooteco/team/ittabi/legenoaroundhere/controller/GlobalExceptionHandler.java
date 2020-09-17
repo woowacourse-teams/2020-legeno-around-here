@@ -1,5 +1,8 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
@@ -53,6 +56,29 @@ public class GlobalExceptionHandler {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequest(
+        ConstraintViolationException constraintViolationException) {
+        String errorMessage = getErrorMessage(constraintViolationException);
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(new ErrorResponse(errorMessage));
+    }
+
+    private String getErrorMessage(ConstraintViolationException constraintViolationException) {
+        Set<ConstraintViolation<?>> violations = constraintViolationException
+            .getConstraintViolations();
+        violations.forEach(violation -> log.info(violation.getMessage()));
+        String errorMessage = "ConstraintViolationException occured";
+
+        if (!violations.isEmpty()) {
+            StringBuilder builder = new StringBuilder();
+            violations.forEach(violation -> builder.append(violation.getMessage()));
+            errorMessage = builder.toString();
+        }
+        return errorMessage;
     }
 
     @ExceptionHandler(NotAuthorizedException.class)
