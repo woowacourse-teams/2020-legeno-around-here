@@ -127,10 +127,6 @@ public class UserAcceptanceTest extends AcceptanceTest {
         // 회원 탈퇴
         deactivateUser(accessToken);
         loginFailed(TEST_THE_OTHER_EMAIL, TEST_USER_OTHER_PASSWORD);
-
-        // 탈퇴한 회원은 조회 불가
-        tokenResponse = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
-        findUserFailed(tokenResponse.getAccessToken(), TEST_THE_OTHER_USER_ID);
     }
 
     /**
@@ -173,6 +169,8 @@ public class UserAcceptanceTest extends AcceptanceTest {
      * Given 타 회원이 가입되어 있다.
      * <p>
      * When 타 회원을 조회한다. Then 타 회원이 조회된다.
+     * <p>
+     * When 탈퇴한 회원을 조회한다. Then 탈퇴한 회원은 조회되지 않는다.(404 Return)
      */
     @DisplayName("타 회원 프로필 조회")
     @Test
@@ -185,6 +183,9 @@ public class UserAcceptanceTest extends AcceptanceTest {
         assertThat(userOtherResponse.getNickname()).isEqualTo(TEST_USER_NICKNAME);
         assertThat(userOtherResponse.getAwardsCount()).isNotNull();
         assertThat(userOtherResponse.getImage());
+
+        // 탈퇴한 회원은 조회 불가
+        findUserFailed(tokenResponse.getAccessToken(), TEST_THE_OTHER_USER_ID);
     }
 
     /**
