@@ -11,6 +11,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { produce } from 'immer';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 const columns = [
   {
@@ -87,14 +89,17 @@ export const createRows = (contents) => {
   return rows;
 };
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(() => ({
   root: {
     width: '100%',
   },
   container: {
     maxHeight: '100%',
   },
-});
+  formControl: {
+    minWidth: 120,
+  },
+}));
 
 const SectorsTable = ({ history }) => {
   const classes = useStyles();
@@ -116,7 +121,15 @@ const SectorsTable = ({ history }) => {
     const fetchData = async () =>
       await findAllSectors(history, cookies, removeCookie, setLoading, setRows, pageProperty, setPageProperty);
     fetchData();
-  }, [cookies, history, pageProperty.page]);
+  }, [cookies, history, pageProperty.page, pageProperty.size]);
+
+  const onChangeOfSize = (event) => {
+    setPageProperty(
+      produce(pageProperty, (draft) => {
+        draft['size'] = event.target.value;
+      }),
+    );
+  };
 
   const onClickOfPage = (event) => {
     event.preventDefault();
@@ -169,7 +182,16 @@ const SectorsTable = ({ history }) => {
               <button value='+10' onClick={onClickOfPage}>
                 ᐅᐅ
               </button>
-              &emsp;총 {pageProperty.totalElements}건
+              &emsp;총 {pageProperty.totalElements}건&emsp; 조회 개수 : &nbsp;
+              <FormControl className={classes.formControl}>
+                <Select native value={pageProperty.size} onChange={onChangeOfSize}>
+                  <option aria-label='None' value='' />
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                </Select>
+              </FormControl>
             </caption>
             <TableHead>
               <TableRow>
