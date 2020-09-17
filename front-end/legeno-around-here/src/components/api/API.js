@@ -12,7 +12,7 @@ const DEFAULT_SORTED_BY = 'id';
 const DEFAULT_DIRECTION = 'desc';
 const DEFAULT_URL = `${process.env.REACT_APP_API_SERVER_HOST}`;
 
-export const loginUser = (email, password, handleReset) => {
+export const loginUser = (email, password, handleReset, history) => {
   axios
     .post(DEFAULT_URL + '/login', {
       email,
