@@ -1,20 +1,49 @@
-import API, { makeHeaderConfig, redirectInvalidToken } from './Api';
+import API, { redirectInvalidToken } from './Api';
+import { createRows } from '../components/SectorsTable';
+import produce from 'immer';
 
-export const findAllSectors = (history, cookies, removeCookie, setData, setLoading) => {
+export const findAllSectors = (
+  history,
+  cookies,
+  removeCookie,
+  setLoading,
+  setData,
+  setRows,
+  pageProperty,
+  setPageProperty,
+) => {
   setLoading(true);
-  const config = makeHeaderConfig(cookies);
+
+  const config = {
+    params: {
+      page: pageProperty.page,
+      size: pageProperty.size,
+      sortedBy: pageProperty.sortedBy,
+      direction: pageProperty.direction,
+    },
+    headers: {
+      'X-Auth-Token': cookies['accessToken'],
+    },
+  };
 
   API.get('/admin/sectors', config)
     .then((response) => {
-      console.log('success');
-      console.log(response.data);
-      setData(response.data);
+      const data = response.data;
+      setData(data);
+
+      const contents = data.content;
+      setRows(createRows(contents));
+
+      setPageProperty(
+        produce(pageProperty, (draft) => {
+          draft['totalPages'] = data.totalPages;
+          draft['totalElements'] = data.totalElements;
+        }),
+      );
     })
     .catch((error) => {
       let status = error.response.status;
       redirectInvalidToken(history, status, removeCookie);
-      console.log('fail');
-      return null;
     })
     .then(() => {
       setLoading(false);
