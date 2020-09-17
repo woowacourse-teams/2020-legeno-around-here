@@ -26,7 +26,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.notification.Notification;
@@ -269,13 +268,17 @@ class UserServiceTest extends ServiceTest {
 
     @DisplayName("회원 탈퇴")
     @Test
-    void deleteMe_Success() {
-        userService.deleteMe();
-
+    void deactivate_Success() {
         User authUser = (User) authenticationFacade.getAuthentication()
             .getPrincipal();
-        assertThatThrownBy(() -> userService.loadUserByUsername(authUser.getUsername()))
-            .isInstanceOf(UsernameNotFoundException.class);
+        assertThat(authUser.isDeactivated()).isFalse();
+
+        userService.deactivateMe();
+
+        User user = userRepository.findById(authUser.getId())
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        assertThat(user.isDeactivated()).isTrue();
     }
 
     @DisplayName("회원 조회, 성공")

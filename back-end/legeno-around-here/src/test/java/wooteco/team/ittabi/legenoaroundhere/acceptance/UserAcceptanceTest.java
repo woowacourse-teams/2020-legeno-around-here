@@ -124,8 +124,8 @@ public class UserAcceptanceTest extends AcceptanceTest {
         assertThatThrownBy(() -> changeMyPassword(accessToken, TEST_USER_OTHER_PASSWORD));
 
         // 회원 탈퇴
-        deleteUser(accessToken);
-        findNotExistMe(accessToken);
+        deactivateUser(accessToken);
+        loginFailed(TEST_THE_OTHER_EMAIL, TEST_USER_OTHER_PASSWORD);
     }
 
     /**
@@ -235,14 +235,19 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .extract().as(UserResponse.class);
     }
 
-    private void findNotExistMe(String accessToken) {
+    private void loginFailed(String email, String password) {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("password", password);
+
         given()
-            .header("X-AUTH-TOKEN", accessToken)
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when()
-            .get("/users/me")
+            .post("/login")
             .then()
-            .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     private UserImageResponse createUserImage(String accessToken) {
@@ -310,7 +315,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    private void deleteUser(String accessToken) {
+    private void deactivateUser(String accessToken) {
         given()
             .header("X-AUTH-TOKEN", accessToken)
             .when()
