@@ -14,7 +14,7 @@ import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-class UserResponseTest {
+class UserOtherResponseTest {
 
     private static final Email TEST_EMAIL = new Email(TEST_USER_EMAIL);
 
@@ -28,13 +28,11 @@ class UserResponseTest {
 
         assertThat(user.isDeactivated()).isFalse();
 
-        UserResponse userResponse = UserResponse.from(user);
-        assertThat(userResponse.getId()).isEqualTo(user.getId());
-        assertThat(userResponse.getEmail()).isEqualTo(user.getEmail().getEmail());
-        assertThat(userResponse.getNickname()).isEqualTo(user.getNickname());
-        assertThat(userResponse.getImage()).isEqualTo(UserImageResponse.of(user.getImage()));
-        assertThat(userResponse.getArea()).isEqualTo(AreaResponse.of(user.getArea()));
-        assertThat(userResponse.getAwardsCount()).isEqualTo(AwardsCountResponse.of(user));
+        UserOtherResponse userOtherResponse = UserOtherResponse.from(user);
+        assertThat(userOtherResponse.getId()).isEqualTo(user.getId());
+        assertThat(userOtherResponse.getNickname()).isEqualTo(user.getNickname());
+        assertThat(userOtherResponse.getImage()).isEqualTo(UserImageResponse.of(user.getImage()));
+        assertThat(userOtherResponse.getAwardsCount()).isEqualTo(AwardsCountResponse.of(user));
     }
 
     @Test
@@ -45,12 +43,11 @@ class UserResponseTest {
 
         assertThat(user.isDeactivated()).isTrue();
 
-        UserResponse userResponse = UserResponse.from(user);
-        assertThat(userResponse.getId()).isEqualTo(user.getId());
-        assertThat(userResponse.getEmail()).isEqualTo(UserResponse.DEACTIVATED_USER_EMAIL);
-        assertThat(userResponse.getNickname()).isEqualTo(UserResponse.DEACTIVATED_USER_NICKNAME);
-        assertThat(userResponse.getImage()).isNull();
-        assertThat(userResponse.getArea()).isNull();
-        assertThat(userResponse.getAwardsCount()).isEqualTo(AwardsCountResponse.ofInitialValue());
+        UserOtherResponse userOtherResponse = UserOtherResponse.from(user);
+        assertThat(userOtherResponse.getId()).isEqualTo(user.getId());
+        assertThat(userOtherResponse.getNickname())
+            .isEqualTo(UserResponse.DEACTIVATED_USER_NICKNAME);
+        assertThat(userOtherResponse.getImage()).isEqualTo(UserImageResponse.of(user.getImage()));
+        assertThat(userOtherResponse.getAwardsCount()).isEqualTo(AwardsCountResponse.of(user));
     }
 }

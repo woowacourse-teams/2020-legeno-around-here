@@ -39,6 +39,7 @@ public class UserResponse {
             .id(user.getId())
             .nickname(DEACTIVATED_USER_NICKNAME)
             .email(DEACTIVATED_USER_EMAIL)
+            .awardsCount(AwardsCountResponse.ofInitialValue())
             .build();
     }
 
