@@ -17,6 +17,9 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @ToString
 public class UserResponse {
 
+    static final String DEACTIVATED_USER_NICKNAME = "탈퇴한 회원";
+    static final String DEACTIVATED_USER_EMAIL = "";
+
     private Long id;
     private String email;
     private String nickname;
@@ -25,6 +28,21 @@ public class UserResponse {
     private AwardsCountResponse awardsCount;
 
     public static UserResponse from(User user) {
+        if (user.isDeactivated()) {
+            return fromDeactivated(user);
+        }
+        return fromActivated(user);
+    }
+
+    private static UserResponse fromDeactivated(User user) {
+        return UserResponse.builder()
+            .id(user.getId())
+            .nickname(DEACTIVATED_USER_NICKNAME)
+            .email(DEACTIVATED_USER_EMAIL)
+            .build();
+    }
+
+    private static UserResponse fromActivated(User user) {
         return UserResponse.builder()
             .id(user.getId())
             .email(user.getEmail().getEmail())
