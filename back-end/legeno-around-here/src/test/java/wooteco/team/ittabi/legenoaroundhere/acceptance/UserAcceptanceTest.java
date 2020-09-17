@@ -15,6 +15,7 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NEW_USER_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NEW_USER_PASSWORD;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_THE_OTHER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_THE_OTHER_USER_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
@@ -126,6 +127,10 @@ public class UserAcceptanceTest extends AcceptanceTest {
         // 회원 탈퇴
         deactivateUser(accessToken);
         loginFailed(TEST_THE_OTHER_EMAIL, TEST_USER_OTHER_PASSWORD);
+
+        // 탈퇴한 회원은 조회 불가
+        tokenResponse = login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
+        findUserFailed(tokenResponse.getAccessToken(), TEST_THE_OTHER_USER_ID);
     }
 
     /**
@@ -341,6 +346,16 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .then()
             .statusCode(HttpStatus.OK.value())
             .extract().as(UserOtherResponse.class);
+    }
+
+    private void findUserFailed(String accessToken, Long userId) {
+        given()
+            .header("X-AUTH-TOKEN", accessToken)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/users/" + userId)
+            .then()
+            .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     private TokenResponse adminLogin(String email, String password) {
