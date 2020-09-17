@@ -11,14 +11,14 @@ import MenuBar from '../components/MenuBar';
 import Token from '../components/validation/Token';
 import mainPageStyle from '../libs/mainPageStyle';
 
-const HomePage = ({ history }) => {
+const HomePage = () => {
   const classes = mainPageStyle();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   return (
     <div className={classes.root}>
-      <Token history={history} />
-      <MenuBar menuName='Home' history={history} />
+      <Token />
+      <MenuBar menuName='Home' />
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth='lg' className={classes.container}>

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
+import { withRouter } from 'react-router-dom';
 
 const Token = ({ history }) => {
   const [cookies] = useCookies(['accessToken']);
@@ -14,4 +15,4 @@ const Token = ({ history }) => {
   return <></>;
 };
 
-export default Token;
+export default withRouter(Token);

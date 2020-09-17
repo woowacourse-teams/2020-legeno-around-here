@@ -15,6 +15,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import SecondaryListItems from './sidebaritem/SecondaryListItems';
 import MainListItems from './sidebaritem/MainListItems';
+import { withRouter } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -137,4 +138,4 @@ const MenuBar = ({ menuName, history }) => {
   );
 };
 
-export default MenuBar;
+export default withRouter(MenuBar);

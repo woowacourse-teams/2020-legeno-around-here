@@ -9,14 +9,14 @@ import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Copyright from '../components/Copyright';
 
-const UserManagePage = ({ history }) => {
+const UserManagePage = () => {
   const classes = mainPageStyle();
   const fixedHeightPaper = clsx(classes.paper, classes.paperFullHeight);
 
   return (
     <div className={classes.root}>
-      <Token history={history} />
-      <MenuBar menuName='User Management' history={history} />
+      <Token />
+      <MenuBar menuName='User Management' />
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth='lg' className={classes.container}>
