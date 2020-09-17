@@ -89,7 +89,6 @@ public class UserService implements UserDetailsService {
     @Transactional
     public TokenResponse loginAdmin(LoginRequest loginRequest) {
         User user = findUserByEmail(loginRequest);
-
         validateAdmin(user);
         return getTokenResponse(loginRequest, user);
     }
