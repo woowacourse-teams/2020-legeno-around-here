@@ -62,14 +62,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
-            .antMatchers("/h2-console/**").permitAll()
             .antMatchers(
+                "/h2-console/**",
                 "/v2/api-docs",
                 "/swagger-resources/**",
                 "/swagger-ui.html",
                 "/webjars/**",
                 "/check-joined",
                 "/join",
+                "/admin/login",
                 "/login",
                 "/mail-auth/**",
                 "/profile").permitAll()
