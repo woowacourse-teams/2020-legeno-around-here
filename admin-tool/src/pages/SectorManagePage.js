@@ -11,7 +11,7 @@ import Copyright from '../components/Copyright';
 
 const SectorManagePage = ({ history }) => {
   const classes = mainPageStyle();
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const fixedHeightPaper = clsx(classes.paper, classes.paperFullHeight);
 
   return (
     <div className={classes.root}>
@@ -21,7 +21,6 @@ const SectorManagePage = ({ history }) => {
         <div className={classes.appBarSpacer}/>
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
-            {/* Chart */}
             <Grid item xs={12}>
               <Paper className={fixedHeightPaper}>
                 <div>부문 관리 - 부문 승인 요청을 승인/반려하는 페이지</div>

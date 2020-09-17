@@ -11,7 +11,7 @@ import Copyright from '../components/Copyright';
 
 const QuestionManagePage = ({ history }) => {
   const classes = mainPageStyle();
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const fixedHeightPaper = clsx(classes.paper, classes.paperFullHeight);
 
   return (
     <div className={classes.root}>
@@ -21,7 +21,6 @@ const QuestionManagePage = ({ history }) => {
         <div className={classes.appBarSpacer}/>
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
-            {/* Chart */}
             <Grid item xs={12}>
               <Paper className={fixedHeightPaper}>
                 <div>질문 관리 - 1:1 질문에 답변할 수 있는 페이지</div>

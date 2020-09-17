@@ -11,7 +11,7 @@ import Copyright from '../components/Copyright';
 
 const UserManagePage = ({ history }) => {
   const classes = mainPageStyle();
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const fixedHeightPaper = clsx(classes.paper, classes.paperFullHeight);
 
   return (
     <div className={classes.root}>
@@ -21,7 +21,6 @@ const UserManagePage = ({ history }) => {
         <div className={classes.appBarSpacer}/>
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
-            {/* Chart */}
             <Grid item xs={12}>
               <Paper className={fixedHeightPaper}>
                 <div>사용자 관리 - 사용자를 관리(권한 등)하는 페이지</div>

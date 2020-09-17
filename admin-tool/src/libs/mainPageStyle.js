@@ -26,6 +26,9 @@ const mainPageStyle = makeStyles((theme) => ({
   fixedHeight: {
     height: 240,
   },
+  paperFullHeight: {
+    height: '75vh',
+  },
 }));
 
 export default mainPageStyle;
