@@ -2,16 +2,7 @@ import API, { redirectInvalidToken } from './Api';
 import { createRows } from '../components/SectorsTable';
 import produce from 'immer';
 
-export const findAllSectors = (
-  history,
-  cookies,
-  removeCookie,
-  setLoading,
-  setData,
-  setRows,
-  pageProperty,
-  setPageProperty,
-) => {
+export const findAllSectors = (history, cookies, removeCookie, setLoading, setRows, pageProperty, setPageProperty) => {
   setLoading(true);
 
   const config = {
@@ -29,8 +20,6 @@ export const findAllSectors = (
   API.get('/admin/sectors', config)
     .then((response) => {
       const data = response.data;
-      setData(data);
-
       const contents = data.content;
       setRows(createRows(contents));
 

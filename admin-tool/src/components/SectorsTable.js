@@ -92,7 +92,7 @@ const useStyles = makeStyles({
     width: '100%',
   },
   container: {
-    maxHeight: 440,
+    maxHeight: '100%',
   },
 });
 
@@ -101,7 +101,6 @@ const SectorsTable = ({ history }) => {
 
   const [cookies, removeCookie] = useCookies(['accessToken']);
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState(null);
   const [rows, setRows] = useState(null);
 
   const [pageProperty, setPageProperty] = useState({
@@ -115,7 +114,7 @@ const SectorsTable = ({ history }) => {
 
   useEffect(() => {
     const fetchData = async () =>
-      await findAllSectors(history, cookies, removeCookie, setLoading, setData, setRows, pageProperty, setPageProperty);
+      await findAllSectors(history, cookies, removeCookie, setLoading, setRows, pageProperty, setPageProperty);
     fetchData();
   }, [cookies, history, pageProperty.page]);
 
@@ -145,14 +144,12 @@ const SectorsTable = ({ history }) => {
     return <>로딩중</>;
   }
 
-  if (!data) {
+  if (!rows) {
     return null;
   }
 
   return (
     <>
-      <div>부문 관리 - 부문 승인 요청을 승인/반려하는 페이지</div>
-      {data && <textarea rows={10} value={JSON.stringify(data, null, 2)} readOnly={true} />}
       <Paper className={classes.root}>
         <TableContainer className={classes.container}>
           <Table stickyHeader aria-label='sticky table'>

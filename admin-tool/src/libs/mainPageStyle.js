@@ -27,7 +27,7 @@ const mainPageStyle = makeStyles((theme) => ({
     height: 240,
   },
   paperFullHeight: {
-    height: '75vh',
+    height: '100%',
   },
 }));
 
