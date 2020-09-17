@@ -21,7 +21,7 @@ const App = () => {
       <Route path={['/comment-report']} component={CommentReportPage} exact />
       <Route path={['/sector-report']} component={SectorReportPage} exact />
       <Route path={['/user-report']} component={UserReportPage} exact />
-      <Route path='/login' component={LoginPage} />
+      <Route path={['/login']} component={LoginPage} exact />
     </>
   );
 };
