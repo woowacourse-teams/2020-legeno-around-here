@@ -13,6 +13,7 @@ import TableRow from '@material-ui/core/TableRow';
 import { produce } from 'immer';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import Button from '@material-ui/core/Button';
 
 const columns = [
   {
@@ -133,7 +134,7 @@ const SectorsTable = ({ history }) => {
 
   const onClickOfPage = (event) => {
     event.preventDefault();
-    const { value } = event.target;
+    const { value } = event.currentTarget;
     let result = pageProperty.page + value * 1;
 
     if (result >= pageProperty.totalPages) {
@@ -167,21 +168,21 @@ const SectorsTable = ({ history }) => {
         <TableContainer className={classes.container}>
           <Table stickyHeader aria-label='sticky table'>
             <caption>
-              <button value='-10' onClick={onClickOfPage}>
+              <Button variant='outlined' size='small' value='-10' onClick={onClickOfPage}>
                 ᐊᐊ
-              </button>
+              </Button>
               &nbsp;
-              <button value='-1' onClick={onClickOfPage}>
+              <Button variant='outlined' size='small' value='-1' onClick={onClickOfPage}>
                 ᐊ
-              </button>
+              </Button>
               &ensp;{pageProperty.page + 1} / {pageProperty.totalPages}&ensp;
-              <button value='+1' onClick={onClickOfPage}>
+              <Button variant='outlined' size='small' value='+1' onClick={onClickOfPage}>
                 ᐅ
-              </button>
+              </Button>
               &nbsp;
-              <button value='+10' onClick={onClickOfPage}>
+              <Button variant='outlined' size='small' value='+10' onClick={onClickOfPage}>
                 ᐅᐅ
-              </button>
+              </Button>
               &emsp;총 {pageProperty.totalElements}건&emsp; 조회 개수 : &nbsp;
               <FormControl className={classes.formControl}>
                 <Select native value={pageProperty.size} onChange={onChangeOfSize}>
