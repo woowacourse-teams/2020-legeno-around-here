@@ -15,6 +15,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import SectorModal from './SectorModal';
+import * as qs from 'qs';
 
 const columns = [
   {
@@ -103,7 +104,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const SectorsTable = ({ history }) => {
+const SectorsTable = ({ location, history }) => {
+  const query = qs.parse(location.search, {
+    ignoreQueryPrefix: true,
+  });
   const classes = useStyles();
 
   const [cookies, removeCookie] = useCookies(['accessToken']);
@@ -111,11 +115,11 @@ const SectorsTable = ({ history }) => {
   const [rows, setRows] = useState(null);
 
   const [pageProperty, setPageProperty] = useState({
-    page: 0,
+    page: query.page ? parseInt(query.page) - 1 : 0,
     totalPages: 0,
-    size: 10,
-    sortedBy: 'id',
-    direction: 'desc',
+    size: query.size ? parseInt(query.size) : 10,
+    sortedBy: query.sortedBy ? query.sortedBy : 'id',
+    direction: query.direction ? query.direction : 'desc',
     totalElements: 0,
   });
 
@@ -126,12 +130,25 @@ const SectorsTable = ({ history }) => {
     const fetchData = async () =>
       await findAllSectors(history, cookies, removeCookie, setLoading, setRows, pageProperty, setPageProperty);
     fetchData();
-  }, [cookies, history, pageProperty.page, pageProperty.size, pageProperty.sortedBy, pageProperty.direction]);
+  }, [cookies, history, location]);
+
+  useEffect(() => {
+    const parameter = qs.stringify({
+      page: pageProperty.page + 1,
+      size: pageProperty.size,
+      sortedBy: pageProperty.sortedBy,
+      direction: pageProperty.direction,
+    });
+
+    const url = location.pathname + '?' + parameter;
+    console.log(url);
+    history.push(url);
+  }, [pageProperty.page, pageProperty.size, pageProperty.sortedBy, pageProperty.direction]);
 
   const onChangeOfSize = (event) => {
     setPageProperty(
       produce(pageProperty, (draft) => {
-        draft['size'] = event.target.value;
+        draft['size'] = parseInt(event.target.value);
         draft['page'] = 0;
       }),
     );
