@@ -122,12 +122,42 @@ const SectorsTable = ({ history }) => {
     const fetchData = async () =>
       await findAllSectors(history, cookies, removeCookie, setLoading, setRows, pageProperty, setPageProperty);
     fetchData();
-  }, [cookies, history, pageProperty.page, pageProperty.size]);
+  }, [cookies, history, pageProperty.page, pageProperty.size, pageProperty.sortedBy, pageProperty.direction]);
 
   const onChangeOfSize = (event) => {
     setPageProperty(
       produce(pageProperty, (draft) => {
         draft['size'] = event.target.value;
+        draft['page'] = 0;
+      }),
+    );
+  };
+
+  const onClickOfTableHeader = (event) => {
+    event.preventDefault();
+    const { sortedBy } = event.currentTarget.dataset;
+
+    const getDirection = () => {
+      if (pageProperty.direction === 'desc') {
+        return 'asc';
+      }
+      return 'desc';
+    };
+
+    if (sortedBy === pageProperty.sortedBy) {
+      const direction = getDirection();
+      setPageProperty(
+        produce(pageProperty, (draft) => {
+          draft['direction'] = direction;
+        }),
+      );
+      return;
+    }
+
+    setPageProperty(
+      produce(pageProperty, (draft) => {
+        draft['sortedBy'] = sortedBy;
+        draft['direction'] = 'desc';
       }),
     );
   };
@@ -151,8 +181,6 @@ const SectorsTable = ({ history }) => {
       }),
     );
   };
-
-  console.log(pageProperty);
 
   if (loading) {
     return <>로딩중</>;
@@ -197,7 +225,13 @@ const SectorsTable = ({ history }) => {
             <TableHead>
               <TableRow>
                 {columns.map((column) => (
-                  <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}>
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}
+                    data-sorted-by={column.sortedBy}
+                    onClick={onClickOfTableHeader}
+                  >
                     {column.label}
                   </TableCell>
                 ))}
