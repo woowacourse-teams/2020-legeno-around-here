@@ -22,9 +22,9 @@ class UserSimpleResponseTest {
     @Autowired
     private UserRepository userRepository;
 
-    @DisplayName("정적 팩터리 메서드, 활성화(일반) 유저일경우")
+    @DisplayName("정적 팩터리 메서드, 활성화(일반) 유저일경우 - UserSimpleResponse 반환")
     @Test
-    void from_ActivatedUser() {
+    void from_ActivatedUser_ReturnUserSimpleResponse() {
         User user = userRepository.findByEmail(TEST_EMAIL)
             .orElseThrow(() -> new NotExistsException("존재하지 않는 회원입니다."));
 
@@ -37,9 +37,9 @@ class UserSimpleResponseTest {
         assertThat(userSimpleResponse.getImage()).isEqualTo(UserImageResponse.of(user.getImage()));
     }
 
-    @DisplayName("정적 팩터리 메서드, 비활성화(탈퇴) 유저일 경우, 필드 대체")
+    @DisplayName("정적 팩터리 메서드, 비활성화(탈퇴) 유저일 경우 - 필드 대체된 UserSimpleResponse 반환")
     @Test
-    void from_DeactivatedUser_Replace() {
+    void from_DeactivatedUser_ReturnReplacedUserSimpleResponse() {
         User user = userRepository.findByEmail(TEST_EMAIL)
             .orElseThrow(() -> new NotExistsException("존재하지 않는 회원입니다."));
         user.deactivate();

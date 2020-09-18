@@ -17,9 +17,9 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @ToString
 public class AwardsCountResponse {
 
-    private static final int INITIAL_VALUE = 0;
-    private static final AwardsCountResponse AWARDS_COUNT_RESPONSE_OF_INTIAL_VALUE
-        = new AwardsCountResponse(INITIAL_VALUE, INITIAL_VALUE, INITIAL_VALUE);
+    private static final int INITIAL_AWARD_COUNT = 0;
+    private static final AwardsCountResponse INITIAL_AWARDS_COUNT_RESPONSE
+        = new AwardsCountResponse(INITIAL_AWARD_COUNT, INITIAL_AWARD_COUNT, INITIAL_AWARD_COUNT);
 
     private int topOne;
     private int topThree;
@@ -34,6 +34,6 @@ public class AwardsCountResponse {
     }
 
     public static AwardsCountResponse ofInitialValue() {
-        return AWARDS_COUNT_RESPONSE_OF_INTIAL_VALUE;
+        return INITIAL_AWARDS_COUNT_RESPONSE;
     }
 }

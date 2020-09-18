@@ -22,9 +22,9 @@ class UserResponseTest {
     @Autowired
     protected UserRepository userRepository;
 
-    @DisplayName("정적 팩터리 메서드, 활성화(일반) 유저일경우")
+    @DisplayName("정적 팩터리 메서드, 활성화(일반) 유저일경우 - UserResponse 반환")
     @Test
-    void from_ActivatedUser() {
+    void from_ActivatedUser_ReturnUserResponse() {
         User user = userRepository.findByEmail(TEST_EMAIL)
             .orElseThrow(() -> new NotExistsException("존재하지 않는 회원입니다."));
 
@@ -39,9 +39,9 @@ class UserResponseTest {
         assertThat(userResponse.getAwardsCount()).isEqualTo(AwardsCountResponse.of(user));
     }
 
-    @DisplayName("정적 팩터리 메서드, 비활성화(탈퇴) 유저일 경우, 필드 대체")
+    @DisplayName("정적 팩터리 메서드, 비활성화(탈퇴) 유저일 경우 - 필드 대체된 UserResponse 반환")
     @Test
-    void from_DeactivatedUser_Replace() {
+    void from_DeactivatedUser_ReturnReplacedUserResponse() {
         User user = userRepository.findByEmail(TEST_EMAIL)
             .orElseThrow(() -> new NotExistsException("존재하지 않는 회원입니다."));
         user.deactivate();
