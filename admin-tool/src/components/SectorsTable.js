@@ -14,6 +14,7 @@ import { produce } from 'immer';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
+import SectorModal from './SectorModal';
 
 const columns = [
   {
@@ -118,6 +119,9 @@ const SectorsTable = ({ history }) => {
     totalElements: 0,
   });
 
+  const [open, setOpen] = React.useState(false);
+  const [rowId, setRowId] = React.useState(null);
+
   useEffect(() => {
     const fetchData = async () =>
       await findAllSectors(history, cookies, removeCookie, setLoading, setRows, pageProperty, setPageProperty);
@@ -190,6 +194,19 @@ const SectorsTable = ({ history }) => {
     return null;
   }
 
+  const openModal = (event) => {
+    event.preventDefault();
+    const { rowId } = event.currentTarget.dataset;
+    setRowId(rowId);
+    setOpen(true);
+  };
+
+  const closeModal = (event) => {
+    event.preventDefault();
+    setOpen(false);
+    setRowId(null);
+  };
+
   return (
     <>
       <Paper className={classes.root}>
@@ -240,7 +257,7 @@ const SectorsTable = ({ history }) => {
             <TableBody>
               {rows.map((row) => {
                 return (
-                  <TableRow hover role='checkbox' tabIndex={-1} key={row.id}>
+                  <TableRow hover role='checkbox' tabIndex={-1} key={row.id} data-row-id={row.id} onClick={openModal}>
                     {columns.map((column) => {
                       const value = row[column.id];
                       return (
@@ -255,6 +272,7 @@ const SectorsTable = ({ history }) => {
             </TableBody>
           </Table>
         </TableContainer>
+        <SectorModal open={open} closeModal={closeModal} rowId={rowId} />
       </Paper>
     </>
   );
