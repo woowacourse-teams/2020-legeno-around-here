@@ -99,9 +99,16 @@ public class UserService implements UserDetailsService {
     }
 
     private TokenResponse getTokenResponse(LoginRequest loginRequest, User user) {
+        validateDeactivated(user);
         checkPassword(loginRequest, user);
         String token = jwtTokenGenerator.createToken(user.getUsername(), user.getRoles());
         return new TokenResponse(token);
+    }
+
+    private void validateDeactivated(User user) {
+        if (user.isDeactivated()) {
+            throw new NotExistsException("탈퇴한 회원입니다.");
+        }
     }
 
     private void validateAdmin(User user) {
@@ -175,9 +182,9 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void deleteMe() {
+    public void deactivateMe() {
         User user = findPrincipal();
-        userRepository.delete(user);
+        user.deactivate();
     }
 
     @Override
@@ -198,6 +205,7 @@ public class UserService implements UserDetailsService {
     @Transactional(readOnly = true)
     public UserOtherResponse findUser(Long userId) {
         User user = findById(userId);
+        validateDeactivated(user);
         return UserOtherResponse.from(user);
     }
 }

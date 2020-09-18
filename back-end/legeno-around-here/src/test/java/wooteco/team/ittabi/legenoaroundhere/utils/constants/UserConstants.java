@@ -21,6 +21,7 @@ public class UserConstants {
     public static final String TEST_NEW_USER_NICKNAME = "n_userName";
     public static final String TEST_NEW_USER_PASSWORD = "n_userPassword";
 
+    public static final Long TEST_THE_OTHER_USER_ID = 4L;
     public static final String TEST_THE_OTHER_EMAIL = "theother@test.com";
     public static final String TEST_UPDATE_EMAIL = "update@test.com";
 

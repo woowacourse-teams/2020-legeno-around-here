@@ -8,11 +8,11 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Copyright from '../components/Copyright';
+import SectorsTable from '../components/SectorsTable';
 
 const SectorManagePage = () => {
   const classes = mainPageStyle();
   const fixedHeightPaper = clsx(classes.paper, classes.paperFullHeight);
-
   return (
     <div className={classes.root}>
       <Token />
@@ -23,7 +23,7 @@ const SectorManagePage = () => {
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <Paper className={fixedHeightPaper}>
-                <div>부문 관리 - 부문 승인 요청을 승인/반려하는 페이지</div>
+                <SectorsTable />
               </Paper>
             </Grid>
           </Grid>

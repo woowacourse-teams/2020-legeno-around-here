@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +22,9 @@ public class AdminSectorResponse {
     private String name;
     private String description;
     private UserSimpleResponse creator;
+    private LocalDateTime createdAt;
     private UserSimpleResponse lastModifier;
+    private LocalDateTime lastModifiedAt;
     private String state;
     private String reason;
 
@@ -31,7 +34,9 @@ public class AdminSectorResponse {
             .name(sector.getName())
             .description(sector.getDescription())
             .creator(UserSimpleResponse.from(sector.getCreator()))
+            .createdAt(sector.getCreatedAt())
             .lastModifier(UserSimpleResponse.from(sector.getLastModifier()))
+            .lastModifiedAt(sector.getModifiedAt())
             .state(sector.getState())
             .reason(sector.getReason())
             .build();
