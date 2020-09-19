@@ -62,6 +62,20 @@ const PostDetail = ({ post, myInfo, history }) => {
     setComments(foundComments);
   };
 
+  const findCreatorLink = () => {
+    if (post.creator.nickname === "탈퇴한 회원") {
+      return <Typography>{post.creator.nickname}</Typography>;
+    }
+    return (
+      <Typography
+        component={LinkWithoutStyle}
+        to={isMyPost ? '/users/me' : '/users/' + post.creator.id}
+      >
+        {post.creator.nickname}
+      </Typography>
+    );
+  };
+
   return (
     <>
       <Grid container>
@@ -69,9 +83,7 @@ const PostDetail = ({ post, myInfo, history }) => {
           <Typography>{post.area.fullName}</Typography>
         </Grid>
         <Grid container item xs={6} alignItems='flex-start' justify='flex-end' direction='row'>
-          <Typography component={LinkWithoutStyle} to={isMyPost ? '/users/me' : '/users/' + post.creator.id}>
-            {post.creator.nickname}
-          </Typography>
+          {findCreatorLink()}
         </Grid>
       </Grid>
       <Typography variant='h5'>{post.sector.name} 부문</Typography>
