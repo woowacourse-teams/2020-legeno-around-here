@@ -668,7 +668,7 @@ export const deletePost = (accessToken, postId, history) => {
     });
 };
 
-export const withdraw = (accessToken) => {
+export const withdraw = (accessToken, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -679,7 +679,7 @@ export const withdraw = (accessToken) => {
   .then(async (response) => {
     await removeAccessTokenCookie();
     alert('탈퇴 완료되었습니다. 그동안 이용해주셔서 감사합니다!');
-    document.location.href = '/';
+    history.push('/');
   })
   .catch(async (error) => {
     await redirectLoginWhenUnauthorized(error);

@@ -26,8 +26,8 @@ const useStyle = makeStyles({
   },
 });
 
-const handleWithdraw = (accessToken) => {
-  withdraw(accessToken);
+const handleWithdraw = (accessToken, history) => {
+  withdraw(accessToken, history);
 };
 
 const WithdrawConfirmPage = ({ history }) => {
@@ -48,7 +48,7 @@ const WithdrawConfirmPage = ({ history }) => {
         <Typography className={classes.buttonWhetherWithdraw} component={LinkWithoutStyle} to='/users/me'>
           아니요
         </Typography>
-        <Typography className={classes.buttonWhetherWithdraw} onClick={(e) => handleWithdraw(accessToken)}>
+        <Typography className={classes.buttonWhetherWithdraw} onClick={(e) => handleWithdraw(accessToken, history)}>
           네
         </Typography>
       </div>
