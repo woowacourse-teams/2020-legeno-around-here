@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.user;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -72,6 +73,8 @@ public class User extends BaseEntity implements UserDetails {
     @OneToMany(mappedBy = "awardee")
     private List<SectorCreatorAward> sectorCreatorAwards = new ArrayList<>();
 
+    private LocalDateTime deactivatedAt;
+
     @Builder
     public User(String email, String nickname, String password, Area area, UserImage image) {
         this.email = makeEmail(email);
@@ -129,6 +132,18 @@ public class User extends BaseEntity implements UserDetails {
         return sectorCreatorAwards.size();
     }
 
+    public boolean hasNotRole(Role role) {
+        return !this.roles.contains(role.getRoleName());
+    }
+
+    public void deactivate() {
+        this.deactivatedAt = LocalDateTime.now();
+    }
+
+    public boolean isDeactivated() {
+        return Objects.nonNull(deactivatedAt);
+    }
+
     @Override
     public String getUsername() {
         return this.email.getEmail();
@@ -180,5 +195,4 @@ public class User extends BaseEntity implements UserDetails {
     public void setArea(Area area) {
         this.area = area;
     }
-
 }

@@ -1,27 +1,14 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { List } from '@material-ui/core';
 import PostImageItem from './PostImageItem';
-
-const useStyles = makeStyles(() => ({
-  root: {
-    width: '100%',
-    height: 300,
-    display: 'flex',
-    flexDirection: 'row',
-    padding: 0,
-  },
-}));
+import Carousel from 'react-material-ui-carousel';
 
 const PostImages = ({ images }) => {
-  const classes = useStyles();
-
   return (
-    <List className={classes.root}>
+    <Carousel autoPlay={false} timeout={400}>
       {images.map((image) => (
         <PostImageItem key={image.id} image={image} />
       ))}
-    </List>
+    </Carousel>
   );
 };
 

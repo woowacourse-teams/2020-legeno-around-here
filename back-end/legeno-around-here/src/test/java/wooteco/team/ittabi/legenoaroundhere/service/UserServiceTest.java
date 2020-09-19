@@ -9,6 +9,8 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AUTH_NUMBER;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_CONTENT_TYPE;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.NotificationConstants.TEST_NOTIFICATION_BEFORE_DATE_TIME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_PASSWORD;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_UPDATE_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_ID;
@@ -24,11 +26,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.notification.Notification;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
+import wooteco.team.ittabi.legenoaroundhere.domain.user.Role;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.mailauth.MailAuth;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
@@ -41,10 +43,12 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.AlreadyExistUserException;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.NotificationRepository;
+import wooteco.team.ittabi.legenoaroundhere.repository.UserRepository;
 import wooteco.team.ittabi.legenoaroundhere.utils.TestConverterUtils;
 
 class UserServiceTest extends ServiceTest {
@@ -64,6 +68,9 @@ class UserServiceTest extends ServiceTest {
 
     @MockBean
     private MailAuthRepository mailAuthRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
@@ -261,13 +268,17 @@ class UserServiceTest extends ServiceTest {
 
     @DisplayName("회원 탈퇴")
     @Test
-    void deleteMe_Success() {
-        userService.deleteMe();
-
+    void deactivate_Success() {
         User authUser = (User) authenticationFacade.getAuthentication()
             .getPrincipal();
-        assertThatThrownBy(() -> userService.loadUserByUsername(authUser.getUsername()))
-            .isInstanceOf(UsernameNotFoundException.class);
+        assertThat(authUser.isDeactivated()).isFalse();
+
+        userService.deactivateMe();
+
+        User user = userRepository.findById(authUser.getId())
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        assertThat(user.isDeactivated()).isTrue();
     }
 
     @DisplayName("회원 조회, 성공")
@@ -280,10 +291,53 @@ class UserServiceTest extends ServiceTest {
         assertThat(user.getAwardsCount()).isNotNull();
     }
 
+    @DisplayName("회원 조회, 예외 발생 - 탈퇴 회원")
+    @Test
+    void findUser_Deactivated_ThrownException() {
+        String deactivatedEmail = "deactivated@email.com";
+        User user = User.builder()
+            .email(deactivatedEmail)
+            .nickname("daNickname")
+            .password("daPassword")
+            .build();
+        user.deactivate();
+        User deactivatedUser = userRepository.save(user);
+
+        assertThatThrownBy(() -> userService.findUser(deactivatedUser.getId()))
+            .isInstanceOf(NotExistsException.class);
+    }
+
     @DisplayName("회원 조회, 예외 발생 - 유효하지 않은 ID")
     @Test
     void findUser_InvalidId_ThrownException() {
         assertThatThrownBy(() -> userService.findUser(TEST_USER_INVALID_ID))
             .isInstanceOf(NotExistsException.class);
+    }
+
+    @DisplayName("어드민 로그인, 성공 - 어드민 롤을 가진 계정")
+    @Test
+    void adminLogin_Admin_Success() {
+        String adminUser = TEST_ADMIN_EMAIL;
+        User user = userRepository.findByEmail(new Email(adminUser))
+            .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+        assertThat(user.hasNotRole(Role.ADMIN)).isFalse();
+
+        LoginRequest loginRequest = new LoginRequest(adminUser, TEST_ADMIN_PASSWORD);
+        TokenResponse response = userService.loginAdmin(loginRequest);
+        assertThat(response.getAccessToken()).isNotEmpty();
+        assertThat(response.getAccessToken()).hasSizeGreaterThan(TOKEN_MIN_SIZE);
+    }
+
+    @DisplayName("어드민 로그인, 예외 발생 - 어드민 롤을 가지지 않은 계정")
+    @Test
+    void adminLogin_NotAdmin_ThrownException() {
+        String notAdminUser = TEST_USER_EMAIL;
+        User user = userRepository.findByEmail(new Email(notAdminUser))
+            .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+        assertThat(user.hasNotRole(Role.ADMIN)).isTrue();
+
+        LoginRequest loginRequest = new LoginRequest(notAdminUser, TEST_USER_PASSWORD);
+        assertThatThrownBy(() -> userService.loginAdmin(loginRequest))
+            .isInstanceOf(NotAuthorizedException.class);
     }
 }

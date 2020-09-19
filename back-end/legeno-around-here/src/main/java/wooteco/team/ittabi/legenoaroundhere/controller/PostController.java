@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import wooteco.team.ittabi.legenoaroundhere.controller.validator.ImagesConstraint;
 import wooteco.team.ittabi.legenoaroundhere.dto.PageRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.PageableAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
@@ -33,6 +35,7 @@ import wooteco.team.ittabi.legenoaroundhere.service.PostService;
 
 @RestController
 @AllArgsConstructor
+@Validated
 public class PostController {
 
     private final PostService postService;
@@ -56,7 +59,8 @@ public class PostController {
     }
 
     @PostMapping(POSTS_PATH + IMAGES_PATH)
-    public ResponseEntity<List<PostImageResponse>> uploadPostImages(List<MultipartFile> images) {
+    public ResponseEntity<List<PostImageResponse>> uploadPostImages(
+        @ImagesConstraint List<MultipartFile> images) {
         List<PostImageResponse> postImageResponses = postService.uploadPostImages(images);
 
         return ResponseEntity

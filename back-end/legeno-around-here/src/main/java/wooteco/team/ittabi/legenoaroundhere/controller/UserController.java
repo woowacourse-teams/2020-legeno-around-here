@@ -94,8 +94,8 @@ public class UserController {
     }
 
     @DeleteMapping(USERS_PATH + ME_PATH)
-    public ResponseEntity<Void> deleteMe() {
-        userService.deleteMe();
+    public ResponseEntity<Void> deactivateMe() {
+        userService.deactivateMe();
 
         return ResponseEntity
             .noContent()
