@@ -561,6 +561,11 @@ export const findOthersProfileById = async ({ accessToken, userId, history }) =>
     })
     .catch(async (error) => {
       await redirectLoginWhenUnauthorized(error, history);
+      if (error.response && error.response.status === 404) {
+        alert("존재하지 않는 회원입니다.");
+        window.history.back();
+        return;
+      }
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
     });
