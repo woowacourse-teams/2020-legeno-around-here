@@ -31,8 +31,8 @@ const RankingTopBar = ({ history }) => {
   }
 
   useEffect(() => {
-    getUnreadNotificationCount(accessToken, setUnreadNotification);
-  }, [accessToken]);
+    getUnreadNotificationCount(accessToken, setUnreadNotification, history);
+  }, [accessToken, history]);
 
   return (
     <AppBar position='sticky'>

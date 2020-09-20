@@ -35,7 +35,7 @@ const NotificationItem = ({ notification, history }) => {
   }, [isRead]);
 
   const notificationItemOnclick = useCallback(() => {
-    readNotification(accessToken, id);
+    readNotification(accessToken, id, history);
     history.push(location);
   }, [accessToken, id, location, history]);
 

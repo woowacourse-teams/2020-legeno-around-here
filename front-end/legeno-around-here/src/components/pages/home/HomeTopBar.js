@@ -49,8 +49,8 @@ const HomeTopBar = ({ setter, sectorId, history }) => {
   };
 
   useEffect(() => {
-    getUnreadNotificationCount(accessToken, setUnreadNotification);
-  }, [accessToken]);
+    getUnreadNotificationCount(accessToken, setUnreadNotification, history);
+  }, [accessToken, history]);
 
   return (
     <>
