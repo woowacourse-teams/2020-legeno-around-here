@@ -26,8 +26,8 @@ const NotificationPage = ({ history }) => {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    getMyNotification(accessToken, setNotifications);
-  }, [accessToken]);
+    getMyNotification(accessToken, setNotifications, history);
+  }, [accessToken, history]);
 
   return (
     <>

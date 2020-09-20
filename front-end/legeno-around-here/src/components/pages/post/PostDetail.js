@@ -14,9 +14,9 @@ import UpdatePostButton from './UpdatePostButton';
 import PostReportSection from './PostReportSection';
 import LinkWithoutStyle from '../../../util/LinkWithoutStyle';
 import DeletePostButton from './DeletePostButton';
-import {makeStyles} from "@material-ui/core/styles";
-import {MAIN_COLOR} from "../../../constants/Color";
-import {DEFAULT_IMAGE_URL} from "../myProfileEdit/MyProfileEditPage";
+import { makeStyles } from "@material-ui/core/styles";
+import { MAIN_COLOR } from "../../../constants/Color";
+import { DEFAULT_IMAGE_URL } from "../myProfileEdit/MyProfileEditPage";
 
 const useStyle = makeStyles({
   postTopSection: {
@@ -97,6 +97,31 @@ const PostDetail = ({ post, myInfo, history }) => {
     setComments(foundComments);
   };
 
+  const makeCreatorNameUi = () => {
+    if (post.creator.nickname === "탈퇴한 회원") {
+      return <Typography className={classes.postAuthorNicknameSection}>{post.creator.nickname}</Typography>;
+    }
+    return (
+      <Typography
+        component={LinkWithoutStyle}
+        to={isMyPost ? '/users/me' : '/users/' + post.creator.id}
+        className={classes.postAuthorNicknameSection}
+      >
+        {post.creator.nickname}
+      </Typography>
+    );
+  };
+
+  const makeCreatorPhotoUi = () => {
+    if (post.creator.nickname === "탈퇴한 회원") {
+      return <div className={classes.authorProfilePhotoUrl} />
+    }
+    return <LinkWithoutStyle
+      className={classes.authorProfilePhotoUrl}
+      to={isMyPost ? '/users/me' : '/users/' + post.creator.id}
+    />;
+  };
+
   return (
     <>
       <Grid container className={classes.postTopSection}>
@@ -104,17 +129,8 @@ const PostDetail = ({ post, myInfo, history }) => {
           <Typography>{post.area.fullName}</Typography>
         </Grid>
         <Grid container item xs={6}>
-          <Typography
-            component={LinkWithoutStyle}
-            to={isMyPost ? '/users/me' : '/users/' + post.creator.id}
-            className={classes.postAuthorNicknameSection}
-          >
-            {post.creator.nickname}
-          </Typography>
-          <LinkWithoutStyle
-            className={classes.authorProfilePhotoUrl}
-            to={isMyPost ? '/users/me' : '/users/' + post.creator.id}
-          />
+          {makeCreatorNameUi()}
+          {makeCreatorPhotoUi()}
         </Grid>
       </Grid>
       <Typography variant='h5'>{post.sector.name} 부문</Typography>

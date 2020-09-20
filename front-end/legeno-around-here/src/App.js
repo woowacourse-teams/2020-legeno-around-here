@@ -21,6 +21,7 @@ import ErrorPage from './components/pages/ErrorPage';
 import MyAwardPage from './components/pages/myAward/MyAwardPage';
 import OtherAwardPage from './components/pages/OtherAward/OtherAwardPage';
 import SectorDetailPage from './components/pages/sector/SectorDetailPage';
+import WithdrawConfirmPage from './components/pages/myProfile/WithdrawConfirmPage';
 
 function App() {
   const mainArea = localStorage.getItem('mainAreaName');
@@ -54,6 +55,7 @@ function App() {
         <Route path='/my-awards' exact component={MyAwardPage} />
         <Route path='/notification' exact component={NotificationPage} />
         <Route path='/users/:userId/posts' exact component={OtherPosts} />
+        <Route path='/confirm-withdraw' exact component={WithdrawConfirmPage} />
         <Route path='*' component={ErrorPage} />
       </Switch>
     </BrowserRouter>

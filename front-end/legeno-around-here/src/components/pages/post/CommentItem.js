@@ -1,9 +1,10 @@
 import React from 'react';
 import { ListItem, Typography, ListItemText, Divider } from '@material-ui/core';
 import { convertDateFormat } from '../../../util/TimeUtils';
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import LinkWithoutStyle from "../../../util/LinkWithoutStyle";
-import {MAIN_COLOR} from "../../../constants/Color";
+import { MAIN_COLOR } from "../../../constants/Color";
+import { DEFAULT_IMAGE_URL } from "../myProfileEdit/MyProfileEditPage";
 
 const useStyle = makeStyles({
   photoAndTextsLayout: {
@@ -30,19 +31,25 @@ const useStyle = makeStyles({
 });
 
 const CommentItem = ({ comment, myUserId }) => {
-  console.log(comment)
   const isMyComment = comment.creator.id === myUserId;
   const classes = useStyle({
-    creatorProfilePhotoUrl: comment.creator.image.url
+    creatorProfilePhotoUrl: comment.creator.image ? comment.creator.image.url : DEFAULT_IMAGE_URL
   });
+
+  const makeCreatorPhotoUi = () => {
+    if (comment.creator.nickname === "탈퇴한 회원") {
+      return <div className={classes.creatorProfilePhoto} />
+    }
+    return <LinkWithoutStyle
+      className={classes.creatorProfilePhoto}
+      to={isMyComment? '/users/me' : '/users/' + comment.creator.id}
+    />;
+  };
 
   return (
     <>
       <ListItem alignItems='flex-start' className={classes.photoAndTextsLayout}>
-        <LinkWithoutStyle
-          className={classes.creatorProfilePhoto}
-          to={isMyComment ? '/users/me' : '/users/' + comment.creator.id}
-        />
+        {makeCreatorPhotoUi()}
         <div className={classes.textsLayout}>
           <Typography variant='subtitle1'>작성자 : {comment.creator.nickname}</Typography>
           <ListItemText primary={comment.writing} secondary={convertDateFormat(comment.createdAt)} />
