@@ -33,7 +33,7 @@ const useStyle = makeStyles({
   },
   postAuthorNicknameSection: {
     display: 'inline',
-    margin: 'auto 3px auto auto',
+    margin: 'auto 5px auto auto',
   },
   authorProfilePhotoUrl: (props) => ({
     width: '35px',
