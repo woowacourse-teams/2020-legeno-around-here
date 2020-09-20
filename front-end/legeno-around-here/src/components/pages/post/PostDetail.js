@@ -178,7 +178,13 @@ const PostDetail = ({ post, myInfo, history }) => {
           </Grid>
         </Grid>
       </form>
-      {comments.length > 0 && <Comments comments={comments} loading={loading} />}
+      {comments.length > 0 &&
+        <Comments
+          comments={comments}
+          loading={loading}
+          myUserId={myInfo? myInfo.id : null}
+        />
+      }
     </>
   );
 };

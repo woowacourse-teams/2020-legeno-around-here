@@ -11,14 +11,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Comments = ({ comments, loading }) => {
+const Comments = ({ comments, loading, myUserId }) => {
   const classes = useStyles();
 
   if (loading) return <Loading />;
   return (
     <List className={classes.root}>
       {comments.map((comment) => (
-        <CommentItem key={comment.id} comment={comment} />
+        <CommentItem key={comment.id} comment={comment} myUserId={myUserId} />
       ))}
     </List>
   );
