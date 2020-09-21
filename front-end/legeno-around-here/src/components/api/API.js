@@ -46,7 +46,8 @@ export const savePostImages = async (formData, accessToken, history) => {
       }
     });
   } catch (error) {
-    await redirectLoginWhenUnauthorized(error, history);
+    if (await redirectLoginWhenUnauthorized(error, history)) return;
+
     const errorResponse = error.response.data;
     alert(errorResponse.errorMessage);
   }
@@ -64,7 +65,8 @@ export const createPost = async (postData, accessToken, history) => {
       history.push(response.headers.location);
     }
   } catch (error) {
-    await redirectLoginWhenUnauthorized(error, history);
+    if (await redirectLoginWhenUnauthorized(error, history)) return;
+
     console.log(error);
     const errorResponse = error.response.data;
     alert(errorResponse.errorMessage);
@@ -82,7 +84,8 @@ export const createPostReport = async (data, accessToken, history) => {
     if (response.status === HTTP_STATUS_CREATED) {
     }
   } catch (error) {
-    await redirectLoginWhenUnauthorized(error, history);
+    if (await redirectLoginWhenUnauthorized(error, history)) return;
+
     const errorResponse = error.response.data;
     alert(errorResponse.errorMessage);
   }
@@ -100,7 +103,8 @@ export const updatePost = async (postId, postUpdateData, accessToken, history) =
       history.push(`/posts/${postId}`);
     }
   } catch (error) {
-    await redirectLoginWhenUnauthorized(error, history);
+    if (await redirectLoginWhenUnauthorized(error, history)) return;
+
     const errorResponse = error.response.data;
     alert(errorResponse.errorMessage);
   }
@@ -180,7 +184,8 @@ export const saveProfilePhoto = async (formData, accessToken, history) => {
       return response.data;
     }
   } catch (error) {
-    await redirectLoginWhenUnauthorized(error, history);
+    if (await redirectLoginWhenUnauthorized(error, history)) return;
+
     const errorResponse = error.response.data;
     alert(errorResponse.errorMessage);
   }
@@ -203,7 +208,8 @@ export const updateUser = async (nickname, imageId, accessToken, history) => {
     );
     history.push('/users/me');
   } catch (error) {
-    await redirectLoginWhenUnauthorized(error, history);
+    if (await redirectLoginWhenUnauthorized(error, history)) return;
+
     const errorResponse = error.response.data;
     alert(errorResponse.errorMessage);
   }
@@ -221,7 +227,8 @@ export const createComment = async (postId, writing, accessToken, history) => {
       return true;
     }
   } catch (error) {
-    await redirectLoginWhenUnauthorized(error, history);
+    if (await redirectLoginWhenUnauthorized(error, history)) return;
+
     const errorResponse = error.response.data;
     alert(errorResponse.errorMessage);
   }
@@ -241,7 +248,8 @@ export const createPendingSector = async (sector, accessToken, history) => {
       return response.data;
     }
   } catch (error) {
-    await redirectLoginWhenUnauthorized(error, history);
+    if (await redirectLoginWhenUnauthorized(error, history)) return;
+
     const errorResponse = error.response.data;
     alert(errorResponse.errorMessage);
   }
@@ -259,7 +267,8 @@ export const pressPostZzang = async (postId, accessToken, history) => {
       return true;
     }
   } catch (error) {
-    await redirectLoginWhenUnauthorized(error, history);
+    if (await redirectLoginWhenUnauthorized(error, history)) return;
+
     const errorResponse = error.response.data;
     alert(errorResponse.errorMessage);
   }
@@ -279,7 +288,8 @@ export const findMyInfo = (accessToken, history) => {
       return response.data;
     })
     .catch(async (error) => {
-      await redirectLoginWhenUnauthorized(error, history);
+      if (await redirectLoginWhenUnauthorized(error, history)) return;
+
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
     });
@@ -305,7 +315,8 @@ export const findCurrentPostsFromPage = async (page, accessToken, mainAreaId, se
     )
     .then((response) => response.data.content)
     .catch(async (error) => {
-      await redirectLoginWhenUnauthorized(error, history);
+      if (await redirectLoginWhenUnauthorized(error, history)) return;
+
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
     });
@@ -321,7 +332,8 @@ export const findMyAwards = async (accessToken, history) => {
     .get(DEFAULT_URL + `/awards/me`, config)
     .then((response) => response.data)
     .catch(async (error) => {
-      await redirectLoginWhenUnauthorized(error, history);
+      if (await redirectLoginWhenUnauthorized(error, history)) return;
+
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
     });
@@ -337,7 +349,8 @@ export const findAllOtherAwards = async (accessToken, userId, history) => {
     .get(DEFAULT_URL + `/users/${userId}/awards`, config)
     .then((response) => response.data)
     .catch(async (error) => {
-      await redirectLoginWhenUnauthorized(error, history);
+      if (await redirectLoginWhenUnauthorized(error, history)) return;
+
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
     });
@@ -363,7 +376,8 @@ export const findMyPostsFromPage = async (mainAreaId, page, accessToken, history
     )
     .then((response) => response.data.content)
     .catch(async (error) => {
-      await redirectLoginWhenUnauthorized(error, history);
+      if (await redirectLoginWhenUnauthorized(error, history)) return;
+
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
     });
@@ -387,7 +401,8 @@ export const findOtherPostsFromPage = async (otherUserId, page, accessToken, his
     )
     .then((response) => response.data.content)
     .catch(async (error) => {
-      await redirectLoginWhenUnauthorized(error, history);
+      if (await redirectLoginWhenUnauthorized(error, history)) return;
+
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
     });
@@ -414,7 +429,8 @@ export const findRankedPostsFromPage = async (mainAreaId, criteria, page, access
     )
     .then((response) => response.data.content)
     .catch(async (error) => {
-      await redirectLoginWhenUnauthorized(error, history);
+      if (await redirectLoginWhenUnauthorized(error, history)) return;
+
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
     });
@@ -441,7 +457,8 @@ export const findAreasFromPage = async (page, accessToken, keyword, history) => 
       return response.data.content;
     })
     .catch(async (error) => {
-      await redirectLoginWhenUnauthorized(error, history);
+      if (await redirectLoginWhenUnauthorized(error, history)) return;
+
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
       throw error.response;
@@ -459,7 +476,7 @@ export const findAllSimpleSectors = async (accessToken, history) => {
       return response.data;
     })
     .catch(async (error) => {
-      await redirectLoginWhenUnauthorized(error, history);
+      if (await redirectLoginWhenUnauthorized(error, history)) return;
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
     });
@@ -482,7 +499,8 @@ export const findSectorsFromPage = async (page, accessToken, history) => {
       config,
     )
     .catch(async (error) => {
-      await redirectLoginWhenUnauthorized(error, history);
+      if (await redirectLoginWhenUnauthorized(error, history)) return;
+
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
     });
@@ -503,7 +521,8 @@ export const findAllMySector = async (accessToken, history) => {
       }
     })
     .catch(async (error) => {
-      await redirectLoginWhenUnauthorized(error, history);
+      if (await redirectLoginWhenUnauthorized(error, history)) return;
+
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
     });
@@ -524,7 +543,8 @@ export const findPost = async (accessToken, postId, history) => {
       }
     })
     .catch(async (error) => {
-      await redirectLoginWhenUnauthorized(error, history);
+      if (await redirectLoginWhenUnauthorized(error, history)) return;
+
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
     });
@@ -545,7 +565,8 @@ export const findCommentsByPostId = async (accessToken, postId, history) => {
       }
     })
     .catch(async (error) => {
-      await redirectLoginWhenUnauthorized(error, history);
+      if (await redirectLoginWhenUnauthorized(error, history)) return;
+
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
     });
@@ -564,7 +585,7 @@ export const findOthersProfileById = async ({ accessToken, userId, history }) =>
       return response.data;
     })
     .catch(async (error) => {
-      await redirectLoginWhenUnauthorized(error, history);
+      if (await redirectLoginWhenUnauthorized(error, history)) return;
 
       if (error.response && error.response.status === 404) {
         alert("존재하지 않는 회원입니다.");
@@ -589,7 +610,8 @@ export const getMyNotification = (accessToken, setNotifications, history) => {
       setNotifications(response.data);
     })
     .catch(async (error) => {
-      await redirectLoginWhenUnauthorized(error, history);
+      if (await redirectLoginWhenUnauthorized(error, history)) return;
+
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
     });
@@ -609,7 +631,8 @@ export const getUnreadNotificationCount = (accessToken, setUnreadNotification, h
       setUnreadNotification(unreadCount);
     })
     .catch(async (error) => {
-      await redirectLoginWhenUnauthorized(error, history);
+      if (await redirectLoginWhenUnauthorized(error, history)) return;
+
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
     });
@@ -626,7 +649,8 @@ export const readNotification = (accessToken, id, history) => {
     .put(DEFAULT_URL + `/notifications/${id}/read`, null, config)
     .then(() => {})
     .catch(async (error) => {
-      await redirectLoginWhenUnauthorized(error, history);
+      if (await redirectLoginWhenUnauthorized(error, history)) return;
+
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
     });
@@ -647,7 +671,8 @@ export const findSector = async (accessToken, sectorId, history) => {
       }
     })
     .catch(async (error) => {
-      await redirectLoginWhenUnauthorized(error, history);
+      if (await redirectLoginWhenUnauthorized(error, history)) return;
+
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
     });
@@ -666,7 +691,8 @@ export const deletePost = (accessToken, postId, history) => {
       history.push('/home');
     })
     .catch(async (error) => {
-      await redirectLoginWhenUnauthorized(error, history);
+      if (await redirectLoginWhenUnauthorized(error, history)) return;
+
       const errorResponse = error.response.data;
       alert(errorResponse.errorMessage);
     });
@@ -686,7 +712,8 @@ export const withdraw = (accessToken, history) => {
     history.push('/');
   })
   .catch(async (error) => {
-    await redirectLoginWhenUnauthorized(error);
+    if (await redirectLoginWhenUnauthorized(error)) return;
+
     const errorResponse = error.response.data;
     alert(errorResponse.errorMessage);
   });
