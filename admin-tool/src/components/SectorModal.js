@@ -41,13 +41,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SectorModal = ({ open, closeModal, rowId }) => {
+const SectorModal = ({ open, closeModal, initModal, rowId }) => {
   const classes = useStyles();
   const [modalStyle] = React.useState(getModalStyle);
   const [cookies, removeCookie] = useCookies(['accessToken']);
   const [sectorDetails, setSectorDetails] = useState({});
   const [loading, setLoading] = useState(false);
-  const [rerenderStandard, setRerenderStandard] = useState(false);
   const defaultStateAndReason = {
     state: '승인',
     reason: '검토 완료',
@@ -57,11 +56,11 @@ const SectorModal = ({ open, closeModal, rowId }) => {
   useEffect(() => {
     if (rowId) {
       const sectorDetail = async () =>
-        await findSector(cookies, removeCookie, closeModal, rowId, setLoading, setSectorDetails);
+        await findSector(cookies, removeCookie, initModal, rowId, setLoading, setSectorDetails);
       sectorDetail();
     }
     // eslint-disable-next-line
-  }, [open, rerenderStandard]);
+  }, [open]);
 
   if (!rowId) {
     return null;
@@ -91,17 +90,11 @@ const SectorModal = ({ open, closeModal, rowId }) => {
 
   const updateState = (event) => {
     event.preventDefault();
-    const sectorDetail = async () =>
-      await updateSectorState(
-        cookies,
-        removeCookie,
-        rowId,
-        updateStateAndReason,
-        defaultStateAndReason,
-        setUpdateStateAndReason,
-        rerenderStandard,
-        setRerenderStandard,
-      );
+    const afterJob = () => {
+      setUpdateStateAndReason(defaultStateAndReason);
+      initModal();
+    };
+    const sectorDetail = async () => await updateSectorState(cookies, rowId, updateStateAndReason, afterJob);
     sectorDetail();
   };
 

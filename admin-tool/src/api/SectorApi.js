@@ -42,7 +42,7 @@ export const findAllSectors = (history, cookies, removeCookie, setLoading, setRo
     });
 };
 
-export const findSector = (cookies, removeCookie, closeModal, rowId, setLoading, setSectorDetails) => {
+export const findSector = (cookies, removeCookie, initModal, rowId, setLoading, setSectorDetails) => {
   setLoading(true);
 
   API.get(`/admin/sectors/${rowId}`, makeTokenHeader(cookies))
@@ -65,34 +65,20 @@ export const findSector = (cookies, removeCookie, closeModal, rowId, setLoading,
       });
     })
     .catch(() => {
-      closeModal();
+      initModal();
     })
     .then(() => {
       setLoading(false);
     });
 };
 
-export const updateSectorState = (
-  cookies,
-  removeCookie,
-  rowId,
-  updateStateAndReason,
-  defaultStateAndReason,
-  setUpdateStateAndReason,
-  rerenderStandard,
-  setRerenderStandard,
-) => {
-  const data = {
-    state: updateStateAndReason.state,
-    reason: updateStateAndReason.reason,
-  };
+export const updateSectorState = (cookies, rowId, updateStateAndReason, afterJob) => {
+  const data = updateStateAndReason;
 
   API.put(`/admin/sectors/${rowId}/state`, data, makeTokenHeader(cookies))
     .then((response) => {
       if (response.status === 200) {
-        console.log('200');
-        setUpdateStateAndReason(defaultStateAndReason);
-        setRerenderStandard(!rerenderStandard);
+        afterJob();
       }
     })
     .catch(() => {});

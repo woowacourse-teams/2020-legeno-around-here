@@ -255,6 +255,10 @@ const SectorsTable = ({ location, history }) => {
 
   const closeModal = (event) => {
     event.preventDefault();
+    initModal();
+  };
+
+  const initModal = () => {
     setOpen(false);
     setRowId(null);
   };
@@ -324,7 +328,7 @@ const SectorsTable = ({ location, history }) => {
             </TableBody>
           </Table>
         </TableContainer>
-        <SectorModal open={open} closeModal={closeModal} rowId={rowId} />
+        <SectorModal open={open} closeModal={closeModal} initModal={initModal} rowId={rowId} />
       </Paper>
     </>
   );
