@@ -51,7 +51,9 @@ const CommentItem = ({ comment, myId }) => {
       <ListItem alignItems='flex-start' className={classes.photoAndTextsLayout}>
         {makeCreatorPhotoUi()}
         <div className={classes.textsLayout}>
-          <Typography variant='subtitle1'>작성자 : {comment.creator.nickname}</Typography>
+          <Typography variant='subtitle1' color='textSecondary'>
+            {comment.creator.nickname}
+          </Typography>
           <ListItemText primary={comment.writing} secondary={convertDateFormat(comment.createdAt)} />
         </div>
       </ListItem>
