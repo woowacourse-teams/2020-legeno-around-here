@@ -193,11 +193,11 @@ const PostDetail = ({ post, myInfo, history }) => {
           </Grid>
         </Grid>
       </form>
-      {comments.length > 0 &&
+      {comments.length > 0 && myInfo &&
         <Comments
           comments={comments}
           loading={loading}
-          myId={myInfo ? myInfo.id : null}
+          myId={myInfo.id}
         />
       }
     </>
