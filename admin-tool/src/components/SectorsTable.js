@@ -132,6 +132,9 @@ const SectorsTable = ({ location, history }) => {
   const [rowId, setRowId] = React.useState(null);
 
   useEffect(() => {
+    if (open) {
+      return;
+    }
     const fetchData = async () =>
       await findAllSectors(
         history,
@@ -144,7 +147,7 @@ const SectorsTable = ({ location, history }) => {
       );
     fetchData();
     // eslint-disable-next-line
-  }, [cookies, history, location]);
+  }, [cookies, history, location, open]);
 
   const mounted = useRef(false);
 

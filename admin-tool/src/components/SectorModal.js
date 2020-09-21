@@ -55,7 +55,6 @@ const SectorModal = ({ open, closeModal, rowId }) => {
   const [updateStateAndReason, setUpdateStateAndReason] = useState(defaultStateAndReason);
 
   useEffect(() => {
-    console.log('useEffect - 1');
     if (rowId) {
       const sectorDetail = async () =>
         await findSector(cookies, removeCookie, closeModal, rowId, setLoading, setSectorDetails);
