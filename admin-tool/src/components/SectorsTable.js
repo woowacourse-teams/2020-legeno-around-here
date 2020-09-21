@@ -328,7 +328,7 @@ const SectorsTable = ({ location, history }) => {
             </TableBody>
           </Table>
         </TableContainer>
-        <SectorModal open={open} closeModal={closeModal} initModal={initModal} rowId={rowId} />
+        {open ? <SectorModal open={open} closeModal={closeModal} initModal={initModal} rowId={rowId} /> : null}
       </Paper>
     </>
   );
