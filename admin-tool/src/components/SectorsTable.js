@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { findAllSectors } from '../api/SectorApi';
 import { withRouter } from 'react-router-dom';
@@ -11,6 +11,11 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { produce } from 'immer';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import Button from '@material-ui/core/Button';
+import SectorModal from './SectorModal';
+import * as qs from 'qs';
 
 const columns = [
   {
@@ -87,40 +92,134 @@ export const createRows = (contents) => {
   return rows;
 };
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(() => ({
   root: {
     width: '100%',
   },
   container: {
     maxHeight: '100%',
   },
-});
+  formControl: {
+    minWidth: 120,
+  },
+}));
 
-const SectorsTable = ({ history }) => {
+const SectorsTable = ({ location, history }) => {
   const classes = useStyles();
 
   const [cookies, removeCookie] = useCookies(['accessToken']);
   const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState(null);
 
-  const [pageProperty, setPageProperty] = useState({
-    page: 0,
-    totalPages: 0,
-    size: 10,
-    sortedBy: 'id',
-    direction: 'desc',
-    totalElements: 0,
-  });
+  const getInitialPageProperty = () => {
+    const query = qs.parse(location.search, {
+      ignoreQueryPrefix: true,
+    });
+
+    return {
+      page: query.page ? parseInt(query.page) - 1 : 0,
+      totalPages: 0,
+      size: query.size ? parseInt(query.size) : 10,
+      sortedBy: query.sortedBy ? query.sortedBy : 'id',
+      direction: query.direction ? query.direction : 'desc',
+      totalElements: 0,
+      updateHistory: false,
+    };
+  };
+
+  const [pageProperty, setPageProperty] = useState(getInitialPageProperty());
+  const [open, setOpen] = React.useState(false);
+  const [rowId, setRowId] = React.useState(null);
 
   useEffect(() => {
+    if (open) {
+      return;
+    }
     const fetchData = async () =>
-      await findAllSectors(history, cookies, removeCookie, setLoading, setRows, pageProperty, setPageProperty);
+      await findAllSectors(
+        history,
+        cookies,
+        removeCookie,
+        setLoading,
+        setRows,
+        getInitialPageProperty(),
+        setPageProperty,
+      );
     fetchData();
-  }, [cookies, history, pageProperty.page]);
+    // eslint-disable-next-line
+  }, [cookies, history, location, open]);
+
+  const mounted = useRef(false);
+
+  useEffect(() => {
+    if (!mounted || !pageProperty.updateHistory) {
+      mounted.current = true;
+      return;
+    }
+    const parameter = qs.stringify({
+      page: pageProperty.page + 1,
+      size: pageProperty.size,
+      sortedBy: pageProperty.sortedBy,
+      direction: pageProperty.direction,
+    });
+    const url = location.pathname + '?' + parameter;
+    mounted.current = false;
+
+    setPageProperty(
+      produce(pageProperty, (draft) => {
+        draft['updateHistory'] = false;
+      }),
+    );
+
+    history.push(url);
+    // eslint-disable-next-line
+  }, [pageProperty.updateHistory]);
+
+  const onChangeOfSize = (event) => {
+    event.preventDefault();
+    setPageProperty(
+      produce(pageProperty, (draft) => {
+        draft['size'] = parseInt(event.currentTarget.value);
+        draft['page'] = 0;
+        draft['updateHistory'] = true;
+      }),
+    );
+  };
+
+  const onClickOfTableHeader = (event) => {
+    event.preventDefault();
+    const { sortedBy } = event.currentTarget.dataset;
+
+    const getDirection = () => {
+      if (pageProperty.direction === 'desc') {
+        return 'asc';
+      }
+      return 'desc';
+    };
+
+    if (sortedBy === pageProperty.sortedBy) {
+      const direction = getDirection();
+      setPageProperty(
+        produce(pageProperty, (draft) => {
+          draft['direction'] = direction;
+          draft['updateHistory'] = true;
+        }),
+      );
+      return;
+    }
+
+    setPageProperty(
+      produce(pageProperty, (draft) => {
+        draft['sortedBy'] = sortedBy;
+        draft['direction'] = 'desc';
+        draft['updateHistory'] = true;
+      }),
+    );
+  };
 
   const onClickOfPage = (event) => {
     event.preventDefault();
-    const { value } = event.target;
+    const { value } = event.currentTarget;
     let result = pageProperty.page + value * 1;
 
     if (result >= pageProperty.totalPages) {
@@ -134,11 +233,10 @@ const SectorsTable = ({ history }) => {
     setPageProperty(
       produce(pageProperty, (draft) => {
         draft['page'] = result;
+        draft['updateHistory'] = true;
       }),
     );
   };
-
-  console.log(pageProperty);
 
   if (loading) {
     return <>로딩중</>;
@@ -148,33 +246,65 @@ const SectorsTable = ({ history }) => {
     return null;
   }
 
+  const openModal = (event) => {
+    event.preventDefault();
+    const { rowId } = event.currentTarget.dataset;
+    setRowId(rowId);
+    setOpen(true);
+  };
+
+  const closeModal = (event) => {
+    event.preventDefault();
+    initModal();
+  };
+
+  const initModal = () => {
+    setOpen(false);
+    setRowId(null);
+  };
+
   return (
     <>
       <Paper className={classes.root}>
         <TableContainer className={classes.container}>
           <Table stickyHeader aria-label='sticky table'>
             <caption>
-              <button value='-10' onClick={onClickOfPage}>
+              <Button variant='outlined' size='small' value='-10' onClick={onClickOfPage}>
                 ᐊᐊ
-              </button>
+              </Button>
               &nbsp;
-              <button value='-1' onClick={onClickOfPage}>
+              <Button variant='outlined' size='small' value='-1' onClick={onClickOfPage}>
                 ᐊ
-              </button>
+              </Button>
               &ensp;{pageProperty.page + 1} / {pageProperty.totalPages}&ensp;
-              <button value='+1' onClick={onClickOfPage}>
+              <Button variant='outlined' size='small' value='+1' onClick={onClickOfPage}>
                 ᐅ
-              </button>
+              </Button>
               &nbsp;
-              <button value='+10' onClick={onClickOfPage}>
+              <Button variant='outlined' size='small' value='+10' onClick={onClickOfPage}>
                 ᐅᐅ
-              </button>
-              &emsp;총 {pageProperty.totalElements}건
+              </Button>
+              &emsp;총 {pageProperty.totalElements}건&emsp; 조회 개수 : &nbsp;
+              <FormControl className={classes.formControl}>
+                <Select native value={pageProperty.size} onChange={onChangeOfSize}>
+                  <option aria-label='None' value='' />
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                </Select>
+              </FormControl>
             </caption>
             <TableHead>
               <TableRow>
                 {columns.map((column) => (
-                  <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}>
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}
+                    data-sorted-by={column.sortedBy}
+                    onClick={onClickOfTableHeader}
+                  >
                     {column.label}
                   </TableCell>
                 ))}
@@ -183,7 +313,7 @@ const SectorsTable = ({ history }) => {
             <TableBody>
               {rows.map((row) => {
                 return (
-                  <TableRow hover role='checkbox' tabIndex={-1} key={row.id}>
+                  <TableRow hover role='checkbox' tabIndex={-1} key={row.id} data-row-id={row.id} onClick={openModal}>
                     {columns.map((column) => {
                       const value = row[column.id];
                       return (
@@ -198,6 +328,7 @@ const SectorsTable = ({ history }) => {
             </TableBody>
           </Table>
         </TableContainer>
+        {open ? <SectorModal open={open} closeModal={closeModal} initModal={initModal} rowId={rowId} /> : null}
       </Paper>
     </>
   );

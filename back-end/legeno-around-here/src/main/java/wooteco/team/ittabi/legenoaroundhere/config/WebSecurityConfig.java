@@ -26,6 +26,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtTokenDecoder jwtTokenDecoder;
     private final IAuthenticationFacade authenticationFacade;
 
+    @Value("${security.cors.origin.domain.frontend}")
+    private final String frontendDomain;
+
+    @Value("${security.cors.origin.domain.adminTool}")
+    private final String adminToolDomain;
+
     @Bean
     public IAuthenticationFacade authenticationFacadeBean() {
         return new AuthenticationFacade();
@@ -37,13 +43,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    @Value("${security.cors.origin}")
     @Bean
-    public CorsConfigurationSource corsConfigurationSource(String corsOrigin) {
-        log.info("crossOrigin: {}", corsOrigin);
+    public CorsConfigurationSource corsConfigurationSource() {
+        log.info("crossOrigin - Frontend Domain: {}", frontendDomain);
+        log.info("crossOrigin - AdminTool Domain: {}", adminToolDomain);
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedOrigin(corsOrigin);
+        configuration.addAllowedOrigin(frontendDomain);
+        configuration.addAllowedOrigin(adminToolDomain);
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
