@@ -13,14 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { removeAccessTokenCookie } from '../../util/TokenUtils';
 import Link from "@material-ui/core/Link";
-
-const Copyright = () => {
-  return (
-    <Typography variant='body2' color='textSecondary' align='center'>
-      {'Copyright © Ittabi 2020.'}
-    </Typography>
-  );
-};
+import Copyright from "../Copyright";
 
 const useStyles = makeStyles((theme) => ({
   paper: {

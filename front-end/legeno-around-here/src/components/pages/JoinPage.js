@@ -11,14 +11,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { createUser, checkJoined, sendAuthMail, checkAuthNumber } from '../api/API';
 import Link from "@material-ui/core/Link";
-
-const Copyright = () => {
-  return (
-    <Typography variant='body2' color='textSecondary' align='center'>
-      {'Copyright © Ittabi 2020.'}
-    </Typography>
-  );
-};
+import Checkbox from "@material-ui/core/Checkbox";
+import Copyright from "../Copyright";
 
 const InputCheck = (input) => {
   return (
@@ -228,7 +222,7 @@ const JoinPage = ({history}) => {
               </Button>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant='caption' color='error'></Typography>
+              <Typography variant='caption' color='error' />
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -288,6 +282,12 @@ const JoinPage = ({history}) => {
               </Typography>
             </Grid>
           </Grid>
+          <Checkbox
+            color="primary"
+            inputProps={{ 'aria-label': 'secondary checkbox' }}
+          />
+          <Link underline='always'>회원 가입 약관</Link>
+          에 동의합니다.
           <Button type='submit' fullWidth variant='contained' color='primary' className={classes.submit}>
             회원가입
           </Button>
