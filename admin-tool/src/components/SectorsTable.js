@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { findAllSectors } from '../api/SectorApi';
 import { withRouter } from 'react-router-dom';
@@ -105,51 +105,79 @@ const useStyles = makeStyles(() => ({
 }));
 
 const SectorsTable = ({ location, history }) => {
-  const query = qs.parse(location.search, {
-    ignoreQueryPrefix: true,
-  });
   const classes = useStyles();
 
   const [cookies, removeCookie] = useCookies(['accessToken']);
   const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState(null);
 
-  const [pageProperty, setPageProperty] = useState({
-    page: query.page ? parseInt(query.page) - 1 : 0,
-    totalPages: 0,
-    size: query.size ? parseInt(query.size) : 10,
-    sortedBy: query.sortedBy ? query.sortedBy : 'id',
-    direction: query.direction ? query.direction : 'desc',
-    totalElements: 0,
-  });
+  const getInitialPageProperty = () => {
+    const query = qs.parse(location.search, {
+      ignoreQueryPrefix: true,
+    });
 
+    return {
+      page: query.page ? parseInt(query.page) - 1 : 0,
+      totalPages: 0,
+      size: query.size ? parseInt(query.size) : 10,
+      sortedBy: query.sortedBy ? query.sortedBy : 'id',
+      direction: query.direction ? query.direction : 'desc',
+      totalElements: 0,
+      updateHistory: false,
+    };
+  };
+
+  const [pageProperty, setPageProperty] = useState(getInitialPageProperty());
   const [open, setOpen] = React.useState(false);
   const [rowId, setRowId] = React.useState(null);
 
   useEffect(() => {
     const fetchData = async () =>
-      await findAllSectors(history, cookies, removeCookie, setLoading, setRows, pageProperty, setPageProperty);
+      await findAllSectors(
+        history,
+        cookies,
+        removeCookie,
+        setLoading,
+        setRows,
+        getInitialPageProperty(),
+        setPageProperty,
+      );
     fetchData();
+    // eslint-disable-next-line
   }, [cookies, history, location]);
 
+  const mounted = useRef(false);
+
   useEffect(() => {
+    if (!mounted || !pageProperty.updateHistory) {
+      mounted.current = true;
+      return;
+    }
     const parameter = qs.stringify({
       page: pageProperty.page + 1,
       size: pageProperty.size,
       sortedBy: pageProperty.sortedBy,
       direction: pageProperty.direction,
     });
-
     const url = location.pathname + '?' + parameter;
-    console.log(url);
+    mounted.current = false;
+
+    setPageProperty(
+      produce(pageProperty, (draft) => {
+        draft['updateHistory'] = false;
+      }),
+    );
+
     history.push(url);
-  }, [pageProperty.page, pageProperty.size, pageProperty.sortedBy, pageProperty.direction]);
+    // eslint-disable-next-line
+  }, [pageProperty.updateHistory]);
 
   const onChangeOfSize = (event) => {
     setPageProperty(
       produce(pageProperty, (draft) => {
         draft['size'] = parseInt(event.target.value);
         draft['page'] = 0;
+        draft['updateHistory'] = true;
       }),
     );
   };
@@ -170,6 +198,7 @@ const SectorsTable = ({ location, history }) => {
       setPageProperty(
         produce(pageProperty, (draft) => {
           draft['direction'] = direction;
+          draft['updateHistory'] = true;
         }),
       );
       return;
@@ -179,6 +208,7 @@ const SectorsTable = ({ location, history }) => {
       produce(pageProperty, (draft) => {
         draft['sortedBy'] = sortedBy;
         draft['direction'] = 'desc';
+        draft['updateHistory'] = true;
       }),
     );
   };
@@ -199,6 +229,7 @@ const SectorsTable = ({ location, history }) => {
     setPageProperty(
       produce(pageProperty, (draft) => {
         draft['page'] = result;
+        draft['updateHistory'] = true;
       }),
     );
   };

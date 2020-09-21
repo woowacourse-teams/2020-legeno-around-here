@@ -34,6 +34,9 @@ export const findAllSectors = (history, cookies, removeCookie, setLoading, setRo
       let status = error.response.status;
       redirectInvalidToken(history, status, removeCookie);
     })
+    .catch(() => {
+      history.push('/');
+    })
     .then(() => {
       setLoading(false);
     });
