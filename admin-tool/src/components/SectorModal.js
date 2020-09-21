@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { useCookies } from 'react-cookie';
-import { findSector } from '../api/SectorApi';
+import { findSector, updateSectorState } from '../api/SectorApi';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
@@ -57,7 +57,8 @@ const SectorModal = ({ open, closeModal, rowId }) => {
   useEffect(() => {
     console.log('useEffect - 1');
     if (rowId) {
-      const sectorDetail = async () => await findSector(cookies, removeCookie, rowId, setLoading, setSectorDetails);
+      const sectorDetail = async () =>
+        await findSector(cookies, removeCookie, closeModal, rowId, setLoading, setSectorDetails);
       sectorDetail();
     }
     // eslint-disable-next-line
@@ -91,8 +92,18 @@ const SectorModal = ({ open, closeModal, rowId }) => {
 
   const updateState = (event) => {
     event.preventDefault();
-    setRerenderStandard(!rerenderStandard);
-    setUpdateStateAndReason(defaultStateAndReason);
+    const sectorDetail = async () =>
+      await updateSectorState(
+        cookies,
+        removeCookie,
+        rowId,
+        updateStateAndReason,
+        defaultStateAndReason,
+        setUpdateStateAndReason,
+        rerenderStandard,
+        setRerenderStandard,
+      );
+    sectorDetail();
   };
 
   return (
