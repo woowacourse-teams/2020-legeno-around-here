@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { createUser, checkJoined, sendAuthMail, checkAuthNumber } from '../api/API';
-import LinkWithoutStyle from '../../util/LinkWithoutStyle';
+import Link from "@material-ui/core/Link";
 
 const Copyright = () => {
   return (
@@ -167,6 +167,11 @@ const JoinPage = ({history}) => {
     [validateEmail, validateNickname, validatePassword, validatePasswordRepeat, join],
   );
 
+  const onClickLogin = (event) => {
+    event.preventDefault();
+    history.push('/login');
+  }
+
   return (
     <Container component='main' maxWidth='xs'>
       <CssBaseline />
@@ -288,9 +293,11 @@ const JoinPage = ({history}) => {
           </Button>
           <Grid container justify='flex-end'>
             <Grid item>
-              <LinkWithoutStyle to='/login' variant='body2'>
-                이미 계정이 있으신가요? 로그인을 해주세요!
-              </LinkWithoutStyle>
+              이미 계정이 있으신가요?&nbsp;
+              <Link underline='always' onClick={onClickLogin}>
+                로그인
+              </Link>
+                을 해주세요!
             </Grid>
           </Grid>
         </form>
