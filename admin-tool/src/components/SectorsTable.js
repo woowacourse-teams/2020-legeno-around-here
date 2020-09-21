@@ -173,9 +173,10 @@ const SectorsTable = ({ location, history }) => {
   }, [pageProperty.updateHistory]);
 
   const onChangeOfSize = (event) => {
+    event.preventDefault();
     setPageProperty(
       produce(pageProperty, (draft) => {
-        draft['size'] = parseInt(event.target.value);
+        draft['size'] = parseInt(event.currentTarget.value);
         draft['page'] = 0;
         draft['updateHistory'] = true;
       }),

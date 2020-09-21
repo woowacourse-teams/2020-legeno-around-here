@@ -8,14 +8,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
 import DoneIcon from '@material-ui/icons/Done';
+import produce from 'immer';
 
 const currencies = [
-  {
-    value: '등록',
-  },
-  {
-    value: '승인 신청',
-  },
   {
     value: '승인',
   },
@@ -52,6 +47,12 @@ const SectorModal = ({ open, closeModal, rowId }) => {
   const [cookies, removeCookie] = useCookies(['accessToken']);
   const [sectorDetails, setSectorDetails] = useState({});
   const [loading, setLoading] = useState(false);
+  const [rerenderStandard, setRerenderStandard] = useState(false);
+  const defaultStateAndReason = {
+    state: '승인',
+    reason: '검토 완료',
+  };
+  const [updateStateAndReason, setUpdateStateAndReason] = useState(defaultStateAndReason);
 
   useEffect(() => {
     console.log('useEffect - 1');
@@ -60,15 +61,39 @@ const SectorModal = ({ open, closeModal, rowId }) => {
       sectorDetail();
     }
     // eslint-disable-next-line
-  }, [open]);
-
-  if (loading) {
-    return <>로딩중</>;
-  }
+  }, [open, rerenderStandard]);
 
   if (!rowId) {
     return null;
   }
+
+  if (rowId && loading) {
+    return <div>loading</div>;
+  }
+
+  const onChangeState = (event) => {
+    event.preventDefault();
+    setUpdateStateAndReason(
+      produce(updateStateAndReason, (draft) => {
+        draft['state'] = event.currentTarget.dataset.value;
+      }),
+    );
+  };
+
+  const onChangeReason = (event) => {
+    event.preventDefault();
+    setUpdateStateAndReason(
+      produce(updateStateAndReason, (draft) => {
+        draft['reason'] = event.currentTarget.value;
+      }),
+    );
+  };
+
+  const updateState = (event) => {
+    event.preventDefault();
+    setRerenderStandard(!rerenderStandard);
+    setUpdateStateAndReason(defaultStateAndReason);
+  };
 
   return (
     <>
@@ -79,7 +104,7 @@ const SectorModal = ({ open, closeModal, rowId }) => {
         aria-describedby='simple-modal-description'
       >
         <div style={modalStyle} className={classes.paper}>
-          <h2 id='simple-modal-title'>부문 상세 및 상태 변경</h2>
+          <h2>부문 상세</h2>
           <TextField
             label='부문명'
             defaultValue={sectorDetails.name}
@@ -179,11 +204,33 @@ const SectorModal = ({ open, closeModal, rowId }) => {
           <br />
           <br />
           <TextField
-            label={'상태 (기존 값 : ' + sectorDetails.state + ')'}
+            label='상태'
             defaultValue={sectorDetails.state}
+            InputProps={{
+              readOnly: true,
+            }}
+            variant='outlined'
+          />
+          &ensp;
+          <TextField
+            label='사유'
+            defaultValue={sectorDetails.reason}
+            InputProps={{
+              readOnly: true,
+            }}
+            variant='outlined'
+          />
+          <br />
+          <br />
+          <hr />
+          <h2 id='simple-modal-title'>부문 상태 변경</h2>
+          <TextField
+            label='변경 상태'
+            defaultValue={defaultStateAndReason.state}
             select
             helperText='변경 희망 상태를 고르세요.'
             variant='outlined'
+            onChange={onChangeState}
           >
             {currencies.map((option) => (
               <MenuItem key={option.value} value={option.value}>
@@ -193,14 +240,14 @@ const SectorModal = ({ open, closeModal, rowId }) => {
           </TextField>
           &ensp;
           <TextField
-            label={'사유 (기존 값 : ' + sectorDetails.reason + ')'}
-            placeholder='상태 변경 사유'
-            defaultValue={sectorDetails.reason}
+            label='변경 사유'
+            defaultValue={defaultStateAndReason.reason}
             helperText='상태를 변경하는 사유를 적어주세요. (생략 가능)ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ'
             variant='outlined'
+            onChange={onChangeReason}
           />
           &ensp;
-          <IconButton color='primary' aria-label='Save State'>
+          <IconButton color='primary' aria-label='Save State' onClick={updateState}>
             <DoneIcon />
           </IconButton>
           <IconButton color='secondary' aria-label='Close modal' onClick={closeModal}>
