@@ -1,4 +1,4 @@
-import API, { redirectInvalidToken } from './Api';
+import API, { makeTokenHeader, redirectInvalidToken } from './Api';
 import { createRows } from '../components/SectorsTable';
 import produce from 'immer';
 
@@ -36,6 +36,39 @@ export const findAllSectors = (history, cookies, removeCookie, setLoading, setRo
     })
     .catch(() => {
       history.push('/');
+    })
+    .then(() => {
+      setLoading(false);
+    });
+};
+
+export const findSector = (cookies, removeCookie, rowId, setLoading, setSectorDetails) => {
+  setLoading(true);
+
+  console.log(rowId);
+
+  API.get(`/admin/sectors/${rowId}`, makeTokenHeader(cookies))
+    .then((response) => {
+      const data = response.data;
+      setSectorDetails({
+        id: data.id,
+        name: data.name,
+        description: data.description,
+        createdAt: data.createdAt,
+        creatorId: data.creator.id,
+        creatorEmail: data.creator.email,
+        creatorNickname: data.creator.nickname,
+        lastModifiedAt: data.lastModifiedAt,
+        lastModifierId: data.lastModifier.id,
+        lastModifierEmail: data.lastModifier.email,
+        lastModifierNickname: data.lastModifier.nickname,
+        state: data.state,
+        reason: data.reason,
+      });
+    })
+    .catch((error) => {
+      console.log('error');
+      console.log(error);
     })
     .then(() => {
       setLoading(false);
