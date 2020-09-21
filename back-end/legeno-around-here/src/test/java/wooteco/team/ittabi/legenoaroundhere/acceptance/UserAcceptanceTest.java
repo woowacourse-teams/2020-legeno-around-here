@@ -15,6 +15,7 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NEW_USER_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NEW_USER_PASSWORD;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_THE_OTHER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_THE_OTHER_USER_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
@@ -124,8 +125,8 @@ public class UserAcceptanceTest extends AcceptanceTest {
         assertThatThrownBy(() -> changeMyPassword(accessToken, TEST_USER_OTHER_PASSWORD));
 
         // 회원 탈퇴
-        deleteUser(accessToken);
-        findNotExistMe(accessToken);
+        deactivateUser(accessToken);
+        loginFailed(TEST_THE_OTHER_EMAIL, TEST_USER_OTHER_PASSWORD);
     }
 
     /**
@@ -168,6 +169,8 @@ public class UserAcceptanceTest extends AcceptanceTest {
      * Given 타 회원이 가입되어 있다.
      * <p>
      * When 타 회원을 조회한다. Then 타 회원이 조회된다.
+     * <p>
+     * When 탈퇴한 회원을 조회한다. Then 탈퇴한 회원은 조회되지 않는다.(404 Return)
      */
     @DisplayName("타 회원 프로필 조회")
     @Test
@@ -180,6 +183,9 @@ public class UserAcceptanceTest extends AcceptanceTest {
         assertThat(userOtherResponse.getNickname()).isEqualTo(TEST_USER_NICKNAME);
         assertThat(userOtherResponse.getAwardsCount()).isNotNull();
         assertThat(userOtherResponse.getImage());
+
+        // 탈퇴한 회원은 조회 불가
+        findUserFailed(tokenResponse.getAccessToken(), TEST_THE_OTHER_USER_ID);
     }
 
     /**
@@ -235,14 +241,19 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .extract().as(UserResponse.class);
     }
 
-    private void findNotExistMe(String accessToken) {
+    private void loginFailed(String email, String password) {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("password", password);
+
         given()
-            .header("X-AUTH-TOKEN", accessToken)
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when()
-            .get("/users/me")
+            .post("/login")
             .then()
-            .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     private UserImageResponse createUserImage(String accessToken) {
@@ -310,7 +321,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    private void deleteUser(String accessToken) {
+    private void deactivateUser(String accessToken) {
         given()
             .header("X-AUTH-TOKEN", accessToken)
             .when()
@@ -336,6 +347,16 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .then()
             .statusCode(HttpStatus.OK.value())
             .extract().as(UserOtherResponse.class);
+    }
+
+    private void findUserFailed(String accessToken, Long userId) {
+        given()
+            .header("X-AUTH-TOKEN", accessToken)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/users/" + userId)
+            .then()
+            .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     private TokenResponse adminLogin(String email, String password) {

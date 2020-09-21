@@ -26,7 +26,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.notification.Notification;
@@ -269,13 +268,17 @@ class UserServiceTest extends ServiceTest {
 
     @DisplayName("회원 탈퇴")
     @Test
-    void deleteMe_Success() {
-        userService.deleteMe();
-
+    void deactivate_Success() {
         User authUser = (User) authenticationFacade.getAuthentication()
             .getPrincipal();
-        assertThatThrownBy(() -> userService.loadUserByUsername(authUser.getUsername()))
-            .isInstanceOf(UsernameNotFoundException.class);
+        assertThat(authUser.isDeactivated()).isFalse();
+
+        userService.deactivateMe();
+
+        User user = userRepository.findById(authUser.getId())
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        assertThat(user.isDeactivated()).isTrue();
     }
 
     @DisplayName("회원 조회, 성공")
@@ -286,6 +289,22 @@ class UserServiceTest extends ServiceTest {
         assertThat(user.getId()).isEqualTo(TEST_USER_ID);
         assertThat(user.getNickname()).isEqualTo(TEST_USER_NICKNAME);
         assertThat(user.getAwardsCount()).isNotNull();
+    }
+
+    @DisplayName("회원 조회, 예외 발생 - 탈퇴 회원")
+    @Test
+    void findUser_Deactivated_ThrownException() {
+        String deactivatedEmail = "deactivated@email.com";
+        User user = User.builder()
+            .email(deactivatedEmail)
+            .nickname("daNickname")
+            .password("daPassword")
+            .build();
+        user.deactivate();
+        User deactivatedUser = userRepository.save(user);
+
+        assertThatThrownBy(() -> userService.findUser(deactivatedUser.getId()))
+            .isInstanceOf(NotExistsException.class);
     }
 
     @DisplayName("회원 조회, 예외 발생 - 유효하지 않은 ID")
