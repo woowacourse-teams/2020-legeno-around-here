@@ -96,7 +96,7 @@ const PostDetail = ({ post, myInfo, history }) => {
     setComments(foundComments);
   };
 
-  const makeCreatorNameUi = () => {
+  const makeCreatorName = () => {
     if (post.creator.nickname === "탈퇴한 회원") {
       return <Typography className={classes.postAuthorNicknameSection}>{post.creator.nickname}</Typography>;
     }
@@ -111,7 +111,7 @@ const PostDetail = ({ post, myInfo, history }) => {
     );
   };
 
-  const makeCreatorPhotoUi = () => {
+  const makeCreatorPhoto = () => {
     if (post.creator.nickname === "탈퇴한 회원") {
       return <div className={classes.authorProfilePhotoUrl} />
     }
@@ -128,8 +128,8 @@ const PostDetail = ({ post, myInfo, history }) => {
           <Typography>{post.area.fullName}</Typography>
         </Grid>
         <Grid container item xs={6}>
-          {makeCreatorNameUi()}
-          {makeCreatorPhotoUi()}
+          {makeCreatorName()}
+          {makeCreatorPhoto()}
         </Grid>
       </Grid>
       <Typography variant='h5'>{post.sector.name} 부문</Typography>
