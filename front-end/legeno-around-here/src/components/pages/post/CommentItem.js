@@ -30,8 +30,8 @@ const useStyle = makeStyles({
   }
 });
 
-const CommentItem = ({ comment, myUserId }) => {
-  const isMyComment = comment.creator.id === myUserId;
+const CommentItem = ({ comment, myId }) => {
+  const isMyComment = comment.creator.id === myId;
   const classes = useStyle({
     creatorProfilePhotoUrl: comment.creator.image ? comment.creator.image.url : DEFAULT_IMAGE_URL
   });
@@ -42,7 +42,7 @@ const CommentItem = ({ comment, myUserId }) => {
     }
     return <LinkWithoutStyle
       className={classes.creatorProfilePhoto}
-      to={isMyComment? '/users/me' : '/users/' + comment.creator.id}
+      to={isMyComment ? '/users/me' : '/users/' + comment.creator.id}
     />;
   };
 

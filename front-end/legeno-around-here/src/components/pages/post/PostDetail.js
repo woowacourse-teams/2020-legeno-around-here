@@ -55,7 +55,7 @@ const PostDetail = ({ post, myInfo, history }) => {
   const [zzang, setZzang] = useState(post.zzang.activated);
   const [zzangCount, setZzangCount] = useState(post.zzang.count);
   const isMyPost = post && myInfo && post.creator.id === myInfo.id;
-  const authorProfilePhotoUrl= post.creator.image ? post.creator.image.url : DEFAULT_IMAGE_URL;
+  const authorProfilePhotoUrl = post.creator.image ? post.creator.image.url : DEFAULT_IMAGE_URL;
   const props = { authorProfilePhotoUrl: authorProfilePhotoUrl };
   const classes = useStyle(props);
 
@@ -75,7 +75,6 @@ const PostDetail = ({ post, myInfo, history }) => {
       }
       setZzangCount(zzangCount + 1);
       setZzang(!zzang);
-      return;
     }
   };
 
@@ -198,7 +197,7 @@ const PostDetail = ({ post, myInfo, history }) => {
         <Comments
           comments={comments}
           loading={loading}
-          myUserId={myInfo? myInfo.id : null}
+          myId={myInfo ? myInfo.id : null}
         />
       }
     </>
