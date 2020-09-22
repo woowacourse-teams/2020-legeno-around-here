@@ -31,9 +31,13 @@ const HomeTopBar = ({ setter, sectorId, history }) => {
 
   useEffect(() => {
     const loadAllSimpleSectors = async () => {
-      const foundSimpleSectors = await findAllSimpleSectors(accessToken, history);
-      await foundSimpleSectors.unshift(SIMPLE_ALL_SECTOR);
-      await setSimpleSectors(foundSimpleSectors);
+      findAllSimpleSectors(accessToken, history)
+        .then(async (foundSimpleSectors) => {
+          if (foundSimpleSectors) {
+            await foundSimpleSectors.unshift(SIMPLE_ALL_SECTOR);
+            await setSimpleSectors(foundSimpleSectors);
+          }
+        })
     };
     loadAllSimpleSectors();
   }, [accessToken, history]);

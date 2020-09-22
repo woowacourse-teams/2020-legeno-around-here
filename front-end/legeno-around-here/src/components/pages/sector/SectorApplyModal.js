@@ -6,7 +6,7 @@ import { createPendingSector } from '../../api/API';
 import Loading from '../../Loading';
 import ErrorTypography from '../../ErrorTypography';
 
-const SectorApplyModal = ({ open, handleClose }) => {
+const SectorApplyModal = ({ open, handleClose, history }) => {
   const NAME_MIN_LENGTH = 2;
   const NAME_MAX_LENGTH = 20;
   const DESCRIPTION_MIN_LENGTH = 2;
@@ -51,7 +51,7 @@ const SectorApplyModal = ({ open, handleClose }) => {
 
     const sendSector = async () => {
       setLoading(true);
-      await createPendingSector({ name, description }, accessToken);
+      await createPendingSector({ name, description }, accessToken, history);
       setLoading(false);
     };
     sendSector();

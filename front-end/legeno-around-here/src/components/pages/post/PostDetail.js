@@ -14,6 +14,38 @@ import UpdatePostButton from './UpdatePostButton';
 import PostReportSection from './PostReportSection';
 import LinkWithoutStyle from '../../../util/LinkWithoutStyle';
 import DeletePostButton from './DeletePostButton';
+import { makeStyles } from "@material-ui/core/styles";
+import { MAIN_COLOR } from "../../../constants/Color";
+import { DEFAULT_IMAGE_URL } from "../myProfileEdit/MyProfileEditPage";
+
+const useStyle = makeStyles({
+  postTopSection: {
+    height: '41px',
+    display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'center',
+    marginTop: '4px',
+  },
+  postAreaNameSection: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'center',
+  },
+  postAuthorNicknameSection: {
+    display: 'inline',
+    margin: 'auto 5px auto auto',
+  },
+  authorProfilePhotoUrl: (props) => ({
+    width: '35px',
+    height: '35px',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    borderRadius: '300px',
+    backgroundImage: `url(${props.authorProfilePhotoUrl})`,
+    border: `1px solid ${MAIN_COLOR}`,
+  }),
+});
 
 const PostDetail = ({ post, myInfo, history }) => {
   const accessToken = getAccessTokenFromCookie();
@@ -23,6 +55,9 @@ const PostDetail = ({ post, myInfo, history }) => {
   const [zzang, setZzang] = useState(post.zzang.activated);
   const [zzangCount, setZzangCount] = useState(post.zzang.count);
   const isMyPost = post && myInfo && post.creator.id === myInfo.id;
+  const authorProfilePhotoUrl = post.creator.image ? post.creator.image.url : DEFAULT_IMAGE_URL;
+  const props = { authorProfilePhotoUrl: authorProfilePhotoUrl };
+  const classes = useStyle(props);
 
   let keyValue = 0;
 
@@ -40,7 +75,6 @@ const PostDetail = ({ post, myInfo, history }) => {
       }
       setZzangCount(zzangCount + 1);
       setZzang(!zzang);
-      return;
     }
   };
 
@@ -62,28 +96,40 @@ const PostDetail = ({ post, myInfo, history }) => {
     setComments(foundComments);
   };
 
-  const findCreatorLink = () => {
+  const makeCreatorName = () => {
     if (post.creator.nickname === "탈퇴한 회원") {
-      return <Typography>{post.creator.nickname}</Typography>;
+      return <Typography className={classes.postAuthorNicknameSection}>{post.creator.nickname}</Typography>;
     }
     return (
       <Typography
         component={LinkWithoutStyle}
         to={isMyPost ? '/users/me' : '/users/' + post.creator.id}
+        className={classes.postAuthorNicknameSection}
       >
         {post.creator.nickname}
       </Typography>
     );
   };
 
+  const makeCreatorPhoto = () => {
+    if (post.creator.nickname === "탈퇴한 회원") {
+      return <div className={classes.authorProfilePhotoUrl} />
+    }
+    return <LinkWithoutStyle
+      className={classes.authorProfilePhotoUrl}
+      to={isMyPost ? '/users/me' : '/users/' + post.creator.id}
+    />;
+  };
+
   return (
     <>
-      <Grid container>
-        <Grid container item xs={6}>
+      <Grid container className={classes.postTopSection}>
+        <Grid container item xs={6} className={classes.postAreaNameSection}>
           <Typography>{post.area.fullName}</Typography>
         </Grid>
-        <Grid container item xs={6} alignItems='flex-start' justify='flex-end' direction='row'>
-          {findCreatorLink()}
+        <Grid container item xs={6}>
+          {makeCreatorName()}
+          {makeCreatorPhoto()}
         </Grid>
       </Grid>
       <Typography variant='h5'>{post.sector.name} 부문</Typography>
@@ -147,7 +193,13 @@ const PostDetail = ({ post, myInfo, history }) => {
           </Grid>
         </Grid>
       </form>
-      {comments.length > 0 && <Comments comments={comments} loading={loading} />}
+      {comments.length > 0 && myInfo &&
+        <Comments
+          comments={comments}
+          loading={loading}
+          myId={myInfo.id}
+        />
+      }
     </>
   );
 };

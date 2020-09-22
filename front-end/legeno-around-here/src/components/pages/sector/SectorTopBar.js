@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SectorTopBar = () => {
+const SectorTopBar = ({ history }) => {
   const classes = useStyles();
 
   return (
@@ -22,7 +22,7 @@ const SectorTopBar = () => {
         <Toolbar>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <SectorApplyButton />
+            <SectorApplyButton history={history}/>
           </div>
         </Toolbar>
       </AppBar>
