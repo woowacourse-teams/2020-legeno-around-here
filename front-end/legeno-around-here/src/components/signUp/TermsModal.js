@@ -53,7 +53,7 @@ const TermsModal = ({ open, closeModal, agree, setAgree }) => {
             id='outlined-multiline-static'
             label='Multiline'
             multiline
-            rows={4}
+            rows={10}
             defaultValue='Default Value'
             variant='outlined'
             fullWidth

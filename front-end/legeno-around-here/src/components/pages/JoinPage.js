@@ -162,9 +162,18 @@ const JoinPage = ({ history }) => {
         alert('입력값을 확인해 주세요.');
         return;
       }
+      if (!termsAgree) {
+        console.log(termsAgree);
+        alert('우리동네캡짱 이용 약관에 동의하셔야 합니다.');
+        return;
+      }
+      if (!privacyAgree) {
+        alert('개인정보 수집 및 이용에 동의하셔야 합니다.');
+        return;
+      }
       join();
     },
-    [validateEmail, validateNickname, validatePassword, validatePasswordRepeat, join],
+    [validateEmail, validateNickname, validatePassword, validatePasswordRepeat, join, termsAgree, privacyAgree],
   );
 
   const onChangeTerms = (event) => {
@@ -188,6 +197,9 @@ const JoinPage = ({ history }) => {
   };
 
   const closeModal = (event) => {
+    if (event) {
+      event.preventDefault();
+    }
     setTermsModalOpen(false);
     setPrivacyModalOpen(false);
   };
