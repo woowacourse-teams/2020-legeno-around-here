@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Modal from '@material-ui/core/Modal';
 import Checkbox from '@material-ui/core/Checkbox';
 
-const getModalStyle = () => {
+export const getModalStyle = () => {
   const top = 50;
   const left = 50;
 
@@ -15,7 +15,7 @@ const getModalStyle = () => {
   };
 };
 
-const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles((theme) => ({
   paper: {
     position: 'absolute',
     width: 874,
