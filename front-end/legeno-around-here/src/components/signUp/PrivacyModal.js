@@ -31,6 +31,15 @@ const PrivacyModal = ({ open, closeModal, agree, setAgree }) => {
   const classes = useStyles();
   const [modalStyle] = React.useState(getModalStyle);
 
+  const onChangeAgree = (event) => {
+    event.preventDefault();
+    const turnedAgree = !agree;
+    setAgree(turnedAgree);
+    if (turnedAgree) {
+      closeModal();
+    }
+  };
+
   return (
     <>
       <Modal
@@ -53,7 +62,12 @@ const PrivacyModal = ({ open, closeModal, agree, setAgree }) => {
               readOnly: true,
             }}
           />
-          <Checkbox color='primary' inputProps={{ 'aria-label': 'secondary checkbox' }} />
+          <Checkbox
+            color='primary'
+            inputProps={{ 'aria-label': 'secondary checkbox' }}
+            checked={agree}
+            onChange={onChangeAgree}
+          />
           개인정보 수집 및 이용에 동의합니다.(필수)
         </div>
       </Modal>

@@ -167,6 +167,16 @@ const JoinPage = ({ history }) => {
     [validateEmail, validateNickname, validatePassword, validatePasswordRepeat, join],
   );
 
+  const onChangeTerms = (event) => {
+    event.preventDefault();
+    setTermsAgree(!termsAgree);
+  };
+
+  const onChangePrivacy = (event) => {
+    event.preventDefault();
+    setPrivacyAgree(!privacyAgree);
+  };
+
   const openTermsModal = (event) => {
     event.preventDefault();
     setTermsModalOpen(true);
@@ -176,8 +186,8 @@ const JoinPage = ({ history }) => {
     event.preventDefault();
     setPrivacyModalOpen(true);
   };
+
   const closeModal = (event) => {
-    event.preventDefault();
     setTermsModalOpen(false);
     setPrivacyModalOpen(false);
   };
@@ -303,13 +313,23 @@ const JoinPage = ({ history }) => {
               </Typography>
             </Grid>
           </Grid>
-          <Checkbox color='primary' inputProps={{ 'aria-label': 'secondary checkbox' }} />
+          <Checkbox
+            color='primary'
+            inputProps={{ 'aria-label': 'secondary checkbox' }}
+            checked={termsAgree}
+            onChange={onChangeTerms}
+          />
           <Link underline='always' onClick={openTermsModal}>
             우리동네캡짱 이용약관
           </Link>
           에 동의합니다.(필수)
           <br />
-          <Checkbox color='primary' inputProps={{ 'aria-label': 'secondary checkbox' }} />
+          <Checkbox
+            color='primary'
+            inputProps={{ 'aria-label': 'secondary checkbox' }}
+            checked={privacyAgree}
+            onChange={onChangePrivacy}
+          />
           <Link underline='always' onClick={openPrivacyModal}>
             개인정보 수집 및 이용
           </Link>

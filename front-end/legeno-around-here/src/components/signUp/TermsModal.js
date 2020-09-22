@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Modal from '@material-ui/core/Modal';
 import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
 
 const getModalStyle = () => {
   const top = 50;
@@ -31,6 +30,15 @@ const TermsModal = ({ open, closeModal, agree, setAgree }) => {
   const classes = useStyles();
   const [modalStyle] = React.useState(getModalStyle);
 
+  const onChangeAgree = (event) => {
+    event.preventDefault();
+    const turnedAgree = !agree;
+    setAgree(turnedAgree);
+    if (turnedAgree) {
+      closeModal();
+    }
+  };
+
   return (
     <>
       <Modal
@@ -53,7 +61,12 @@ const TermsModal = ({ open, closeModal, agree, setAgree }) => {
               readOnly: true,
             }}
           />
-          <Checkbox color='primary' inputProps={{ 'aria-label': 'secondary checkbox' }} />
+          <Checkbox
+            color='primary'
+            inputProps={{ 'aria-label': 'secondary checkbox' }}
+            checked={agree}
+            onChange={onChangeAgree}
+          />
           우리동네캡짱 이용약관에 동의합니다.(필수)
         </div>
       </Modal>
