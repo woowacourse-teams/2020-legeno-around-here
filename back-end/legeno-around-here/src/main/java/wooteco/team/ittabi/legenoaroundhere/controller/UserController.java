@@ -7,7 +7,7 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.USERS_
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.USERS_PATH_WITH_SLASH;
 
 import java.net.URI;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
-import wooteco.team.ittabi.legenoaroundhere.dto.PasswordFindRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCheckRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
@@ -30,7 +29,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
@@ -41,13 +40,6 @@ public class UserController {
 
         return ResponseEntity
             .noContent()
-            .build();
-    }
-
-    @PostMapping("/find/password")
-    public ResponseEntity<Void> resetPassword(@RequestBody PasswordFindRequest passwordFindRequest) {
-        return ResponseEntity
-            .ok()
             .build();
     }
 

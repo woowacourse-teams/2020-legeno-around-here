@@ -1,12 +1,13 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
 import javax.mail.MessagingException;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
+import wooteco.team.ittabi.legenoaroundhere.domain.user.mailauth.Mail;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.mailauth.MailAuth;
 import wooteco.team.ittabi.legenoaroundhere.dto.MailAuthCheckRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.MailAuthCreateRequest;
@@ -18,7 +19,7 @@ import wooteco.team.ittabi.legenoaroundhere.utils.AuthUtils;
 import wooteco.team.ittabi.legenoaroundhere.utils.MailHandler;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class MailAuthService {
 
@@ -31,7 +32,11 @@ public class MailAuthService {
         String email = mailAuthCreateRequest.getEmail();
 
         saveMailAuth(email, authNumber);
-        sendAuthMail(email, authNumber);
+        sendMailAuth(Mail.builder()
+            .email(email)
+            .subject("우리동네캡짱 회원 가입 인증 메일")
+            .text("<p> 회원가입 인증번호 : " + authNumber + "</p>")
+            .build());
     }
 
     private void saveMailAuth(String email, int authNumber) {
@@ -39,13 +44,12 @@ public class MailAuthService {
         mailAuthRepository.save(mailAuth);
     }
 
-    public void sendAuthMail(String email, int authNumber) {
+    public void sendMailAuth(Mail mail) {
         try {
             MailHandler mailHandler = new MailHandler(javaMailSender);
-            mailHandler.setTo(email);
-            mailHandler.setSubject("우리동네캡짱 회원 가입 인증 메일");
-            mailHandler.setText(
-                "<p> 인증번호: " + authNumber + "</p>");
+            mailHandler.setTo(mail.getEmail());
+            mailHandler.setSubject(mail.getSubject());
+            mailHandler.setText(mail.getText());
             mailHandler.send();
         } catch (MessagingException e) {
             throw new FailedSendMailException("인증 메일 전송에 실패하였습니다.");

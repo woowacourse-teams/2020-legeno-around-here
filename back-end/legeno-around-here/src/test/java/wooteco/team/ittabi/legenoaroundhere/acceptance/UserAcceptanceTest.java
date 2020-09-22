@@ -31,6 +31,7 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,6 +41,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserOtherResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
+import wooteco.team.ittabi.legenoaroundhere.service.MailAuthService;
 
 public class UserAcceptanceTest extends AcceptanceTest {
 
@@ -48,6 +50,9 @@ public class UserAcceptanceTest extends AcceptanceTest {
 
     @MockBean
     private MailAuthRepository mailAuthRepository;
+
+    @MockBean
+    private MailAuthService mailAuthService;
 
     @BeforeEach
     void setUp() {
@@ -80,6 +85,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
         //메일 인증
         MailAuth mailAuth = new MailAuth(TEST_NEW_USER_EMAIL, TEST_AUTH_NUMBER);
         when(mailAuthRepository.findByEmail(any())).thenReturn(java.util.Optional.of(mailAuth));
+        Mockito.doNothing().when(mailAuthService).sendMailAuth(any());
 
         //회원 가입
         String location = createUserWithoutArea(TEST_NEW_USER_EMAIL, TEST_NEW_USER_NICKNAME,
@@ -125,8 +131,8 @@ public class UserAcceptanceTest extends AcceptanceTest {
         assertThatThrownBy(() -> changeMyPassword(accessToken, TEST_USER_OTHER_PASSWORD));
 
         // 비밀번호 찾기(재설정)
-        findPassword(TEST_USER_NICKNAME, TEST_USER_EMAIL);
-//        loginFailed(TEST_USER_EMAIL, TEST_USER_PASSWORD);
+        findPassword(TEST_USER_NICKNAME, TEST_THE_OTHER_EMAIL);
+        assertThatThrownBy(() -> login(TEST_THE_OTHER_EMAIL, TEST_USER_OTHER_PASSWORD));
 
         // 회원 탈퇴
         deactivateUser(accessToken);
