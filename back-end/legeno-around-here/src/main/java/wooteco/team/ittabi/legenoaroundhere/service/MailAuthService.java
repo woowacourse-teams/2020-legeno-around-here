@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
-import java.util.concurrent.ThreadLocalRandom;
 import javax.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +14,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.FailedSendMailException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
+import wooteco.team.ittabi.legenoaroundhere.utils.AuthUtils;
 import wooteco.team.ittabi.legenoaroundhere.utils.MailHandler;
 
 @Service
@@ -22,15 +22,12 @@ import wooteco.team.ittabi.legenoaroundhere.utils.MailHandler;
 @Slf4j
 public class MailAuthService {
 
-    private static final int AUTH_NUMBER_MIN = 100_000;
-    private static final int AUTH_NUMBER_RANGE = 900_000;
-
     private final JavaMailSender javaMailSender;
     private final MailAuthRepository mailAuthRepository;
 
     @Transactional
     public void publishAuth(MailAuthCreateRequest mailAuthCreateRequest) {
-        int authNumber = makeRandomAuthNumber();
+        int authNumber = AuthUtils.makeRandomAuthNumber();
         String email = mailAuthCreateRequest.getEmail();
 
         saveMailAuth(email, authNumber);
@@ -42,7 +39,7 @@ public class MailAuthService {
         mailAuthRepository.save(mailAuth);
     }
 
-    private void sendAuthMail(String email, int authNumber) {
+    public void sendAuthMail(String email, int authNumber) {
         try {
             MailHandler mailHandler = new MailHandler(javaMailSender);
             mailHandler.setTo(email);
@@ -53,10 +50,6 @@ public class MailAuthService {
         } catch (MessagingException e) {
             throw new FailedSendMailException("인증 메일 전송에 실패하였습니다.");
         }
-    }
-
-    private int makeRandomAuthNumber() {
-        return AUTH_NUMBER_MIN + ThreadLocalRandom.current().nextInt(AUTH_NUMBER_RANGE);
     }
 
     @Transactional
