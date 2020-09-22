@@ -1,18 +1,18 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { loginUser } from '../api/API';
+import React, { useEffect, useState } from 'react';
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { removeAccessTokenCookie } from '../../util/TokenUtils';
-import LinkWithoutStyle from '../../util/LinkWithoutStyle';
+import { findPassword } from '../../api/API';
+import { removeAccessTokenCookie } from '../../../util/TokenUtils';
+import Grid from '@material-ui/core/Grid';
+import LinkWithoutStyle from '../../../util/LinkWithoutStyle';
 
 const Copyright = () => {
   return (
@@ -42,35 +42,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LoginForm = ({ history }) => {
+const FindPasswordPage = ({ history }) => {
   const classes = useStyles();
+  const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
-  const handleChangeEmail = useCallback(({ target: { value } }) => {
+  const handleChangeNickname = ({ target: { value } }) => {
+    setNickname(value);
+  };
+
+  const handleChangeEmail = ({ target: { value } }) => {
     setEmail(value);
-  }, []);
+  };
 
-  const handleChangePassword = useCallback(({ target: { value } }) => {
-    setPassword(value);
-  }, []);
-
-  const handleReset = useCallback(() => {
+  const handleReset = () => {
+    setNickname('');
     setEmail('');
-    setPassword('');
-  }, []);
+  };
 
-  const login = useCallback(() => {
-    loginUser(email, password, handleReset, history);
-  }, [email, password, handleReset, history]);
-
-  const handleSubmit = useCallback(
-    (event) => {
-      event.preventDefault();
-      login();
-    },
-    [login],
-  );
+  const submit = (event) => {
+    event.preventDefault();
+    findPassword(nickname, email, handleReset, history);
+  };
 
   useEffect(() => {
     removeAccessTokenCookie();
@@ -84,9 +77,22 @@ const LoginForm = ({ history }) => {
           <ThumbUpIcon />
         </Avatar>
         <Typography component='h1' variant='h5'>
-          우리동네캡짱 로그인
+          우리동네캡짱 비밀번호 찾기
         </Typography>
-        <form onSubmit={handleSubmit} className={classes.form}>
+        <form onSubmit={submit} className={classes.form}>
+          <TextField
+            variant='outlined'
+            margin='normal'
+            required
+            fullWidth
+            name='nickname'
+            label='닉네임'
+            type='text'
+            id='nickname'
+            autoComplete='current-password'
+            value={nickname}
+            onChange={handleChangeNickname}
+          />
           <TextField
             variant='outlined'
             margin='normal'
@@ -101,31 +107,13 @@ const LoginForm = ({ history }) => {
             value={email}
             onChange={handleChangeEmail}
           />
-          <TextField
-            variant='outlined'
-            margin='normal'
-            required
-            fullWidth
-            name='password'
-            label='비밀번호'
-            type='password'
-            id='password'
-            autoComplete='current-password'
-            value={password}
-            onChange={handleChangePassword}
-          />
           <Button type='submit' fullWidth variant='contained' color='primary' className={classes.submit}>
-            로그인
+            재설정 메일 발송
           </Button>
-          <Grid container justify='space-between'>
+          <Grid container direction='row-reverse' justify='space-between'>
             <Grid item>
-              <LinkWithoutStyle to='/join' variant='body2'>
-                {'처음이신가요? 회원가입을 해주세요!'}
-              </LinkWithoutStyle>
-            </Grid>
-            <Grid item>
-              <LinkWithoutStyle to='/find/password' variant='body2'>
-                {'비밀번호를 까먹으셨나요?'}
+              <LinkWithoutStyle to='/login' variant='body2'>
+                {'뒤로 가기'}
               </LinkWithoutStyle>
             </Grid>
           </Grid>
@@ -138,4 +126,4 @@ const LoginForm = ({ history }) => {
   );
 };
 
-export default LoginForm;
+export default FindPasswordPage;

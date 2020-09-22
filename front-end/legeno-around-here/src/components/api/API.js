@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {
   removeAccessTokenCookie,
-  setAccessTokenCookie
+  setAccessTokenCookie,
 } from '../../util/TokenUtils';
 
 const HTTP_STATUS_OK = 200;
@@ -31,6 +31,24 @@ export const loginUser = (email, password, handleReset, history) => {
       alert(errorResponse.errorMessage);
       handleReset();
     });
+};
+
+export const findPassword = async (nickname, email, handleReset, history) => {
+  try {
+    const response = await axios.post(DEFAULT_URL + '/find/password', {
+      nickname,
+      email,
+    });
+    if (response.status === HTTP_STATUS_OK) {
+      alert('이메일로 변경된 비밀번호를 전송했습니다! 로그인 후 비밀번호를 수정해주세요!');
+      history.push('/login');
+    }
+  } catch (error) {
+    if (await redirectLoginWhenUnauthorized(error, history)) return;
+    console.log(error);
+    const errorResponse = error.response.data;
+    alert(errorResponse.errorMessage);
+  }
 };
 
 export const savePostImages = async (formData, accessToken, history) => {
@@ -471,7 +489,8 @@ export const findAllSimpleSectors = async (accessToken, history) => {
       'X-Auth-Token': accessToken,
     },
   };
-  return await axios.get(DEFAULT_URL + `/sectors/simple`, config)
+  return await axios
+    .get(DEFAULT_URL + `/sectors/simple`, config)
     .then((response) => {
       return response.data;
     })
@@ -588,7 +607,7 @@ export const findOthersProfileById = async ({ accessToken, userId, history }) =>
       if (await redirectLoginWhenUnauthorized(error, history)) return;
 
       if (error.response && error.response.status === 404) {
-        alert("존재하지 않는 회원입니다.");
+        alert('존재하지 않는 회원입니다.');
         history.goBack();
         return;
       }
@@ -705,18 +724,18 @@ export const withdraw = (accessToken, history) => {
     },
   };
   axios
-  .delete(DEFAULT_URL + '/users/me', config)
-  .then(async () => {
-    await removeAccessTokenCookie();
-    alert('탈퇴 완료되었습니다. 그동안 이용해주셔서 감사합니다!');
-    history.push('/');
-  })
-  .catch(async (error) => {
-    if (await redirectLoginWhenUnauthorized(error)) return;
+    .delete(DEFAULT_URL + '/users/me', config)
+    .then(async () => {
+      await removeAccessTokenCookie();
+      alert('탈퇴 완료되었습니다. 그동안 이용해주셔서 감사합니다!');
+      history.push('/');
+    })
+    .catch(async (error) => {
+      if (await redirectLoginWhenUnauthorized(error)) return;
 
-    const errorResponse = error.response.data;
-    alert(errorResponse.errorMessage);
-  });
+      const errorResponse = error.response.data;
+      alert(errorResponse.errorMessage);
+    });
 };
 
 // 로그인 페이지로 리다이렉트 될 경우 true 반환, 그렇지 않을 경우 false 반환
