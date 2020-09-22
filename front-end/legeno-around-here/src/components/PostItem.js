@@ -7,7 +7,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
 import { convertDateFormat } from '../util/TimeUtils';
 import Grid from '@material-ui/core/Grid';
-import LinesEllipsis from 'react-lines-ellipsis';
+import { ellipsis } from '../util/StringUtils';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -35,6 +35,8 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const POST_ITEM_ELLIPSIS_SIZE = 35;
+
 const PostItem = ({ post, history }) => {
   const classes = useStyles();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -54,9 +56,7 @@ const PostItem = ({ post, history }) => {
       <Grid item xs>
         <Grid item xs>
           <Typography variant='h6'>{sector.name} 부문</Typography>
-          <Typography variant='subtitle1'>
-            <LinesEllipsis text={writing} maxLine='3' ellipsis='...' trimRight basedOn='letters' />
-          </Typography>
+          <Typography variant='subtitle1'> {ellipsis(writing, POST_ITEM_ELLIPSIS_SIZE)}</Typography>
         </Grid>
         <Grid container direction='column' justify='space-between'>
           <Grid item xs>

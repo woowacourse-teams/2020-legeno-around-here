@@ -15,8 +15,8 @@ import Grid from '@material-ui/core/Grid';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import { createPostReport } from '../../api/API';
 import Loading from '../../Loading';
-import LinesEllipsis from 'react-lines-ellipsis';
 import Typography from '@material-ui/core/Typography';
+import { ellipsis } from '../../../util/StringUtils';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -34,6 +34,8 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
 }));
+
+const POST_REPORT_ELLIPSIS_SIZE = 25;
 
 const PostReportSection = ({ post, history }) => {
   const classes = useStyles();
@@ -107,9 +109,7 @@ const PostReportSection = ({ post, history }) => {
             ) : (
               <>
                 <Typography color='textSecondary'>내용</Typography>
-                <Typography variant='subtitle1'>
-                  <LinesEllipsis text={post.writing} maxLine='2' ellipsis='...' trimRight basedOn='letters' />
-                </Typography>
+                <Typography variant='subtitle1'>{ellipsis(post.writing, POST_REPORT_ELLIPSIS_SIZE)}</Typography>
                 <Typography color='textSecondary'>작성자</Typography>
                 <Typography variant='subtitle1'>
                   <div>{post.creator.nickname}</div>
