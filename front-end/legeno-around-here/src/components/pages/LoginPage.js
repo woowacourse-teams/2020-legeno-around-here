@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { removeAccessTokenCookie } from '../../util/TokenUtils';
 import LinkWithoutStyle from '../../util/LinkWithoutStyle';
+import LoginGoogle from '../thirdparty/LoginGoogle';
 
 const Copyright = () => {
   return (
@@ -97,7 +98,7 @@ const LoginForm = ({ history }) => {
             name='email'
             autoComplete='email'
             autoFocus
-            type="email"
+            type='email'
             value={email}
             onChange={handleChangeEmail}
           />
@@ -118,6 +119,8 @@ const LoginForm = ({ history }) => {
             로그인
           </Button>
           <Grid container>
+            <LoginGoogle />
+            <br />
             <Grid item>
               <LinkWithoutStyle to='/join' variant='body2'>
                 {'처음이신가요? 회원가입을 해주세요!'}
