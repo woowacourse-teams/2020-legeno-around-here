@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.PasswordFindRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCheckRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
@@ -40,6 +41,13 @@ public class UserController {
 
         return ResponseEntity
             .noContent()
+            .build();
+    }
+
+    @PostMapping("/find/password")
+    public ResponseEntity<Void> resetPassword(@RequestBody PasswordFindRequest passwordFindRequest) {
+        return ResponseEntity
+            .ok()
             .build();
     }
 

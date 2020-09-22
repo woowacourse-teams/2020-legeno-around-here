@@ -124,6 +124,10 @@ public class UserAcceptanceTest extends AcceptanceTest {
         // 비밀번호 수정 실패 - 동일한 비밀번호로 수정
         assertThatThrownBy(() -> changeMyPassword(accessToken, TEST_USER_OTHER_PASSWORD));
 
+        // 비밀번호 찾기(재설정)
+        findPassword(TEST_USER_NICKNAME, TEST_USER_EMAIL);
+//        loginFailed(TEST_USER_EMAIL, TEST_USER_PASSWORD);
+
         // 회원 탈퇴
         deactivateUser(accessToken);
         loginFailed(TEST_THE_OTHER_EMAIL, TEST_USER_OTHER_PASSWORD);
@@ -336,6 +340,20 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .get("/check-joined?email=" + email)
             .then()
             .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    private void findPassword(String nickname, String email) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("nickname", nickname);
+        params.put("email", email);
+
+        given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/find/password")
+            .then()
+            .statusCode(HttpStatus.OK.value());
     }
 
     private UserOtherResponse findUser(String accessToken, Long userId) {

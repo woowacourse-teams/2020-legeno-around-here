@@ -80,6 +80,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/admin/login",
                 "/login",
                 "/mail-auth/**",
+                "/find/password",
                 "/profile").permitAll()
             .antMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest().hasAnyRole("USER", "ADMIN")
