@@ -204,4 +204,12 @@ public class User extends BaseEntity implements UserDetails {
     public void setArea(Area area) {
         this.area = area;
     }
+
+    public void setProvider(AuthProvider provider) {
+        this.provider = provider;
+    }
+
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
+    }
 }

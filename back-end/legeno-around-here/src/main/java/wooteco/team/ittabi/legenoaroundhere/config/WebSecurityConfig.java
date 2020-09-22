@@ -6,16 +6,24 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.frameoptions.WhiteListedAllowFromStrategy;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import wooteco.team.ittabi.legenoaroundhere.config.auth.controller.CustomUserDetailsService;
+import wooteco.team.ittabi.legenoaroundhere.config.auth.oauth2.CustomOAuth2UserService;
+import wooteco.team.ittabi.legenoaroundhere.config.auth.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import wooteco.team.ittabi.legenoaroundhere.config.auth.oauth2.OAuth2AuthenticationFailureHandler;
+import wooteco.team.ittabi.legenoaroundhere.config.auth.oauth2.OAuth2AuthenticationSuccessHandler;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenDecoder;
 
 @EnableWebSecurity
@@ -31,6 +39,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${security.cors.origin.domain.adminTool}")
     private final String adminToolDomain;
+
+    private final CustomUserDetailsService customUserDetailsService;
+
+    private final CustomOAuth2UserService customOAuth2UserService;
+
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+
+    private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Bean
     public IAuthenticationFacade authenticationFacadeBean() {
@@ -60,6 +78,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
+    @Bean
+    public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
+        return new HttpCookieOAuth2AuthorizationRequestRepository();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -80,7 +103,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/admin/login",
                 "/login",
                 "/mail-auth/**",
-                "/profile").permitAll()
+                "/profile",
+                "/auth/**",
+                "/oauth2/**").permitAll()
             .antMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest().hasAnyRole("USER", "ADMIN")
             .and()
@@ -93,8 +118,35 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 )
             ).frameOptions().sameOrigin()
             .and()
+            .oauth2Login()
+            .authorizationEndpoint()
+            .baseUri("/oauth2/authorize")
+            .authorizationRequestRepository(cookieAuthorizationRequestRepository())
+            .and()
+            .redirectionEndpoint()
+            .baseUri("/oauth2/callback/*")
+            .and()
+            .userInfoEndpoint()
+            .userService(customOAuth2UserService)
+            .and()
+            .successHandler(oAuth2AuthenticationSuccessHandler)
+            .failureHandler(oAuth2AuthenticationFailureHandler)
+            .and()
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenDecoder, authenticationFacade),
                 UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Override
+    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder)
+        throws Exception {
+        authenticationManagerBuilder
+            .userDetailsService(customUserDetailsService)
+            .passwordEncoder(passwordEncoder());
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
 
