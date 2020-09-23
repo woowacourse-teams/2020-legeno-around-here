@@ -27,7 +27,7 @@ const RankingTopBar = ({ history }) => {
   const [unreadNotification, setUnreadNotification] = useState(0);
 
   if (!mainArea) {
-    localStorage.setItem('mainAreaName', '서울특별시');
+    localStorage.setItem('mainAreaName', '전체');
   }
 
   useEffect(() => {
