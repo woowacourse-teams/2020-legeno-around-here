@@ -13,7 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { removeAccessTokenCookie } from '../../util/TokenUtils';
 import LinkWithoutStyle from '../../util/LinkWithoutStyle';
-import LoginGoogle from '../thirdparty/LoginGoogle';
+import SocialLogin from '../thirdparty/SocalLogin';
 
 const Copyright = () => {
   return (
@@ -119,7 +119,7 @@ const LoginForm = ({ history }) => {
             로그인
           </Button>
           <Grid container>
-            <LoginGoogle />
+            <SocialLogin />
             <br />
             <Grid item>
               <LinkWithoutStyle to='/join' variant='body2'>
