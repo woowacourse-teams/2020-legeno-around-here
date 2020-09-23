@@ -163,7 +163,6 @@ const JoinPage = ({ history }) => {
         return;
       }
       if (!termsAgree) {
-        console.log(termsAgree);
         alert('우리동네캡짱 이용 약관에 동의하셔야 합니다.');
         return;
       }
