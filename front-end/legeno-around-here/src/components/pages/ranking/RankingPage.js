@@ -33,43 +33,26 @@ const useStyle = makeStyles(() => ({
 
 const RankingPage = ({ location, history }) => {
   const classes = useStyle();
+  const accessToken = getAccessTokenFromCookie();
 
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [sectorId, setSectorId] = useState('none');
-  const [criteria, setCriteria] = useState('total');
   const [locationParams, setLocationParams] = useState(location.search);
+  const [criteria, setCriteria] = useState('total');
 
-  const setter = { setPage, setPosts, setSectorId, setLocationParams };
-
-  const accessToken = getAccessTokenFromCookie();
+  const topBarSetters = { setPage, setPosts, setSectorId, setLocationParams };
   const mainAreaId = localStorage.getItem('mainAreaId');
-
-  /* 처음에 보여줄 글 목록을 가져옴 */
-  useEffect(() => {
-    findRankedPostsFromPage(mainAreaId, criteria, 0, accessToken, history)
-      .then((firstPosts) => {
-        if (!firstPosts || firstPosts.length === 0) {
-          setHasMore(false);
-          return;
-        }
-        setPosts(firstPosts);
-      })
-      .catch((e) => {
-        setHasMore(false);
-      });
-    setPage(1);
-  }, [mainAreaId, accessToken, criteria, history]);
 
   useEffect(() => {
     setHasMore(true);
-    fetchNextPosts();
+    loadNextPosts();
     // eslint-disable-next-line
   }, [sectorId]);
 
-  const fetchNextPosts = () => {
-    let selectedSectorId = '';
+  const loadNextPosts = () => {
+    let selectedSectorId;
     if (locationParams.includes('?sectorId=')) {
       selectedSectorId = locationParams.split('?sectorId=')[1];
     } else if (sectorId === 'none') {
@@ -102,7 +85,7 @@ const RankingPage = ({ location, history }) => {
 
   return (
     <>
-      <HomeTopBar setter={setter} sectorId={sectorId} history={history} selected={'ranking'} />
+      <HomeTopBar setter={topBarSetters} sectorId={sectorId} history={history} selected={'ranking'} />
       <Container>
         <div className={classes.filterSection}>
           <FormControl className={classes.durationFilter}>
@@ -116,7 +99,7 @@ const RankingPage = ({ location, history }) => {
           </FormControl>
         </div>
         <InfiniteScroll
-          next={fetchNextPosts}
+          next={loadNextPosts}
           hasMore={hasMore}
           loader={<Loading />}
           dataLength={posts.length}

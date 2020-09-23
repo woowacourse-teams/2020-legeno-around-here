@@ -21,13 +21,18 @@ const HomePage = ({ location, history }) => {
   const [sectorId, setSectorId] = useState('none');
   const [locationParams, setLocationParams] = useState(location.search);
 
-  const setter = { setPage, setPosts, setSectorId, setLocationParams };
-
+  const topBarSetters = { setPage, setPosts, setSectorId, setLocationParams };
   const mainAreaId = localStorage.getItem('mainAreaId');
+
+  useEffect(() => {
+    setHasMore(true);
+    loadNextPosts();
+    // eslint-disable-next-line
+  }, [sectorId]);
 
   const loadNextPosts = async () => {
     try {
-      let selectedSectorId = '';
+      let selectedSectorId;
       if (locationParams.includes('?sectorId=')) {
         selectedSectorId = locationParams.split('?sectorId=')[1];
       } else if (sectorId === 'none') {
@@ -48,15 +53,9 @@ const HomePage = ({ location, history }) => {
     }
   };
 
-  useEffect(() => {
-    setHasMore(true);
-    loadNextPosts();
-    // eslint-disable-next-line
-  }, [sectorId]);
-
   return (
     <>
-      <HomeTopBar setter={setter} sectorId={sectorId} history={history} selected={'home'} />
+      <HomeTopBar setter={topBarSetters} sectorId={sectorId} history={history} selected={'home'} />
       <Container>
         <InfiniteScroll
           next={loadNextPosts}
