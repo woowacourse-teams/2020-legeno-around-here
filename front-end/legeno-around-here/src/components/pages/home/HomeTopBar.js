@@ -29,7 +29,7 @@ const SIMPLE_ALL_SECTOR = {
   name: '전체 부문',
 };
 
-const HomeTopBar = ({ setter, sectorId, history }) => {
+const HomeTopBar = ({ setter, sectorId, history, selected }) => {
   const classes = useStyles();
   const accessToken = getAccessTokenFromCookie();
   const [simpleSectors, setSimpleSectors] = useState([SIMPLE_ALL_SECTOR]);
@@ -65,7 +65,7 @@ const HomeTopBar = ({ setter, sectorId, history }) => {
     <>
       <AppBar position='sticky'>
         <Toolbar>
-          <AreaSearch history={history} selected='home' />
+          <AreaSearch history={history} selected={selected} />
           <Autocomplete
             id='sector-search'
             freeSolo

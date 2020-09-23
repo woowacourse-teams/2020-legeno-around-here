@@ -56,7 +56,7 @@ const HomePage = ({ location, history }) => {
 
   return (
     <>
-      <HomeTopBar setter={setter} sectorId={sectorId} history={history} />
+      <HomeTopBar setter={setter} sectorId={sectorId} history={history} selected={'home'} />
       <Container>
         <InfiniteScroll
           next={loadNextPosts}

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { makeStyles } from '@material-ui/core/styles';
 
-import TopBar from './RankingTopBar';
 import Bottom from '../../Bottom';
 import BottomBlank from '../../BottomBlank';
 import Loading from '../../Loading';
@@ -13,6 +12,7 @@ import RankingItem from './RankingItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Container from '@material-ui/core/Container';
+import HomeTopBar from '../home/HomeTopBar';
 
 const useStyle = makeStyles(() => ({
   filterSection: {
@@ -102,7 +102,7 @@ const RankingPage = ({ location, history }) => {
 
   return (
     <>
-      <TopBar setter={setter} sectorId={sectorId} history={history} />
+      <HomeTopBar setter={setter} sectorId={sectorId} history={history} selected={'ranking'} />
       <Container>
         <div className={classes.filterSection}>
           <FormControl className={classes.durationFilter}>
