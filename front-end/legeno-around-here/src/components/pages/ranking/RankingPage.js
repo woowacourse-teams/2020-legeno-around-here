@@ -10,7 +10,6 @@ import { findRankedPostsFromPage } from '../../api/API';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import { RANKING } from '../../../constants/BottomItems';
 import RankingItem from './RankingItem';
-import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Container from '@material-ui/core/Container';
@@ -29,10 +28,6 @@ const useStyle = makeStyles(() => ({
   durationFilter: {
     display: 'inline-block',
     marginRight: 'auto',
-  },
-  sectorFilter: {
-    display: 'inline-block',
-    marginLeft: 'auto',
   },
 }));
 
@@ -97,9 +92,8 @@ const RankingPage = ({ history }) => {
               <option value='week'>주간</option>
               <option value='yesterday'>어제</option>
             </Select>
+            &nbsp;캡짱들을 소개합니다!
           </FormControl>
-
-          <Typography className={classes.sectorFilter}>부문 전체</Typography>
         </div>
         <InfiniteScroll
           next={fetchNextPosts}
