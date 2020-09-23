@@ -27,15 +27,20 @@ const SocialLogin = () => {
 
   return (
     <div className='social-login'>
-      <Button className='btn btn-block social-btn google' variant='outlined' onClick={onClickGoogleAuth}>
-        <img className={classes.icon} src={googleLogo} alt='Google' />
-        &emsp;Log in with Google
-      </Button>
-      &ensp;
-      <Button className='btn btn-block social-btn github' variant='outlined' onClick={onClickGithubAuth}>
-        <img className={classes.icon} src={githubLogo} alt='Github' />
-        &emsp;Log in with Github
-      </Button>
+      <br />
+      <div>
+        <Button variant='outlined' fullWidth onClick={onClickGoogleAuth}>
+          <img className={classes.icon} src={googleLogo} alt='Google' />
+          &emsp;Google 계정으로 함께하기
+        </Button>
+      </div>
+      <br />
+      <div>
+        <Button variant='outlined' fullWidth onClick={onClickGithubAuth}>
+          <img className={classes.icon} src={githubLogo} alt='Github' />
+          &emsp;Github 계정으로 함께하기
+        </Button>
+      </div>
     </div>
   );
 };

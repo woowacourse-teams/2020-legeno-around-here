@@ -119,7 +119,6 @@ const LoginForm = ({ history }) => {
             로그인
           </Button>
           <Grid container>
-            <SocialLogin />
             <br />
             <Grid item>
               <LinkWithoutStyle to='/join' variant='body2'>
@@ -127,6 +126,7 @@ const LoginForm = ({ history }) => {
               </LinkWithoutStyle>
             </Grid>
           </Grid>
+          <SocialLogin />
         </form>
       </div>
       <Box mt={8}>
