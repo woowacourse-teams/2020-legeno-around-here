@@ -14,6 +14,8 @@ const useStyle = makeStyles({
   creatorProfilePhoto: (props) => ({
     width: '35px',
     height: '35px',
+    minWidth: '35px',
+    minHeight: '35px',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
