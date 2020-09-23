@@ -10,10 +10,6 @@ public abstract class OAuth2UserInfo {
         this.attributes = attributes;
     }
 
-    public Map<String, Object> getAttributes() {
-        return attributes;
-    }
-
     public abstract String getId();
 
     public abstract String getNickname();
