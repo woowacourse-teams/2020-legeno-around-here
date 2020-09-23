@@ -185,6 +185,7 @@ const PostDetail = ({ post, myInfo, history }) => {
               onChange={onWritingChanged}
               value={writing}
               inputProps={{ maxLength: 200 }}
+              helperText={`${writing.length}/200`}
             />
           </Grid>
           <Grid container item xs={1}>
