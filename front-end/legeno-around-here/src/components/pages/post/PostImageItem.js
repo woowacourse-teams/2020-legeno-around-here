@@ -6,7 +6,6 @@ const useStyles = makeStyles(() => ({
     width: 'auto',
     height: 'auto',
     maxHeight: '400px',
-    maxWeight: '400px',
     backgroundSize: 'contain',
   },
 }));
