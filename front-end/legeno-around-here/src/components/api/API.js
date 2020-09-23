@@ -1,8 +1,5 @@
 import axios from 'axios';
-import {
-  removeAccessTokenCookie,
-  setAccessTokenCookie
-} from '../../util/TokenUtils';
+import { removeAccessTokenCookie, setAccessTokenCookie } from '../../util/TokenUtils';
 
 const HTTP_STATUS_OK = 200;
 const HTTP_STATUS_CREATED = 201;
@@ -301,6 +298,7 @@ export const findCurrentPostsFromPage = async (page, accessToken, mainAreaId, se
       'X-Auth-Token': accessToken,
     },
   };
+
   return await axios
     .get(
       DEFAULT_URL +
@@ -408,7 +406,7 @@ export const findOtherPostsFromPage = async (otherUserId, page, accessToken, his
     });
 };
 
-export const findRankedPostsFromPage = async (mainAreaId, criteria, page, accessToken, history) => {
+export const findRankedPostsFromPage = async (mainAreaId, selectedSectorId, criteria, page, accessToken, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -424,7 +422,7 @@ export const findRankedPostsFromPage = async (mainAreaId, criteria, page, access
         `direction=${DEFAULT_DIRECTION}&` +
         `criteria=${criteria}&` +
         `areaId=${mainAreaId}&` +
-        `sectorIds=`,
+        `sectorIds=${selectedSectorId}`,
       config,
     )
     .then((response) => response.data.content)
@@ -471,7 +469,8 @@ export const findAllSimpleSectors = async (accessToken, history) => {
       'X-Auth-Token': accessToken,
     },
   };
-  return await axios.get(DEFAULT_URL + `/sectors/simple`, config)
+  return await axios
+    .get(DEFAULT_URL + `/sectors/simple`, config)
     .then((response) => {
       return response.data;
     })
@@ -588,7 +587,7 @@ export const findOthersProfileById = async ({ accessToken, userId, history }) =>
       if (await redirectLoginWhenUnauthorized(error, history)) return;
 
       if (error.response && error.response.status === 404) {
-        alert("존재하지 않는 회원입니다.");
+        alert('존재하지 않는 회원입니다.');
         history.goBack();
         return;
       }
@@ -705,18 +704,18 @@ export const withdraw = (accessToken, history) => {
     },
   };
   axios
-  .delete(DEFAULT_URL + '/users/me', config)
-  .then(async () => {
-    await removeAccessTokenCookie();
-    alert('탈퇴 완료되었습니다. 그동안 이용해주셔서 감사합니다!');
-    history.push('/');
-  })
-  .catch(async (error) => {
-    if (await redirectLoginWhenUnauthorized(error)) return;
+    .delete(DEFAULT_URL + '/users/me', config)
+    .then(async () => {
+      await removeAccessTokenCookie();
+      alert('탈퇴 완료되었습니다. 그동안 이용해주셔서 감사합니다!');
+      history.push('/');
+    })
+    .catch(async (error) => {
+      if (await redirectLoginWhenUnauthorized(error)) return;
 
-    const errorResponse = error.response.data;
-    alert(errorResponse.errorMessage);
-  });
+      const errorResponse = error.response.data;
+      alert(errorResponse.errorMessage);
+    });
 };
 
 // 로그인 페이지로 리다이렉트 될 경우 true 반환, 그렇지 않을 경우 false 반환

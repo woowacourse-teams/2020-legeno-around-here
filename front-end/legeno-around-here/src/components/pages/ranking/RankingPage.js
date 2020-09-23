@@ -31,15 +31,20 @@ const useStyle = makeStyles(() => ({
   },
 }));
 
-const RankingPage = ({ history }) => {
+const RankingPage = ({ location, history }) => {
+  const classes = useStyle();
+
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
+  const [sectorId, setSectorId] = useState('none');
   const [criteria, setCriteria] = useState('total');
+  const [locationParams, setLocationParams] = useState(location.search);
+
+  const setter = { setPage, setPosts, setSectorId, setLocationParams };
 
   const accessToken = getAccessTokenFromCookie();
   const mainAreaId = localStorage.getItem('mainAreaId');
-  const classes = useStyle();
 
   /* 처음에 보여줄 글 목록을 가져옴 */
   useEffect(() => {
@@ -57,8 +62,23 @@ const RankingPage = ({ history }) => {
     setPage(1);
   }, [mainAreaId, accessToken, criteria, history]);
 
+  useEffect(() => {
+    setHasMore(true);
+    fetchNextPosts();
+    // eslint-disable-next-line
+  }, [sectorId]);
+
   const fetchNextPosts = () => {
-    findRankedPostsFromPage(mainAreaId, criteria, page, accessToken, history)
+    let selectedSectorId = '';
+    if (locationParams.includes('?sectorId=')) {
+      selectedSectorId = locationParams.split('?sectorId=')[1];
+    } else if (sectorId === 'none') {
+      selectedSectorId = '';
+    } else {
+      selectedSectorId = sectorId;
+    }
+
+    findRankedPostsFromPage(mainAreaId, selectedSectorId, criteria, page, accessToken, history)
       .then((nextPosts) => {
         if (!nextPosts || nextPosts.length === 0) {
           setHasMore(false);
@@ -82,7 +102,7 @@ const RankingPage = ({ history }) => {
 
   return (
     <>
-      <TopBar history={history} />
+      <TopBar setter={setter} sectorId={sectorId} history={history} />
       <Container>
         <div className={classes.filterSection}>
           <FormControl className={classes.durationFilter}>
