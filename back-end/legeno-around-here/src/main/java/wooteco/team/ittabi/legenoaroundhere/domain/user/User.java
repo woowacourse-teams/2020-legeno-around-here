@@ -212,4 +212,8 @@ public class User extends BaseEntity implements UserDetails {
     public void setProviderId(String providerId) {
         this.providerId = providerId;
     }
+
+    public boolean isDifferentProvider(String registrationId) {
+        return !provider.isSame(registrationId);
+    }
 }

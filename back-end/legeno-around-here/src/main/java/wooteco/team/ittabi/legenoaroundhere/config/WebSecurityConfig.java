@@ -19,12 +19,12 @@ import org.springframework.security.web.header.writers.frameoptions.XFrameOption
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import wooteco.team.ittabi.legenoaroundhere.config.auth.controller.CustomUserDetailsService;
 import wooteco.team.ittabi.legenoaroundhere.config.auth.oauth2.CustomOAuth2UserService;
 import wooteco.team.ittabi.legenoaroundhere.config.auth.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import wooteco.team.ittabi.legenoaroundhere.config.auth.oauth2.OAuth2AuthenticationFailureHandler;
 import wooteco.team.ittabi.legenoaroundhere.config.auth.oauth2.OAuth2AuthenticationSuccessHandler;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenDecoder;
+import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 
 @EnableWebSecurity
 @AllArgsConstructor
@@ -40,15 +40,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${security.cors.origin.domain.adminTool}")
     private final String adminToolDomain;
 
-    private final CustomUserDetailsService customUserDetailsService;
+    private final UserService userService;
 
     private final CustomOAuth2UserService customOAuth2UserService;
 
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
-
-    private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Bean
     public IAuthenticationFacade authenticationFacadeBean() {
@@ -124,7 +122,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizationRequestRepository(cookieAuthorizationRequestRepository())
             .and()
             .redirectionEndpoint()
-            .baseUri("/oauth2/callback/*")
+            .baseUri("/login/oauth2/code/*")
             .and()
             .userInfoEndpoint()
             .userService(customOAuth2UserService)
@@ -140,7 +138,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder)
         throws Exception {
         authenticationManagerBuilder
-            .userDetailsService(customUserDetailsService)
+            .userDetailsService(userService)
             .passwordEncoder(passwordEncoder());
     }
 

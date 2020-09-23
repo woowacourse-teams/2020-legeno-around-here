@@ -5,40 +5,33 @@ import static wooteco.team.ittabi.legenoaroundhere.config.auth.oauth2.HttpCookie
 import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
-import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
-import wooteco.team.ittabi.legenoaroundhere.config.auth.AppProperties;
-import wooteco.team.ittabi.legenoaroundhere.config.auth.TokenProvider;
+import wooteco.team.ittabi.legenoaroundhere.config.auth.AuthorizedRedirectUris;
+import wooteco.team.ittabi.legenoaroundhere.config.auth.UserPrincipal;
 import wooteco.team.ittabi.legenoaroundhere.config.auth.exception.BadRequestException;
 import wooteco.team.ittabi.legenoaroundhere.config.auth.util.CookieUtils;
+import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
 
+@AllArgsConstructor
 @Component
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private TokenProvider tokenProvider;
+    private final JwtTokenGenerator jwtTokenGenerator;
 
-    private AppProperties appProperties;
+    private final AuthorizedRedirectUris authorizedRedirectUris;
 
-    private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
-
-    @Autowired
-    OAuth2AuthenticationSuccessHandler(TokenProvider tokenProvider, AppProperties appProperties,
-        HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository) {
-        this.tokenProvider = tokenProvider;
-        this.appProperties = appProperties;
-        this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
-    }
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-        Authentication authentication) throws IOException, ServletException {
+        Authentication authentication) throws IOException {
         String targetUrl = determineTargetUrl(request, response, authentication);
 
         if (response.isCommitted()) {
@@ -63,7 +56,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
-        String token = tokenProvider.createToken(authentication);
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        String token
+            = jwtTokenGenerator.createToken(userPrincipal.getUsername(), userPrincipal.getRoles());
 
         return UriComponentsBuilder.fromUriString(targetUrl)
             .queryParam("token", token)
@@ -80,16 +75,12 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private boolean isAuthorizedRedirectUri(String uri) {
         URI clientRedirectUri = URI.create(uri);
 
-        return appProperties.getOauth2().getAuthorizedRedirectUris()
+        return authorizedRedirectUris.getAuthorizedRedirectUris()
             .stream()
             .anyMatch(authorizedRedirectUri -> {
-                // Only validate host and port. Let the clients use different paths if they want to
                 URI authorizedURI = URI.create(authorizedRedirectUri);
-                if (authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
-                    && authorizedURI.getPort() == clientRedirectUri.getPort()) {
-                    return true;
-                }
-                return false;
+                return authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
+                    && authorizedURI.getPort() == clientRedirectUri.getPort();
             });
     }
 }
