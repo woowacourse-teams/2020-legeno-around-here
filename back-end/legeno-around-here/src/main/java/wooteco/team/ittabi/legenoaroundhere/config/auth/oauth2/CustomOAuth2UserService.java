@@ -58,7 +58,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             validateProvider(registrationId, user);
-            user = updateExistingUser(user, oAuth2UserInfo);
             return UserPrincipal.create(user, attributes);
         }
 
@@ -98,11 +97,4 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         return userRepository.save(user);
     }
-
-    private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
-        existingUser.setNickname(oAuth2UserInfo.getNickname());
-
-        return userRepository.save(existingUser);
-    }
-
 }
