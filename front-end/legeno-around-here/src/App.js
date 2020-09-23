@@ -22,6 +22,7 @@ import OtherAwardPage from './components/pages/OtherAward/OtherAwardPage';
 import SectorDetailPage from './components/pages/sector/SectorDetailPage';
 import WithdrawConfirmPage from './components/pages/myProfile/WithdrawConfirmPage';
 import OAuth2RedirectHandler from './components/thirdparty/OAuth2RedirectHandler';
+import ErrorPage from './components/pages/ErrorPage';
 
 function App() {
   const mainArea = localStorage.getItem('mainAreaName');
@@ -56,8 +57,8 @@ function App() {
         <Route path='/notification' exact component={NotificationPage} />
         <Route path='/users/:userId/posts' exact component={OtherPosts} />
         <Route path='/confirm-withdraw' exact component={WithdrawConfirmPage} />
-        <Route path='/confirm-withdraw' exact component={WithdrawConfirmPage} />
         <Route path='/oauth2/redirect' exact component={OAuth2RedirectHandler} />
+        <Route path='*' component={ErrorPage} />
       </Switch>
     </BrowserRouter>
   );
