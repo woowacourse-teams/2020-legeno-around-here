@@ -74,10 +74,12 @@ const SectorApplyModal = ({ open, handleClose, history }) => {
     >
       <Fade in={open}>
         <div className={classes.paper}>
+          <h2>부문 신청</h2>
           <form onSubmit={submitSector} id='posting-form'>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
+                  label='부문명'
                   type='text'
                   fullWidth
                   multiline
@@ -86,6 +88,8 @@ const SectorApplyModal = ({ open, handleClose, history }) => {
                   onChange={onNameChanged}
                   value={name}
                   inputProps={{ maxLength: 20 }}
+                  helperText={`${name.length}/20`}
+                  variant='outlined'
                 />
               </Grid>
               <Grid item xs={12}>
@@ -93,6 +97,7 @@ const SectorApplyModal = ({ open, handleClose, history }) => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  label='부문 설명'
                   type='text'
                   fullWidth
                   multiline
@@ -101,6 +106,8 @@ const SectorApplyModal = ({ open, handleClose, history }) => {
                   onChange={onDescriptionChanged}
                   value={description}
                   inputProps={{ maxLength: 40 }}
+                  helperText={`${description.length}/40`}
+                  variant='outlined'
                 />
               </Grid>
               <Grid item xs={12}>
