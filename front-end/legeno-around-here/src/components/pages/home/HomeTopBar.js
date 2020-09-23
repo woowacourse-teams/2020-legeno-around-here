@@ -76,7 +76,7 @@ const HomeTopBar = ({ setter, sectorId, history }) => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                placeholder='부문을 검색하세요!'
+                placeholder='전체 부문 (검색)'
                 inputProps={{
                   ...params.inputProps,
                   className: classes.textField,
