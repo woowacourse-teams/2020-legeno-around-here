@@ -8,9 +8,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -72,6 +75,12 @@ public class User extends BaseEntity implements UserDetails {
 
     @OneToMany(mappedBy = "awardee")
     private List<SectorCreatorAward> sectorCreatorAwards = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AuthProvider provider;
+
+    private String providerId;
 
     private LocalDateTime deactivatedAt;
 
@@ -194,5 +203,17 @@ public class User extends BaseEntity implements UserDetails {
 
     public void setArea(Area area) {
         this.area = area;
+    }
+
+    public void setProvider(AuthProvider provider) {
+        this.provider = provider;
+    }
+
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
+    }
+
+    public boolean isDifferentProvider(String registrationId) {
+        return !provider.isSame(registrationId);
     }
 }

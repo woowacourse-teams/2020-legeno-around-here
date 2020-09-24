@@ -4,15 +4,15 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import handleBackButtonClicked from '../../../util/BackButtonHandler';
+import handleBackButtonClicked from '../../util/BackButtonHandler';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   grow: {
     flexGrow: 1,
   },
 }));
 
-const MyProfileEditTopBar = () => {
+const ArrowBackTopBar = () => {
   const classes = useStyles();
 
   return (
@@ -27,4 +27,4 @@ const MyProfileEditTopBar = () => {
   );
 };
 
-export default MyProfileEditTopBar;
+export default ArrowBackTopBar;

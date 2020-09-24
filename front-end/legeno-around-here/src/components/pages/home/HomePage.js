@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-
-import HomeTopBar from './HomeTopBar';
 import Bottom from '../../Bottom';
 
 import { findCurrentPostsFromPage } from '../../api/API';
@@ -11,23 +9,30 @@ import Loading from '../../Loading';
 import BottomBlank from '../../BottomBlank';
 import Container from '@material-ui/core/Container';
 import PostItem from '../../PostItem';
+import { getMainAreaId } from '../../../util/localStorageUtils';
+import EndMessage from '../../EndMessage';
+import SearchTopBar from '../../topBar/SearchTopBar';
 
 const HomePage = ({ location, history }) => {
-  const accessToken = getAccessTokenFromCookie();
-
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const [sectorId, setSectorId] = useState('none');
   const [locationParams, setLocationParams] = useState(location.search);
 
-  const setter = { setPage, setPosts, setSectorId, setLocationParams };
+  const accessToken = getAccessTokenFromCookie();
+  const mainAreaId = getMainAreaId();
+  const topBarSetters = { setPage, setPosts, setSectorId, setLocationParams };
 
-  const mainAreaId = localStorage.getItem('mainAreaId');
+  useEffect(() => {
+    setHasMore(true);
+    loadNextPosts();
+    // eslint-disable-next-line
+  }, [sectorId]);
 
   const loadNextPosts = async () => {
     try {
-      let selectedSectorId = '';
+      let selectedSectorId;
       if (locationParams.includes('?sectorId=')) {
         selectedSectorId = locationParams.split('?sectorId=')[1];
       } else if (sectorId === 'none') {
@@ -48,22 +53,17 @@ const HomePage = ({ location, history }) => {
     }
   };
 
-  useEffect(() => {
-    setHasMore(true);
-    loadNextPosts();
-    // eslint-disable-next-line
-  }, [sectorId]);
-
   return (
     <>
-      <HomeTopBar setter={setter} sectorId={sectorId} history={history} />
+      <SearchTopBar setter={topBarSetters} sectorId={sectorId} history={history} selected={'home'} />
       <Container>
         <InfiniteScroll
+          style={{ overflowY: 'hidden' }}
           next={loadNextPosts}
           hasMore={hasMore}
           loader={<Loading />}
           dataLength={posts.length}
-          endMessage={<h3>모두 읽으셨습니다!</h3>}
+          endMessage={<EndMessage message={'모두 읽으셨습니다!'} />}
         >
           {posts.map((post) => (
             <PostItem key={post.id} post={post} history={history} />

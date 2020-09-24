@@ -7,14 +7,20 @@ import Badge from '@material-ui/core/Badge';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
-import { findAllSimpleSectors, getUnreadNotificationCount } from '../../api/API';
-import AreaSearch from '../../AreaSearch';
-import LinkWithoutStyle from '../../../util/LinkWithoutStyle';
+import { getAccessTokenFromCookie } from '../../util/TokenUtils';
+import { findAllSimpleSectors, getUnreadNotificationCount } from '../api/API';
+import AreaSearch from '../AreaSearch';
+import LinkWithoutStyle from '../../util/LinkWithoutStyle';
 
 const useStyles = makeStyles(() => ({
   grow: {
     flexGrow: 1,
+  },
+  textField: {
+    color: 'white',
+    fontSize: '1.3rem',
+    position: 'relative',
+    top: '1px',
   },
 }));
 
@@ -23,7 +29,7 @@ const SIMPLE_ALL_SECTOR = {
   name: '전체 부문',
 };
 
-const HomeTopBar = ({ setter, sectorId, history }) => {
+const SearchTopBar = ({ setter, sectorId, history, selected }) => {
   const classes = useStyles();
   const accessToken = getAccessTokenFromCookie();
   const [simpleSectors, setSimpleSectors] = useState([SIMPLE_ALL_SECTOR]);
@@ -31,13 +37,12 @@ const HomeTopBar = ({ setter, sectorId, history }) => {
 
   useEffect(() => {
     const loadAllSimpleSectors = async () => {
-      findAllSimpleSectors(accessToken, history)
-        .then(async (foundSimpleSectors) => {
-          if (foundSimpleSectors) {
-            await foundSimpleSectors.unshift(SIMPLE_ALL_SECTOR);
-            await setSimpleSectors(foundSimpleSectors);
-          }
-        })
+      findAllSimpleSectors(accessToken, history).then(async (foundSimpleSectors) => {
+        if (foundSimpleSectors) {
+          await foundSimpleSectors.unshift(SIMPLE_ALL_SECTOR);
+          await setSimpleSectors(foundSimpleSectors);
+        }
+      });
     };
     loadAllSimpleSectors();
   }, [accessToken, history]);
@@ -60,7 +65,7 @@ const HomeTopBar = ({ setter, sectorId, history }) => {
     <>
       <AppBar position='sticky'>
         <Toolbar>
-          <AreaSearch history={history} selected='home' />
+          <AreaSearch history={history} selected={selected} />
           <Autocomplete
             id='sector-search'
             freeSolo
@@ -68,7 +73,16 @@ const HomeTopBar = ({ setter, sectorId, history }) => {
             onChange={(event, option) => option && changeSector(option.id)}
             getOptionLabel={(option) => option.name}
             fullWidth
-            renderInput={(params) => <TextField {...params} placeholder='부문을 검색하세요!' />}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                placeholder='전체 부문 (검색)'
+                inputProps={{
+                  ...params.inputProps,
+                  className: classes.textField,
+                }}
+              />
+            )}
           />
           <div className={classes.grow} />
           <div>
@@ -86,4 +100,4 @@ const HomeTopBar = ({ setter, sectorId, history }) => {
   );
 };
 
-export default HomeTopBar;
+export default SearchTopBar;

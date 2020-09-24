@@ -8,14 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { getAccessTokenFromCookie } from '../../util/TokenUtils';
-
-const Copyright = () => {
-  return (
-    <Typography variant='body2' color='textSecondary' align='center'>
-      {'Copyright © Ittabi 2020.'}
-    </Typography>
-  );
-};
+import Copyright from '../Copyright';
 
 const useStyles = makeStyles((theme) => ({
   logo: {

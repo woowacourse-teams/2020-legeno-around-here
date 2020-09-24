@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import BottomBlank from '../../BottomBlank';
 import Bottom from '../../Bottom';
 import { PROFILE } from '../../../constants/BottomItems';
-import TopBar from '../myProfile/myProfileTopBar';
 import { findAllOtherAwards } from '../../api/API';
 import Loading from '../../Loading';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import Awards from '../myAward/Awards';
+import ArrowBackTopBar from '../../topBar/ArrowBackTopBar';
 
 const OtherAwardPage = ({ match, history }) => {
   const accessToken = getAccessTokenFromCookie();
@@ -27,9 +27,10 @@ const OtherAwardPage = ({ match, history }) => {
   if (loading) {
     return <Loading />;
   }
+
   return (
     <>
-      <TopBar />
+      <ArrowBackTopBar />
       <Awards awards={awards} />
       <BottomBlank />
       <Bottom selected={PROFILE} />

@@ -17,20 +17,14 @@ import HomePageReload from './components/pages/home/HomePageReload';
 import NotificationPage from './components/pages/home/NotificationPage';
 import InitPage from './components/pages/InitPage';
 import OtherPosts from './components/pages/OthersProfile/OtherPosts';
-import ErrorPage from './components/pages/ErrorPage';
 import MyAwardPage from './components/pages/myAward/MyAwardPage';
 import OtherAwardPage from './components/pages/OtherAward/OtherAwardPage';
 import SectorDetailPage from './components/pages/sector/SectorDetailPage';
 import WithdrawConfirmPage from './components/pages/myProfile/WithdrawConfirmPage';
+import OAuth2RedirectHandler from './components/thirdparty/OAuth2RedirectHandler';
+import ErrorPage from './components/pages/ErrorPage';
 
 function App() {
-  const mainArea = localStorage.getItem('mainAreaName');
-
-  if (!mainArea) {
-    localStorage.setItem('mainAreaName', '서울특별시');
-    localStorage.setItem('mainAreaId', 1);
-  }
-
   return (
     <BrowserRouter>
       <Switch>
@@ -56,6 +50,7 @@ function App() {
         <Route path='/notification' exact component={NotificationPage} />
         <Route path='/users/:userId/posts' exact component={OtherPosts} />
         <Route path='/confirm-withdraw' exact component={WithdrawConfirmPage} />
+        <Route path='/oauth2/redirect' exact component={OAuth2RedirectHandler} />
         <Route path='*' component={ErrorPage} />
       </Switch>
     </BrowserRouter>
