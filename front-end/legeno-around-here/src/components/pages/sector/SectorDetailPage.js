@@ -12,7 +12,6 @@ import BottomBlank from '../../BottomBlank';
 import Button from '@material-ui/core/Button';
 import Bottom from '../../Bottom';
 import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
-import { Link } from 'react-router-dom';
 
 const useStyle = makeStyles({
   sectorNameSection: {
@@ -26,8 +25,8 @@ const useStyle = makeStyles({
   sectorCreatorSection: {
     width: '90%',
     display: 'flex',
-    alignItems: 'center',
     margin: '20px auto',
+    justifyContent: 'center',
   },
   sectorCreatorSectionBackground: {
     borderRadius: '20px',
@@ -112,9 +111,15 @@ const SectorDetailPage = ({ match, history }) => {
     loadSector();
   }, [accessToken, sectorId, history]);
 
+  const onClickGoToPostsButton = (event) => {
+    event.preventDefault();
+    history.push(`/home?sectorId=${sectorId}`);
+  };
+
   if (loading) {
     return <Loading />;
   }
+
   return (
     <>
       <PostDetailTopBar />
@@ -126,7 +131,7 @@ const SectorDetailPage = ({ match, history }) => {
           <Typography variant='h6'>{sector.description}</Typography>
         </div>
         <div className={classes.sectorCreatorSectionBackground}>
-          <Typography>부문 창시자</Typography>
+          <Typography align='center'>부문 창시자</Typography>
           <LinkWithoutStyle
             to={isSectorCreatorMe() ? '/users/me' : '/users/' + sector.creator.id}
             className={classes.sectorCreatorSection}
@@ -140,11 +145,15 @@ const SectorDetailPage = ({ match, history }) => {
           </LinkWithoutStyle>
         </div>
         <div className={classes.buttonSection}>
-          <Link to={`/home?sectorId=${sectorId}`}>
-            <Button variant='contained' color='primary' className={classes.goToPostsButton} size='large'>
-              자랑글 보러 가기
-            </Button>
-          </Link>
+          <Button
+            variant='contained'
+            color='primary'
+            className={classes.goToPostsButton}
+            size='large'
+            onClick={onClickGoToPostsButton}
+          >
+            자랑글 보러 가기
+          </Button>
         </div>
         <BottomBlank />
       </Container>

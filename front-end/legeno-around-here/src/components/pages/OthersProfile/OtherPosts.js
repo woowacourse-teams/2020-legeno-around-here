@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-
-import TopBar from './OtherPorfileTopBar';
 import Bottom from '../../Bottom';
 import { PROFILE } from '../../../constants/BottomItems';
 import Loading from '../../Loading';
@@ -9,6 +7,7 @@ import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import { findOtherPostsFromPage } from '../../api/API';
 import PostItem from '../../PostItem';
 import BottomBlank from '../../BottomBlank';
+import ArrowBackTopBar from '../../topBar/ArrowBackTopBar';
 
 function OtherPosts({ match, history }) {
   const [page, setPage] = useState(0);
@@ -46,7 +45,7 @@ function OtherPosts({ match, history }) {
 
   return (
     <>
-      <TopBar />
+      <ArrowBackTopBar />
       <InfiniteScroll
         next={fetchNextPosts}
         hasMore={hasMore}
@@ -55,7 +54,7 @@ function OtherPosts({ match, history }) {
         endMessage={<h3>모두 읽으셨습니다!</h3>}
       >
         {posts.map((post) => (
-          <PostItem key={post.id} post={post} history={history}/>
+          <PostItem key={post.id} post={post} history={history} />
         ))}
       </InfiniteScroll>
       <BottomBlank />
