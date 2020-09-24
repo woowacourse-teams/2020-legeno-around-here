@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { loginUser } from '../api/API';
 
 import Avatar from '@material-ui/core/Avatar';
@@ -85,7 +85,7 @@ const LoginForm = ({ history }) => {
         <Typography component='h1' variant='h5'>
           우리동네캡짱 로그인
         </Typography>
-        <form onSubmit={handleSubmit} className={classes.form} noValidate>
+        <form onSubmit={handleSubmit} className={classes.form}>
           <TextField
             variant='outlined'
             margin='normal'
@@ -116,7 +116,7 @@ const LoginForm = ({ history }) => {
           <Button type='submit' fullWidth variant='contained' color='primary' className={classes.submit}>
             로그인
           </Button>
-          <Grid container>
+          <Grid container justify='space-between'>
             <Grid item>
               처음이신가요?&nbsp;
               <Link underline='always' onClick={onClickJoin}>
@@ -124,6 +124,11 @@ const LoginForm = ({ history }) => {
               </Link>
               을 해주세요!
               <br />
+            </Grid>
+            <Grid item>
+              <LinkWithoutStyle to='/find/password' variant='body2'>
+                {'비밀번호를 까먹으셨나요?'}
+              </LinkWithoutStyle>
             </Grid>
           </Grid>
           <SocialLogin />

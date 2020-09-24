@@ -20,6 +20,7 @@ import OtherPosts from './components/pages/OthersProfile/OtherPosts';
 import MyAwardPage from './components/pages/myAward/MyAwardPage';
 import OtherAwardPage from './components/pages/OtherAward/OtherAwardPage';
 import SectorDetailPage from './components/pages/sector/SectorDetailPage';
+import FindPasswordPage from './components/pages/find/FindPasswordPage';
 import WithdrawConfirmPage from './components/pages/myProfile/WithdrawConfirmPage';
 import OAuth2RedirectHandler from './components/thirdparty/OAuth2RedirectHandler';
 import ErrorPage from './components/pages/ErrorPage';
@@ -33,6 +34,7 @@ function App() {
         <Route path='/home-reload' exact component={HomePageReload} />
         <Route path='/join' exact component={Join} />
         <Route path='/login' exact component={Login} />
+        <Route path='/find/password' exact component={FindPasswordPage} />
         <Route path='/users/me' exact component={MyProfilePage} />
         <Route path='/posting' exact component={PostingPage} />
         <Route path='/posts/:postId/update' exact component={PostingUpdatePage} />

@@ -30,6 +30,24 @@ export const loginUser = (email, password, handleReset, history) => {
     });
 };
 
+export const findPassword = async (nickname, email, handleReset, history) => {
+  try {
+    const response = await axios.post(DEFAULT_URL + '/find/password', {
+      nickname,
+      email,
+    });
+    if (response.status === HTTP_STATUS_OK) {
+      alert('이메일로 변경된 비밀번호를 전송했습니다! 로그인 후 비밀번호를 수정해주세요!');
+      history.push('/login');
+    }
+  } catch (error) {
+    if (await redirectLoginWhenUnauthorized(error, history)) return;
+    console.log(error);
+    const errorResponse = error.response.data;
+    alert(errorResponse.errorMessage);
+  }
+};
+
 export const savePostImages = async (formData, accessToken, history) => {
   const config = {
     headers: {
@@ -297,7 +315,6 @@ export const findCurrentPostsFromPage = async (page, accessToken, mainAreaId, se
       'X-Auth-Token': accessToken,
     },
   };
-
   return await axios
     .get(
       DEFAULT_URL +
@@ -405,7 +422,7 @@ export const findOtherPostsFromPage = async (otherUserId, page, accessToken, his
     });
 };
 
-export const findRankedPostsFromPage = async (mainAreaId, selectedSectorId, criteria, page, accessToken, history) => {
+export const findRankedPostsFromPage = async (mainAreaId, criteria, page, accessToken, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -421,7 +438,7 @@ export const findRankedPostsFromPage = async (mainAreaId, selectedSectorId, crit
         `direction=${DEFAULT_DIRECTION}&` +
         `criteria=${criteria}&` +
         `areaId=${mainAreaId}&` +
-        `sectorIds=${selectedSectorId}`,
+        `sectorIds=`,
       config,
     )
     .then((response) => response.data.content)
@@ -723,6 +740,7 @@ const redirectLoginWhenUnauthorized = (error, history) => {
     history.push('/login');
     return true;
   } else if (error.response && error.response.status === 500) {
+    console.log(error.response);
     return false;
   }
   return false;
