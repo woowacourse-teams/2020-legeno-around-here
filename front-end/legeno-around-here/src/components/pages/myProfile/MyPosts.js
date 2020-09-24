@@ -11,6 +11,7 @@ import PostItem from '../../PostItem';
 import BottomBlank from '../../BottomBlank';
 import Container from '@material-ui/core/Container';
 import EndMessage from '../../EndMessage';
+import { getMainAreaId } from '../../../util/localStorageUtils';
 
 function MyPosts({ history }) {
   const [page, setPage] = useState(0);
@@ -18,7 +19,7 @@ function MyPosts({ history }) {
   const [hasMore, setHasMore] = useState(true);
 
   const accessToken = getAccessTokenFromCookie();
-  const mainAreaId = localStorage.getItem('mainAreaId');
+  const mainAreaId = getMainAreaId();
 
   useEffect(() => {
     findMyPostsFromPage(mainAreaId, 0, accessToken, history).then((firstPosts) => {

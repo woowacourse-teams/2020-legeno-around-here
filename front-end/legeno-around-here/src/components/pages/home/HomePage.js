@@ -11,6 +11,7 @@ import Container from '@material-ui/core/Container';
 import PostItem from '../../PostItem';
 import EndMessage from '../../EndMessage';
 import SearchTopBar from '../../topBar/SearchTopBar';
+import { getMainAreaId } from '../../../util/localStorageUtils';
 
 const HomePage = ({ location, history }) => {
   const accessToken = getAccessTokenFromCookie();
@@ -18,7 +19,7 @@ const HomePage = ({ location, history }) => {
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(false);
-  const [areaId, setAreaId] = useState(localStorage.getItem('mainAreaId'));
+  const [areaId, setAreaId] = useState(getMainAreaId());
   const [sectorId, setSectorId] = useState('none');
   const [locationParams, setLocationParams] = useState(location.search);
 

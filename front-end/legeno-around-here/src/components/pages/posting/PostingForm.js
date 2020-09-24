@@ -13,6 +13,7 @@ import PostingFormImages from './PostingFormImages';
 import PostingFormSectorSearch from './PostingFormSectorSearch';
 import { List } from 'immutable';
 import PostingFormAreaSearch from './PostingFormAreaSearch';
+import { getMainAreaId, getMainAreaName } from '../../../util/localStorageUtils';
 
 const PostingForm = ({ history }) => {
   const DEFAULT_MAIN_AREA = { id: '1', name: '서울특별시' };
@@ -26,8 +27,8 @@ const PostingForm = ({ history }) => {
   };
 
   const getMainArea = () => {
-    const mainAreaId = localStorage.getItem('mainAreaId');
-    const mainAreaName = localStorage.getItem('mainAreaName');
+    const mainAreaId = getMainAreaId();
+    const mainAreaName = getMainAreaName();
 
     if (isAllValue(mainAreaId, mainAreaName)) {
       return DEFAULT_MAIN_AREA;

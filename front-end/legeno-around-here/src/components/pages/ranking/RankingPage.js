@@ -15,6 +15,7 @@ import Container from '@material-ui/core/Container';
 import SearchTopBar from '../../topBar/SearchTopBar';
 import EndMessage from '../../EndMessage';
 import Typography from '@material-ui/core/Typography';
+import { getMainAreaId } from '../../../util/localStorageUtils';
 
 const useStyle = makeStyles(() => ({
   filterSection: {
@@ -40,7 +41,7 @@ const RankingPage = ({ location, history }) => {
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
-  const [areaId, setAreaId] = useState(localStorage.getItem('mainAreaId'));
+  const [areaId, setAreaId] = useState(getMainAreaId());
   const [sectorId, setSectorId] = useState('none');
   const [locationParams, setLocationParams] = useState(location.search);
   const [criteria, setCriteria] = useState('total');
