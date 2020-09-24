@@ -15,7 +15,7 @@ import Container from '@material-ui/core/Container';
 import SearchTopBar from '../../topBar/SearchTopBar';
 import EndMessage from '../../EndMessage';
 import Typography from '@material-ui/core/Typography';
-import { getMainAreaId } from '../../../util/localStorageUtils';
+import { getMainAreaId, getMainCriteria, setMainCriteria } from '../../../util/localStorageUtils';
 
 const useStyle = makeStyles(() => ({
   filterSection: {
@@ -44,7 +44,7 @@ const RankingPage = ({ location, history }) => {
   const [areaId, setAreaId] = useState(getMainAreaId());
   const [sectorId, setSectorId] = useState('none');
   const [locationParams, setLocationParams] = useState(location.search);
-  const [criteria, setCriteria] = useState('total');
+  const [criteria, setCriteria] = useState(getMainCriteria());
 
   const removeContent = () => {
     setPage(0);
@@ -92,6 +92,7 @@ const RankingPage = ({ location, history }) => {
     }
     removeContent();
     setCriteria(targetValue);
+    setMainCriteria(targetValue);
   };
 
   /* 공동순위 처리를 위해서 필요한 변수들 */
