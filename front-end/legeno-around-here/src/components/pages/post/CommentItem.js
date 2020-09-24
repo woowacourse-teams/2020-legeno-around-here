@@ -69,7 +69,7 @@ const CommentItem = ({ comment, myId }) => {
       <ListItem alignItems='flex-start' className={classes.photoAndTextsLayout}>
         {makeCreatorPhotoUi()}
         <div className={classes.textsLayout}>
-          <Typography variant='subtitle1' color='textSecondary'>
+          <Typography variant='subtitle2' color='textSecondary'>
             {comment.creator.nickname}
           </Typography>
           <Typography variant='subtitle1'>
