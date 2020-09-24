@@ -13,20 +13,33 @@ import PostingFormImages from './PostingFormImages';
 import PostingFormSectorSearch from './PostingFormSectorSearch';
 import { List } from 'immutable';
 import PostingFormAreaSearch from './PostingFormAreaSearch';
-import {
-  getMainAreaId,
-  getMainAreaName,
-} from '../../../util/localStoargeHandler';
 
 const PostingForm = ({ history }) => {
+  const DEFAULT_MAIN_AREA = { id: '1', name: '서울특별시' };
+
+  const isNullValue = (mainAreaId, mainAreaName) => {
+    return !mainAreaId || !mainAreaName;
+  };
+
+  const isAllValue = (mainAreaId, mainAreaName) => {
+    return isNullValue(mainAreaId, mainAreaName) || mainAreaId === '' || mainAreaName === '전체';
+  };
+
+  const getMainArea = () => {
+    const mainAreaId = localStorage.getItem('mainAreaId');
+    const mainAreaName = localStorage.getItem('mainAreaName');
+
+    if (isAllValue(mainAreaId, mainAreaName)) {
+      return DEFAULT_MAIN_AREA;
+    }
+    return { id: mainAreaId, name: mainAreaName };
+  };
+
   const classes = useStyles();
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [writing, setWriting] = useState('');
   const [sector, setSector] = useState(null);
-  const [area, setArea] = useState({
-    id: getMainAreaId(),
-    name: getMainAreaName(),
-  });
+  const [area, setArea] = useState(getMainArea());
   const [images, setImages] = useState(List([]));
   const [loading, setLoading] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);

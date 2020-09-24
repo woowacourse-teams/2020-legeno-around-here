@@ -11,7 +11,7 @@ import Loading from '../../Loading';
 import BottomBlank from '../../BottomBlank';
 import Container from '@material-ui/core/Container';
 import PostItem from '../../PostItem';
-import { getMainAreaId } from '../../../util/localStoargeUtils';
+import { getMainAreaId } from '../../../util/localStorageUtils';
 import EndMessage from '../../EndMessage';
 
 const HomePage = ({ location, history }) => {
