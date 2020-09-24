@@ -15,7 +15,7 @@ import Container from '@material-ui/core/Container';
 import SearchTopBar from '../../topBar/SearchTopBar';
 import EndMessage from '../../EndMessage';
 import Typography from '@material-ui/core/Typography';
-import { getMainAreaId, getMainCriteria, setMainCriteria } from '../../../util/localStorageUtils';
+import { getMainAreaId, getMainCriteria, getMainSectorId, setMainCriteria } from '../../../util/localStorageUtils';
 
 const useStyle = makeStyles(() => ({
   filterSection: {
@@ -42,7 +42,7 @@ const RankingPage = ({ location, history }) => {
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [areaId, setAreaId] = useState(getMainAreaId());
-  const [sectorId, setSectorId] = useState('none');
+  const [sectorId, setSectorId] = useState(getMainSectorId());
   const [locationParams, setLocationParams] = useState(location.search);
   const [criteria, setCriteria] = useState(getMainCriteria());
 
@@ -62,16 +62,7 @@ const RankingPage = ({ location, history }) => {
   }, [areaId, sectorId, criteria]);
 
   const loadNextPosts = () => {
-    let selectedSectorId;
-    if (locationParams.includes('?sectorId=')) {
-      selectedSectorId = locationParams.split('?sectorId=')[1];
-    } else if (sectorId === 'none') {
-      selectedSectorId = '';
-    } else {
-      selectedSectorId = sectorId;
-    }
-
-    findRankedPostsFromPage(areaId, selectedSectorId, criteria, page, accessToken, history)
+    findRankedPostsFromPage(areaId, sectorId, criteria, page, accessToken, history)
       .then((nextPosts) => {
         if (!nextPosts || nextPosts.length === 0) {
           setHasMore(false);

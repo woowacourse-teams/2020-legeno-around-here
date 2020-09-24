@@ -11,6 +11,7 @@ import { getAccessTokenFromCookie } from '../../util/TokenUtils';
 import { findAllSimpleSectors, getUnreadNotificationCount } from '../api/API';
 import AreaSearch from '../AreaSearch';
 import LinkWithoutStyle from '../../util/LinkWithoutStyle';
+import { getMainSectorName, setMainSectorId, setMainSectorName } from '../../util/localStorageUtils';
 
 const useStyles = makeStyles(() => ({
   grow: {
@@ -47,12 +48,14 @@ const SearchTopBar = ({ setter, getter, history }) => {
     loadAllSimpleSectors();
   }, [accessToken, history]);
 
-  const changeSector = (optionId) => {
+  const changeSector = (optionId, optionName) => {
     if (getter.sectorId === optionId) {
       return;
     }
     setter.removeContent();
     setter.setSectorId(optionId);
+    setMainSectorId(optionId);
+    setMainSectorName(optionName);
   };
 
   useEffect(() => {
@@ -68,13 +71,13 @@ const SearchTopBar = ({ setter, getter, history }) => {
             id='sector-search'
             freeSolo
             options={simpleSectors}
-            onChange={(event, option) => option && changeSector(option.id)}
+            onChange={(event, option) => option && changeSector(option.id, option.name)}
             getOptionLabel={(option) => option.name}
             fullWidth
             renderInput={(params) => (
               <TextField
                 {...params}
-                placeholder='전체 부문 (검색)'
+                placeholder={getMainSectorName() + ' (검색)'}
                 inputProps={{
                   ...params.inputProps,
                   className: classes.textField,

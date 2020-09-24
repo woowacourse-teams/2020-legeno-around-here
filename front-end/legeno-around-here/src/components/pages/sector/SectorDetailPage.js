@@ -12,6 +12,7 @@ import BottomBlank from '../../BottomBlank';
 import Button from '@material-ui/core/Button';
 import Bottom from '../../Bottom';
 import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
+import { setMainSectorId, setMainSectorName } from '../../../util/localStorageUtils';
 
 const useStyle = makeStyles({
   sectorNameSection: {
@@ -113,7 +114,9 @@ const SectorDetailPage = ({ match, history }) => {
 
   const onClickGoToPostsButton = (event) => {
     event.preventDefault();
-    history.push(`/home?sectorId=${sectorId}`);
+    setMainSectorId(sectorId);
+    setMainSectorName(sector.name);
+    history.push(`/home`);
   };
 
   if (loading) {
