@@ -9,11 +9,12 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
 import { convertDateFormat } from '../../../util/TimeUtils';
 import useStyle from './RankingItemStyle';
-import LinesEllipsis from 'react-lines-ellipsis';
+import { ellipsis } from '../../../util/StringUtils';
 
 const FIRST_PRIZE_IMAGE_URL = '/images/gold.png';
 const SECOND_PRIZE_IMAGE_URL = '/images/silver.png';
 const THIRD_PRIZE_IMAGE_URL = '/images/bronze.png';
+const RANKING_ITEM_ELLIPSIS_SIZE = 35;
 
 const RankingItem = ({ post, rank, whetherToPrintZzangCount, history }) => {
   const matchRankToPrizeUrl = (rank) => {
@@ -63,7 +64,7 @@ const RankingItem = ({ post, rank, whetherToPrintZzangCount, history }) => {
             작성 지역 : {area.fullName}
           </Typography>
           <Typography variant='subtitle2' color='textSecondary' className={classes.writing}>
-            <LinesEllipsis text={writing} maxLine='3' ellipsis='...' trimRight basedOn='letters' />
+            {ellipsis(writing, RANKING_ITEM_ELLIPSIS_SIZE)}
           </Typography>
         </CardContent>
         <CardActions className={classes.reactions} disableSpacing>
