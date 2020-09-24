@@ -14,6 +14,8 @@ import Select from '@material-ui/core/Select';
 import Container from '@material-ui/core/Container';
 import SearchTopBar from '../../topBar/SearchTopBar';
 import EndMessage from '../../EndMessage';
+import Typography from '@material-ui/core/Typography';
+import { getMainAreaId } from '../../../util/localStorageUtils';
 
 const useStyle = makeStyles(() => ({
   filterSection: {
@@ -39,18 +41,25 @@ const RankingPage = ({ location, history }) => {
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
+  const [areaId, setAreaId] = useState(getMainAreaId());
   const [sectorId, setSectorId] = useState('none');
   const [locationParams, setLocationParams] = useState(location.search);
   const [criteria, setCriteria] = useState('total');
 
-  const topBarSetters = { setPage, setPosts, setSectorId, setLocationParams };
-  const mainAreaId = localStorage.getItem('mainAreaId');
+  const removeContent = () => {
+    setPage(0);
+    setPosts([]);
+    setLocationParams('');
+  };
+
+  const topBarSetters = { setAreaId, setSectorId, removeContent };
+  const topBarGetters = { areaId, sectorId };
 
   useEffect(() => {
     setHasMore(true);
     loadNextPosts();
     // eslint-disable-next-line
-  }, [sectorId]);
+  }, [areaId, sectorId, criteria]);
 
   const loadNextPosts = () => {
     let selectedSectorId;
@@ -62,7 +71,7 @@ const RankingPage = ({ location, history }) => {
       selectedSectorId = sectorId;
     }
 
-    findRankedPostsFromPage(mainAreaId, selectedSectorId, criteria, page, accessToken, history)
+    findRankedPostsFromPage(areaId, selectedSectorId, criteria, page, accessToken, history)
       .then((nextPosts) => {
         if (!nextPosts || nextPosts.length === 0) {
           setHasMore(false);
@@ -77,7 +86,12 @@ const RankingPage = ({ location, history }) => {
   };
 
   const handleChange = (event) => {
-    setCriteria(event.target.value);
+    const targetValue = event.target.value;
+    if (criteria === targetValue) {
+      return;
+    }
+    removeContent();
+    setCriteria(targetValue);
   };
 
   /* 공동순위 처리를 위해서 필요한 변수들 */
@@ -86,7 +100,7 @@ const RankingPage = ({ location, history }) => {
 
   return (
     <>
-      <SearchTopBar setter={topBarSetters} sectorId={sectorId} history={history} selected={'ranking'} />
+      <SearchTopBar setter={topBarSetters} getter={topBarGetters} history={history} selected={'ranking'} />
       <Container>
         <div className={classes.filterSection}>
           <FormControl className={classes.durationFilter}>
@@ -94,9 +108,9 @@ const RankingPage = ({ location, history }) => {
               <option value='total'>역대</option>
               <option value='month'>월간</option>
               <option value='week'>주간</option>
-              <option value='yesterday'>어제</option>
+              <option value='yesterday'>어제 하루</option>
             </Select>
-            &nbsp;캡짱들을 소개합니다!
+            <Typography className={classes.durationFilter}>&nbsp;짱을 가장 많이 받은 자랑글</Typography>
           </FormControl>
         </div>
         <InfiniteScroll
@@ -110,15 +124,7 @@ const RankingPage = ({ location, history }) => {
             const rank = post.zzang.count === zzangCountOfBeforePost ? rankOfBeforePost : index + 1;
             zzangCountOfBeforePost = post.zzang.count;
             rankOfBeforePost = rank;
-            return (
-              <RankingItem
-                key={post.id}
-                post={post}
-                rank={rank}
-                whetherToPrintZzangCount={criteria === `total`}
-                history={history}
-              />
-            );
+            return <RankingItem key={post.id} post={post} rank={rank} history={history} />;
           })}
         </InfiniteScroll>
         <BottomBlank />

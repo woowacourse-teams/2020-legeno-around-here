@@ -16,7 +16,7 @@ const SECOND_PRIZE_IMAGE_URL = '/images/silver.png';
 const THIRD_PRIZE_IMAGE_URL = '/images/bronze.png';
 const RANKING_ITEM_ELLIPSIS_SIZE = 35;
 
-const RankingItem = ({ post, rank, whetherToPrintZzangCount, history }) => {
+const RankingItem = ({ post, rank, history }) => {
   const matchRankToPrizeUrl = (rank) => {
     if (rank === 1) {
       return FIRST_PRIZE_IMAGE_URL;
@@ -31,7 +31,6 @@ const RankingItem = ({ post, rank, whetherToPrintZzangCount, history }) => {
   };
 
   const props = {
-    whetherToPrintZzangCount: whetherToPrintZzangCount,
     prizeImageUrl: matchRankToPrizeUrl(rank),
   };
   const classes = useStyle(props);

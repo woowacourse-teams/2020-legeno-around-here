@@ -43,7 +43,6 @@ const useStyle = makeStyles({
     marginTop: 100,
   },
   reactions: (props) => ({
-    display: `${props.whetherToPrintZzangCount ? 'block' : 'none'}`,
     paddingTop: 0,
   }),
   reactionIconSpace: {

@@ -9,7 +9,7 @@ const useStyles = makeStyles(() => ({
     height: 100,
     display: 'flex',
     flexDirection: 'row',
-    padding: 0,
+    padding: '5px',
   },
 }));
 

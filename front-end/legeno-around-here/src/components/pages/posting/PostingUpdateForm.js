@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Loading from '../../Loading';
 import { Typography } from '@material-ui/core';
 
-import { updatePost, findPost, savePostImages } from '../../api/API';
+import { findPost, savePostImages, updatePost } from '../../api/API';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import useStyles from '../posting/PostingFormStyles';
 import PostingFormImages from './PostingFormImages';
@@ -10,6 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import { List } from 'immutable';
+import { getMainAreaName } from '../../../util/localStorageUtils';
 
 const PostingUpdateForm = ({ postId, history }) => {
   const classes = useStyles();
@@ -30,7 +31,7 @@ const PostingUpdateForm = ({ postId, history }) => {
       setWriting(foundPost.writing);
       setImages(List(foundPost.images));
       setSectorName(foundPost.sector.name);
-      setAreaName(localStorage.getItem('mainAreaName'));
+      setAreaName(getMainAreaName());
       setLoading(false);
     };
     loadPost();
