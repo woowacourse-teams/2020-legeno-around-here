@@ -8,7 +8,10 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
-import { findAllSimpleSectors, getUnreadNotificationCount } from '../../api/API';
+import {
+  findAllSimpleSectors,
+  getUnreadNotificationCount,
+} from '../../api/API';
 import AreaSearch from '../../AreaSearch';
 import LinkWithoutStyle from '../../../util/LinkWithoutStyle';
 
@@ -31,13 +34,12 @@ const HomeTopBar = ({ setter, sectorId, history }) => {
 
   useEffect(() => {
     const loadAllSimpleSectors = async () => {
-      findAllSimpleSectors(accessToken, history)
-        .then(async (foundSimpleSectors) => {
-          if (foundSimpleSectors) {
-            await foundSimpleSectors.unshift(SIMPLE_ALL_SECTOR);
-            await setSimpleSectors(foundSimpleSectors);
-          }
-        })
+      findAllSimpleSectors(accessToken, history).then(async (foundSimpleSectors) => {
+        if (foundSimpleSectors) {
+          await foundSimpleSectors.unshift(SIMPLE_ALL_SECTOR);
+          await setSimpleSectors(foundSimpleSectors);
+        }
+      });
     };
     loadAllSimpleSectors();
   }, [accessToken, history]);

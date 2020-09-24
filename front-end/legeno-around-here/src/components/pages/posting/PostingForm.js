@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Loading from '../../Loading';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
-import { Button, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 
 import { createPost, savePostImages } from '../../api/API';
@@ -12,15 +12,20 @@ import SectorApplyButton from '../sector/SectorApplyButton';
 import PostingFormImages from './PostingFormImages';
 import PostingFormSectorSearch from './PostingFormSectorSearch';
 import { List } from 'immutable';
+import PostingFormAreaSearch from './PostingFormAreaSearch';
+import {
+  getMainAreaId,
+  getMainAreaName,
+} from '../../../util/localStoargeHandler';
 
 const PostingForm = ({ history }) => {
   const classes = useStyles();
   const [accessToken] = useState(getAccessTokenFromCookie());
   const [writing, setWriting] = useState('');
   const [sector, setSector] = useState(null);
-  const [area] = useState({
-    id: localStorage.getItem('mainAreaId'),
-    name: localStorage.getItem('mainAreaName'),
+  const [area, setArea] = useState({
+    id: getMainAreaId(),
+    name: getMainAreaName(),
   });
   const [images, setImages] = useState(List([]));
   const [loading, setLoading] = useState(false);
@@ -168,7 +173,7 @@ const PostingForm = ({ history }) => {
         <PostingFormSectorSearch setSector={setSector} history={history} />
         {sector && sector.id !== null ? <Typography className={classes.sector}>{sector.name}</Typography> : ''}
         <br />
-        <Button className={classes.selectAreaButton}>지역 설정</Button>
+        <PostingFormAreaSearch setArea={setArea} history={history} />
         {area && area.id !== null ? <Typography className={classes.area}>{area.name}</Typography> : ''}
         <Typography>
           참가하고 싶은 부문이 없으신가요? <SectorApplyButton />을 해보세요!!

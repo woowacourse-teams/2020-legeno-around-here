@@ -11,19 +11,18 @@ import Loading from '../../Loading';
 import BottomBlank from '../../BottomBlank';
 import Container from '@material-ui/core/Container';
 import PostItem from '../../PostItem';
+import { getMainAreaId } from '../../../util/localStoargeHandler';
 
 const HomePage = ({ location, history }) => {
-  const accessToken = getAccessTokenFromCookie();
-
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const [sectorId, setSectorId] = useState('none');
   const [locationParams, setLocationParams] = useState(location.search);
 
+  const accessToken = getAccessTokenFromCookie();
   const setter = { setPage, setPosts, setSectorId, setLocationParams };
-
-  const mainAreaId = localStorage.getItem('mainAreaId');
+  const mainAreaId = getMainAreaId();
 
   const loadNextPosts = async () => {
     try {
