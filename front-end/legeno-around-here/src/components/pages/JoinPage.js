@@ -10,15 +10,11 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { createUser, checkJoined, sendAuthMail, checkAuthNumber } from '../api/API';
-import LinkWithoutStyle from '../../util/LinkWithoutStyle';
-
-const Copyright = () => {
-  return (
-    <Typography variant='body2' color='textSecondary' align='center'>
-      {'Copyright © Ittabi 2020.'}
-    </Typography>
-  );
-};
+import Link from '@material-ui/core/Link';
+import Checkbox from '@material-ui/core/Checkbox';
+import Copyright from '../Copyright';
+import TermsModal from '../signUp/TermsModal';
+import PrivacyModal from '../signUp/PrivacyModal';
 
 const InputCheck = (input) => {
   return (
@@ -52,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   check: { width: '38%', border: '1px solid gray', marginLeft: '4%', marginTop: '2%' },
 }));
 
-const JoinPage = ({history}) => {
+const JoinPage = ({ history }) => {
   const classes = useStyles();
   const NICKNAME_MIN_LENGTH = 1;
   const NICKNAME_MAX_LENGTH = 10;
@@ -69,6 +65,10 @@ const JoinPage = ({history}) => {
   const [isAuthNumberDisabled, setIsAuthNumberDisabled] = useState(false);
   const [mailAuthToggle, setMailAuthToggle] = useState('인증 메일 전송');
   const [isMailSent, setIsMailSent] = useState(false);
+  const [termsModalOpen, setTermsModalOpen] = useState(false);
+  const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
+  const [termsAgree, setTermsAgree] = useState(false);
+  const [privacyAgree, setPrivacyAgree] = useState(false);
 
   const validateEmail = useMemo(() => {
     return email && !EMAIL_REGEX.test(String(email).toLowerCase());
@@ -162,10 +162,51 @@ const JoinPage = ({history}) => {
         alert('입력값을 확인해 주세요.');
         return;
       }
+      if (!termsAgree) {
+        alert('우리동네캡짱 이용 약관에 동의하셔야 합니다.');
+        return;
+      }
+      if (!privacyAgree) {
+        alert('개인정보 수집 및 이용에 동의하셔야 합니다.');
+        return;
+      }
       join();
     },
-    [validateEmail, validateNickname, validatePassword, validatePasswordRepeat, join],
+    [validateEmail, validateNickname, validatePassword, validatePasswordRepeat, join, termsAgree, privacyAgree],
   );
+
+  const onChangeTerms = (event) => {
+    event.preventDefault();
+    setTermsAgree(!termsAgree);
+  };
+
+  const onChangePrivacy = (event) => {
+    event.preventDefault();
+    setPrivacyAgree(!privacyAgree);
+  };
+
+  const openTermsModal = (event) => {
+    event.preventDefault();
+    setTermsModalOpen(true);
+  };
+
+  const openPrivacyModal = (event) => {
+    event.preventDefault();
+    setPrivacyModalOpen(true);
+  };
+
+  const closeModal = (event) => {
+    if (event) {
+      event.preventDefault();
+    }
+    setTermsModalOpen(false);
+    setPrivacyModalOpen(false);
+  };
+
+  const onClickLogin = (event) => {
+    event.preventDefault();
+    history.push('/login');
+  };
 
   return (
     <Container component='main' maxWidth='xs'>
@@ -223,7 +264,7 @@ const JoinPage = ({history}) => {
               </Button>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant='caption' color='error'></Typography>
+              <Typography variant='caption' color='error' />
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -283,14 +324,37 @@ const JoinPage = ({history}) => {
               </Typography>
             </Grid>
           </Grid>
+          <Checkbox
+            color='primary'
+            inputProps={{ 'aria-label': 'secondary checkbox' }}
+            checked={termsAgree}
+            onChange={onChangeTerms}
+          />
+          <Link underline='always' onClick={openTermsModal}>
+            우리동네캡짱 이용약관
+          </Link>
+          에 동의합니다.(필수)
+          <br />
+          <Checkbox
+            color='primary'
+            inputProps={{ 'aria-label': 'secondary checkbox' }}
+            checked={privacyAgree}
+            onChange={onChangePrivacy}
+          />
+          <Link underline='always' onClick={openPrivacyModal}>
+            개인정보 수집 및 이용
+          </Link>
+          에 동의합니다.(필수)
           <Button type='submit' fullWidth variant='contained' color='primary' className={classes.submit}>
             회원가입
           </Button>
           <Grid container justify='flex-end'>
             <Grid item>
-              <LinkWithoutStyle to='/login' variant='body2'>
-                이미 계정이 있으신가요? 로그인을 해주세요!
-              </LinkWithoutStyle>
+              이미 계정이 있으신가요?&nbsp;
+              <Link underline='always' onClick={onClickLogin}>
+                로그인
+              </Link>
+              을 해주세요!
             </Grid>
           </Grid>
         </form>
@@ -298,8 +362,14 @@ const JoinPage = ({history}) => {
       <Box mt={5}>
         <Copyright />
       </Box>
+      {termsModalOpen ? (
+        <TermsModal open={termsModalOpen} closeModal={closeModal} agree={termsAgree} setAgree={setTermsAgree} />
+      ) : null}
+      {privacyModalOpen ? (
+        <PrivacyModal open={privacyModalOpen} closeModal={closeModal} agree={privacyAgree} setAgree={setPrivacyAgree} />
+      ) : null}
     </Container>
   );
-}
+};
 
 export default JoinPage;
