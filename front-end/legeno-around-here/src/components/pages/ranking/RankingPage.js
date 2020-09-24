@@ -124,15 +124,7 @@ const RankingPage = ({ location, history }) => {
             const rank = post.zzang.count === zzangCountOfBeforePost ? rankOfBeforePost : index + 1;
             zzangCountOfBeforePost = post.zzang.count;
             rankOfBeforePost = rank;
-            return (
-              <RankingItem
-                key={post.id}
-                post={post}
-                rank={rank}
-                whetherToPrintZzangCount={criteria === `total`}
-                history={history}
-              />
-            );
+            return <RankingItem key={post.id} post={post} rank={rank} history={history} />;
           })}
         </InfiniteScroll>
         <BottomBlank />
