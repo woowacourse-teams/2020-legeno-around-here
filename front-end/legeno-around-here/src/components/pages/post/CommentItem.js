@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Divider, ListItem, Typography } from '@material-ui/core';
 import { convertDateFormat } from '../../../util/TimeUtils';
 import { makeStyles } from '@material-ui/core/styles';
 import LinkWithoutStyle from '../../../util/LinkWithoutStyle';
 import { MAIN_COLOR } from '../../../constants/Color';
 import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
+import {getAccessTokenFromCookie} from "../../../util/TokenUtils";
 
 const useStyle = makeStyles({
   photoAndTextsLayout: {
@@ -29,10 +30,25 @@ const useStyle = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     marginLeft: '8px',
+    width: '98%',
+  },
+  secondaryInfoSection: {
+    width: '90%',
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  createdTime: {
+    display: 'inline-block',
+    margin: 'auto auto auto 0',
+  },
+  deleteButton: {
+    display: 'inline-block',
+    margin: 'auto 0 auto auto',
   },
 });
 
-const CommentItem = ({ comment, myId }) => {
+const CommentItem = ({ comment, myId, onCommentDelete }) => {
+  const [accessToken] = useState(getAccessTokenFromCookie());
   const isMyComment = comment.creator.id === myId;
   const classes = useStyle({
     creatorProfilePhotoUrl: comment.creator.image ? comment.creator.image.url : DEFAULT_IMAGE_URL,
@@ -55,7 +71,7 @@ const CommentItem = ({ comment, myId }) => {
       <ListItem alignItems='flex-start' className={classes.photoAndTextsLayout}>
         {makeCreatorPhotoUi()}
         <div className={classes.textsLayout}>
-          <Typography variant='subtitle1' color='textSecondary'>
+          <Typography variant='subtitle2' color='textSecondary'>
             {comment.creator.nickname}
           </Typography>
           <Typography variant='subtitle1'>
@@ -68,9 +84,24 @@ const CommentItem = ({ comment, myId }) => {
               );
             })}
           </Typography>
-          <Typography variant='subtitle2' color='textSecondary'>
-            {convertDateFormat(comment.createdAt)}
-          </Typography>
+          <div className={classes.secondaryInfoSection}>
+            <Typography
+              variant='subtitle2'
+              color='textSecondary'
+              className={classes.createdTime}
+            >
+              {convertDateFormat(comment.createdAt)}
+            </Typography> {
+              isMyComment && <Typography
+                variant='subtitle2'
+                color='textSecondary'
+                className={classes.deleteButton}
+                onClick={() => onCommentDelete(accessToken, comment.id)}
+              >
+                삭제
+              </Typography>
+            }
+          </div>
         </div>
       </ListItem>
       <Divider />

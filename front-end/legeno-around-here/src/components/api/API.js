@@ -717,6 +717,25 @@ export const withdraw = (accessToken, history) => {
     });
 };
 
+export const deleteComment = (accessToken, commentId) => {
+  const config = {
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
+  };
+  axios
+  .delete(DEFAULT_URL + '/comments/' + commentId, config)
+  .then(async () => {
+    alert('정상적으로 삭제되었습니다!');
+  })
+  .catch(async (error) => {
+    if (await redirectLoginWhenUnauthorized(error)) return;
+
+    const errorResponse = error.response.data;
+    alert(errorResponse.errorMessage);
+  });
+};
+
 // 로그인 페이지로 리다이렉트 될 경우 true 반환, 그렇지 않을 경우 false 반환
 const redirectLoginWhenUnauthorized = (error, history) => {
   if (error.response && error.response.status === 403) {

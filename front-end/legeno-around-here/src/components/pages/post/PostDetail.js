@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { createComment, findCommentsByPostId, pressPostZzang } from '../../api/API';
+import {
+  createComment,
+  deleteComment,
+  findCommentsByPostId,
+  pressPostZzang
+} from '../../api/API';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import Typography from '@material-ui/core/Typography';
 import { Grid, IconButton, TextField } from '@material-ui/core';
@@ -124,6 +129,13 @@ const PostDetail = ({ post, myInfo, history }) => {
     );
   };
 
+  const deleteCommentFunction = async (accessToken, commentId) => {
+    if (window.confirm("정말 삭제하시겠습니까??")) {
+      await deleteComment(accessToken, commentId);
+      setComments(comments.filter(comment => comment.id !== commentId));
+    }
+  };
+
   return (
     <>
       <Grid container className={classes.postTopSection}>
@@ -195,7 +207,12 @@ const PostDetail = ({ post, myInfo, history }) => {
           </Grid>
         </Grid>
       </form>
-      {comments.length > 0 && myInfo && <Comments comments={comments} loading={loading} myId={myInfo.id} />}
+      {comments.length > 0 && myInfo && <Comments
+        comments={comments}
+        loading={loading}
+        myId={myInfo.id}
+        onCommentDelete={deleteCommentFunction}
+      />}
     </>
   );
 };
