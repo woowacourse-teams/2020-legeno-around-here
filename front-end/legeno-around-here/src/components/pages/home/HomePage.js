@@ -27,7 +27,7 @@ const HomePage = ({ location, history }) => {
 
   const loadNextPosts = async () => {
     try {
-      let selectedSectorId = '';
+      let selectedSectorId;
       if (locationParams.includes('?sectorId=')) {
         selectedSectorId = locationParams.split('?sectorId=')[1];
       } else if (sectorId === 'none') {
@@ -59,6 +59,7 @@ const HomePage = ({ location, history }) => {
       <HomeTopBar setter={setter} sectorId={sectorId} history={history} />
       <Container>
         <InfiniteScroll
+          style={{ overflowY: 'hidden' }}
           next={loadNextPosts}
           hasMore={hasMore}
           loader={<Loading />}

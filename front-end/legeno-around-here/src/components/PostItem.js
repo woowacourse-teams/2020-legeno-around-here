@@ -13,6 +13,7 @@ const useStyles = makeStyles(() => ({
   root: {
     borderBottom: '1.5px solid darkgray',
     padding: '10px',
+    width: '100%',
   },
   cover: {
     position: 'relative',
