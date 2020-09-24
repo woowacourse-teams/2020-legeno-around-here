@@ -38,8 +38,6 @@ const CommentItem = ({ comment, myId }) => {
     creatorProfilePhotoUrl: comment.creator.image ? comment.creator.image.url : DEFAULT_IMAGE_URL,
   });
 
-  let keyValue = 0;
-
   const makeCreatorPhotoUi = () => {
     if (comment.creator.nickname === '탈퇴한 회원') {
       return <div className={classes.creatorProfilePhoto} />;
@@ -61,10 +59,9 @@ const CommentItem = ({ comment, myId }) => {
             {comment.creator.nickname}
           </Typography>
           <Typography variant='subtitle1'>
-            {comment.writing.split('\n').map((line) => {
-              keyValue += 1;
+            {comment.writing.split('\n').map((line, index) => {
               return (
-                <span key={keyValue}>
+                <span key={index}>
                   {line}
                   <br />
                 </span>

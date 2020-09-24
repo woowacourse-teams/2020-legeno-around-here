@@ -59,8 +59,6 @@ const PostDetail = ({ post, myInfo, history }) => {
   const props = { authorProfilePhotoUrl: authorProfilePhotoUrl };
   const classes = useStyle(props);
 
-  let keyValue = 0;
-
   const onWritingChanged = (e) => {
     setWriting(e.target.value);
   };
@@ -137,10 +135,9 @@ const PostDetail = ({ post, myInfo, history }) => {
       <Typography variant='h5'>{post.sector.name} 부문</Typography>
       {post.images.length > 0 && <PostImages images={post.images} />}
       <Typography variant='h6'>
-        {post.writing.split('\n').map((line) => {
-          keyValue += 1;
+        {post.writing.split('\n').map((line, index) => {
           return (
-            <span key={keyValue}>
+            <span key={index}>
               {line}
               <br />
             </span>
