@@ -7,10 +7,10 @@ import Badge from '@material-ui/core/Badge';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
-import { findAllSimpleSectors, getUnreadNotificationCount } from '../../api/API';
-import AreaSearch from '../../AreaSearch';
-import LinkWithoutStyle from '../../../util/LinkWithoutStyle';
+import { getAccessTokenFromCookie } from '../../util/TokenUtils';
+import { findAllSimpleSectors, getUnreadNotificationCount } from '../api/API';
+import AreaSearch from '../AreaSearch';
+import LinkWithoutStyle from '../../util/LinkWithoutStyle';
 
 const useStyles = makeStyles(() => ({
   grow: {
@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
     color: 'white',
     fontSize: '1.3rem',
     position: 'relative',
-    top: '2px',
+    top: '1px',
   },
 }));
 
@@ -29,7 +29,7 @@ const SIMPLE_ALL_SECTOR = {
   name: '전체 부문',
 };
 
-const HomeTopBar = ({ setter, sectorId, history, selected }) => {
+const SearchTopBar = ({ setter, sectorId, history, selected }) => {
   const classes = useStyles();
   const accessToken = getAccessTokenFromCookie();
   const [simpleSectors, setSimpleSectors] = useState([SIMPLE_ALL_SECTOR]);
@@ -100,4 +100,4 @@ const HomeTopBar = ({ setter, sectorId, history, selected }) => {
   );
 };
 
-export default HomeTopBar;
+export default SearchTopBar;

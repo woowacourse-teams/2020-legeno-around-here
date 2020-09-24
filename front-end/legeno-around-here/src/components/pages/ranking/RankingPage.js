@@ -12,7 +12,7 @@ import RankingItem from './RankingItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Container from '@material-ui/core/Container';
-import HomeTopBar from '../home/HomeTopBar';
+import SearchTopBar from '../../topBar/SearchTopBar';
 
 const useStyle = makeStyles(() => ({
   filterSection: {
@@ -85,7 +85,7 @@ const RankingPage = ({ location, history }) => {
 
   return (
     <>
-      <HomeTopBar setter={topBarSetters} sectorId={sectorId} history={history} selected={'ranking'} />
+      <SearchTopBar setter={topBarSetters} sectorId={sectorId} history={history} selected={'ranking'} />
       <Container>
         <div className={classes.filterSection}>
           <FormControl className={classes.durationFilter}>
