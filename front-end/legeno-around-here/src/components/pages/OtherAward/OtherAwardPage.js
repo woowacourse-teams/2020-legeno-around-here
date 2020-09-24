@@ -27,6 +27,7 @@ const OtherAwardPage = ({ match, history }) => {
   if (loading) {
     return <Loading />;
   }
+
   return (
     <>
       <ArrowBackTopBar />
