@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wooteco.team.ittabi.legenoaroundhere.dto.MailAuthCheckRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.MailAuthCreateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.MailAuthFindPasswordRequest;
 import wooteco.team.ittabi.legenoaroundhere.service.MailAuthService;
 
 @RestController
@@ -23,6 +24,16 @@ public class MailAuthController {
     public ResponseEntity<Void> sendAuthMail(
         @RequestBody MailAuthCreateRequest mailAuthCreateRequest) {
         mailAuthService.publishAuth(mailAuthCreateRequest);
+
+        return ResponseEntity
+            .ok()
+            .build();
+    }
+
+    @PostMapping("/find/password")
+    public ResponseEntity<Void> findPasswordAuthMail(
+        @RequestBody MailAuthFindPasswordRequest mailAuthFindPasswordRequest) {
+        mailAuthService.publishAuth(mailAuthFindPasswordRequest);
 
         return ResponseEntity
             .ok()

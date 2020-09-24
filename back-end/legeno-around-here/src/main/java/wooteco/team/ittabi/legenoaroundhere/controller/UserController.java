@@ -24,6 +24,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserOtherResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordUpdateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordWithAuthUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
@@ -102,10 +103,20 @@ public class UserController {
             .build();
     }
 
+    @PutMapping(USERS_PATH + ME_PATH + "/password-auth")
+    public ResponseEntity<Void> changeMyPasswordWithAuth(
+        @RequestBody UserPasswordWithAuthUpdateRequest userPasswordWithAuthUpdateRequest) {
+        userService.changeMyPasswordWithAuth(userPasswordWithAuthUpdateRequest);
+
+        return ResponseEntity
+            .noContent()
+            .build();
+    }
+
     @PutMapping(USERS_PATH + ME_PATH + "/password")
     public ResponseEntity<Void> changeMyPassword(
         @RequestBody UserPasswordUpdateRequest userPasswordUpdateRequest) {
-        userService.changeMyPassword(userPasswordUpdateRequest);
+        userService.changeMyPasswordWithoutAuth(userPasswordUpdateRequest);
 
         return ResponseEntity
             .noContent()

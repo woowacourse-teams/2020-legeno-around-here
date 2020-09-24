@@ -12,7 +12,7 @@ import lombok.ToString;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class PasswordFindRequest {
-    private String nickname;
+public class MailAuthFindPasswordRequest {
+
     private String email;
 }
