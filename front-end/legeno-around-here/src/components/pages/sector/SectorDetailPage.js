@@ -61,7 +61,7 @@ const useStyle = makeStyles({
     margin: '30px auto',
     textAlign: 'center',
   },
-  goToPostsButton: {
+  goToButton: {
     width: '90%',
     margin: 'auto',
     borderRadius: '12px',
@@ -119,6 +119,13 @@ const SectorDetailPage = ({ match, history }) => {
     history.push(`/home`);
   };
 
+  const onClickGoToRankButton = (event) => {
+    event.preventDefault();
+    setMainSectorId(sectorId);
+    setMainSectorName(sector.name);
+    history.push(`/ranking`);
+  };
+
   if (loading) {
     return <Loading />;
   }
@@ -151,11 +158,22 @@ const SectorDetailPage = ({ match, history }) => {
           <Button
             variant='contained'
             color='primary'
-            className={classes.goToPostsButton}
+            className={classes.goToButton}
             size='large'
             onClick={onClickGoToPostsButton}
           >
             자랑글 보러 가기
+          </Button>
+          <br />
+          <br />
+          <Button
+            variant='contained'
+            color='primary'
+            className={classes.goToButton}
+            size='large'
+            onClick={onClickGoToRankButton}
+          >
+            랭킹 보러 가기
           </Button>
         </div>
         <BottomBlank />
