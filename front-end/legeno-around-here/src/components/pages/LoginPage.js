@@ -12,8 +12,9 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { removeAccessTokenCookie } from '../../util/TokenUtils';
-import Link from "@material-ui/core/Link";
-import Copyright from "../Copyright";
+import Link from '@material-ui/core/Link';
+import Copyright from '../Copyright';
+import SocialLogin from '../thirdparty/SocalLogin';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -72,7 +73,7 @@ const LoginForm = ({ history }) => {
   const onClickJoin = (event) => {
     event.preventDefault();
     history.push('/join');
-  }
+  };
 
   return (
     <Container component='main' maxWidth='xs'>

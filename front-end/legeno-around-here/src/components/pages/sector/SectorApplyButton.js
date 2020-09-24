@@ -20,7 +20,7 @@ const SectorApplyButton = ({ history }) => {
           부문신청
         </Typography>
       </Button>
-      <SectorApplyModal open={open} handleClose={handleClose} history={history}/>
+      <SectorApplyModal open={open} handleClose={handleClose} history={history} />
     </>
   );
 };

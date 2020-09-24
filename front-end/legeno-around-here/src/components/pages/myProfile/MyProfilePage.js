@@ -99,7 +99,7 @@ const MyProfilePage = ({ history }) => {
           <NavElement linkTo='/my-awards'>수상내역</NavElement>
           <NavElement linkTo='/my-posts'>작성글</NavElement>
           {/*<NavElement linkTo='/home'>작성 댓글</NavElement>*/}
-          <MySectorSection history={history}/>
+          <MySectorSection history={history} />
         </NavSection>
         <Typography className={classes.withdrawButtonSection} component={LinkWithoutStyle} to='/confirm-withdraw'>
           회원탈퇴

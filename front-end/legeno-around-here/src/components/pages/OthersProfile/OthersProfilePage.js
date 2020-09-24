@@ -25,7 +25,7 @@ function OthersProfilePage({ match, history }) {
     findOthersProfileById({
       accessToken: accessToken,
       userId: match.params.userId,
-      history: {history},
+      history: { history },
     }).then((userResponse) => {
       setNickname(userResponse.nickname);
       setUserId(userResponse.id);

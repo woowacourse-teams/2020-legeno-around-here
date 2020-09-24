@@ -38,7 +38,7 @@ const SectorPage = ({ history }) => {
 
   return (
     <>
-      <SectorTopBar history={history}/>
+      <SectorTopBar history={history} />
       <Container>
         <InfiniteScroll
           next={loadNextSectors}

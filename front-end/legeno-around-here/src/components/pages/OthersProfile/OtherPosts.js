@@ -55,7 +55,7 @@ function OtherPosts({ match, history }) {
         endMessage={<h3>모두 읽으셨습니다!</h3>}
       >
         {posts.map((post) => (
-          <PostItem key={post.id} post={post} history={history}/>
+          <PostItem key={post.id} post={post} history={history} />
         ))}
       </InfiniteScroll>
       <BottomBlank />
