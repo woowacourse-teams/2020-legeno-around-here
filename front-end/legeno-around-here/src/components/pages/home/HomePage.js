@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-
-import HomeTopBar from './HomeTopBar';
 import Bottom from '../../Bottom';
 
 import { findCurrentPostsFromPage } from '../../api/API';
@@ -13,6 +11,7 @@ import Container from '@material-ui/core/Container';
 import PostItem from '../../PostItem';
 import { getMainAreaId } from '../../../util/localStorageUtils';
 import EndMessage from '../../EndMessage';
+import SearchTopBar from '../../topBar/SearchTopBar';
 
 const HomePage = ({ location, history }) => {
   const [page, setPage] = useState(0);
