@@ -405,7 +405,7 @@ export const findOtherPostsFromPage = async (otherUserId, page, accessToken, his
     });
 };
 
-export const findRankedPostsFromPage = async (mainAreaId, selectedSectorId, criteria, page, accessToken, history) => {
+export const findRankedPostsFromPage = async (areaId, selectedSectorId, criteria, page, accessToken, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -420,7 +420,7 @@ export const findRankedPostsFromPage = async (mainAreaId, selectedSectorId, crit
         `sortedBy=${DEFAULT_SORTED_BY}&` +
         `direction=${DEFAULT_DIRECTION}&` +
         `criteria=${criteria}&` +
-        `areaId=${mainAreaId}&` +
+        `areaId=${areaId}&` +
         `sectorIds=${selectedSectorId}`,
       config,
     )

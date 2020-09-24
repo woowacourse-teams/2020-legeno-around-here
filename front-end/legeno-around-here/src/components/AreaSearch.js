@@ -14,9 +14,10 @@ import Loading from './Loading';
 import { makeStyles } from '@material-ui/core/styles';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Areas from './Areas';
-import { getMainAreaName } from '../util/localStorageUtils';
+import { getMainAreaName, setMainAllArea } from '../util/localStorageUtils';
 import EndMessage from './EndMessage';
 import Grid from '@material-ui/core/Grid';
+import { withRouter } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
 
 const DEFAULT_SIZE = 10;
 
-const AreaSearch = ({ history, selected }) => {
+const AreaSearch = ({ history, setter, getter }) => {
   const mainAreaName = getMainAreaName();
 
   const classes = useStyles();
@@ -101,19 +102,19 @@ const AreaSearch = ({ history, selected }) => {
 
   const handleClose = () => {
     initAreaSearch();
-    setAreaKeyword('');
     setListOpen(false);
     setOpen(false);
   };
 
-  function refreshPage(history, selected) {
-    history.replace('/' + selected + '-reload');
-  }
-
   const setMainAreaAll = () => {
-    localStorage.setItem('mainAreaId', '');
-    localStorage.setItem('mainAreaName', '대한민국');
-    refreshPage(history, selected);
+    const allAreaId = '';
+    if (getter.areaId === allAreaId) {
+      return;
+    }
+    setter.removeContent();
+    setter.setAreaId(allAreaId);
+    setMainAllArea();
+    handleClose();
   };
 
   return (
@@ -174,7 +175,9 @@ const AreaSearch = ({ history, selected }) => {
                 height={'400px'}
                 endMessage={<EndMessage message={'모든 지역을 확인하셨습니다!'} />}
               >
-                {areas && areas.length > 0 && <Areas areas={areas} history={history} selected={selected} />}
+                {areas && areas.length > 0 && (
+                  <Areas areas={areas} setter={setter} getter={getter} closeModal={handleClose} />
+                )}
               </InfiniteScroll>
             )}
           </div>
@@ -184,4 +187,4 @@ const AreaSearch = ({ history, selected }) => {
   );
 };
 
-export default AreaSearch;
+export default withRouter(AreaSearch);

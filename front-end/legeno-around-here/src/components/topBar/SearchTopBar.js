@@ -29,7 +29,7 @@ const SIMPLE_ALL_SECTOR = {
   name: '전체 부문',
 };
 
-const SearchTopBar = ({ setter, sectorId, history, selected }) => {
+const SearchTopBar = ({ setter, getter, history }) => {
   const classes = useStyles();
   const accessToken = getAccessTokenFromCookie();
   const [simpleSectors, setSimpleSectors] = useState([SIMPLE_ALL_SECTOR]);
@@ -48,13 +48,11 @@ const SearchTopBar = ({ setter, sectorId, history, selected }) => {
   }, [accessToken, history]);
 
   const changeSector = (optionId) => {
-    if (sectorId === optionId) {
+    if (getter.sectorId === optionId) {
       return;
     }
-    setter.setPage(0);
-    setter.setPosts([]);
+    setter.removeContent();
     setter.setSectorId(optionId);
-    setter.setLocationParams('');
   };
 
   useEffect(() => {
@@ -65,7 +63,7 @@ const SearchTopBar = ({ setter, sectorId, history, selected }) => {
     <>
       <AppBar position='sticky'>
         <Toolbar>
-          <AreaSearch history={history} selected={selected} />
+          <AreaSearch setter={setter} getter={getter} />
           <Autocomplete
             id='sector-search'
             freeSolo

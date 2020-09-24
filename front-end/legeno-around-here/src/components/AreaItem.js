@@ -2,10 +2,7 @@ import React from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { makeStyles } from '@material-ui/core/styles';
-
-function refreshPage(history, selected) {
-  history.replace('/' + selected + '-reload');
-}
+import { setMainAreaId, setMainAreaName } from '../util/localStorageUtils';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,19 +12,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const setMainArea = (area, history, selected) => {
-  localStorage.setItem('mainAreaId', area.id);
-  localStorage.setItem('mainAreaName', area.lastDepthName);
-  refreshPage(history, selected);
-};
-
-const AreaItem = ({ area, history, selected }) => {
+const AreaItem = ({ area, setter, getter, closeModal }) => {
   const classes = useStyles();
+
+  const setMainArea = () => {
+    if (getter.areaId === area.id) {
+      return;
+    }
+    setMainAreaId(area.id);
+    setMainAreaName(area.lastDepthName);
+    setter.removeContent();
+    setter.setAreaId(area.id);
+    closeModal();
+  };
 
   return (
     <>
       <div className={classes.root}>
-        <ListItem button alignItems='center' onClick={() => setMainArea(area, history, selected)}>
+        <ListItem button alignItems='center' onClick={() => setMainArea()}>
           <ListItemText primary={area.fullName} />
         </ListItem>
       </div>

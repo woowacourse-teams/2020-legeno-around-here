@@ -40,18 +40,25 @@ const RankingPage = ({ location, history }) => {
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
+  const [areaId, setAreaId] = useState(localStorage.getItem('mainAreaId'));
   const [sectorId, setSectorId] = useState('none');
   const [locationParams, setLocationParams] = useState(location.search);
   const [criteria, setCriteria] = useState('total');
 
-  const topBarSetters = { setPage, setPosts, setSectorId, setLocationParams };
-  const mainAreaId = localStorage.getItem('mainAreaId');
+  const removeContent = () => {
+    setPage(0);
+    setPosts([]);
+    setLocationParams('');
+  };
+
+  const topBarSetters = { setAreaId, setSectorId, removeContent };
+  const topBarGetters = { areaId, sectorId };
 
   useEffect(() => {
     setHasMore(true);
     loadNextPosts();
     // eslint-disable-next-line
-  }, [sectorId, criteria]);
+  }, [areaId, sectorId, criteria]);
 
   const loadNextPosts = () => {
     let selectedSectorId;
@@ -63,7 +70,7 @@ const RankingPage = ({ location, history }) => {
       selectedSectorId = sectorId;
     }
 
-    findRankedPostsFromPage(mainAreaId, selectedSectorId, criteria, page, accessToken, history)
+    findRankedPostsFromPage(areaId, selectedSectorId, criteria, page, accessToken, history)
       .then((nextPosts) => {
         if (!nextPosts || nextPosts.length === 0) {
           setHasMore(false);
@@ -78,7 +85,12 @@ const RankingPage = ({ location, history }) => {
   };
 
   const handleChange = (event) => {
-    setCriteria(event.target.value);
+    const targetValue = event.target.value;
+    if (criteria === targetValue) {
+      return;
+    }
+    removeContent();
+    setCriteria(targetValue);
   };
 
   /* 공동순위 처리를 위해서 필요한 변수들 */
@@ -87,7 +99,7 @@ const RankingPage = ({ location, history }) => {
 
   return (
     <>
-      <SearchTopBar setter={topBarSetters} sectorId={sectorId} history={history} selected={'ranking'} />
+      <SearchTopBar setter={topBarSetters} getter={topBarGetters} history={history} selected={'ranking'} />
       <Container>
         <div className={classes.filterSection}>
           <FormControl className={classes.durationFilter}>

@@ -9,13 +9,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Areas = ({ areas, history, selected }) => {
+const Areas = ({ areas, setter, getter, closeModal }) => {
   const classes = useStyles();
 
   return (
     <List component='nav' className={classes.list}>
       {areas.map((area) => {
-        return <AreaItem key={area.id} area={area} history={history} selected={selected} />;
+        return <AreaItem key={area.id} area={area} setter={setter} getter={getter} closeModal={closeModal} />;
       })}
     </List>
   );

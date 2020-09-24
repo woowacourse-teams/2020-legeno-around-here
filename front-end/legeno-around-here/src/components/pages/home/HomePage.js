@@ -9,26 +9,33 @@ import Loading from '../../Loading';
 import BottomBlank from '../../BottomBlank';
 import Container from '@material-ui/core/Container';
 import PostItem from '../../PostItem';
-import { getMainAreaId } from '../../../util/localStorageUtils';
 import EndMessage from '../../EndMessage';
 import SearchTopBar from '../../topBar/SearchTopBar';
 
 const HomePage = ({ location, history }) => {
+  const accessToken = getAccessTokenFromCookie();
+
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(false);
+  const [areaId, setAreaId] = useState(localStorage.getItem('mainAreaId'));
   const [sectorId, setSectorId] = useState('none');
   const [locationParams, setLocationParams] = useState(location.search);
 
-  const accessToken = getAccessTokenFromCookie();
-  const mainAreaId = getMainAreaId();
-  const topBarSetters = { setPage, setPosts, setSectorId, setLocationParams };
+  const removeContent = () => {
+    setPage(0);
+    setPosts([]);
+    setLocationParams('');
+  };
+
+  const topBarSetters = { setAreaId, setSectorId, removeContent };
+  const topBarGetters = { areaId, sectorId };
 
   useEffect(() => {
     setHasMore(true);
     loadNextPosts();
     // eslint-disable-next-line
-  }, [sectorId]);
+  }, [areaId, sectorId]);
 
   const loadNextPosts = async () => {
     try {
@@ -41,7 +48,7 @@ const HomePage = ({ location, history }) => {
         selectedSectorId = sectorId;
       }
 
-      const nextPosts = await findCurrentPostsFromPage(page, accessToken, mainAreaId, selectedSectorId, history);
+      const nextPosts = await findCurrentPostsFromPage(page, accessToken, areaId, selectedSectorId, history);
       if (nextPosts.length === 0) {
         setHasMore(false);
         return;
@@ -55,7 +62,7 @@ const HomePage = ({ location, history }) => {
 
   return (
     <>
-      <SearchTopBar setter={topBarSetters} sectorId={sectorId} history={history} selected={'home'} />
+      <SearchTopBar setter={topBarSetters} getter={topBarGetters} history={history} selected={'ranking'} />
       <Container>
         <InfiniteScroll
           style={{ overflowY: 'hidden' }}
