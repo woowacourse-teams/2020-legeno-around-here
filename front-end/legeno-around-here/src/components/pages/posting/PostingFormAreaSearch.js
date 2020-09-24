@@ -5,23 +5,16 @@ import Fade from '@material-ui/core/Fade';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
-import IconButton from '@material-ui/core/IconButton';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Typography from '@material-ui/core/Typography';
-import { getAccessTokenFromCookie } from '../util/TokenUtils';
-import { findAreasFromPage } from './api/API';
-import Loading from './Loading';
 import { makeStyles } from '@material-ui/core/styles';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import Areas from './Areas';
-import { getMainAreaName } from '../util/localStorageUtils';
-import EndMessage from './EndMessage';
+import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
+import { findAreasFromPage } from '../../api/API';
+import Loading from '../../Loading';
+import PostingFormAreas from './PostingFormAreas';
+import EndMessage from '../../EndMessage';
 import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme) => ({
-  menuButton: {
-    marginRight: theme.spacing(0),
-  },
   title: {
     display: 'block',
   },
@@ -36,11 +29,10 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
-  internal: {
-    paddingTop: '5px',
-  },
-  allButton: {
-    width: '100%',
+  selectAreaButton: {
+    display: 'inlineBlock',
+    fontSize: '140%',
+    color: '#3366bb',
   },
   searchButton: {
     width: '100%',
@@ -50,21 +42,21 @@ const useStyles = makeStyles((theme) => ({
 
 const DEFAULT_SIZE = 10;
 
-const AreaSearch = ({ history, selected }) => {
-  const mainAreaName = getMainAreaName();
-
+const PostingFormAreaSearch = ({ setArea, history }) => {
   const classes = useStyles();
   const accessToken = getAccessTokenFromCookie();
+
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [open, setOpen] = useState(false);
   const [listOpen, setListOpen] = useState(false);
   const [areas, setAreas] = useState([]);
-  const [areaKeyword, setAreaKeyword] = useState(mainAreaName);
+  const [areaKeyword, setAreaKeyword] = useState('');
 
   const loadNextAreas = async () => {
     try {
       const nextAreas = await findAreasFromPage(page, accessToken, areaKeyword, history);
+
       if (nextAreas.length < DEFAULT_SIZE) {
         setAreas(areas.concat(nextAreas));
         setPage(page + 1);
@@ -78,21 +70,15 @@ const AreaSearch = ({ history, selected }) => {
     }
   };
 
+  const getInputArea = (event) => {
+    initAreaSearch();
+    setAreaKeyword(event.target.value);
+  };
+
   const searchAreaKeyWord = () => {
     setHasMore(true);
     loadNextAreas();
     setListOpen(true);
-  };
-
-  const initAreaSearch = () => {
-    setHasMore(false);
-    setPage(0);
-    setAreas([]);
-  };
-
-  const getInputArea = (event) => {
-    initAreaSearch();
-    setAreaKeyword(event.target.value);
   };
 
   const handleOpen = () => {
@@ -106,24 +92,17 @@ const AreaSearch = ({ history, selected }) => {
     setOpen(false);
   };
 
-  function refreshPage(history, selected) {
-    history.replace('/' + selected + '-reload');
-  }
-
-  const setMainAreaAll = () => {
-    localStorage.setItem('mainAreaId', '');
-    localStorage.setItem('mainAreaName', '전체');
-    refreshPage(history, selected);
+  const initAreaSearch = () => {
+    setHasMore(false);
+    setPage(0);
+    setAreas([]);
   };
 
   return (
     <>
-      <IconButton edge='start' className={classes.menuButton} color='inherit' onClick={handleOpen}>
-        <ExpandMoreIcon />
-        <Typography className={classes.title} variant='h6' noWrap>
-          {mainAreaName}
-        </Typography>
-      </IconButton>
+      <Button color='inherit' onClick={handleOpen} className={classes.selectAreaButton}>
+        지역 설정
+      </Button>
       <Modal
         aria-labelledby='transition-modal-title'
         aria-describedby='transition-modal-description'
@@ -155,16 +134,6 @@ const AreaSearch = ({ history, selected }) => {
                 </Button>
               </Grid>
             </Grid>
-            <div className={classes.internal}>
-              <Button
-                variant='contained'
-                className={classes.allButton}
-                color='primary'
-                onClick={() => setMainAreaAll()}
-              >
-                모든 지역 글 보기
-              </Button>
-            </div>
             {listOpen && (
               <InfiniteScroll
                 next={loadNextAreas}
@@ -174,7 +143,9 @@ const AreaSearch = ({ history, selected }) => {
                 height={'400px'}
                 endMessage={<EndMessage message={'모든 지역을 확인하셨습니다!'} />}
               >
-                {areas && areas.length > 0 && <Areas areas={areas} history={history} selected={selected} />}
+                {areas && areas.length > 0 && (
+                  <PostingFormAreas areas={areas} setArea={setArea} handleClose={handleClose} />
+                )}
               </InfiniteScroll>
             )}
           </div>
@@ -184,4 +155,4 @@ const AreaSearch = ({ history, selected }) => {
   );
 };
 
-export default AreaSearch;
+export default PostingFormAreaSearch;

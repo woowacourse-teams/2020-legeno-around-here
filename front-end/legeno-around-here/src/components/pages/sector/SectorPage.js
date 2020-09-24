@@ -7,8 +7,9 @@ import { findSectorsFromPage } from '../../api/API';
 import SectorTopBar from './SectorTopBar';
 import Bottom from '../../Bottom';
 import Loading from '../../Loading';
-import { Container, Typography } from '@material-ui/core';
+import { Container } from '@material-ui/core';
 import BottomBlank from '../../BottomBlank';
+import EndMessage from '../../EndMessage';
 
 const SectorPage = ({ history }) => {
   const [accessToken] = useState(getAccessTokenFromCookie());
@@ -45,7 +46,7 @@ const SectorPage = ({ history }) => {
           hasMore={hasMore}
           loader={<Loading />}
           dataLength={sectors.length}
-          endMessage={<Typography>모든 부문을 확인하셨습니다!</Typography>}
+          endMessage={<EndMessage message={'모든 부문을 확인하셨습니다!'} />}
         >
           {sectors && <Sectors sectors={sectors} />}
         </InfiniteScroll>

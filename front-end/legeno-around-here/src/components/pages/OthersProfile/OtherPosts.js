@@ -8,6 +8,7 @@ import { findOtherPostsFromPage } from '../../api/API';
 import PostItem from '../../PostItem';
 import BottomBlank from '../../BottomBlank';
 import ArrowBackTopBar from '../../topBar/ArrowBackTopBar';
+import EndMessage from '../../EndMessage';
 
 function OtherPosts({ match, history }) {
   const [page, setPage] = useState(0);
@@ -51,7 +52,7 @@ function OtherPosts({ match, history }) {
         hasMore={hasMore}
         loader={<Loading />}
         dataLength={posts.length}
-        endMessage={<h3>모두 읽으셨습니다!</h3>}
+        endMessage={<EndMessage message={'모두 읽으셨습니다!'} />}
       >
         {posts.map((post) => (
           <PostItem key={post.id} post={post} history={history} />

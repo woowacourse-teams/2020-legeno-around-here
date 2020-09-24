@@ -25,13 +25,6 @@ import OAuth2RedirectHandler from './components/thirdparty/OAuth2RedirectHandler
 import ErrorPage from './components/pages/ErrorPage';
 
 function App() {
-  const mainArea = localStorage.getItem('mainAreaName');
-
-  if (!mainArea) {
-    localStorage.setItem('mainAreaName', '전체');
-    localStorage.setItem('mainAreaId', '');
-  }
-
   return (
     <BrowserRouter>
       <Switch>

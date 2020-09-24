@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-
-import SearchTopBar from '../../topBar/SearchTopBar';
 import Bottom from '../../Bottom';
 
 import { findCurrentPostsFromPage } from '../../api/API';
@@ -11,18 +9,20 @@ import Loading from '../../Loading';
 import BottomBlank from '../../BottomBlank';
 import Container from '@material-ui/core/Container';
 import PostItem from '../../PostItem';
+import { getMainAreaId } from '../../../util/localStorageUtils';
+import EndMessage from '../../EndMessage';
+import SearchTopBar from '../../topBar/SearchTopBar';
 
 const HomePage = ({ location, history }) => {
-  const accessToken = getAccessTokenFromCookie();
-
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const [sectorId, setSectorId] = useState('none');
   const [locationParams, setLocationParams] = useState(location.search);
 
+  const accessToken = getAccessTokenFromCookie();
+  const mainAreaId = getMainAreaId();
   const topBarSetters = { setPage, setPosts, setSectorId, setLocationParams };
-  const mainAreaId = localStorage.getItem('mainAreaId');
 
   useEffect(() => {
     setHasMore(true);
@@ -63,7 +63,7 @@ const HomePage = ({ location, history }) => {
           hasMore={hasMore}
           loader={<Loading />}
           dataLength={posts.length}
-          endMessage={<h3>모두 읽으셨습니다!</h3>}
+          endMessage={<EndMessage message={'모두 읽으셨습니다!'} />}
         >
           {posts.map((post) => (
             <PostItem key={post.id} post={post} history={history} />

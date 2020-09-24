@@ -13,6 +13,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Container from '@material-ui/core/Container';
 import SearchTopBar from '../../topBar/SearchTopBar';
+import EndMessage from '../../EndMessage';
 
 const useStyle = makeStyles(() => ({
   filterSection: {
@@ -103,7 +104,7 @@ const RankingPage = ({ location, history }) => {
           hasMore={hasMore}
           loader={<Loading />}
           dataLength={posts.length}
-          endMessage={<h3>모두 읽으셨습니다!</h3>}
+          endMessage={<EndMessage message={'모두 읽으셨습니다!'} />}
         >
           {posts.map((post, index) => {
             const rank = post.zzang.count === zzangCountOfBeforePost ? rankOfBeforePost : index + 1;
