@@ -26,8 +26,8 @@ const useStyle = makeStyles({
   sectorCreatorSection: {
     width: '90%',
     display: 'flex',
-    alignItems: 'center',
     margin: '20px auto',
+    justifyContent: 'center',
   },
   sectorCreatorSectionBackground: {
     borderRadius: '20px',
@@ -126,7 +126,7 @@ const SectorDetailPage = ({ match, history }) => {
           <Typography variant='h6'>{sector.description}</Typography>
         </div>
         <div className={classes.sectorCreatorSectionBackground}>
-          <Typography>부문 창시자</Typography>
+          <Typography align='center'>부문 창시자</Typography>
           <LinkWithoutStyle
             to={isSectorCreatorMe() ? '/users/me' : '/users/' + sector.creator.id}
             className={classes.sectorCreatorSection}
