@@ -29,6 +29,20 @@ const useStyle = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     marginLeft: '8px',
+    width: '98%',
+  },
+  secondaryInfoSection: {
+    width: '98%',
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  createdTime: {
+    display: 'inline-block',
+    margin: 'auto auto auto 0',
+  },
+  deleteButton: {
+    display: 'inline-block',
+    margin: 'auto 0 auto auto',
   },
 });
 
@@ -68,9 +82,22 @@ const CommentItem = ({ comment, myId }) => {
               );
             })}
           </Typography>
-          <Typography variant='subtitle2' color='textSecondary'>
-            {convertDateFormat(comment.createdAt)}
-          </Typography>
+          <div className={classes.secondaryInfoSection}>
+            <Typography
+              variant='subtitle2'
+              color='textSecondary'
+              className={classes.createdTime}
+            >
+              {convertDateFormat(comment.createdAt)}
+            </Typography>
+            <Typography
+              variant='subtitle2'
+              color='textSecondary'
+              className={classes.deleteButton}
+            >
+              삭제
+            </Typography>
+          </div>
         </div>
       </ListItem>
       <Divider />
