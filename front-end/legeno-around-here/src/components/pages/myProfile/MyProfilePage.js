@@ -1,8 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { Typography, Container } from '@material-ui/core';
-
-import TopBar from './myProfileTopBar';
+import { Container, Typography } from '@material-ui/core';
 import Bottom from '../../Bottom';
 import { PROFILE } from '../../../constants/BottomItems';
 import { findMyInfo } from '../../api/API';
@@ -25,6 +23,7 @@ import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
 import MySectorSection from './MySectorSection';
 import BottomBlank from '../../BottomBlank';
 import LinkWithoutStyle from '../../../util/LinkWithoutStyle';
+import ArrowBackTopBar from '../../topBar/ArrowBackTopBar';
 
 const useStyle = makeStyles({
   withdrawButtonSection: {
@@ -70,7 +69,7 @@ const MyProfilePage = ({ history }) => {
 
   return (
     <>
-      <TopBar />
+      <ArrowBackTopBar />
       <Container>
         <TopSection>
           <ProfilePhoto photoUrl={profilePhotoUrl} />
@@ -99,7 +98,7 @@ const MyProfilePage = ({ history }) => {
           <NavElement linkTo='/my-awards'>수상내역</NavElement>
           <NavElement linkTo='/my-posts'>작성글</NavElement>
           {/*<NavElement linkTo='/home'>작성 댓글</NavElement>*/}
-          <MySectorSection history={history}/>
+          <MySectorSection history={history} />
         </NavSection>
         <Typography className={classes.withdrawButtonSection} component={LinkWithoutStyle} to='/confirm-withdraw'>
           회원탈퇴

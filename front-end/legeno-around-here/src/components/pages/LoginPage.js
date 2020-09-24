@@ -12,15 +12,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { removeAccessTokenCookie } from '../../util/TokenUtils';
-import LinkWithoutStyle from '../../util/LinkWithoutStyle';
-
-const Copyright = () => {
-  return (
-    <Typography variant='body2' color='textSecondary' align='center'>
-      {'Copyright © Ittabi 2020.'}
-    </Typography>
-  );
-};
+import Link from "@material-ui/core/Link";
+import Copyright from "../Copyright";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -76,6 +69,11 @@ const LoginForm = ({ history }) => {
     removeAccessTokenCookie();
   }, []);
 
+  const onClickJoin = (event) => {
+    event.preventDefault();
+    history.push('/join');
+  }
+
   return (
     <Container component='main' maxWidth='xs'>
       <CssBaseline />
@@ -119,9 +117,12 @@ const LoginForm = ({ history }) => {
           </Button>
           <Grid container>
             <Grid item>
-              <LinkWithoutStyle to='/join' variant='body2'>
-                {'처음이신가요? 회원가입을 해주세요!'}
-              </LinkWithoutStyle>
+              처음이신가요?&nbsp;
+              <Link underline='always' onClick={onClickJoin}>
+                회원가입
+              </Link>
+              을 해주세요!
+              <br />
             </Grid>
           </Grid>
         </form>

@@ -2,8 +2,6 @@ import React, { useMemo, useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-
-import MyProfileEditTopBar from '../myProfileEdit/MyProfileEditTopBar';
 import Bottom from '../../Bottom';
 import { PROFILE } from '../../../constants/BottomItems';
 import { findMyInfo, updateUser } from '../../api/API';
@@ -12,6 +10,7 @@ import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import PhotoEditSection from './PhotoEditSection';
 import useStyle from './MyProfileEditStyles';
 import Container from '@material-ui/core/Container';
+import ArrowBackTopBar from '../../topBar/ArrowBackTopBar';
 
 export const DEFAULT_IMAGE_URL = '/images/default-profile.png';
 
@@ -64,7 +63,7 @@ function MyProfileEditPage({ history }) {
 
   return (
     <>
-      <MyProfileEditTopBar />
+      <ArrowBackTopBar />
       <Container>
         <form className={classes.basicLayout} onSubmit={onSubmit}>
           <PhotoEditSection

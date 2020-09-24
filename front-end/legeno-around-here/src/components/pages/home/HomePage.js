@@ -58,6 +58,7 @@ const HomePage = ({ location, history }) => {
       <HomeTopBar setter={topBarSetters} sectorId={sectorId} history={history} selected={'home'} />
       <Container>
         <InfiniteScroll
+          style={{ overflowY: 'hidden' }}
           next={loadNextPosts}
           hasMore={hasMore}
           loader={<Loading />}
