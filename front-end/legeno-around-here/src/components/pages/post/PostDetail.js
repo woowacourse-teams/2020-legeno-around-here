@@ -14,9 +14,9 @@ import UpdatePostButton from './UpdatePostButton';
 import PostReportSection from './PostReportSection';
 import LinkWithoutStyle from '../../../util/LinkWithoutStyle';
 import DeletePostButton from './DeletePostButton';
-import { makeStyles } from "@material-ui/core/styles";
-import { MAIN_COLOR } from "../../../constants/Color";
-import { DEFAULT_IMAGE_URL } from "../myProfileEdit/MyProfileEditPage";
+import { makeStyles } from '@material-ui/core/styles';
+import { MAIN_COLOR } from '../../../constants/Color';
+import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
 
 const useStyle = makeStyles({
   postTopSection: {
@@ -45,6 +45,9 @@ const useStyle = makeStyles({
     backgroundImage: `url(${props.authorProfilePhotoUrl})`,
     border: `1px solid ${MAIN_COLOR}`,
   }),
+  addButton: {
+    padding: '0px',
+  },
 });
 
 const PostDetail = ({ post, myInfo, history }) => {
@@ -97,7 +100,7 @@ const PostDetail = ({ post, myInfo, history }) => {
   };
 
   const makeCreatorName = () => {
-    if (post.creator.nickname === "탈퇴한 회원") {
+    if (post.creator.nickname === '탈퇴한 회원') {
       return <Typography className={classes.postAuthorNicknameSection}>{post.creator.nickname}</Typography>;
     }
     return (
@@ -112,13 +115,15 @@ const PostDetail = ({ post, myInfo, history }) => {
   };
 
   const makeCreatorPhoto = () => {
-    if (post.creator.nickname === "탈퇴한 회원") {
-      return <div className={classes.authorProfilePhotoUrl} />
+    if (post.creator.nickname === '탈퇴한 회원') {
+      return <div className={classes.authorProfilePhotoUrl} />;
     }
-    return <LinkWithoutStyle
-      className={classes.authorProfilePhotoUrl}
-      to={isMyPost ? '/users/me' : '/users/' + post.creator.id}
-    />;
+    return (
+      <LinkWithoutStyle
+        className={classes.authorProfilePhotoUrl}
+        to={isMyPost ? '/users/me' : '/users/' + post.creator.id}
+      />
+    );
   };
 
   return (
@@ -187,19 +192,13 @@ const PostDetail = ({ post, myInfo, history }) => {
             />
           </Grid>
           <Grid container item xs={1}>
-            <IconButton type='submit'>
+            <IconButton type='submit' className={classes.addButton}>
               <AddIcon />
             </IconButton>
           </Grid>
         </Grid>
       </form>
-      {comments.length > 0 && myInfo &&
-        <Comments
-          comments={comments}
-          loading={loading}
-          myId={myInfo.id}
-        />
-      }
+      {comments.length > 0 && myInfo && <Comments comments={comments} loading={loading} myId={myInfo.id} />}
     </>
   );
 };
