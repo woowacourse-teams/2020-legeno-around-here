@@ -10,6 +10,7 @@ import { findMyPostsFromPage } from '../../api/API';
 import PostItem from '../../PostItem';
 import BottomBlank from '../../BottomBlank';
 import Container from '@material-ui/core/Container';
+import EndMessage from '../../EndMessage';
 
 function MyPosts({ history }) {
   const [page, setPage] = useState(0);
@@ -54,7 +55,7 @@ function MyPosts({ history }) {
           hasMore={hasMore}
           loader={<Loading />}
           dataLength={posts.length}
-          endMessage={<h3>모두 읽으셨습니다!</h3>}
+          endMessage={<EndMessage message={'모두 읽으셨습니다!'} />}
         >
           {posts.map((post) => (
             <PostItem key={post.id} post={post} history={history} />

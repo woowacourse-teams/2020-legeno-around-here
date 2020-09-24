@@ -11,7 +11,8 @@ import Loading from '../../Loading';
 import BottomBlank from '../../BottomBlank';
 import Container from '@material-ui/core/Container';
 import PostItem from '../../PostItem';
-import { getMainAreaId } from '../../../util/localStoargeHandler';
+import { getMainAreaId } from '../../../util/localStoargeUtils';
+import EndMessage from '../../EndMessage';
 
 const HomePage = ({ location, history }) => {
   const [page, setPage] = useState(0);
@@ -62,7 +63,7 @@ const HomePage = ({ location, history }) => {
           hasMore={hasMore}
           loader={<Loading />}
           dataLength={posts.length}
-          endMessage={<h3>모두 읽으셨습니다!</h3>}
+          endMessage={<EndMessage message={'모두 읽으셨습니다!'} />}
         >
           {posts.map((post) => (
             <PostItem key={post.id} post={post} history={history} />

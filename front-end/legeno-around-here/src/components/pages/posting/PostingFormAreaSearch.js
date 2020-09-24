@@ -5,13 +5,13 @@ import Fade from '@material-ui/core/Fade';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import { findAreasFromPage } from '../../api/API';
 import Loading from '../../Loading';
 import PostingFormAreas from './PostingFormAreas';
+import EndMessage from '../../EndMessage';
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -111,10 +111,9 @@ const PostingFormAreaSearch = ({ setArea, history }) => {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <Typography variant='h5'>지역을 검색해주세요!</Typography>
             <TextField
               id='outlined-search'
-              label='Search field'
+              placeholder={'지역을 검색해주세요!'}
               type='search'
               variant='outlined'
               onChange={(event) => getInputArea(event)}
@@ -130,7 +129,7 @@ const PostingFormAreaSearch = ({ setArea, history }) => {
                 loader={<Loading />}
                 dataLength={areas.length}
                 height={'400px'}
-                endMessage={<Typography>모든 지역을 확인하셨습니다!</Typography>}
+                endMessage={<EndMessage message={'모든 지역을 확인하셨습니다!'} />}
               >
                 {areas && areas.length > 0 && (
                   <PostingFormAreas areas={areas} setArea={setArea} handleClose={handleClose} />
