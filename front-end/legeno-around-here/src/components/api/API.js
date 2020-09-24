@@ -741,6 +741,10 @@ const redirectLoginWhenUnauthorized = (error, history) => {
   if (error.response && error.response.status === 403) {
     history.push('/login');
     return true;
+  } else if (error.response && error.response.status === 302) {
+    removeAccessTokenCookie();
+    history.push('/login');
+    return true;
   } else if (error.response && error.response.status === 500) {
     return false;
   }
