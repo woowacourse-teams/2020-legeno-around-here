@@ -9,12 +9,7 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import {
-  checkAuthNumber,
-  checkJoined,
-  createUser,
-  sendAuthMail,
-} from '../api/API';
+import { createUser, checkJoined, sendAuthMail, checkAuthNumber } from '../api/API';
 import Link from '@material-ui/core/Link';
 import Checkbox from '@material-ui/core/Checkbox';
 import Copyright from '../Copyright';
@@ -138,6 +133,7 @@ const JoinPage = ({ history }) => {
   const handleReset = useCallback(() => {
     setEmail('');
     setAuthNumber('');
+    setNickname('');
     setPassword('');
     setPasswordRepeat('');
     setIsEmailDisabled(false);
@@ -161,7 +157,7 @@ const JoinPage = ({ history }) => {
       return;
     }
     checkAuthNumber(email, authNumber, setIsAuthNumberDisabled);
-  }, [email, authNumber, isMailSent]);
+  }, [email, authNumber, isMailSent, isAuthNumberDisabled]);
 
   const join = useCallback(() => {
     createUser(email, nickname, password, authNumber, handleReset, history);

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { loginUser } from '../api/API';
 
 import Avatar from '@material-ui/core/Avatar';
@@ -86,7 +86,7 @@ const LoginForm = ({ history }) => {
         <Typography component='h1' variant='h5'>
           우리동네캡짱 로그인
         </Typography>
-        <form onSubmit={handleSubmit} className={classes.form}>
+        <form onSubmit={handleSubmit} className={classes.form} noValidate>
           <TextField
             variant='outlined'
             margin='normal'
