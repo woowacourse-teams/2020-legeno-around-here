@@ -9,7 +9,12 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { createUser, checkJoined, sendAuthMail, checkAuthNumber } from '../api/API';
+import {
+  checkAuthNumber,
+  checkJoined,
+  createUser,
+  sendAuthMail,
+} from '../api/API';
 import Link from '@material-ui/core/Link';
 import Checkbox from '@material-ui/core/Checkbox';
 import Copyright from '../Copyright';
@@ -133,9 +138,12 @@ const JoinPage = ({ history }) => {
   const handleReset = useCallback(() => {
     setEmail('');
     setAuthNumber('');
-    setNickname('');
     setPassword('');
     setPasswordRepeat('');
+    setIsEmailDisabled(false);
+    setIsAuthNumberDisabled(false);
+    setMailAuthToggle('인증 메일 전송');
+    setIsMailSent(false);
   }, []);
 
   const checkEmail = useCallback(() => {
@@ -143,6 +151,10 @@ const JoinPage = ({ history }) => {
   }, [email]);
 
   const mailAuthToggleFunction = useCallback(() => {
+    if (isAuthNumberDisabled) {
+      alert('인증이 완료됐습니다.');
+      return;
+    }
     if (isMailSent === false) {
       alert('인증 메일을 전송했습니다.');
       sendAuthMail(email, setIsEmailDisabled, setMailAuthToggle, setIsMailSent);
