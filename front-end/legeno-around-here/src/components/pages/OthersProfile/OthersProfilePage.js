@@ -5,12 +5,12 @@ import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import { findOthersProfileById } from '../../api/API';
 import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
 import Loading from '../../Loading';
-import TopBar from '../myProfile/myProfileTopBar';
 import { Nickname, PrivacyBox, ProfilePhoto, TopSection } from '../../myProfile/PrivacySection';
 import { AwardsSection, AwardSummary } from '../../myProfile/AwardSection';
 import { NavElement, NavSection } from '../../myProfile/LinksSection';
 import Bottom from '../../Bottom';
 import BottomBlank from '../../BottomBlank';
+import ArrowBackTopBar from '../../topBar/ArrowBackTopBar';
 
 function OthersProfilePage({ match, history }) {
   const [accessToken] = useState(getAccessTokenFromCookie());
@@ -41,7 +41,7 @@ function OthersProfilePage({ match, history }) {
 
   return (
     <>
-      <TopBar />
+      <ArrowBackTopBar />
       <TopSection>
         <ProfilePhoto photoUrl={profilePhotoUrl} />
         <PrivacyBox>

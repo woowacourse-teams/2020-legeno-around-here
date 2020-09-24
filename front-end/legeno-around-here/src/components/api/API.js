@@ -297,6 +297,7 @@ export const findCurrentPostsFromPage = async (page, accessToken, mainAreaId, se
       'X-Auth-Token': accessToken,
     },
   };
+
   return await axios
     .get(
       DEFAULT_URL +
@@ -404,7 +405,7 @@ export const findOtherPostsFromPage = async (otherUserId, page, accessToken, his
     });
 };
 
-export const findRankedPostsFromPage = async (mainAreaId, criteria, page, accessToken, history) => {
+export const findRankedPostsFromPage = async (mainAreaId, selectedSectorId, criteria, page, accessToken, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -420,7 +421,7 @@ export const findRankedPostsFromPage = async (mainAreaId, criteria, page, access
         `direction=${DEFAULT_DIRECTION}&` +
         `criteria=${criteria}&` +
         `areaId=${mainAreaId}&` +
-        `sectorIds=`,
+        `sectorIds=${selectedSectorId}`,
       config,
     )
     .then((response) => response.data.content)

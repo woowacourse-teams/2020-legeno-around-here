@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-import MyPostsTopBar from './MyPostsTopBar';
+import ArrowBackTopBar from '../../topBar/ArrowBackTopBar';
 import Bottom from '../../Bottom';
 import { PROFILE } from '../../../constants/BottomItems';
 import Loading from '../../Loading';
@@ -47,7 +47,7 @@ function MyPosts({ history }) {
 
   return (
     <>
-      <MyPostsTopBar backButtonLink='/users/me' />
+      <ArrowBackTopBar backButtonLink='/users/me' />
       <Container>
         <InfiniteScroll
           next={fetchNextPosts}

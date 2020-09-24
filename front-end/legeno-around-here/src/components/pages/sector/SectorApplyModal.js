@@ -4,14 +4,8 @@ import useStyles from './SectorApplyButtonStyles';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import { createPendingSector } from '../../api/API';
 import Loading from '../../Loading';
-import ErrorTypography from '../../ErrorTypography';
 
 const SectorApplyModal = ({ open, handleClose, history }) => {
-  const NAME_MIN_LENGTH = 2;
-  const NAME_MAX_LENGTH = 20;
-  const DESCRIPTION_MIN_LENGTH = 2;
-  const DESCRIPTION_MAX_LENGTH = 40;
-
   const classes = useStyles();
   const accessToken = getAccessTokenFromCookie();
   const [name, setName] = useState('');
@@ -24,26 +18,6 @@ const SectorApplyModal = ({ open, handleClose, history }) => {
 
   const onDescriptionChanged = (e) => {
     setDescription(e.target.value);
-  };
-
-  const checkName = () => {
-    if (validateInputLength(name, NAME_MIN_LENGTH, NAME_MAX_LENGTH)) {
-      return <ErrorTypography content={`부문명은 ${NAME_MIN_LENGTH} ~ ${NAME_MAX_LENGTH} 글자 사이로 작성해주세요!`} />;
-    }
-  };
-
-  const checkDescription = () => {
-    if (validateInputLength(description, DESCRIPTION_MIN_LENGTH, DESCRIPTION_MAX_LENGTH)) {
-      return (
-        <ErrorTypography
-          content={`부문설명은 ${DESCRIPTION_MIN_LENGTH} ~ ${DESCRIPTION_MAX_LENGTH} 글자 사이로 작성해주세요!`}
-        />
-      );
-    }
-  };
-
-  const validateInputLength = (input, minLength, maxLength) => {
-    return input && (input.length < minLength || input.length > maxLength);
   };
 
   const submitSector = (e) => {
@@ -74,37 +48,38 @@ const SectorApplyModal = ({ open, handleClose, history }) => {
     >
       <Fade in={open}>
         <div className={classes.paper}>
+          <h2>부문 신청</h2>
           <form onSubmit={submitSector} id='posting-form'>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
+                  label='부문명'
                   type='text'
                   fullWidth
                   multiline
                   rows={1}
-                  placeholder='부문명을 입력해주세요!'
+                  placeholder='부문명을 입력해주세요! (20자 이내 작성)'
                   onChange={onNameChanged}
                   value={name}
                   inputProps={{ maxLength: 20 }}
+                  helperText={`${name.length}/20`}
+                  variant='outlined'
                 />
               </Grid>
               <Grid item xs={12}>
-                {checkName()}
-              </Grid>
-              <Grid item xs={12}>
                 <TextField
+                  label='부문 설명'
                   type='text'
                   fullWidth
                   multiline
                   rows={2}
-                  placeholder='부문을 간단하게 표현해주세요!'
+                  placeholder='부문을 간단하게 설명해주세요! (40자 이내 작성)'
                   onChange={onDescriptionChanged}
                   value={description}
                   inputProps={{ maxLength: 40 }}
+                  helperText={`${description.length}/40`}
+                  variant='outlined'
                 />
-              </Grid>
-              <Grid item xs={12}>
-                {checkDescription()}
               </Grid>
               <Grid item xs={12}>
                 <Typography variant='caption' color='secondary' noWrap>

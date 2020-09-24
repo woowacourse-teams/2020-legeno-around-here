@@ -45,6 +45,9 @@ const useStyle = makeStyles({
     backgroundImage: `url(${props.authorProfilePhotoUrl})`,
     border: `1px solid ${MAIN_COLOR}`,
   }),
+  addButton: {
+    padding: '0px',
+  },
 });
 
 const PostDetail = ({ post, myInfo, history }) => {
@@ -189,7 +192,7 @@ const PostDetail = ({ post, myInfo, history }) => {
             />
           </Grid>
           <Grid container item xs={1}>
-            <IconButton type='submit'>
+            <IconButton type='submit' className={classes.addButton}>
               <AddIcon />
             </IconButton>
           </Grid>

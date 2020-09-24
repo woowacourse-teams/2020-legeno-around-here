@@ -13,6 +13,7 @@ import { HOME, PROFILE, WRITING, SECTOR, RANKING } from '../constants/BottomItem
 
 const bottomWarpStyle = {
   padding: '0px',
+  minWidth: '33px',
 };
 
 const useStyles = makeStyles({

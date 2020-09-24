@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { makeStyles } from '@material-ui/core/styles';
 
-import TopBar from './RankingTopBar';
 import Bottom from '../../Bottom';
 import BottomBlank from '../../BottomBlank';
 import Loading from '../../Loading';
@@ -10,10 +9,10 @@ import { findRankedPostsFromPage } from '../../api/API';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import { RANKING } from '../../../constants/BottomItems';
 import RankingItem from './RankingItem';
-import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Container from '@material-ui/core/Container';
+import HomeTopBar from '../home/HomeTopBar';
 
 const useStyle = makeStyles(() => ({
   filterSection: {
@@ -30,40 +29,39 @@ const useStyle = makeStyles(() => ({
     display: 'inline-block',
     marginRight: 'auto',
   },
-  sectorFilter: {
-    display: 'inline-block',
-    marginLeft: 'auto',
-  },
 }));
 
-const RankingPage = ({ history }) => {
+const RankingPage = ({ location, history }) => {
+  const classes = useStyle();
+  const accessToken = getAccessTokenFromCookie();
+
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
+  const [sectorId, setSectorId] = useState('none');
+  const [locationParams, setLocationParams] = useState(location.search);
   const [criteria, setCriteria] = useState('total');
 
-  const accessToken = getAccessTokenFromCookie();
+  const topBarSetters = { setPage, setPosts, setSectorId, setLocationParams };
   const mainAreaId = localStorage.getItem('mainAreaId');
-  const classes = useStyle();
 
-  /* 처음에 보여줄 글 목록을 가져옴 */
   useEffect(() => {
-    findRankedPostsFromPage(mainAreaId, criteria, 0, accessToken, history)
-      .then((firstPosts) => {
-        if (!firstPosts || firstPosts.length === 0) {
-          setHasMore(false);
-          return;
-        }
-        setPosts(firstPosts);
-      })
-      .catch((e) => {
-        setHasMore(false);
-      });
-    setPage(1);
-  }, [mainAreaId, accessToken, criteria, history]);
+    setHasMore(true);
+    loadNextPosts();
+    // eslint-disable-next-line
+  }, [sectorId]);
 
-  const fetchNextPosts = () => {
-    findRankedPostsFromPage(mainAreaId, criteria, page, accessToken, history)
+  const loadNextPosts = () => {
+    let selectedSectorId;
+    if (locationParams.includes('?sectorId=')) {
+      selectedSectorId = locationParams.split('?sectorId=')[1];
+    } else if (sectorId === 'none') {
+      selectedSectorId = '';
+    } else {
+      selectedSectorId = sectorId;
+    }
+
+    findRankedPostsFromPage(mainAreaId, selectedSectorId, criteria, page, accessToken, history)
       .then((nextPosts) => {
         if (!nextPosts || nextPosts.length === 0) {
           setHasMore(false);
@@ -87,7 +85,7 @@ const RankingPage = ({ history }) => {
 
   return (
     <>
-      <TopBar history={history} />
+      <HomeTopBar setter={topBarSetters} sectorId={sectorId} history={history} selected={'ranking'} />
       <Container>
         <div className={classes.filterSection}>
           <FormControl className={classes.durationFilter}>
@@ -97,12 +95,11 @@ const RankingPage = ({ history }) => {
               <option value='week'>주간</option>
               <option value='yesterday'>어제</option>
             </Select>
+            &nbsp;캡짱들을 소개합니다!
           </FormControl>
-
-          <Typography className={classes.sectorFilter}>부문 전체</Typography>
         </div>
         <InfiniteScroll
-          next={fetchNextPosts}
+          next={loadNextPosts}
           hasMore={hasMore}
           loader={<Loading />}
           dataLength={posts.length}
