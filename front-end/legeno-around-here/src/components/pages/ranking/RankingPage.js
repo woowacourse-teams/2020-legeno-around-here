@@ -51,7 +51,7 @@ const RankingPage = ({ location, history }) => {
     setHasMore(true);
     loadNextPosts();
     // eslint-disable-next-line
-  }, [sectorId]);
+  }, [sectorId, criteria]);
 
   const loadNextPosts = () => {
     let selectedSectorId;
