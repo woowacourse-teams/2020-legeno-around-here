@@ -22,7 +22,7 @@ const PostingForm = ({ history }) => {
   };
 
   const isAllValue = (mainAreaId, mainAreaName) => {
-    return isNullValue(mainAreaId, mainAreaName) || mainAreaId === '' || mainAreaName === '전체';
+    return isNullValue(mainAreaId, mainAreaName) || mainAreaId === '' || mainAreaName === '대한민국';
   };
 
   const getMainArea = () => {

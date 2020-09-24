@@ -14,6 +14,7 @@ import Select from '@material-ui/core/Select';
 import Container from '@material-ui/core/Container';
 import SearchTopBar from '../../topBar/SearchTopBar';
 import EndMessage from '../../EndMessage';
+import Typography from '@material-ui/core/Typography';
 
 const useStyle = makeStyles(() => ({
   filterSection: {
@@ -94,9 +95,9 @@ const RankingPage = ({ location, history }) => {
               <option value='total'>역대</option>
               <option value='month'>월간</option>
               <option value='week'>주간</option>
-              <option value='yesterday'>어제</option>
+              <option value='yesterday'>어제 하루</option>
             </Select>
-            &nbsp;캡짱들을 소개합니다!
+            <Typography className={classes.durationFilter}>&nbsp;짱을 가장 많이 받은 자랑글</Typography>
           </FormControl>
         </div>
         <InfiniteScroll

@@ -112,7 +112,7 @@ const AreaSearch = ({ history, selected }) => {
 
   const setMainAreaAll = () => {
     localStorage.setItem('mainAreaId', '');
-    localStorage.setItem('mainAreaName', '전체');
+    localStorage.setItem('mainAreaName', '대한민국');
     refreshPage(history, selected);
   };
 
