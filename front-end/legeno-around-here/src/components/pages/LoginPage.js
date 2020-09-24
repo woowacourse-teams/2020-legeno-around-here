@@ -15,6 +15,7 @@ import { removeAccessTokenCookie } from '../../util/TokenUtils';
 import Link from '@material-ui/core/Link';
 import Copyright from '../Copyright';
 import SocialLogin from '../thirdparty/SocalLogin';
+import LinkWithoutStyle from '../../util/LinkWithoutStyle';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
