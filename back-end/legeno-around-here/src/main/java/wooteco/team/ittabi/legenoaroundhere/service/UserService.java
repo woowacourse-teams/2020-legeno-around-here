@@ -26,6 +26,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserOtherResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordUpdateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordWithAuthUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.AlreadyExistUserException;
@@ -88,13 +89,14 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public TokenResponse loginAdmin(LoginRequest loginRequest) {
-        User user = findUserByEmail(loginRequest);
+        String email = loginRequest.getEmail();
+        User user = findUserByEmail(email);
         validateAdmin(user);
         return getTokenResponse(loginRequest, user);
     }
 
-    private User findUserByEmail(LoginRequest loginRequest) {
-        return userRepository.findByEmail(new Email(loginRequest.getEmail()))
+    private User findUserByEmail(String email) {
+        return userRepository.findByEmail(new Email(email))
             .orElseThrow(() -> new NotExistsException("가입되지 않은 회원입니다."));
     }
 
@@ -119,7 +121,8 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public TokenResponse login(LoginRequest loginRequest) {
-        User user = findUserByEmail(loginRequest);
+        String email = loginRequest.getEmail();
+        User user = findUserByEmail(email);
         return getTokenResponse(loginRequest, user);
     }
 
@@ -161,10 +164,24 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void changeMyPassword(UserPasswordUpdateRequest userPasswordUpdateRequest) {
+    public void changeMyPasswordWithAuth(
+        UserPasswordWithAuthUpdateRequest userPasswordWithAuthUpdateRequest) {
         User user = findPrincipal();
+        String password = userPasswordWithAuthUpdateRequest.getPassword();
 
+        changeMyPassword(user, password);
+    }
+
+    @Transactional
+    public void changeMyPasswordWithoutAuth(UserPasswordUpdateRequest userPasswordUpdateRequest) {
+        String email = userPasswordUpdateRequest.getEmail();
         String password = userPasswordUpdateRequest.getPassword();
+        User user = findUserByEmail(email);
+
+        changeMyPassword(user, password);
+    }
+
+    private void changeMyPassword(User user, String password) {
         if (PASSWORD_ENCODER.matches(password, user.getPassword())) {
             throw new WrongUserInputException("기존의 비밀번호와 동일한 비밀번호입니다.");
         }
