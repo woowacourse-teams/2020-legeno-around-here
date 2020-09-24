@@ -33,7 +33,7 @@ const useStyle = makeStyles({
     width: '98%',
   },
   secondaryInfoSection: {
-    width: '98%',
+    width: '90%',
     display: 'flex',
     flexDirection: 'row',
   },

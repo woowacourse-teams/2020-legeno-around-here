@@ -726,6 +726,7 @@ export const deleteComment = (accessToken, commentId) => {
   axios
   .delete(DEFAULT_URL + '/comments/' + commentId, config)
   .then(async () => {
+    alert('정상적으로 삭제되었습니다!');
   })
   .catch(async (error) => {
     if (await redirectLoginWhenUnauthorized(error)) return;

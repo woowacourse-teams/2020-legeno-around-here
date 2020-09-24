@@ -130,9 +130,9 @@ const PostDetail = ({ post, myInfo, history }) => {
   };
 
   const deleteCommentFunction = async (accessToken, commentId) => {
-    if (window.confirm("정말 삭제하시겠습니까??") === true){    //확인
+    if (window.confirm("정말 삭제하시겠습니까??")) {
       await deleteComment(accessToken, commentId);
-      setComments(comments.filter(comment => comment.id !== commentId))
+      setComments(comments.filter(comment => comment.id !== commentId));
     }
   };
 
