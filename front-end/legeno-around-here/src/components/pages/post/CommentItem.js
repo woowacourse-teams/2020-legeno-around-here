@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListItem, Typography, ListItemText, Divider } from '@material-ui/core';
+import { Divider, ListItem, Typography } from '@material-ui/core';
 import { convertDateFormat } from '../../../util/TimeUtils';
 import { makeStyles } from '@material-ui/core/styles';
 import LinkWithoutStyle from '../../../util/LinkWithoutStyle';
@@ -14,6 +14,8 @@ const useStyle = makeStyles({
   creatorProfilePhoto: (props) => ({
     width: '35px',
     height: '35px',
+    minWidth: '35px',
+    minHeight: '35px',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
@@ -56,7 +58,19 @@ const CommentItem = ({ comment, myId }) => {
           <Typography variant='subtitle1' color='textSecondary'>
             {comment.creator.nickname}
           </Typography>
-          <ListItemText primary={comment.writing} secondary={convertDateFormat(comment.createdAt)} />
+          <Typography variant='subtitle1'>
+            {comment.writing.split('\n').map((line, index) => {
+              return (
+                <span key={index}>
+                  {line}
+                  <br />
+                </span>
+              );
+            })}
+          </Typography>
+          <Typography variant='subtitle2' color='textSecondary'>
+            {convertDateFormat(comment.createdAt)}
+          </Typography>
         </div>
       </ListItem>
       <Divider />

@@ -31,8 +31,10 @@ const useStyles = makeStyles(() => ({
   img: {
     margin: 'auto',
     display: 'block',
+    width: 'auto',
+    height: 'auto',
+    maxHeight: '350px',
     maxWidth: '100%',
-    maxHeight: '100%',
   },
 }));
 
