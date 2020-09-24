@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Divider, ListItem, Typography } from '@material-ui/core';
 import { convertDateFormat } from '../../../util/TimeUtils';
 import { makeStyles } from '@material-ui/core/styles';
 import LinkWithoutStyle from '../../../util/LinkWithoutStyle';
 import { MAIN_COLOR } from '../../../constants/Color';
 import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
+import {getAccessTokenFromCookie} from "../../../util/TokenUtils";
 
 const useStyle = makeStyles({
   photoAndTextsLayout: {
@@ -46,7 +47,8 @@ const useStyle = makeStyles({
   },
 });
 
-const CommentItem = ({ comment, myId }) => {
+const CommentItem = ({ comment, myId, onCommentDelete }) => {
+  const [accessToken] = useState(getAccessTokenFromCookie());
   const isMyComment = comment.creator.id === myId;
   const classes = useStyle({
     creatorProfilePhotoUrl: comment.creator.image ? comment.creator.image.url : DEFAULT_IMAGE_URL,
@@ -89,14 +91,16 @@ const CommentItem = ({ comment, myId }) => {
               className={classes.createdTime}
             >
               {convertDateFormat(comment.createdAt)}
-            </Typography>
-            <Typography
-              variant='subtitle2'
-              color='textSecondary'
-              className={classes.deleteButton}
-            >
-              삭제
-            </Typography>
+            </Typography> {
+              isMyComment && <Typography
+                variant='subtitle2'
+                color='textSecondary'
+                className={classes.deleteButton}
+                onClick={() => onCommentDelete(accessToken, comment.id)}
+              >
+                삭제
+              </Typography>
+            }
           </div>
         </div>
       </ListItem>
