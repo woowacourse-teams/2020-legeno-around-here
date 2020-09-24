@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
+  internal: {
+    paddingTop: '5px',
+  },
 }));
 
 const DEFAULT_SIZE = 10;
@@ -41,7 +44,7 @@ const AreaSearch = ({ history, selected }) => {
   const mainArea = localStorage.getItem('mainAreaName');
 
   if (!mainArea) {
-    localStorage.setItem('mainAreaName', '서울특별시');
+    localStorage.setItem('mainAreaName', '전체');
   }
 
   const classes = useStyles();
@@ -97,6 +100,16 @@ const AreaSearch = ({ history, selected }) => {
     setOpen(false);
   };
 
+  function refreshPage(history, selected) {
+    history.replace('/' + selected + '-reload');
+  }
+
+  const setMainAreaAll = () => {
+    localStorage.setItem('mainAreaId', '');
+    localStorage.setItem('mainAreaName', '전체');
+    refreshPage(history, selected);
+  };
+
   return (
     <>
       <IconButton edge='start' className={classes.menuButton} color='inherit' onClick={handleOpen}>
@@ -120,17 +133,24 @@ const AreaSearch = ({ history, selected }) => {
         <Fade in={open}>
           <div className={classes.paper}>
             <h2 id='transition-modal-title'>지역을 검색해주세요!</h2>
-            <TextField
-              id='outlined-search'
-              label='Search field'
-              type='search'
-              variant='outlined'
-              onChange={(event) => getInputArea(event)}
-              inputProps={{ maxLength: 40 }}
-            />
-            <Button>
-              <SearchIcon onClick={() => searchAreaKeyWord()} />
-            </Button>
+            <div>
+              <TextField
+                id='outlined-search'
+                label='Search field'
+                type='search'
+                variant='outlined'
+                onChange={(event) => getInputArea(event)}
+                inputProps={{ maxLength: 40 }}
+              />
+              <Button>
+                <SearchIcon onClick={() => searchAreaKeyWord()} />
+              </Button>
+            </div>
+            <div className={classes.internal}>
+              <Button variant='contained' color='primary' onClick={() => setMainAreaAll()}>
+                모든 지역 글 보기
+              </Button>
+            </div>
             {listOpen && (
               <InfiniteScroll
                 next={loadNextAreas}

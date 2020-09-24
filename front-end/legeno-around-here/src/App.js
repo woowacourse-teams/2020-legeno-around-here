@@ -28,8 +28,8 @@ function App() {
   const mainArea = localStorage.getItem('mainAreaName');
 
   if (!mainArea) {
-    localStorage.setItem('mainAreaName', '서울특별시');
-    localStorage.setItem('mainAreaId', 1);
+    localStorage.setItem('mainAreaName', '전체');
+    localStorage.setItem('mainAreaId', '');
   }
 
   return (
