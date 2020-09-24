@@ -9,7 +9,6 @@ import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import { findOtherPostsFromPage } from '../../api/API';
 import PostItem from '../../PostItem';
 import BottomBlank from '../../BottomBlank';
-import EndMessage from '../../EndMessage';
 
 function OtherPosts({ match, history }) {
   const [page, setPage] = useState(0);
@@ -47,7 +46,7 @@ function OtherPosts({ match, history }) {
 
   return (
     <>
-      <TopBar />
+      <ArrowBackTopBar />
       <InfiniteScroll
         next={fetchNextPosts}
         hasMore={hasMore}

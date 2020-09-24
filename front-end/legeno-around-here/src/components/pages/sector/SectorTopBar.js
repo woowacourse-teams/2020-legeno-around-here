@@ -4,7 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import SectorApplyButton from './SectorApplyButton';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   grow: {
     flexGrow: 1,
   },
@@ -22,7 +22,7 @@ const SectorTopBar = ({ history }) => {
         <Toolbar>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <SectorApplyButton history={history}/>
+            <SectorApplyButton history={history} />
           </div>
         </Toolbar>
       </AppBar>

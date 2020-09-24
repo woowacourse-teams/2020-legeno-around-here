@@ -5,6 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -27,6 +28,7 @@ public class UserImage extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
+    @Lob
     @Column(nullable = false)
     private String url;
 

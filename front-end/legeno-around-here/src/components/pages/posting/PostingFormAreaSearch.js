@@ -56,6 +56,7 @@ const PostingFormAreaSearch = ({ setArea, history }) => {
   const loadNextAreas = async () => {
     try {
       const nextAreas = await findAreasFromPage(page, accessToken, areaKeyword, history);
+
       if (nextAreas.length < DEFAULT_SIZE) {
         setAreas(areas.concat(nextAreas));
         setPage(page + 1);

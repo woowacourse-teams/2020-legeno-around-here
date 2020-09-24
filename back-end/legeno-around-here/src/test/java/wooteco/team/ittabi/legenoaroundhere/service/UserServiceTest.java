@@ -29,6 +29,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.notification.Notification;
+import wooteco.team.ittabi.legenoaroundhere.domain.user.AuthProvider;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Role;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
@@ -301,6 +302,7 @@ class UserServiceTest extends ServiceTest {
             .password("daPassword")
             .build();
         user.deactivate();
+        user.setProvider(AuthProvider.LOCAL);
         User deactivatedUser = userRepository.save(user);
 
         assertThatThrownBy(() -> userService.findUser(deactivatedUser.getId()))

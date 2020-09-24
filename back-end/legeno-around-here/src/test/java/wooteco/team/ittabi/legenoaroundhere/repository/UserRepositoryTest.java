@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import wooteco.team.ittabi.legenoaroundhere.domain.user.AuthProvider;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -25,6 +26,7 @@ public class UserRepositoryTest {
             .nickname(TEST_NEW_USER_NICKNAME)
             .password(TEST_NEW_USER_PASSWORD)
             .build();
+        notSavedUser.setProvider(AuthProvider.LOCAL);
         assertThat(notSavedUser.getId()).isNull();
         assertThat(notSavedUser.getCreatedAt()).isNull();
         assertThat(notSavedUser.getModifiedAt()).isNull();

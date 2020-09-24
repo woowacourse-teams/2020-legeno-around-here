@@ -64,7 +64,6 @@ export const createPost = async (postData, accessToken, history) => {
   } catch (error) {
     if (await redirectLoginWhenUnauthorized(error, history)) return;
 
-    console.log(error);
     const errorResponse = error.response.data;
     alert(errorResponse.errorMessage);
   }
@@ -298,6 +297,7 @@ export const findCurrentPostsFromPage = async (page, accessToken, mainAreaId, se
       'X-Auth-Token': accessToken,
     },
   };
+
   return await axios
     .get(
       DEFAULT_URL +
@@ -405,7 +405,7 @@ export const findOtherPostsFromPage = async (otherUserId, page, accessToken, his
     });
 };
 
-export const findRankedPostsFromPage = async (mainAreaId, criteria, page, accessToken, history) => {
+export const findRankedPostsFromPage = async (mainAreaId, selectedSectorId, criteria, page, accessToken, history) => {
   const config = {
     headers: {
       'X-Auth-Token': accessToken,
@@ -421,7 +421,7 @@ export const findRankedPostsFromPage = async (mainAreaId, criteria, page, access
         `direction=${DEFAULT_DIRECTION}&` +
         `criteria=${criteria}&` +
         `areaId=${mainAreaId}&` +
-        `sectorIds=`,
+        `sectorIds=${selectedSectorId}`,
       config,
     )
     .then((response) => response.data.content)
@@ -723,7 +723,6 @@ const redirectLoginWhenUnauthorized = (error, history) => {
     history.push('/login');
     return true;
   } else if (error.response && error.response.status === 500) {
-    console.log(error.response);
     return false;
   }
   return false;

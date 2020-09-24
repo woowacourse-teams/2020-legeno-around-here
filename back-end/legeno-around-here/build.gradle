@@ -26,6 +26,7 @@ dependencies {
     implementation 'com.amazonaws:aws-java-sdk-s3'
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.security:spring-security-oauth2-client'
 
     testImplementation 'io.rest-assured:rest-assured'
     testImplementation 'org.springframework.security:spring-security-test'
