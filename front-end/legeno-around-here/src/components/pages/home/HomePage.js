@@ -13,7 +13,7 @@ import EndMessage from '../../EndMessage';
 import SearchTopBar from '../../topBar/SearchTopBar';
 import { getMainAreaId, getMainSectorId } from '../../../util/localStorageUtils';
 
-const HomePage = ({ location, history }) => {
+const HomePage = ({ history }) => {
   const accessToken = getAccessTokenFromCookie();
 
   const [page, setPage] = useState(0);
@@ -21,12 +21,10 @@ const HomePage = ({ location, history }) => {
   const [hasMore, setHasMore] = useState(false);
   const [areaId, setAreaId] = useState(getMainAreaId());
   const [sectorId, setSectorId] = useState(getMainSectorId());
-  const [locationParams, setLocationParams] = useState(location.search);
 
   const removeContent = () => {
     setPage(0);
     setPosts([]);
-    setLocationParams('');
   };
 
   const topBarSetters = { setAreaId, setSectorId, removeContent };

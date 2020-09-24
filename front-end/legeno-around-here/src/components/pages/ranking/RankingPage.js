@@ -34,7 +34,7 @@ const useStyle = makeStyles(() => ({
   },
 }));
 
-const RankingPage = ({ location, history }) => {
+const RankingPage = ({ history }) => {
   const classes = useStyle();
   const accessToken = getAccessTokenFromCookie();
 
@@ -43,13 +43,11 @@ const RankingPage = ({ location, history }) => {
   const [hasMore, setHasMore] = useState(true);
   const [areaId, setAreaId] = useState(getMainAreaId());
   const [sectorId, setSectorId] = useState(getMainSectorId());
-  const [locationParams, setLocationParams] = useState(location.search);
   const [criteria, setCriteria] = useState(getMainCriteria());
 
   const removeContent = () => {
     setPage(0);
     setPosts([]);
-    setLocationParams('');
   };
 
   const topBarSetters = { setAreaId, setSectorId, removeContent };
