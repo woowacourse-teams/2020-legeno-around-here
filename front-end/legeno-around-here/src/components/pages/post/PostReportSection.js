@@ -15,7 +15,6 @@ import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import { createPostReport } from '../../api/API';
 import Loading from '../../Loading';
 import Typography from '@material-ui/core/Typography';
-import { ellipsis } from '../../../util/StringUtils';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -33,8 +32,6 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
 }));
-
-const POST_REPORT_ELLIPSIS_SIZE = 25;
 
 const PostReportSection = ({ post, history }) => {
   const classes = useStyles();
