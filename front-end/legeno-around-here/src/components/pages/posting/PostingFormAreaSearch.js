@@ -12,6 +12,7 @@ import { findAreasFromPage } from '../../api/API';
 import Loading from '../../Loading';
 import PostingFormAreas from './PostingFormAreas';
 import EndMessage from '../../EndMessage';
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -32,6 +33,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'inlineBlock',
     fontSize: '140%',
     color: '#3366bb',
+  },
+  searchButton: {
+    width: '100%',
+    height: '100%',
   },
 }));
 
@@ -111,17 +116,23 @@ const PostingFormAreaSearch = ({ setArea, history }) => {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <TextField
-              id='outlined-search'
-              placeholder={'지역을 검색해주세요!'}
-              type='search'
-              variant='outlined'
-              onChange={(event) => getInputArea(event)}
-              inputProps={{ maxLength: 40 }}
-            />
-            <Button>
-              <SearchIcon onClick={() => searchAreaKeyWord()} />
-            </Button>
+            <Grid container>
+              <Grid item>
+                <TextField
+                  id='outlined-search'
+                  placeholder={'지역을 검색해주세요!'}
+                  type='search'
+                  variant='outlined'
+                  onChange={(event) => getInputArea(event)}
+                  inputProps={{ maxLength: 40 }}
+                />
+              </Grid>
+              <Grid item>
+                <Button className={classes.searchButton}>
+                  <SearchIcon onClick={() => searchAreaKeyWord()} />
+                </Button>
+              </Grid>
+            </Grid>
             {listOpen && (
               <InfiniteScroll
                 next={loadNextAreas}

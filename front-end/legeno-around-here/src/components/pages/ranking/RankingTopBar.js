@@ -22,13 +22,8 @@ const useStyles = makeStyles((theme) => ({
 
 const RankingTopBar = ({ history }) => {
   const classes = useStyles();
-  const mainArea = localStorage.getItem('mainAreaName');
   const accessToken = getAccessTokenFromCookie();
   const [unreadNotification, setUnreadNotification] = useState(0);
-
-  if (!mainArea) {
-    localStorage.setItem('mainAreaName', '전체');
-  }
 
   useEffect(() => {
     getUnreadNotificationCount(accessToken, setUnreadNotification, history);
