@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-import HomeTopBar from './HomeTopBar';
+import SearchTopBar from '../../topBar/SearchTopBar';
 import Bottom from '../../Bottom';
 
 import { findCurrentPostsFromPage } from '../../api/API';
@@ -55,7 +55,7 @@ const HomePage = ({ location, history }) => {
 
   return (
     <>
-      <HomeTopBar setter={topBarSetters} sectorId={sectorId} history={history} selected={'home'} />
+      <SearchTopBar setter={topBarSetters} sectorId={sectorId} history={history} selected={'home'} />
       <Container>
         <InfiniteScroll
           style={{ overflowY: 'hidden' }}

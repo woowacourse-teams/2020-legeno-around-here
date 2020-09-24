@@ -34,15 +34,16 @@ const WithdrawConfirmPage = ({ history }) => {
   const accessToken = getAccessTokenFromCookie();
   const classes = useStyle();
 
-  return (<>
-    <PostDetailTopBar/>
-      <BottomBlank/>
-      <div className={classes.withdrawInformationSection} >
+  return (
+    <>
+      <PostDetailTopBar />
+      <BottomBlank />
+      <div className={classes.withdrawInformationSection}>
         <Typography>
           한 번 탈퇴하시면 다시 복구할 수 없습니다.
-          <br/>
+          <br />
           정말로 탈퇴하시겠습니까?
-          <br/>
+          <br />
           탈퇴시 작성하신 글 및 댓글은 자동 제거되지 않습니다.
         </Typography>
         <Typography className={classes.buttonWhetherWithdraw} component={LinkWithoutStyle} to='/users/me'>
@@ -52,9 +53,10 @@ const WithdrawConfirmPage = ({ history }) => {
           네
         </Typography>
       </div>
-    <BottomBlank/>
-    <Bottom />
-  </>);
+      <BottomBlank />
+      <Bottom />
+    </>
+  );
 };
 
 export default WithdrawConfirmPage;

@@ -64,7 +64,6 @@ export const createPost = async (postData, accessToken, history) => {
   } catch (error) {
     if (await redirectLoginWhenUnauthorized(error, history)) return;
 
-    console.log(error);
     const errorResponse = error.response.data;
     alert(errorResponse.errorMessage);
   }
@@ -724,7 +723,6 @@ const redirectLoginWhenUnauthorized = (error, history) => {
     history.push('/login');
     return true;
   } else if (error.response && error.response.status === 500) {
-    console.log(error.response);
     return false;
   }
   return false;
