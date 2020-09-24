@@ -1,5 +1,5 @@
 export const setAccessTokenCookie = (accessToken) => {
-  document.cookie = `accessToken=${accessToken}`;
+  document.cookie = `accessToken=${accessToken}; path=/;`;
 };
 
 export const removeAccessTokenCookie = () => {
