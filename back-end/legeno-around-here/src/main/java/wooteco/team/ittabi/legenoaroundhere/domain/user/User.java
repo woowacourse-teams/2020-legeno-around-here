@@ -1,5 +1,6 @@
 package wooteco.team.ittabi.legenoaroundhere.domain.user;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,9 +8,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -72,6 +76,14 @@ public class User extends BaseEntity implements UserDetails {
     @OneToMany(mappedBy = "awardee")
     private List<SectorCreatorAward> sectorCreatorAwards = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AuthProvider provider;
+
+    private String providerId;
+
+    private LocalDateTime deactivatedAt;
+
     @Builder
     public User(String email, String nickname, String password, Area area, UserImage image) {
         this.email = makeEmail(email);
@@ -129,6 +141,18 @@ public class User extends BaseEntity implements UserDetails {
         return sectorCreatorAwards.size();
     }
 
+    public boolean hasNotRole(Role role) {
+        return !this.roles.contains(role.getRoleName());
+    }
+
+    public void deactivate() {
+        this.deactivatedAt = LocalDateTime.now();
+    }
+
+    public boolean isDeactivated() {
+        return Objects.nonNull(deactivatedAt);
+    }
+
     @Override
     public String getUsername() {
         return this.email.getEmail();
@@ -181,4 +205,15 @@ public class User extends BaseEntity implements UserDetails {
         this.area = area;
     }
 
+    public void setProvider(AuthProvider provider) {
+        this.provider = provider;
+    }
+
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
+    }
+
+    public boolean isDifferentProvider(String registrationId) {
+        return !provider.isSame(registrationId);
+    }
 }

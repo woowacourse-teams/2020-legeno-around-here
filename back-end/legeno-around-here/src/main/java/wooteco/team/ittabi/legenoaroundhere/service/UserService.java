@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.Email;
+import wooteco.team.ittabi.legenoaroundhere.domain.user.Role;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.UserImage;
 import wooteco.team.ittabi.legenoaroundhere.dto.LoginRequest;
@@ -28,6 +29,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.AlreadyExistUserException;
+import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 import wooteco.team.ittabi.legenoaroundhere.infra.JwtTokenGenerator;
@@ -85,12 +87,40 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public TokenResponse login(LoginRequest loginRequest) {
-        User user = userRepository.findByEmail(new Email(loginRequest.getEmail()))
+    public TokenResponse loginAdmin(LoginRequest loginRequest) {
+        User user = findUserByEmail(loginRequest);
+        validateAdmin(user);
+        return getTokenResponse(loginRequest, user);
+    }
+
+    private User findUserByEmail(LoginRequest loginRequest) {
+        return userRepository.findByEmail(new Email(loginRequest.getEmail()))
             .orElseThrow(() -> new NotExistsException("가입되지 않은 회원입니다."));
+    }
+
+    private TokenResponse getTokenResponse(LoginRequest loginRequest, User user) {
+        validateDeactivated(user);
         checkPassword(loginRequest, user);
         String token = jwtTokenGenerator.createToken(user.getUsername(), user.getRoles());
         return new TokenResponse(token);
+    }
+
+    private void validateDeactivated(User user) {
+        if (user.isDeactivated()) {
+            throw new NotExistsException("탈퇴한 회원입니다.");
+        }
+    }
+
+    private void validateAdmin(User user) {
+        if (user.hasNotRole(Role.ADMIN)) {
+            throw new NotAuthorizedException("관리자가 아닙니다.");
+        }
+    }
+
+    @Transactional
+    public TokenResponse login(LoginRequest loginRequest) {
+        User user = findUserByEmail(loginRequest);
+        return getTokenResponse(loginRequest, user);
     }
 
     private void checkPassword(LoginRequest loginRequest, User user) {
@@ -152,9 +182,9 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void deleteMe() {
+    public void deactivateMe() {
         User user = findPrincipal();
-        userRepository.delete(user);
+        user.deactivate();
     }
 
     @Override
@@ -175,6 +205,7 @@ public class UserService implements UserDetailsService {
     @Transactional(readOnly = true)
     public UserOtherResponse findUser(Long userId) {
         User user = findById(userId);
+        validateDeactivated(user);
         return UserOtherResponse.from(user);
     }
 }

@@ -57,7 +57,7 @@ const useStyle = makeStyles({
   writing: {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    width: '190px',
+    width: '100%',
   },
 });
 

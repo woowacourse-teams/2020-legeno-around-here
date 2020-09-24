@@ -5,7 +5,7 @@ import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import { Divider, Typography } from '@material-ui/core';
 import MySectors from './MySectors';
 
-const MySectorSection = () => {
+const MySectorSection = ({ history }) => {
   const accessToken = getAccessTokenFromCookie();
   const [mySectors, setMySectors] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -13,12 +13,12 @@ const MySectorSection = () => {
   useEffect(() => {
     const loadMySectors = async () => {
       setLoading(true);
-      const sectors = await findAllMySector(accessToken);
+      const sectors = await findAllMySector(accessToken, history);
       setMySectors(sectors);
       setLoading(false);
     };
     loadMySectors();
-  }, [accessToken]);
+  }, [accessToken, history]);
 
   if (loading) {
     return <Loading />;

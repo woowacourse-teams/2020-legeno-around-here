@@ -14,6 +14,9 @@ import Loading from './Loading';
 import { makeStyles } from '@material-ui/core/styles';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Areas from './Areas';
+import { getMainAreaName } from '../util/localStorageUtils';
+import EndMessage from './EndMessage';
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -33,16 +36,22 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
+  internal: {
+    paddingTop: '5px',
+  },
+  allButton: {
+    width: '100%',
+  },
+  searchButton: {
+    width: '100%',
+    height: '100%',
+  },
 }));
 
 const DEFAULT_SIZE = 10;
 
 const AreaSearch = ({ history, selected }) => {
-  const mainArea = localStorage.getItem('mainAreaName');
-
-  if (!mainArea) {
-    localStorage.setItem('mainAreaName', '서울특별시');
-  }
+  const mainAreaName = getMainAreaName();
 
   const classes = useStyles();
   const accessToken = getAccessTokenFromCookie();
@@ -51,7 +60,7 @@ const AreaSearch = ({ history, selected }) => {
   const [open, setOpen] = useState(false);
   const [listOpen, setListOpen] = useState(false);
   const [areas, setAreas] = useState([]);
-  const [areaKeyword, setAreaKeyword] = useState(mainArea);
+  const [areaKeyword, setAreaKeyword] = useState(mainAreaName);
 
   const loadNextAreas = async () => {
     try {
@@ -97,12 +106,22 @@ const AreaSearch = ({ history, selected }) => {
     setOpen(false);
   };
 
+  function refreshPage(history, selected) {
+    history.replace('/' + selected + '-reload');
+  }
+
+  const setMainAreaAll = () => {
+    localStorage.setItem('mainAreaId', '');
+    localStorage.setItem('mainAreaName', '전체');
+    refreshPage(history, selected);
+  };
+
   return (
     <>
       <IconButton edge='start' className={classes.menuButton} color='inherit' onClick={handleOpen}>
         <ExpandMoreIcon />
         <Typography className={classes.title} variant='h6' noWrap>
-          {mainArea}
+          {mainAreaName}
         </Typography>
       </IconButton>
       <Modal
@@ -119,18 +138,33 @@ const AreaSearch = ({ history, selected }) => {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <h2 id='transition-modal-title'>지역을 검색해주세요!</h2>
-            <TextField
-              id='outlined-search'
-              label='Search field'
-              type='search'
-              variant='outlined'
-              onChange={(event) => getInputArea(event)}
-              inputProps={{ maxLength: 40 }}
-            />
-            <Button>
-              <SearchIcon onClick={() => searchAreaKeyWord()} />
-            </Button>
+            <Grid container>
+              <Grid item>
+                <TextField
+                  id='outlined-search'
+                  placeholder={'지역을 검색해주세요!'}
+                  type='search'
+                  variant='outlined'
+                  onChange={(event) => getInputArea(event)}
+                  inputProps={{ maxLength: 40 }}
+                />
+              </Grid>
+              <Grid item>
+                <Button className={classes.searchButton}>
+                  <SearchIcon onClick={() => searchAreaKeyWord()} />
+                </Button>
+              </Grid>
+            </Grid>
+            <div className={classes.internal}>
+              <Button
+                variant='contained'
+                className={classes.allButton}
+                color='primary'
+                onClick={() => setMainAreaAll()}
+              >
+                모든 지역 글 보기
+              </Button>
+            </div>
             {listOpen && (
               <InfiniteScroll
                 next={loadNextAreas}
@@ -138,7 +172,7 @@ const AreaSearch = ({ history, selected }) => {
                 loader={<Loading />}
                 dataLength={areas.length}
                 height={'400px'}
-                endMessage={<Typography>모든 지역을 확인하셨습니다!</Typography>}
+                endMessage={<EndMessage message={'모든 지역을 확인하셨습니다!'} />}
               >
                 {areas && areas.length > 0 && <Areas areas={areas} history={history} selected={selected} />}
               </InfiniteScroll>

@@ -1,11 +1,11 @@
 import { makeStyles } from '@material-ui/core/styles';
-import CardMedia from '@material-ui/core/CardMedia';
 import React from 'react';
 
-const useStyles = makeStyles((theme) => ({
-  image: {
-    width: '100%',
-    height: '100%',
+const useStyles = makeStyles(() => ({
+  background: {
+    width: 'auto',
+    height: 'auto',
+    maxHeight: '400px',
     backgroundSize: 'contain',
   },
 }));
@@ -13,7 +13,11 @@ const useStyles = makeStyles((theme) => ({
 const PostImageItem = ({ image }) => {
   const classes = useStyles();
 
-  return <CardMedia image={image.url} title={`image id : ${image.id}`} className={classes.image}></CardMedia>;
+  return (
+    <div align='center'>
+      <img className={classes.background} src={image.url} alt='이미지를 불러오지 못했습니다!' />
+    </div>
+  );
 };
 
 export default PostImageItem;

@@ -6,16 +6,16 @@ import * as serviceWorker from './serviceWorker';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
-    typography: {
-        fontFamily: '"DoHyeon", "Noto Sans KR", serif',
-    },
+  typography: {
+    fontFamily: '"DoHyeon", "Noto Sans KR", serif',
+  },
 });
 
 ReactDOM.render(
-    <MuiThemeProvider theme={theme}>
-        <App />
-    </MuiThemeProvider>,
-    document.getElementById('root'),
+  <MuiThemeProvider theme={theme}>
+    <App />
+  </MuiThemeProvider>,
+  document.getElementById('root'),
 );
 
 serviceWorker.unregister();

@@ -3,13 +3,13 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import PostingFormSectors from './PostingFormSectors';
 import { findSectorsFromPage } from '../../api/API';
 import Loading from '../../Loading';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
+import EndMessage from '../../EndMessage';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -100,7 +100,7 @@ const PostingFormSectorSearch = ({ setSector, history }) => {
               loader={<Loading />}
               dataLength={sectors.length}
               height={'400px'}
-              endMessage={<Typography>모든 부문을 확인하셨습니다!</Typography>}
+              endMessage={<EndMessage message={'모든 부문을 확인하셨습니다!'} />}
             >
               {sectors && sectors.length > 0 && <PostingFormSectors selectSector={selectSector} sectors={sectors} />}
             </InfiniteScroll>

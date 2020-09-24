@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-import MyPostsTopBar from './MyPostsTopBar';
+import ArrowBackTopBar from '../../topBar/ArrowBackTopBar';
 import Bottom from '../../Bottom';
 import { PROFILE } from '../../../constants/BottomItems';
 import Loading from '../../Loading';
@@ -10,6 +10,7 @@ import { findMyPostsFromPage } from '../../api/API';
 import PostItem from '../../PostItem';
 import BottomBlank from '../../BottomBlank';
 import Container from '@material-ui/core/Container';
+import EndMessage from '../../EndMessage';
 
 function MyPosts({ history }) {
   const [page, setPage] = useState(0);
@@ -47,14 +48,14 @@ function MyPosts({ history }) {
 
   return (
     <>
-      <MyPostsTopBar backButtonLink='/users/me' />
+      <ArrowBackTopBar backButtonLink='/users/me' />
       <Container>
         <InfiniteScroll
           next={fetchNextPosts}
           hasMore={hasMore}
           loader={<Loading />}
           dataLength={posts.length}
-          endMessage={<h3>모두 읽으셨습니다!</h3>}
+          endMessage={<EndMessage message={'모두 읽으셨습니다!'} />}
         >
           {posts.map((post) => (
             <PostItem key={post.id} post={post} history={history} />

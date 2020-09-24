@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.acceptance;
 
-import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_OTHER_ID;
@@ -17,7 +16,6 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_PASSWORD;
 
 import io.restassured.RestAssured;
-import io.restassured.config.RestAssuredConfig;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -429,8 +427,6 @@ public class PostAcceptanceTest extends AcceptanceTest {
             .multiPart("images", new File(TEST_IMAGE_DIR + TEST_IMAGE_NAME))
             .multiPart("images", new File(TEST_IMAGE_DIR + TEST_IMAGE_NAME))
             .header("X-AUTH-TOKEN", accessToken)
-            .config(RestAssuredConfig.config()
-                .encoderConfig(encoderConfig().defaultContentCharset("UTF-8")))
             .when()
             .post("/posts/images")
             .then()

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Loading from '../../Loading';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
-import { Button, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 
 import { createPost, savePostImages } from '../../api/API';
@@ -12,23 +12,75 @@ import SectorApplyButton from '../sector/SectorApplyButton';
 import PostingFormImages from './PostingFormImages';
 import PostingFormSectorSearch from './PostingFormSectorSearch';
 import { List } from 'immutable';
+import PostingFormAreaSearch from './PostingFormAreaSearch';
 
 const PostingForm = ({ history }) => {
+  const DEFAULT_MAIN_AREA = { id: '1', name: '서울특별시' };
+
+  const isNullValue = (mainAreaId, mainAreaName) => {
+    return !mainAreaId || !mainAreaName;
+  };
+
+  const isAllValue = (mainAreaId, mainAreaName) => {
+    return isNullValue(mainAreaId, mainAreaName) || mainAreaId === '' || mainAreaName === '전체';
+  };
+
+  const getMainArea = () => {
+    const mainAreaId = localStorage.getItem('mainAreaId');
+    const mainAreaName = localStorage.getItem('mainAreaName');
+
+    if (isAllValue(mainAreaId, mainAreaName)) {
+      return DEFAULT_MAIN_AREA;
+    }
+    return { id: mainAreaId, name: mainAreaName };
+  };
+
   const classes = useStyles();
   const [accessToken] = useState(getAccessTokenFromCookie());
-
   const [writing, setWriting] = useState('');
   const [sector, setSector] = useState(null);
-  const [area] = useState({
-    id: localStorage.getItem('mainAreaId'),
-    name: localStorage.getItem('mainAreaName'),
-  });
+  const [area, setArea] = useState(getMainArea());
   const [images, setImages] = useState(List([]));
   const [loading, setLoading] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
 
+  const maxImagesLength = 10;
+  const maxImageMBSize = 5;
+
+  const validateImages = (localImages) => {
+    if (isOverImagesLength(localImages)) {
+      throw new Error(`이미지는 ${maxImagesLength}개까지 등록 가능합니다!`);
+    }
+    if (isOverImagesSize(localImages)) {
+      throw new Error(`이미지는 ${maxImageMBSize}MB 이내로 등록 가능합니다!`);
+    }
+  };
+
+  const isOverImagesLength = (localImages) => {
+    return localImages.length > maxImagesLength;
+  };
+
+  const isOverImagesSize = (localImages) => {
+    const images = Array.from(localImages);
+    for (let image of images) {
+      const imageMBSize = image.size / 1024 / 1024; // MB Size로 바꿈
+      const parsingImageSize = parseFloat(imageMBSize.toFixed(2));
+      if (parsingImageSize > maxImageMBSize) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const onImagesChanged = async (e) => {
     const localImages = e.target.files;
+
+    try {
+      validateImages(localImages);
+    } catch (e) {
+      alert(e.message);
+      return;
+    }
 
     const formData = new FormData();
     if (localImages.length > 0) {
@@ -54,7 +106,7 @@ const PostingForm = ({ history }) => {
   };
 
   const countImages = () => {
-    return <Typography display='inline'>총 {images.size} 개의 사진을 올렸습니다!</Typography>;
+    return <Typography display='inline'>{`${images.size}/${maxImagesLength}`}</Typography>;
   };
 
   const submitPost = (e) => {
@@ -134,7 +186,7 @@ const PostingForm = ({ history }) => {
         <PostingFormSectorSearch setSector={setSector} history={history} />
         {sector && sector.id !== null ? <Typography className={classes.sector}>{sector.name}</Typography> : ''}
         <br />
-        <Button className={classes.selectAreaButton}>지역 설정</Button>
+        <PostingFormAreaSearch setArea={setArea} history={history} />
         {area && area.id !== null ? <Typography className={classes.area}>{area.name}</Typography> : ''}
         <Typography>
           참가하고 싶은 부문이 없으신가요? <SectorApplyButton />을 해보세요!!

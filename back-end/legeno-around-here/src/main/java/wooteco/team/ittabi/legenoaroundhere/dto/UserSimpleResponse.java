@@ -1,5 +1,8 @@
 package wooteco.team.ittabi.legenoaroundhere.dto;
 
+import static wooteco.team.ittabi.legenoaroundhere.dto.UserResponse.DEACTIVATED_USER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.dto.UserResponse.DEACTIVATED_USER_NICKNAME;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +26,21 @@ public class UserSimpleResponse {
     private UserImageResponse image;
 
     public static UserSimpleResponse from(User user) {
+        if (user.isDeactivated()) {
+            return fromDeactivated(user);
+        }
+        return fromActivated(user);
+    }
+
+    private static UserSimpleResponse fromDeactivated(User user) {
+        return UserSimpleResponse.builder()
+            .id(user.getId())
+            .nickname(DEACTIVATED_USER_NICKNAME)
+            .email(DEACTIVATED_USER_EMAIL)
+            .build();
+    }
+
+    private static UserSimpleResponse fromActivated(User user) {
         return UserSimpleResponse.builder()
             .id(user.getId())
             .email(user.getEmail().getEmail())

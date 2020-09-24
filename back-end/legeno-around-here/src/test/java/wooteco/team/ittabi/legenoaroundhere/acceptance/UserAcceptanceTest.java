@@ -9,10 +9,13 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AUTH_NUMBER;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_DIR;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_NAME;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_ADMIN_PASSWORD;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NEW_USER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NEW_USER_NICKNAME;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NEW_USER_PASSWORD;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_THE_OTHER_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_THE_OTHER_USER_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
@@ -122,8 +125,8 @@ public class UserAcceptanceTest extends AcceptanceTest {
         assertThatThrownBy(() -> changeMyPassword(accessToken, TEST_USER_OTHER_PASSWORD));
 
         // 회원 탈퇴
-        deleteUser(accessToken);
-        findNotExistMe(accessToken);
+        deactivateUser(accessToken);
+        loginFailed(TEST_THE_OTHER_EMAIL, TEST_USER_OTHER_PASSWORD);
     }
 
     /**
@@ -166,6 +169,8 @@ public class UserAcceptanceTest extends AcceptanceTest {
      * Given 타 회원이 가입되어 있다.
      * <p>
      * When 타 회원을 조회한다. Then 타 회원이 조회된다.
+     * <p>
+     * When 탈퇴한 회원을 조회한다. Then 탈퇴한 회원은 조회되지 않는다.(404 Return)
      */
     @DisplayName("타 회원 프로필 조회")
     @Test
@@ -178,6 +183,28 @@ public class UserAcceptanceTest extends AcceptanceTest {
         assertThat(userOtherResponse.getNickname()).isEqualTo(TEST_USER_NICKNAME);
         assertThat(userOtherResponse.getAwardsCount()).isNotNull();
         assertThat(userOtherResponse.getImage());
+
+        // 탈퇴한 회원은 조회 불가
+        findUserFailed(tokenResponse.getAccessToken(), TEST_THE_OTHER_USER_ID);
+    }
+
+    /**
+     * Feature: 관리자 로그인 Scenario: 관리자 로그인을 한다.
+     * <p>
+     * When 관리자가 관리자 로그인을 한다. Then 로그인이 되었다.
+     * <p>
+     * When 사용자가 관리자 로그인을 한다. Then 로그인에 실패하였다.
+     * <p>
+     */
+    @DisplayName("어드민 로그인을 진행한다.")
+    @Test
+    void loginAdmin() {
+        TokenResponse tokenResponse = adminLogin(TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD);
+        String accessToken = tokenResponse.getAccessToken();
+        assertThat(tokenResponse).isNotNull();
+        assertThat(accessToken).hasSizeGreaterThanOrEqualTo(TOKEN_MIN_SIZE);
+
+        assertThatThrownBy(() -> adminLogin(TEST_USER_EMAIL, TEST_USER_PASSWORD));
     }
 
     private String createUserWithoutArea(String email, String nickname, String password) {
@@ -214,14 +241,19 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .extract().as(UserResponse.class);
     }
 
-    private void findNotExistMe(String accessToken) {
+    private void loginFailed(String email, String password) {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("password", password);
+
         given()
-            .header("X-AUTH-TOKEN", accessToken)
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when()
-            .get("/users/me")
+            .post("/login")
             .then()
-            .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     private UserImageResponse createUserImage(String accessToken) {
@@ -289,7 +321,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    private void deleteUser(String accessToken) {
+    private void deactivateUser(String accessToken) {
         given()
             .header("X-AUTH-TOKEN", accessToken)
             .when()
@@ -315,5 +347,32 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .then()
             .statusCode(HttpStatus.OK.value())
             .extract().as(UserOtherResponse.class);
+    }
+
+    private void findUserFailed(String accessToken, Long userId) {
+        given()
+            .header("X-AUTH-TOKEN", accessToken)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/users/" + userId)
+            .then()
+            .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    private TokenResponse adminLogin(String email, String password) {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("password", password);
+
+        return given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/admin/login")
+            .then()
+            .log().all()
+            .statusCode(HttpStatus.OK.value())
+            .extract().as(TokenResponse.class);
     }
 }

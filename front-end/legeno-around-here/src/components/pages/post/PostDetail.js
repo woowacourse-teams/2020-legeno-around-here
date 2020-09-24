@@ -14,6 +14,41 @@ import UpdatePostButton from './UpdatePostButton';
 import PostReportSection from './PostReportSection';
 import LinkWithoutStyle from '../../../util/LinkWithoutStyle';
 import DeletePostButton from './DeletePostButton';
+import { makeStyles } from '@material-ui/core/styles';
+import { MAIN_COLOR } from '../../../constants/Color';
+import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
+
+const useStyle = makeStyles({
+  postTopSection: {
+    height: '41px',
+    display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'center',
+    marginTop: '4px',
+  },
+  postAreaNameSection: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'center',
+  },
+  postAuthorNicknameSection: {
+    display: 'inline',
+    margin: 'auto 5px auto auto',
+  },
+  authorProfilePhotoUrl: (props) => ({
+    width: '35px',
+    height: '35px',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    borderRadius: '300px',
+    backgroundImage: `url(${props.authorProfilePhotoUrl})`,
+    border: `1px solid ${MAIN_COLOR}`,
+  }),
+  addButton: {
+    padding: '0px',
+  },
+});
 
 const PostDetail = ({ post, myInfo, history }) => {
   const accessToken = getAccessTokenFromCookie();
@@ -23,8 +58,9 @@ const PostDetail = ({ post, myInfo, history }) => {
   const [zzang, setZzang] = useState(post.zzang.activated);
   const [zzangCount, setZzangCount] = useState(post.zzang.count);
   const isMyPost = post && myInfo && post.creator.id === myInfo.id;
-
-  let keyValue = 0;
+  const authorProfilePhotoUrl = post.creator.image ? post.creator.image.url : DEFAULT_IMAGE_URL;
+  const props = { authorProfilePhotoUrl: authorProfilePhotoUrl };
+  const classes = useStyle(props);
 
   const onWritingChanged = (e) => {
     setWriting(e.target.value);
@@ -40,7 +76,6 @@ const PostDetail = ({ post, myInfo, history }) => {
       }
       setZzangCount(zzangCount + 1);
       setZzang(!zzang);
-      return;
     }
   };
 
@@ -62,25 +97,50 @@ const PostDetail = ({ post, myInfo, history }) => {
     setComments(foundComments);
   };
 
+  const makeCreatorName = () => {
+    if (post.creator.nickname === '탈퇴한 회원') {
+      return <Typography className={classes.postAuthorNicknameSection}>{post.creator.nickname}</Typography>;
+    }
+    return (
+      <Typography
+        component={LinkWithoutStyle}
+        to={isMyPost ? '/users/me' : '/users/' + post.creator.id}
+        className={classes.postAuthorNicknameSection}
+      >
+        {post.creator.nickname}
+      </Typography>
+    );
+  };
+
+  const makeCreatorPhoto = () => {
+    if (post.creator.nickname === '탈퇴한 회원') {
+      return <div className={classes.authorProfilePhotoUrl} />;
+    }
+    return (
+      <LinkWithoutStyle
+        className={classes.authorProfilePhotoUrl}
+        to={isMyPost ? '/users/me' : '/users/' + post.creator.id}
+      />
+    );
+  };
+
   return (
     <>
-      <Grid container>
-        <Grid container item xs={6}>
+      <Grid container className={classes.postTopSection}>
+        <Grid container item xs={6} className={classes.postAreaNameSection}>
           <Typography>{post.area.fullName}</Typography>
         </Grid>
-        <Grid container item xs={6} alignItems='flex-start' justify='flex-end' direction='row'>
-          <Typography component={LinkWithoutStyle} to={isMyPost ? '/users/me' : '/users/' + post.creator.id}>
-            {post.creator.nickname}
-          </Typography>
+        <Grid container item xs={6}>
+          {makeCreatorName()}
+          {makeCreatorPhoto()}
         </Grid>
       </Grid>
       <Typography variant='h5'>{post.sector.name} 부문</Typography>
       {post.images.length > 0 && <PostImages images={post.images} />}
       <Typography variant='h6'>
-        {post.writing.split('\n').map((line) => {
-          keyValue += 1;
+        {post.writing.split('\n').map((line, index) => {
           return (
-            <span key={keyValue}>
+            <span key={index}>
               {line}
               <br />
             </span>
@@ -121,21 +181,21 @@ const PostDetail = ({ post, myInfo, history }) => {
               id='standard-multiline-static'
               fullWidth
               multiline
-              rows={2}
               placeholder='댓글을 입력해주세요!'
               onChange={onWritingChanged}
               value={writing}
               inputProps={{ maxLength: 200 }}
+              helperText={`${writing.length}/200`}
             />
           </Grid>
           <Grid container item xs={1}>
-            <IconButton type='submit'>
+            <IconButton type='submit' className={classes.addButton}>
               <AddIcon />
             </IconButton>
           </Grid>
         </Grid>
       </form>
-      {comments.length > 0 && <Comments comments={comments} loading={loading} />}
+      {comments.length > 0 && myInfo && <Comments comments={comments} loading={loading} myId={myInfo.id} />}
     </>
   );
 };

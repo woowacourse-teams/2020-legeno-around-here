@@ -1,5 +1,8 @@
 package wooteco.team.ittabi.legenoaroundhere.controller;
 
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
@@ -12,7 +15,6 @@ import wooteco.team.ittabi.legenoaroundhere.dto.ErrorResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.AlreadyExistUserException;
 import wooteco.team.ittabi.legenoaroundhere.exception.FileIOException;
 import wooteco.team.ittabi.legenoaroundhere.exception.MultipartFileConvertException;
-import wooteco.team.ittabi.legenoaroundhere.exception.NeedEmailAuthException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotFoundAlgorithmException;
@@ -24,15 +26,6 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @RestControllerAdvice(annotations = RestController.class)
 @Slf4j
 public class GlobalExceptionHandler {
-
-    @ExceptionHandler(NeedEmailAuthException.class)
-    public ResponseEntity<ErrorResponse> handleUnauthorized(NeedEmailAuthException e) {
-        log.info(e.getMessage());
-
-        return ResponseEntity
-            .status(HttpStatus.UNAUTHORIZED)
-            .body(new ErrorResponse(e.getMessage()));
-    }
 
     @ExceptionHandler(NotExistsException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(NotExistsException e) {
@@ -53,6 +46,29 @@ public class GlobalExceptionHandler {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequest(
+        ConstraintViolationException constraintViolationException) {
+        String errorMessage = getErrorMessage(constraintViolationException);
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(new ErrorResponse(errorMessage));
+    }
+
+    private String getErrorMessage(ConstraintViolationException constraintViolationException) {
+        Set<ConstraintViolation<?>> violations = constraintViolationException
+            .getConstraintViolations();
+        violations.forEach(violation -> log.info(violation.getMessage()));
+        String errorMessage = "ConstraintViolationException occured";
+
+        if (!violations.isEmpty()) {
+            StringBuilder builder = new StringBuilder();
+            violations.forEach(violation -> builder.append(violation.getMessage()));
+            errorMessage = builder.toString();
+        }
+        return errorMessage;
     }
 
     @ExceptionHandler(NotAuthorizedException.class)

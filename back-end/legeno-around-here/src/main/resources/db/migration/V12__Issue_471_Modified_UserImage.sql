@@ -1,0 +1,5 @@
+ALTER TABLE `user_image`
+    MODIFY COLUMN `url` LONGTEXT;
+
+ALTER TABLE `post_image`
+    MODIFY COLUMN `url` LONGTEXT;

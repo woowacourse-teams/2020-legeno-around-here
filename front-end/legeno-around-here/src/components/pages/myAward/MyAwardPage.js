@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import BottomBlank from '../../BottomBlank';
 import Bottom from '../../Bottom';
 import { PROFILE } from '../../../constants/BottomItems';
-import MyAwardTopBar from '../myAward/MyAwardTopBar';
 import { findMyAwards } from '../../api/API';
 import Loading from '../../Loading';
 import { getAccessTokenFromCookie } from '../../../util/TokenUtils';
 import Awards from './Awards';
 import Container from '@material-ui/core/Container';
+import ArrowBackTopBar from '../../topBar/ArrowBackTopBar';
 
 const MyAwardPage = ({ history }) => {
   const accessToken = getAccessTokenFromCookie();
@@ -29,7 +29,7 @@ const MyAwardPage = ({ history }) => {
   }
   return (
     <>
-      <MyAwardTopBar />
+      <ArrowBackTopBar />
       <Container>
         <Awards awards={awards} />
         <BottomBlank />

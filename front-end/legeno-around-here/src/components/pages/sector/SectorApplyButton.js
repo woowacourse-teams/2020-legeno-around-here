@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Typography } from '@material-ui/core';
 import SectorApplyModal from './SectorApplyModal';
 
-const SectorApplyButton = () => {
+const SectorApplyButton = ({ history }) => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -20,7 +20,7 @@ const SectorApplyButton = () => {
           부문신청
         </Typography>
       </Button>
-      <SectorApplyModal open={open} handleClose={handleClose} />
+      <SectorApplyModal open={open} handleClose={handleClose} history={history} />
     </>
   );
 };

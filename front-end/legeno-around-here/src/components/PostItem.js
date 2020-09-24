@@ -13,6 +13,7 @@ const useStyles = makeStyles(() => ({
   root: {
     borderBottom: '1.5px solid darkgray',
     padding: '10px',
+    width: '100%',
   },
   cover: {
     position: 'relative',
@@ -30,8 +31,10 @@ const useStyles = makeStyles(() => ({
   img: {
     margin: 'auto',
     display: 'block',
+    width: 'auto',
+    height: 'auto',
+    maxHeight: '350px',
     maxWidth: '100%',
-    maxHeight: '100%',
   },
 }));
 

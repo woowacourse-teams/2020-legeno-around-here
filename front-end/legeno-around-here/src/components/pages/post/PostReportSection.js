@@ -8,7 +8,6 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -52,7 +51,7 @@ const PostReportSection = ({ post, history }) => {
     { id: 4, value: '기타' },
   ];
 
-  const submitReport = async (history) => {
+  const submitReport = async () => {
     const data = {
       targetId: post.id,
       writing: writing,
@@ -108,17 +107,33 @@ const PostReportSection = ({ post, history }) => {
               <Loading />
             ) : (
               <>
-                <Typography color='textSecondary'>내용</Typography>
-                <Typography variant='subtitle1'>{ellipsis(post.writing, POST_REPORT_ELLIPSIS_SIZE)}</Typography>
-                <Typography color='textSecondary'>작성자</Typography>
-                <Typography variant='subtitle1'>
-                  <div>{post.creator.nickname}</div>
-                </Typography>
+                <h2>글 신고</h2>
+                <TextField
+                  label='신고 글 본문'
+                  defaultValue={post.writing}
+                  multiline
+                  rows={5}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  fullWidth
+                  variant='outlined'
+                />
+                <br />
+                <br />
+                <TextField
+                  label='신고 글 작성자'
+                  defaultValue={post.creator.nickname}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  fullWidth
+                  variant='outlined'
+                />
+                <br />
+                <hr />
                 <FormControl component='fieldset'>
-                  <FormLabel component='legend'>사유선택</FormLabel>
-                  <Typography variant='subtitle2'>
-                    여러 사유에 해당하는 경우, 대표적인 사유 1개를 선택해주세요!
-                  </Typography>
+                  <Typography variant='subtitle1'>대표적인 사유를 1개 선택해주세요.</Typography>
                   <RadioGroup aria-label='gender' value={value} onChange={handleChange}>
                     {reportText.map((report) => (
                       <FormControlLabel key={report.id} value={report.value} control={<Radio />} label={report.value} />
