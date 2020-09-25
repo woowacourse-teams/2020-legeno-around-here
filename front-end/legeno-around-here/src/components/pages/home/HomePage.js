@@ -11,22 +11,20 @@ import Container from '@material-ui/core/Container';
 import PostItem from '../../PostItem';
 import EndMessage from '../../EndMessage';
 import SearchTopBar from '../../topBar/SearchTopBar';
-import { getMainAreaId } from '../../../util/localStorageUtils';
+import { getMainAreaId, getMainSectorId } from '../../../util/localStorageUtils';
 
-const HomePage = ({ location, history }) => {
+const HomePage = ({ history }) => {
   const accessToken = getAccessTokenFromCookie();
 
   const [page, setPage] = useState(0);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const [areaId, setAreaId] = useState(getMainAreaId());
-  const [sectorId, setSectorId] = useState('none');
-  const [locationParams, setLocationParams] = useState(location.search);
+  const [sectorId, setSectorId] = useState(getMainSectorId());
 
   const removeContent = () => {
     setPage(0);
     setPosts([]);
-    setLocationParams('');
   };
 
   const topBarSetters = { setAreaId, setSectorId, removeContent };
@@ -40,16 +38,7 @@ const HomePage = ({ location, history }) => {
 
   const loadNextPosts = async () => {
     try {
-      let selectedSectorId;
-      if (locationParams.includes('?sectorId=')) {
-        selectedSectorId = locationParams.split('?sectorId=')[1];
-      } else if (sectorId === 'none') {
-        selectedSectorId = '';
-      } else {
-        selectedSectorId = sectorId;
-      }
-
-      const nextPosts = await findCurrentPostsFromPage(page, accessToken, areaId, selectedSectorId, history);
+      const nextPosts = await findCurrentPostsFromPage(page, accessToken, areaId, sectorId, history);
       if (nextPosts.length === 0) {
         setHasMore(false);
         return;
