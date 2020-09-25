@@ -21,6 +21,7 @@ import SectorDetailPage from './components/pages/sector/SectorDetailPage';
 import WithdrawConfirmPage from './components/pages/myProfile/WithdrawConfirmPage';
 import OAuth2RedirectHandler from './components/thirdparty/OAuth2RedirectHandler';
 import ErrorPage from './components/pages/ErrorPage';
+import FindPasswordPage from './components/pages/find/FindPasswordPage';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path='/home' exact component={HomePage} />
         <Route path='/join' exact component={Join} />
         <Route path='/login' exact component={Login} />
+        <Route path='/find/password' exact component={FindPasswordPage} />
         <Route path='/users/me' exact component={MyProfilePage} />
         <Route path='/posting' exact component={PostingPage} />
         <Route path='/posts/:postId/update' exact component={PostingUpdatePage} />

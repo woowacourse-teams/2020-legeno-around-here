@@ -4,7 +4,6 @@ import static io.restassured.config.EncoderConfig.encoderConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AREA_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.AreaConstants.TEST_AUTH_NUMBER;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.ImageConstants.TEST_IMAGE_DIR;
@@ -16,6 +15,8 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_NEW_USER_PASSWORD;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_THE_OTHER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_THE_OTHER_USER_ID;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_UPDATE_EMAIL;
+import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_UPDATE_PASSWORD;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_EMAIL;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_ID;
 import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants.TEST_USER_NICKNAME;
@@ -31,15 +32,15 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import wooteco.team.ittabi.legenoaroundhere.domain.user.mailauth.MailAuth;
 import wooteco.team.ittabi.legenoaroundhere.dto.TokenResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserOtherResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
-import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
+import wooteco.team.ittabi.legenoaroundhere.service.MailAuthService;
 
 public class UserAcceptanceTest extends AcceptanceTest {
 
@@ -47,7 +48,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
     private static final int TOKEN_MIN_SIZE = 1;
 
     @MockBean
-    private MailAuthRepository mailAuthRepository;
+    private MailAuthService mailAuthService;
 
     @BeforeEach
     void setUp() {
@@ -78,8 +79,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
         checkJoined(TEST_NEW_USER_EMAIL);
 
         //메일 인증
-        MailAuth mailAuth = new MailAuth(TEST_NEW_USER_EMAIL, TEST_AUTH_NUMBER);
-        when(mailAuthRepository.findByEmail(any())).thenReturn(java.util.Optional.of(mailAuth));
+        Mockito.doNothing().when(mailAuthService).sendMailAuth(any());
 
         //회원 가입
         String location = createUserWithoutArea(TEST_NEW_USER_EMAIL, TEST_NEW_USER_NICKNAME,
@@ -118,11 +118,24 @@ public class UserAcceptanceTest extends AcceptanceTest {
         login(TEST_USER_EMAIL, TEST_USER_PASSWORD);
 
         // 비밀번호 수정
-        changeMyPassword(accessToken, TEST_USER_OTHER_PASSWORD);
+        changeMyPasswordWithAuth(accessToken, TEST_USER_OTHER_PASSWORD);
         login(TEST_THE_OTHER_EMAIL, TEST_USER_OTHER_PASSWORD);
 
         // 비밀번호 수정 실패 - 동일한 비밀번호로 수정
-        assertThatThrownBy(() -> changeMyPassword(accessToken, TEST_USER_OTHER_PASSWORD));
+        assertThatThrownBy(() -> changeMyPasswordWithAuth(accessToken, TEST_USER_OTHER_PASSWORD));
+
+        // 비밀번호 찾기 메일 인증
+        findPassword(TEST_UPDATE_EMAIL);
+
+        // 비밀번호 찾기를 통한 비밀번호 수정 실패 - 동일한 비밀번호로 수정
+        assertThatThrownBy(
+            () -> changeMyPasswordWithoutAuth(TEST_UPDATE_EMAIL, TEST_USER_PASSWORD));
+
+        // 비밀번호 찾기를 통한 비밀번호 수정
+        changeMyPasswordWithoutAuth(TEST_UPDATE_EMAIL, TEST_UPDATE_PASSWORD);
+
+        // 로그인 실패 - 다른 비밀번호
+        assertThatThrownBy(() -> login(TEST_UPDATE_EMAIL, TEST_USER_OTHER_PASSWORD));
 
         // 회원 탈퇴
         deactivateUser(accessToken);
@@ -306,12 +319,27 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .extract().as(UserResponse.class);
     }
 
-    private void changeMyPassword(String accessToken, String password) {
+    private void changeMyPasswordWithAuth(String accessToken, String password) {
         Map<String, String> params = new HashMap<>();
         params.put("password", password);
 
         given()
             .header("X-AUTH-TOKEN", accessToken)
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .put("/users/me/password-auth")
+            .then()
+            .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    private void changeMyPasswordWithoutAuth(String email, String password) {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("password", password);
+
+        given()
             .body(params)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -336,6 +364,19 @@ public class UserAcceptanceTest extends AcceptanceTest {
             .get("/check-joined?email=" + email)
             .then()
             .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    private void findPassword(String email) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("email", email);
+
+        given()
+            .body(params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/mail-auth/find/password")
+            .then()
+            .statusCode(HttpStatus.OK.value());
     }
 
     private UserOtherResponse findUser(String accessToken, Long userId) {

@@ -100,6 +100,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/join",
                 "/admin/login",
                 "/login",
+                "/users/me/password",
                 "/mail-auth/**",
                 "/profile",
                 "/auth/**",

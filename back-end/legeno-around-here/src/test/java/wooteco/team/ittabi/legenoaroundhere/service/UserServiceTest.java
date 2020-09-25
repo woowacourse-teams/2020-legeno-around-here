@@ -41,6 +41,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserOtherResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordUpdateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordWithAuthUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.AlreadyExistUserException;
@@ -241,29 +242,58 @@ class UserServiceTest extends ServiceTest {
         assertThat(updatedUserResponse.getImage()).isEqualTo(userImage);
     }
 
-    @DisplayName("내 비밀번호 수정, 성공")
+    @DisplayName("내 비밀번호 수정 (로그인 후), 성공")
     @Test
-    void changeMyPassword_Success() {
+    void changeMyPasswordWithAuth_Success() {
         User updateUser = userRepository.findByEmail(new Email(TEST_UPDATE_EMAIL))
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
         setAuthentication(updateUser);
 
-        UserPasswordUpdateRequest userPasswordUpdateRequest
-            = new UserPasswordUpdateRequest(TEST_USER_OTHER_PASSWORD);
+        UserPasswordWithAuthUpdateRequest userPasswordWithAuthUpdateRequest
+            = new UserPasswordWithAuthUpdateRequest(TEST_USER_OTHER_PASSWORD);
 
-        userService.changeMyPassword(userPasswordUpdateRequest);
+        userService.changeMyPasswordWithAuth(userPasswordWithAuthUpdateRequest);
         LoginRequest loginRequest = new LoginRequest(TEST_UPDATE_EMAIL, TEST_USER_OTHER_PASSWORD);
 
         assertThat(userService.login(loginRequest)).isInstanceOf(TokenResponse.class);
     }
 
-    @DisplayName("내 비밀번호 수정, 예외 발생 - 기존과 동일한 비밀번호")
+    @DisplayName("내 비밀번호 수정 (로그인 후), 예외 발생 - 기존과 동일한 비밀번호")
     @Test
-    void changeMyPassword_SamePassword_ThrownException() {
-        UserPasswordUpdateRequest userPasswordUpdateRequest
-            = new UserPasswordUpdateRequest(TEST_USER_PASSWORD);
+    void changeMyPasswordWithAuth_SamePassword_ThrownException() {
+        UserPasswordWithAuthUpdateRequest userPasswordWithAuthUpdateRequest
+            = new UserPasswordWithAuthUpdateRequest(TEST_USER_PASSWORD);
 
-        assertThatThrownBy(() -> userService.changeMyPassword(userPasswordUpdateRequest))
+        assertThatThrownBy(
+            () -> userService.changeMyPasswordWithAuth(userPasswordWithAuthUpdateRequest))
+            .isInstanceOf(WrongUserInputException.class);
+    }
+
+    @DisplayName("내 비밀번호 수정 (로그인 전 비밀번호 찾기), 성공")
+    @Test
+    void changeMyPasswordWithoutAuth_Success() {
+        User updateUser = userRepository.findByEmail(new Email(TEST_PREFIX + TEST_USER_EMAIL))
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        setAuthentication(updateUser);
+
+        UserPasswordUpdateRequest userPasswordUpdateRequest
+            = new UserPasswordUpdateRequest(TEST_PREFIX + TEST_USER_EMAIL,
+            TEST_USER_OTHER_PASSWORD);
+        userService.changeMyPasswordWithoutAuth(userPasswordUpdateRequest);
+
+        LoginRequest loginRequest = new LoginRequest(TEST_PREFIX + TEST_USER_EMAIL,
+            TEST_USER_OTHER_PASSWORD);
+
+        assertThat(userService.login(loginRequest)).isInstanceOf(TokenResponse.class);
+    }
+
+    @DisplayName("내 비밀번호 수정 (로그인 전 비밀번호 찾기), 예외 발생 - 기존과 동일한 비밀번호")
+    @Test
+    void changeMyPasswordWithoutAuth_SamePassword_ThrownException() {
+        UserPasswordUpdateRequest userPasswordUpdateRequest
+            = new UserPasswordUpdateRequest(TEST_PREFIX + TEST_USER_EMAIL, TEST_USER_PASSWORD);
+
+        assertThatThrownBy(() -> userService.changeMyPasswordWithoutAuth(userPasswordUpdateRequest))
             .isInstanceOf(WrongUserInputException.class);
     }
 

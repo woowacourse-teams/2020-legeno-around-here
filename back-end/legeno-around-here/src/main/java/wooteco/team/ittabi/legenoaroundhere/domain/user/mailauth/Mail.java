@@ -1,19 +1,22 @@
-package wooteco.team.ittabi.legenoaroundhere.dto;
+package wooteco.team.ittabi.legenoaroundhere.domain.user.mailauth;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @EqualsAndHashCode
 @ToString
-public class UserPasswordUpdateRequest {
+@Builder
+public class Mail {
 
     private String email;
-    private String password;
+    private String subject;
+    private String text;
 }

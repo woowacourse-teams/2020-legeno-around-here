@@ -12,8 +12,7 @@ import lombok.ToString;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class UserPasswordUpdateRequest {
+public class MailAuthFindPasswordRequest {
 
     private String email;
-    private String password;
 }

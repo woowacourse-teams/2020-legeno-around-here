@@ -7,7 +7,7 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.USERS_
 import static wooteco.team.ittabi.legenoaroundhere.utils.UrlPathConstants.USERS_PATH_WITH_SLASH;
 
 import java.net.URI;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,12 +24,13 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserImageResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserOtherResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordUpdateRequest;
+import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordWithAuthUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
@@ -102,10 +103,20 @@ public class UserController {
             .build();
     }
 
+    @PutMapping(USERS_PATH + ME_PATH + "/password-auth")
+    public ResponseEntity<Void> changeMyPasswordWithAuth(
+        @RequestBody UserPasswordWithAuthUpdateRequest userPasswordWithAuthUpdateRequest) {
+        userService.changeMyPasswordWithAuth(userPasswordWithAuthUpdateRequest);
+
+        return ResponseEntity
+            .noContent()
+            .build();
+    }
+
     @PutMapping(USERS_PATH + ME_PATH + "/password")
-    public ResponseEntity<Void> changeMyPassword(
+    public ResponseEntity<Void> changeMyPasswordWithoutAuth(
         @RequestBody UserPasswordUpdateRequest userPasswordUpdateRequest) {
-        userService.changeMyPassword(userPasswordUpdateRequest);
+        userService.changeMyPasswordWithoutAuth(userPasswordUpdateRequest);
 
         return ResponseEntity
             .noContent()

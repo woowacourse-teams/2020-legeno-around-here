@@ -24,6 +24,7 @@ public class UserConstants {
     public static final Long TEST_THE_OTHER_USER_ID = 4L;
     public static final String TEST_THE_OTHER_EMAIL = "theother@test.com";
     public static final String TEST_UPDATE_EMAIL = "update@test.com";
+    public static final String TEST_UPDATE_PASSWORD = "updatePassword";
 
     public static final String TEST_RANKING_EMAIL_A = "a@capzzang.co.kr";
     public static final String TEST_RANKING_EMAIL_B = "b@capzzang.co.kr";

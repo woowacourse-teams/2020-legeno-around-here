@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { loginUser } from '../api/API';
 
 import Avatar from '@material-ui/core/Avatar';
@@ -15,6 +15,7 @@ import { removeAccessTokenCookie } from '../../util/TokenUtils';
 import Link from '@material-ui/core/Link';
 import Copyright from '../Copyright';
 import SocialLogin from '../thirdparty/SocalLogin';
+import LinkWithoutStyle from '../../util/LinkWithoutStyle';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -116,7 +117,7 @@ const LoginForm = ({ history }) => {
           <Button type='submit' fullWidth variant='contained' color='primary' className={classes.submit}>
             로그인
           </Button>
-          <Grid container>
+          <Grid container justify='space-between'>
             <Grid item>
               처음이신가요?&nbsp;
               <Link underline='always' onClick={onClickJoin}>
@@ -124,6 +125,11 @@ const LoginForm = ({ history }) => {
               </Link>
               을 해주세요!
               <br />
+            </Grid>
+            <Grid item>
+              <LinkWithoutStyle to='/find/password' variant='body2'>
+                {'비밀번호를 잊어버리셨나요?'}
+              </LinkWithoutStyle>
             </Grid>
           </Grid>
           <SocialLogin />
