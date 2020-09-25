@@ -114,7 +114,7 @@ public class UserController {
     }
 
     @PutMapping(USERS_PATH + ME_PATH + "/password")
-    public ResponseEntity<Void> changeMyPassword(
+    public ResponseEntity<Void> changeMyPasswordWithoutAuth(
         @RequestBody UserPasswordUpdateRequest userPasswordUpdateRequest) {
         userService.changeMyPasswordWithoutAuth(userPasswordUpdateRequest);
 

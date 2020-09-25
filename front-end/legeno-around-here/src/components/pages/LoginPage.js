@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { loginUser } from '../api/API';
 
 import Avatar from '@material-ui/core/Avatar';
@@ -128,7 +128,7 @@ const LoginForm = ({ history }) => {
             </Grid>
             <Grid item>
               <LinkWithoutStyle to='/find/password' variant='body2'>
-                {'비밀번호를 까먹으셨나요?'}
+                {'비밀번호를 잊어버리셨나요?'}
               </LinkWithoutStyle>
             </Grid>
           </Grid>
