@@ -1,6 +1,8 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,5 +56,36 @@ public class RankingService {
         }
         return postRepository.findRankingByAreaIdAndSectorIds(pageable, postSearch.getAreaId(),
             postSearch.getSectorIds(), startDate, endDate);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Post> searchRanking(PostSearchRequest postSearchFilter,
+        RankingRequest rankingRequest, int postCount) {
+        PostSearch postSearch = postSearchFilter.toPostSearch();
+        RankingCriteria rankingCriteria = RankingCriteria.of(rankingRequest.getCriteria());
+
+        List<Post> posts = getRankingByFilter(postSearch, rankingCriteria, postCount);
+
+        return Collections.unmodifiableList(posts);
+    }
+
+    private List<Post> getRankingByFilter(PostSearch postSearch, RankingCriteria rankingCriteria,
+        int postCount) {
+        LocalDateTime startDate = rankingCriteria.getStartDate();
+        LocalDateTime endDate = rankingCriteria.getEndDate();
+
+        if (postSearch.isNotExistsFilter()) {
+            return postRepository.findRankingBy(startDate, endDate, postCount);
+        }
+        if (postSearch.isAreaFilter()) {
+            return postRepository.findRankingByAreaId(postSearch.getAreaId(), startDate,
+                endDate, postCount);
+        }
+        if (postSearch.isSectorFilter()) {
+            return postRepository.findRankingBySectorIds(postSearch.getSectorIds(),
+                startDate, endDate, postCount);
+        }
+        return postRepository.findRankingByAreaIdAndSectorIds(postSearch.getAreaId(),
+            postSearch.getSectorIds(), startDate, endDate, postCount);
     }
 }
