@@ -1,5 +1,7 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
+import java.util.Collections;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,5 +25,10 @@ public class AreaService {
         Page<Area> areas = areaRepository.findAllByFullNameIsLike(pageable, likeKeyword);
 
         return areas.map(AreaResponse::of);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Area> findAllAreas() {
+        return Collections.unmodifiableList(areaRepository.findAll());
     }
 }
