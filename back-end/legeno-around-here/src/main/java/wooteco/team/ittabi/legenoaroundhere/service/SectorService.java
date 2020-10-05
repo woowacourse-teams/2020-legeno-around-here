@@ -183,7 +183,7 @@ public class SectorService {
     }
 
     @Transactional(readOnly = true)
-    public List<SectorSimpleResponse> findSectorsForKeywordSearch() {
+    public List<SectorSimpleResponse> findAllAvailableSectors() {
         List<Sector> sectors = sectorRepository.findAllByStateIn(SectorState.getAllAvailable());
         return SectorSimpleResponse.listOf(sectors);
     }

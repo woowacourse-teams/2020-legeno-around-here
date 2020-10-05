@@ -517,7 +517,7 @@ class SectorServiceTest extends ServiceTest {
     @Test
     void findSectorsForKeywordSearch_Nothing_ZeroReturn() {
         List<SectorSimpleResponse> sectorsForKeywordSearch
-            = sectorService.findSectorsForKeywordSearch();
+            = sectorService.findAllAvailableSectors();
 
         assertThat(sectorsForKeywordSearch).hasSize(0);
     }
@@ -529,7 +529,7 @@ class SectorServiceTest extends ServiceTest {
         sectorService.createPendingSector(sectorRequest);
 
         List<SectorSimpleResponse> sectorsForKeywordSearch
-            = sectorService.findSectorsForKeywordSearch();
+            = sectorService.findAllAvailableSectors();
 
         assertThat(sectorsForKeywordSearch).hasSize(0);
     }
@@ -545,7 +545,7 @@ class SectorServiceTest extends ServiceTest {
         sectorService.updateSectorState(pendingSector.getId(), sectorUpdateStateRequest);
 
         List<SectorSimpleResponse> sectorsForKeywordSearch
-            = sectorService.findSectorsForKeywordSearch();
+            = sectorService.findAllAvailableSectors();
 
         assertThat(sectorsForKeywordSearch).hasSize(1);
     }
@@ -560,7 +560,7 @@ class SectorServiceTest extends ServiceTest {
         sectorService.createSector(sectorRequest);
 
         List<SectorSimpleResponse> sectorsForKeywordSearch
-            = sectorService.findSectorsForKeywordSearch();
+            = sectorService.findAllAvailableSectors();
 
         assertThat(sectorsForKeywordSearch).hasSize(2);
     }
