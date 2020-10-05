@@ -1,4 +1,4 @@
-package wooteco.team.ittabi.legenoaroundhere.service;
+package wooteco.team.ittabi.legenoaroundhere.service.award;
 
 import static wooteco.team.ittabi.legenoaroundhere.domain.ranking.RankingCriteria.LAST_MONTH;
 
@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,20 +17,31 @@ import wooteco.team.ittabi.legenoaroundhere.domain.award.PopularityPostCreatorAw
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.ranking.RankingCriteria;
 import wooteco.team.ittabi.legenoaroundhere.domain.util.AwardNameMaker;
+import wooteco.team.ittabi.legenoaroundhere.dto.AwardResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.RankingRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorSimpleResponse;
 import wooteco.team.ittabi.legenoaroundhere.repository.PopularityPostCreatorAwardRepository;
+import wooteco.team.ittabi.legenoaroundhere.service.AreaService;
+import wooteco.team.ittabi.legenoaroundhere.service.RankingService;
+import wooteco.team.ittabi.legenoaroundhere.service.SectorService;
 
 @Slf4j
 @Service
 @AllArgsConstructor
-public class PostAwardService {
+public class PopularPostAwardService {
 
-    private final PopularityPostCreatorAwardRepository popularityPostCreatorAwardRepository;
+    private final PopularityPostCreatorAwardRepository popularPostAwardRepository;
     private final RankingService rankingService;
     private final SectorService sectorService;
     private final AreaService areaService;
+
+    List<AwardResponse> findPopularPostAwards(Long awardeeId) {
+        return popularPostAwardRepository.findAllByAwardee_Id(awardeeId)
+            .stream()
+            .map(AwardResponse::of)
+            .collect(Collectors.toList());
+    }
 
     @Transactional
     public void createPopularPostAwards(LocalDateTime awardingTime) {
@@ -92,7 +104,7 @@ public class PostAwardService {
             .startDate(startDate)
             .endDate(endDate)
             .build();
-        popularityPostCreatorAwardRepository.save(award);
+        popularPostAwardRepository.save(award);
 
         log.info("인기글 상 수여 : {}", award.getName());
     }

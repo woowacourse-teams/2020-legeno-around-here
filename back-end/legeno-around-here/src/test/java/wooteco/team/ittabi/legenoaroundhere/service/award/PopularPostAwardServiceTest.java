@@ -1,4 +1,4 @@
-package wooteco.team.ittabi.legenoaroundhere.service;
+package wooteco.team.ittabi.legenoaroundhere.service.award;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,8 +30,11 @@ import wooteco.team.ittabi.legenoaroundhere.dto.AwardResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostCreateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
+import wooteco.team.ittabi.legenoaroundhere.service.PostService;
+import wooteco.team.ittabi.legenoaroundhere.service.SectorService;
+import wooteco.team.ittabi.legenoaroundhere.service.ServiceTest;
 
-class PostAwardServiceTest extends ServiceTest {
+class PopularPostAwardServiceTest extends ServiceTest {
 
     private static final String TEST_PREFIX = "ranking_";
     private static final Long SEOUL_ID = 1L;
@@ -47,10 +50,7 @@ class PostAwardServiceTest extends ServiceTest {
     private SectorService sectorService;
 
     @Autowired
-    private AwardService awardService;
-
-    @Autowired
-    private PostAwardService postAwardService;
+    private PopularPostAwardService popularPostAwardService;
 
     private LocalDate setUpTime;
     private User user;
@@ -119,9 +119,9 @@ class PostAwardServiceTest extends ServiceTest {
         // 글 작성일로부터 한달 뒤
         LocalDateTime dayOfNextMonth = LocalDateTime.now().plusMonths(1L);
 
-        postAwardService.createPopularPostAwards(dayOfNextMonth);
+        popularPostAwardService.createPopularPostAwards(dayOfNextMonth);
 
-        List<AwardResponse> awardsOfUserA = awardService.findAwards(user.getId());
+        List<AwardResponse> awardsOfUserA = popularPostAwardService.findPopularPostAwards(user.getId());
         assertThat(awardsOfUserA).hasSize(5);
 
         List<String> awardNames = awardsOfUserA.stream()
