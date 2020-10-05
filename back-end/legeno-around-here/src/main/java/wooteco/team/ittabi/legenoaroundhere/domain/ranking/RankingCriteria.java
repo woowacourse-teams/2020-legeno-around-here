@@ -2,50 +2,55 @@ package wooteco.team.ittabi.legenoaroundhere.domain.ranking;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.function.Function;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 
 public enum RankingCriteria {
     YESTERDAY("yesterday",
-        LocalDateTime.of(
-            LocalDateTime.now().minusDays(1).getYear(),
-            LocalDateTime.now().minusDays(1).getMonth(),
-            LocalDateTime.now().minusDays(1).getDayOfMonth(),
+        dateTime -> LocalDateTime.of(
+            dateTime.minusDays(1).getYear(),
+            dateTime.minusDays(1).getMonth(),
+            dateTime.minusDays(1).getDayOfMonth(),
             0,
-            0),
-        LocalDateTime.of(
-            LocalDateTime.now().getYear(),
-            LocalDateTime.now().getMonth(),
-            LocalDateTime.now().getDayOfMonth(),
+            0
+        ),
+        dateTime -> LocalDateTime.of(
+            dateTime.getYear(),
+            dateTime.getMonth(),
+            dateTime.getDayOfMonth(),
             0,
-            0)),
+            0
+        )
+    ),
     LAST_WEEK("week",
-        LocalDateTime.now().minusDays(7 + (LocalDateTime.now().getDayOfWeek().getValue() % 7)),
-        LocalDateTime.now().minusDays(LocalDateTime.now().getDayOfWeek().getValue() % 7)),
+        dateTime -> dateTime.minusDays(7 + (dateTime.getDayOfWeek().getValue() % 7)),
+        dateTime -> dateTime.minusDays(dateTime.getDayOfWeek().getValue() % 7)
+    ),
     LAST_MONTH("month",
-        LocalDateTime.of(
-            LocalDateTime.now().minusMonths(1).getYear(),
-            LocalDateTime.now().minusMonths(1).getMonth(),
+        dateTime -> LocalDateTime.of(
+            dateTime.minusMonths(1).getYear(),
+            dateTime.minusMonths(1).getMonth(),
             1,
             0,
-            0),
-        LocalDateTime.of(
-            LocalDateTime.now().getYear(),
-            LocalDateTime.now().getMonth(),
-            1,
-            0,
-            0)),
-    TOTAL("total", LocalDateTime.of(1000, 1, 1, 0, 0, 0),
-        LocalDateTime.of(9999, 12, 31, 23, 59, 59));
+            0
+        ),
+        dateTime -> LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(), 1, 0, 0)
+    ),
+    TOTAL("total",
+        dateTime -> LocalDateTime.of(1000, 1, 1, 0, 0, 0),
+        dateTime -> LocalDateTime.of(9999, 12, 31, 23, 59, 59)
+    );
 
     private final String rankingCriteria;
-    private final LocalDateTime startDate;
-    private final LocalDateTime endDate;
+    private final Function<LocalDateTime, LocalDateTime> calculateStartDate;
+    private final Function<LocalDateTime, LocalDateTime> calculateEndDate;
 
-    RankingCriteria(String rankingCriteria, LocalDateTime startDate,
-        LocalDateTime endDate) {
+    RankingCriteria(String rankingCriteria,
+        Function<LocalDateTime, LocalDateTime> calculateStartDate,
+        Function<LocalDateTime, LocalDateTime> calculateEndDate) {
         this.rankingCriteria = rankingCriteria;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.calculateStartDate = calculateStartDate;
+        this.calculateEndDate = calculateEndDate;
     }
 
     public static RankingCriteria of(String criteria) {
@@ -64,10 +69,18 @@ public enum RankingCriteria {
     }
 
     public LocalDateTime getStartDate() {
-        return this.startDate;
+        return this.getStartDate(LocalDateTime.now());
     }
 
     public LocalDateTime getEndDate() {
-        return this.endDate;
+        return this.getEndDate(LocalDateTime.now());
+    }
+
+    public LocalDateTime getStartDate(LocalDateTime now) {
+        return this.calculateStartDate.apply(now);
+    }
+
+    public LocalDateTime getEndDate(LocalDateTime now) {
+        return this.calculateEndDate.apply(now);
     }
 }
