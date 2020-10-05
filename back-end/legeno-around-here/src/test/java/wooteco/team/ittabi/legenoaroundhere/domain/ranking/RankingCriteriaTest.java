@@ -45,15 +45,12 @@ class RankingCriteriaTest {
     }
 
     private static Stream<Arguments> getStartDateTestcase() {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime lastMonthStart = LocalDateTime.of(
-            now.minusMonths(1).getYear(),
-            now.minusMonths(1).getMonth(),
-            1,
-            0,
-            0
-        );
-        LocalDateTime lastWeekStart = now.minusDays(7 + (now.getDayOfWeek().getValue() % 7));
+        LocalDateTime now = LocalDateTime.of(2020, 3, 11, 14, 20, 0);
+
+        LocalDateTime lastMonthStart = LocalDateTime.of(2020, 2, 1, 0, 0, 0);
+
+        // 일요일 ~ 토요일을 한 주로 하여, 지난주 첫날(일요일)의 이 시각
+        LocalDateTime lastWeekStart = LocalDateTime.of(2020, 3, 1, 14, 20, 0);
 
         return Stream.of(
             Arguments.of(RankingCriteria.LAST_MONTH, now, lastMonthStart),
@@ -62,10 +59,11 @@ class RankingCriteriaTest {
     }
 
     private static Stream<Arguments> getEndDateTestcase() {
-        LocalDateTime now = LocalDateTime.now();
-
-        LocalDateTime lastMonthEnd = LocalDateTime.of(now.getYear(), now.getMonth(), 1, 0, 0);
-        LocalDateTime lastWeekEnd = now.minusDays(now.getDayOfWeek().getValue() % 7);
+        LocalDateTime now = LocalDateTime.of(2020, 3, 11, 14, 20, 0);
+        // 지난달의 마지막 = 이번달의 시작 (이번달 1일 0시 0분 0초)
+        LocalDateTime lastMonthEnd = LocalDateTime.of(2020, 3, 1, 0, 0, 0);
+        // 일요일 ~ 토요일을 한 주로 하여, 이번주 시작(일요일)의 이 시각
+        LocalDateTime lastWeekEnd = LocalDateTime.of(2020, 3, 8, 14, 20, 0);
 
         return Stream.of(
             Arguments.of(RankingCriteria.LAST_MONTH, now, lastMonthEnd),
