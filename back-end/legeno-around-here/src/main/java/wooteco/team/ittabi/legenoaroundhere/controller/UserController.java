@@ -27,6 +27,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserPasswordWithAuthUpdateRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.UserUpdateRequest;
+import wooteco.team.ittabi.legenoaroundhere.exception.LoginPageRedirectException;
 import wooteco.team.ittabi.legenoaroundhere.service.UserService;
 
 @RestController
@@ -59,6 +60,11 @@ public class UserController {
 
         return ResponseEntity
             .ok(token);
+    }
+
+    @GetMapping("/login")
+    public ResponseEntity<Void> login() {
+        throw new LoginPageRedirectException();
     }
 
     @GetMapping(USERS_PATH + ME_PATH)
