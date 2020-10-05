@@ -22,9 +22,9 @@ class AwardNameMakerTest {
 
     private static final Post POST;
     private static final Sector SECTOR;
+    private static final Area AREA;
     private static final LocalDate TEST_START_TIME = LocalDate.parse("2019-01-01");
-    private static final LocalDate TEST_END_TIME = LocalDate.parse("2019-01-31");
-
+    private static final LocalDate TEST_END_TIME = LocalDate.parse("2019-02-01");
 
     static {
         User user = User.builder()
@@ -39,7 +39,7 @@ class AwardNameMakerTest {
             .lastModifier(user)
             .state(SectorState.PUBLISHED)
             .build();
-        Area area = Area.builder()
+        AREA = Area.builder()
             .fullName("서울특별시 양천구")
             .firstDepthName("서울특별시")
             .secondDepthName("양천구")
@@ -49,7 +49,7 @@ class AwardNameMakerTest {
         POST = Post.builder()
             .writing("test writing")
             .postImages(new ArrayList<>())
-            .area(area)
+            .area(AREA)
             .sector(SECTOR)
             .build();
     }
@@ -65,7 +65,7 @@ class AwardNameMakerTest {
     @Test
     void makePopularPostAwardName() {
         String result = AwardNameMaker.makePopularPostAwardName(
-            POST, 1, TEST_START_TIME, TEST_END_TIME, RankingCriteria.LAST_MONTH);
+            POST, 1, AREA, TEST_START_TIME, TEST_END_TIME, RankingCriteria.LAST_MONTH);
         assertThat(result).isEqualTo("2019년 1월 양천구 이색 경험 부문 1위");
     }
 
@@ -73,7 +73,7 @@ class AwardNameMakerTest {
     @Test
     void makePopularPostAwardName_IfRankingCriteriaUnsupported_ThrowException() {
         assertThatThrownBy(() -> AwardNameMaker.makePopularPostAwardName(
-            POST, 1, TEST_START_TIME, TEST_END_TIME, RankingCriteria.YESTERDAY)
+            POST, 1, AREA, TEST_START_TIME, TEST_END_TIME, RankingCriteria.YESTERDAY)
         ).isInstanceOf(UnsupportedOperationException.class);
     }
 }

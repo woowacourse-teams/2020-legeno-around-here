@@ -9,10 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
-import wooteco.team.ittabi.legenoaroundhere.domain.award.PopularityPostCreatorAward;
 import wooteco.team.ittabi.legenoaroundhere.domain.award.SectorCreatorAward;
-import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
-import wooteco.team.ittabi.legenoaroundhere.domain.ranking.RankingCriteria;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.domain.util.AwardNameMaker;
@@ -73,21 +70,5 @@ public class AwardService {    // Todo: 테스트 없음 (만들어야댐)
             .build();
         sectorCreatorAwardRepository.save(sectorCreatorAward);
         notificationService.notifyGiveASectorCreatorAward(sectorCreatorAward);
-    }
-
-    @Transactional
-    public void givePopularPostAward(Post popularPost, int ranking, RankingCriteria rankingCriteria,
-        LocalDate startDate, LocalDate endDate) {
-        PopularityPostCreatorAward award = PopularityPostCreatorAward.builder()
-            .name(AwardNameMaker.makePopularPostAwardName(
-                popularPost, ranking, startDate, endDate, rankingCriteria))
-            .awardee(popularPost.getCreator())
-            .ranking(ranking)
-            .startDate(startDate)
-            .endDate(endDate)
-            .build();
-        popularityPostCreatorAwardRepository.save(award);
-
-        log.info("인기글 상 수여 : {}", award.getName());
     }
 }
