@@ -36,9 +36,10 @@ public class SectorService {
     private static final String DB_LIKE_FORMAT = "%%%s%%";
     private static final int DEFAULT_PAGING_NUMBER = 0;
 
-    private final NotificationService notificationService;
     private final SectorRepository sectorRepository;
-    private final SectorCreatorAwardRepository sectorCreatorAwardRepository;
+    private final AwardService awardService;
+    private final NotificationService notificationService;
+
     private final IAuthenticationFacade authenticationFacade;
 
     @Transactional
@@ -149,29 +150,12 @@ public class SectorService {
             sectorUpdateStateRequest.getReason(), user);
 
         if (sectorState.equals(SectorState.APPROVED)) {
-            giveASectorCreatorAward(sector);
+            awardService.giveSectorCreatorAward(sector);
             notificationService.notifySectorApproved(sector);
         }
-
         if (sectorState.equals(SectorState.REJECTED)) {
             notificationService.notifySectorRejected(sector);
         }
-    }
-
-    private void giveASectorCreatorAward(Sector sector) {
-        if (sectorCreatorAwardRepository.findBySector(sector).isPresent()) {
-            log.info("기존에 수상 이력이 있는 부문입니다.");
-            return;
-        }
-
-        SectorCreatorAward sectorCreatorAward = SectorCreatorAward.builder()
-            .name(AwardNameMaker.makeSectorCreatorAwardName(sector))
-            .awardee(sector.getCreator())
-            .sector(sector)
-            .date(LocalDate.now())
-            .build();
-        sectorCreatorAwardRepository.save(sectorCreatorAward);
-        notificationService.notifyGiveASectorCreatorAward(sectorCreatorAward);
     }
 
     @Transactional(readOnly = true)
