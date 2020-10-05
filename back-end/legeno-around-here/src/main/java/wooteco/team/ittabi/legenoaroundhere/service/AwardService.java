@@ -7,8 +7,12 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
+import wooteco.team.ittabi.legenoaroundhere.domain.award.PopularityPostCreatorAward;
 import wooteco.team.ittabi.legenoaroundhere.domain.award.SectorCreatorAward;
+import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
+import wooteco.team.ittabi.legenoaroundhere.domain.ranking.RankingCriteria;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.domain.util.AwardNameMaker;
@@ -19,13 +23,14 @@ import wooteco.team.ittabi.legenoaroundhere.repository.SectorCreatorAwardReposit
 @Slf4j
 @Service
 @AllArgsConstructor
-public class AwardService {
+public class AwardService {    // Todo: 테스트 없음 (만들어야댐)
 
     private final PopularityPostCreatorAwardRepository popularityPostCreatorAwardRepository;
     private final SectorCreatorAwardRepository sectorCreatorAwardRepository;
     private final IAuthenticationFacade authenticationFacade;
     private final NotificationService notificationService;
 
+    @Transactional(readOnly = true)
     public List<AwardResponse> findAwards(Long awardeeId) {
         List<AwardResponse> awardResponses = new ArrayList<>();
         awardResponses.addAll(findPopularityPostCreatorAwards(awardeeId));
@@ -54,6 +59,7 @@ public class AwardService {
         return findAwards(user.getId());
     }
 
+    @Transactional
     void giveSectorCreatorAward(Sector sector) {
         if (sectorCreatorAwardRepository.findBySector(sector).isPresent()) {
             log.info("기존에 수상 이력이 있는 부문입니다.");
@@ -69,5 +75,19 @@ public class AwardService {
         notificationService.notifyGiveASectorCreatorAward(sectorCreatorAward);
     }
 
+    @Transactional
+    public void givePopularPostAward(Post popularPost, int ranking, RankingCriteria rankingCriteria,
+        LocalDate startDate, LocalDate endDate) {
+        PopularityPostCreatorAward award = PopularityPostCreatorAward.builder()
+            .name(AwardNameMaker.makePopularPostAwardName(
+                popularPost, ranking, startDate, endDate, rankingCriteria))
+            .awardee(popularPost.getCreator())
+            .ranking(ranking)
+            .startDate(startDate)
+            .endDate(endDate)
+            .build();
+        popularityPostCreatorAwardRepository.save(award);
 
+        log.info("인기글 상 수여 : {}", award.getName());
+    }
 }
