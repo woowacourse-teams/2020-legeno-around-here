@@ -6,6 +6,7 @@ const useStyles = makeStyles(() => ({
     width: 'auto',
     height: 'auto',
     maxHeight: '400px',
+    maxWidth: '-webkit-fill-available',
     backgroundSize: 'contain',
   },
 }));
