@@ -31,6 +31,9 @@ import wooteco.team.ittabi.legenoaroundhere.service.SectorService;
 @AllArgsConstructor
 public class PopularPostAwardService {
 
+    private static final int RANKING_LIMIT = 3;    // 3등까지 수상
+    private static final RankingCriteria RANKING_CRITERIA_FOR_AWARD = LAST_MONTH;    // 월간 수상
+
     private final PopularityPostCreatorAwardRepository popularPostAwardRepository;
     private final RankingService rankingService;
     private final SectorService sectorService;
@@ -49,22 +52,19 @@ public class PopularPostAwardService {
         List<Area> allAreas = areaService.findAllAreas();
 
         allAvailableSectors.forEach(sector ->
-            allAreas.forEach(area ->
-                createAwardAt(area, sector.getId(), 5, awardingTime, LAST_MONTH))
+            allAreas.forEach(area -> createAwardAt(
+                area, sector.getId(), RANKING_LIMIT, awardingTime, RANKING_CRITERIA_FOR_AWARD))
         );
     }
 
-    /**
-     * @param rankLimit : 몇위까지 가져올지. ex) Top3 를 원할 경우 rankLimit = 3
-     */
-    private void createAwardAt(Area area, Long sectorId, int rankLimit,
+    private void createAwardAt(Area area, Long sectorId, int rankingLimit,
         LocalDateTime awardingTime, RankingCriteria rankingCriteria) {
         RankingRequest rankingRequest = new RankingRequest(LAST_MONTH.getCriteriaName());
         PostSearchRequest postSearchRequest = new PostSearchRequest(area.getId(),
             String.valueOf(sectorId));
 
         List<Post> posts = rankingService
-            .searchRanking(postSearchRequest, rankingRequest, rankLimit);
+            .searchRanking(postSearchRequest, rankingRequest, rankingLimit);
         List<PostWithRank> postWithRankList = makePostWithRankingList(posts);
 
         postWithRankList.forEach(postWithRank -> givePopularPostAward(
