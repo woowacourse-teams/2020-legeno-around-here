@@ -109,6 +109,7 @@ const AreaSearch = ({ history, setter, getter }) => {
   const setMainAreaAll = () => {
     const allAreaId = '';
     if (getter.areaId === allAreaId) {
+      handleClose();
       return;
     }
     setter.removeContent();
