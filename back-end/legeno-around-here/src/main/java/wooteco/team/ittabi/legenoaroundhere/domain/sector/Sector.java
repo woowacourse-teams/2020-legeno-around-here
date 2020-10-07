@@ -21,13 +21,14 @@ import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
+import wooteco.team.ittabi.legenoaroundhere.domain.notification.Notification;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString(exclude = {"posts"})
+@ToString(exclude = {"posts", "notifications"})
 @SQLDelete(sql = "UPDATE sector SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class Sector extends BaseEntity {
@@ -57,6 +58,9 @@ public class Sector extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "last_modifier_id", nullable = false)
     private User lastModifier;
+
+    @OneToMany(mappedBy = "sector", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Notification> notifications = new ArrayList<>();
 
     @Builder
     public Sector(String name, String description, User creator, User lastModifier,
