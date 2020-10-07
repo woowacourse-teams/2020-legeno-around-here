@@ -174,6 +174,18 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("로그인 기본 페이지 요청 - 401 반환")
+    void login_GET_ReturnUnauthorized() throws Exception {
+        this.mockMvc.perform(get("/login")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnauthorized())
+            .andDo(print())
+            .andReturn()
+            .getResponse();
+    }
+
+    @Test
     @DisplayName("내 정보 얻기")
     void findMe() throws Exception {
         UserResponse expected = UserResponse.builder()

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import wooteco.team.ittabi.legenoaroundhere.dto.ErrorResponse;
 import wooteco.team.ittabi.legenoaroundhere.exception.AlreadyExistUserException;
 import wooteco.team.ittabi.legenoaroundhere.exception.FileIOException;
+import wooteco.team.ittabi.legenoaroundhere.exception.LoginPageRedirectException;
 import wooteco.team.ittabi.legenoaroundhere.exception.MultipartFileConvertException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
@@ -78,6 +79,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity
             .status(HttpStatus.FORBIDDEN)
             .body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(LoginPageRedirectException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorized() {
+
+        return ResponseEntity
+            .status(HttpStatus.UNAUTHORIZED)
+            .body(new ErrorResponse("Login이 필요합니다."));
     }
 
     @ExceptionHandler({Exception.class, NotFoundAlgorithmException.class})

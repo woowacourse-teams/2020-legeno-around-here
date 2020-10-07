@@ -25,6 +25,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 import wooteco.team.ittabi.legenoaroundhere.domain.State;
+import wooteco.team.ittabi.legenoaroundhere.domain.notification.Notification;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAvailableException;
@@ -33,7 +34,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString(exclude = {"post", "superComment", "cocomments", "zzangs"})
+@ToString(exclude = {"post", "superComment", "cocomments", "zzangs", "notifications"})
 @SQLDelete(sql = "UPDATE comment SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class Comment extends BaseEntity {
@@ -65,6 +66,9 @@ public class Comment extends BaseEntity {
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<CommentZzang> zzangs = new ArrayList<>();
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Notification> notifications = new ArrayList<>();
 
     public Comment(User creator, String writing) {
         validateLength(writing);

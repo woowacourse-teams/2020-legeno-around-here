@@ -14,9 +14,7 @@ public class OAuth2UserInfoFactory {
         if (AuthProvider.GOOGLE.isSame(registrationId)) {
             return new GoogleOAuth2UserInfo(attributes);
         }
-        if (AuthProvider.GITHUB.isSame(registrationId)) {
-            return new GithubOAuth2UserInfo(attributes);
-        }
+
         throw new OAuth2AuthenticationProcessingException(
             "Sorry! Login with " + registrationId + " is not supported yet.");
     }
