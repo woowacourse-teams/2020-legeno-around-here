@@ -104,7 +104,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/mail-auth/**",
                 "/profile",
                 "/auth/**",
-                "/oauth2/**").permitAll()
+                "/oauth2/**",
+                "/favicon.ico").permitAll()
             .antMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest().hasAnyRole("USER", "ADMIN")
             .and()
@@ -118,6 +119,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             ).frameOptions().sameOrigin()
             .and()
             .oauth2Login()
+            .loginPage("/login")
             .authorizationEndpoint()
             .baseUri("/oauth2/authorize")
             .authorizationRequestRepository(cookieAuthorizationRequestRepository())

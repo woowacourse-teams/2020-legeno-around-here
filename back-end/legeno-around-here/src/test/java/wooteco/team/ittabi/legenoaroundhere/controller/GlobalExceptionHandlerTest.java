@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import wooteco.team.ittabi.legenoaroundhere.exception.FileIOException;
+import wooteco.team.ittabi.legenoaroundhere.exception.LoginPageRedirectException;
 import wooteco.team.ittabi.legenoaroundhere.exception.MultipartFileConvertException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotAuthorizedException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
@@ -148,6 +149,18 @@ class GlobalExceptionHandlerTest {
         this.mockMvc.perform(get("/sectors/")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isInternalServerError())
+            .andExpect(jsonPath("errorMessage").hasJsonPath());
+    }
+
+    @DisplayName("LoginPageRedirectException 때, Unauthorized 리턴")
+    @Test
+    void handleInternalServerError_LoginPageRedirectException_Unauthorized() throws Exception {
+        doThrow(LoginPageRedirectException.class)
+            .when(sectorService).searchAvailableSectors(any(), any());
+
+        this.mockMvc.perform(get("/sectors/")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnauthorized())
             .andExpect(jsonPath("errorMessage").hasJsonPath());
     }
 

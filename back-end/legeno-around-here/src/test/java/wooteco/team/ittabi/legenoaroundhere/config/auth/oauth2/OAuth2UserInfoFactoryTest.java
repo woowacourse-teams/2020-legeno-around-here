@@ -24,7 +24,7 @@ class OAuth2UserInfoFactoryTest {
 
     @DisplayName("OAuth2UserInfo 생성 - 성공")
     @ParameterizedTest
-    @ValueSource(strings = {"google", "github"})
+    @ValueSource(strings = {"google"})
     void getOAuth2UserInfo_Success(String registrationId) {
         assertThat(OAuth2UserInfoFactory.getOAuth2UserInfo(registrationId, new HashMap<>()))
             .isInstanceOf(OAuth2UserInfo.class);
