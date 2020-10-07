@@ -36,8 +36,7 @@ public class S3Uploader {
         try {
             return convertToCreateFile(multipartFile, originalFileName);
         } catch (IOException e) {
-            log.error("File 읽기 실패, originalFileName = {}", originalFileName);
-            throw new FileIOException("File을 읽고 쓰는데 실패했습니다!");
+            throw new FileIOException(originalFileName + " File을 읽고 쓰는데 실패했습니다!");
         }
     }
 
@@ -47,8 +46,7 @@ public class S3Uploader {
         if (convertFile.createNewFile()) {
             return createFile(multipartFile, convertFile);
         }
-        log.debug("File 전환 실패, originalFileName = {}", originalFileName);
-        throw new MultipartFileConvertException("MultipartFile -> File로 전환이 실패했습니다.");
+        throw new MultipartFileConvertException(originalFileName + "파일이 MultipartFile -> File로 전환이 실패했습니다.");
     }
 
     private File createFile(MultipartFile multipartFile, File convertFile) throws IOException {
@@ -82,9 +80,8 @@ public class S3Uploader {
     private void removeNewFile(File targetFile) {
         try {
             Files.delete(targetFile.toPath());
-            log.info("파일이 삭제되었습니다.");
         } catch (IOException e) {
-            log.info("파일이 삭제되지 못했습니다.");
+            throw new FileIOException(targetFile.getName() + " 파일이 삭제되지 못했습니다.");
         }
     }
 }
