@@ -57,6 +57,7 @@ export const PrivacySignOutBox = styled.span`
   font-size: 15px;
   display: inline;
   color: #444444;
+  cursor: pointer
 `;
 
 export const PrivacyRightEditLinks = styled.div`
