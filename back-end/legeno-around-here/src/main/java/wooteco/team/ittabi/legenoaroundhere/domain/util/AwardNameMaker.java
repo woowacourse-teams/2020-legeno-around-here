@@ -26,7 +26,9 @@ public class AwardNameMaker {
             return makePopularPostAwardNameByMonth(
                 popularPost, ranking, targetArea, startDate, endDate);
         }
-        throw new UnsupportedOperationException("월간 수상만 지원합니다.");
+        throw new UnsupportedOperationException("월간 수상만 지원합니다.\n"
+            + "현재 " + rankingCriteria.getCriteriaName() + "으로"
+            + "상 이름을 만들어주길 요청하셨습니다.");
     }
 
     private static String makePopularPostAwardNameByMonth(Post popularPost, int ranking,
