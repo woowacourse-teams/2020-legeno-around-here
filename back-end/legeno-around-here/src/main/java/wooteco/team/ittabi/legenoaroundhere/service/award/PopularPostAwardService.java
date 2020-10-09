@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
-import wooteco.team.ittabi.legenoaroundhere.domain.award.PopularityPostCreatorAward;
+import wooteco.team.ittabi.legenoaroundhere.domain.award.PopularPostAward;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.ranking.RankingCriteria;
 import wooteco.team.ittabi.legenoaroundhere.domain.util.AwardNameMaker;
@@ -21,7 +21,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.AwardResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.RankingRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorSimpleResponse;
-import wooteco.team.ittabi.legenoaroundhere.repository.PopularityPostCreatorAwardRepository;
+import wooteco.team.ittabi.legenoaroundhere.repository.PopularPostAwardRepository;
 import wooteco.team.ittabi.legenoaroundhere.service.AreaService;
 import wooteco.team.ittabi.legenoaroundhere.service.RankingService;
 import wooteco.team.ittabi.legenoaroundhere.service.SectorService;
@@ -34,7 +34,7 @@ public class PopularPostAwardService {
     private static final int RANKING_LIMIT = 3;    // 3등까지 수상
     private static final RankingCriteria RANKING_CRITERIA_FOR_AWARD = LAST_MONTH;    // 월간 수상
 
-    private final PopularityPostCreatorAwardRepository popularPostAwardRepository;
+    private final PopularPostAwardRepository popularPostAwardRepository;
     private final RankingService rankingService;
     private final SectorService sectorService;
     private final AreaService areaService;
@@ -95,7 +95,7 @@ public class PopularPostAwardService {
     private void givePopularPostAward(Post popularPost, int ranking, Area targetArea,
         RankingCriteria rankingCriteria,
         LocalDate startDate, LocalDate endDate) {
-        PopularityPostCreatorAward award = PopularityPostCreatorAward.builder()
+        PopularPostAward award = PopularPostAward.builder()
             .name(AwardNameMaker.makePopularPostAwardName(
                 popularPost, ranking, targetArea, startDate, endDate, rankingCriteria))
             .awardee(popularPost.getCreator())
