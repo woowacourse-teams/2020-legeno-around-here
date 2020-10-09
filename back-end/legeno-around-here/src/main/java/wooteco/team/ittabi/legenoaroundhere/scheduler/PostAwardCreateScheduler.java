@@ -12,7 +12,7 @@ import wooteco.team.ittabi.legenoaroundhere.service.award.PopularPostAwardServic
 @Component
 public class PostAwardCreateScheduler {
 
-    private PopularPostAwardService popularPostAwardService;
+    private final PopularPostAwardService popularPostAwardService;
 
     @Scheduled(cron = "0 0 0 1 * *")    // cron : 0초 0시 0분 1일 *월 *요일 (매월 1일 0시 0분 0초)
     public void createPopularPostAwards() {
