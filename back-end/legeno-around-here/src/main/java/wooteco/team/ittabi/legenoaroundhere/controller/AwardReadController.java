@@ -16,7 +16,7 @@ import wooteco.team.ittabi.legenoaroundhere.service.award.AwardReadService;
 
 @RestController
 @AllArgsConstructor
-public class AwardController {
+public class AwardReadController {
 
     private final AwardReadService awardReadService;
 
