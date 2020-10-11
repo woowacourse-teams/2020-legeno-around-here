@@ -76,7 +76,7 @@ public class AwardNameMaker {
     }
 
     private static void validateMonthForMonthlyPostAward(LocalDate startDate, LocalDate endDate) {
-        if (isStartDateOneMonthAheadOfEndDate(startDate, endDate)) {
+        if (startDate.getMonthValue() + 1 != endDate.getMonthValue()) {
             throw new IllegalArgumentException(
                 "start date 의 달이 end date 의 달보다 1 작아야합니다.\n"
                     + "start date : "
@@ -87,11 +87,6 @@ public class AwardNameMaker {
                     + endDate.getDayOfMonth() + "일"
             );
         }
-    }
-
-    private static boolean isStartDateOneMonthAheadOfEndDate(
-        LocalDate startDate, LocalDate endDate) {
-        return (startDate.getMonthValue() + 1) != endDate.getMonthValue();
     }
 
     private static void validateDayForMonthlyPostAward(LocalDate startDate, LocalDate endDate) {
