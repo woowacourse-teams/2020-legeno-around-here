@@ -44,13 +44,6 @@ class RankingCriteriaTest {
         assertThat(rankingCriteria.getEndDate(now)).isEqualTo(expected);
     }
 
-    @DisplayName("isLastMonth")
-    @ParameterizedTest
-    @MethodSource("testcaseOfIsLastMonth")
-    void isLastMonth(RankingCriteria rankingCriteria, boolean expected) {
-        assertThat(rankingCriteria.isLastMonth()).isEqualTo(expected);
-    }
-
     private static Stream<Arguments> getStartDateTestcase() {
         return Stream.of(
             Arguments.of(RankingCriteria.LAST_MONTH,
@@ -82,14 +75,6 @@ class RankingCriteriaTest {
         return Stream.of(
             Arguments.of(RankingCriteria.LAST_MONTH, now, lastMonthEnd),
             Arguments.of(RankingCriteria.LAST_WEEK, now, lastWeekEnd)
-        );
-    }
-
-    private static Stream<Arguments> testcaseOfIsLastMonth() {
-        return Stream.of(
-            Arguments.of(RankingCriteria.LAST_WEEK, false),
-            Arguments.of(RankingCriteria.LAST_MONTH, true),
-            Arguments.of(RankingCriteria.YESTERDAY, false)
         );
     }
 }
