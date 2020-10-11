@@ -22,7 +22,7 @@ public class AwardNameMaker {
         LocalDate endDate,
         RankingCriteria rankingCriteria) {
 
-        if (rankingCriteria.equals(RankingCriteria.LAST_MONTH)) {
+        if (rankingCriteria.isLastMonth()) {
             return makePopularPostAwardNameByMonth(
                 popularPost, ranking, targetArea, startDate, endDate);
         }

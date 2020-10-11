@@ -64,6 +64,10 @@ public enum RankingCriteria {
         return this.rankingCriteria.equals(criteria);
     }
 
+    public boolean isLastMonth() {
+        return this.equals(LAST_MONTH);
+    }
+
     public String getCriteriaName() {
         return this.rankingCriteria;
     }
