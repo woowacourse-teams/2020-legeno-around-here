@@ -15,10 +15,12 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,6 +44,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 @ToString(exclude = {"posts", "comments"})
 @SQLDelete(sql = "UPDATE user SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
+@Table(indexes = @Index(name = "idx_user_email", columnList = "email"))
 public class User extends BaseEntity implements UserDetails {
 
     @Embedded

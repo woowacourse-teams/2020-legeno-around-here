@@ -10,9 +10,11 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,6 +33,10 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @ToString(exclude = {"posts", "notifications"})
 @SQLDelete(sql = "UPDATE sector SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
+@Table(indexes = {
+    @Index(name = "idx_sector_name", columnList = "name"),
+    @Index(name = "idx_sector_creator", columnList = "creator_id")
+})
 public class Sector extends BaseEntity {
 
     private static final String DEFAULT_REASON = "";
