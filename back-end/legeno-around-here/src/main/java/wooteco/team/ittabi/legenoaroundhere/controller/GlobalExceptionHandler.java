@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotExistsException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(NotExistsException e) {
-        log.info(e.getMessage());
+        log.info("NotFound Exception : ", e);
 
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
         FileIOException.class, NotUniqueException.class, PropertyReferenceException.class,
         BindException.class, AlreadyExistUserException.class})
     public ResponseEntity<ErrorResponse> handleBadRequest(Exception e) {
-        log.info(e.getMessage());
+        log.info("BadRequest Exception : ", e);
 
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
@@ -74,7 +74,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotAuthorizedException.class)
     public ResponseEntity<ErrorResponse> handleForbidden(NotAuthorizedException e) {
-        log.info(e.getMessage());
+        log.info("Forbidden Exception : ", e);
 
         return ResponseEntity
             .status(HttpStatus.FORBIDDEN)
@@ -92,7 +92,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({Exception.class, NotFoundAlgorithmException.class,
         UnsupportedOperationException.class})
     public ResponseEntity<ErrorResponse> handleInternalServerError(Exception e) {
-        log.info(e.getMessage());
+        log.error("InternalServerError : ", e);
 
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)

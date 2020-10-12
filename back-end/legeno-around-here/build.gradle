@@ -2,11 +2,68 @@ plugins {
     id 'org.springframework.boot' version '2.3.1.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'java'
+    id 'jacoco'
 }
 
 group = 'wooteco.team.ittabi'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
+
+jacoco {
+    toolVersion = '0.8.5'
+}
+
+jacocoTestReport {
+    reports {
+        html.enabled true
+        xml.enabled false
+        csv.enabled false
+    }
+
+    finalizedBy 'jacocoTestCoverageVerification'
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            enabled = true
+            element = 'BUNDLE'
+
+            limit {
+                counter = 'INSTRUCTION'
+                value = 'COVEREDRATIO'
+                minimum = 0.80
+            }
+
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.70
+            }
+
+            excludes = []
+        }
+
+        rule {
+            enabled = true
+            element = 'CLASS'
+
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.50
+            }
+
+            excludes = [
+                    '*.mailauth.*',
+                    '*.config.*',
+                    '*.MailAuthService',
+                    '*.aws.*',
+                    'wooteco.team.ittabi.legenoaroundhere.domain.award.PopularityPostCreatorAward',
+            ]
+        }
+    }
+}
 
 repositories {
     mavenCentral()
@@ -27,6 +84,7 @@ dependencies {
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.security:spring-security-oauth2-client'
+    implementation 'com.github.maricn:logback-slack-appender:1.4.0'
 
     testImplementation 'io.rest-assured:rest-assured'
     testImplementation 'org.springframework.security:spring-security-test'
@@ -46,4 +104,5 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    finalizedBy 'jacocoTestReport'
 }
