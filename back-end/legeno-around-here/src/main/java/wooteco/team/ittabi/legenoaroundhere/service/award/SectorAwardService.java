@@ -17,7 +17,7 @@ import wooteco.team.ittabi.legenoaroundhere.service.NotificationService;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class SectorAwardService {
+class SectorAwardService {
 
     private final SectorCreatorAwardRepository sectorCreatorAwardRepository;
     private final NotificationService notificationService;
@@ -31,7 +31,7 @@ public class SectorAwardService {
     }
 
     @Transactional
-    public void giveSectorCreatorAward(Sector sector) {
+    void giveSectorCreatorAward(Sector sector) {
         if (sectorCreatorAwardRepository.findBySector(sector).isPresent()) {
             log.info("기존에 수상 이력이 있는 부문입니다.");
             return;

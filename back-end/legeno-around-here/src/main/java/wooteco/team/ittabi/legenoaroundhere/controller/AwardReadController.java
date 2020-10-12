@@ -12,17 +12,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import wooteco.team.ittabi.legenoaroundhere.dto.AwardResponse;
-import wooteco.team.ittabi.legenoaroundhere.service.award.AwardReadService;
+import wooteco.team.ittabi.legenoaroundhere.service.award.AwardService;
 
 @RestController
 @AllArgsConstructor
 public class AwardReadController {
 
-    private final AwardReadService awardReadService;
+    private final AwardService awardService;
 
     @GetMapping(USERS_PATH_WITH_SLASH + "{userId}" + AWARDS_PATH)
     public ResponseEntity<List<AwardResponse>> findAwards(@PathVariable Long userId) {
-        List<AwardResponse> awards = awardReadService.findAwards(userId);
+        List<AwardResponse> awards = awardService.findAwards(userId);
 
         return ResponseEntity
             .ok(awards);
@@ -30,7 +30,7 @@ public class AwardReadController {
 
     @GetMapping(AWARDS_PATH_WITH_SLASH + ME_PATH)
     public ResponseEntity<List<AwardResponse>> findMyAwards() {
-        List<AwardResponse> awards = awardReadService.findMyAwards();
+        List<AwardResponse> awards = awardService.findMyAwards();
 
         return ResponseEntity
             .ok(awards);

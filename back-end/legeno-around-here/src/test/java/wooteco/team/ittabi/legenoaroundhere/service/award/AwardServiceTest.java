@@ -34,7 +34,7 @@ import wooteco.team.ittabi.legenoaroundhere.service.PostService;
 import wooteco.team.ittabi.legenoaroundhere.service.SectorService;
 import wooteco.team.ittabi.legenoaroundhere.service.ServiceTest;
 
-class PopularPostAwardServiceTest extends ServiceTest {
+class AwardServiceTest extends ServiceTest {
 
     private static final String TEST_PREFIX = "ranking_";
     private static final Long SEOUL_ID = 1L;
@@ -50,7 +50,7 @@ class PopularPostAwardServiceTest extends ServiceTest {
     private SectorService sectorService;
 
     @Autowired
-    private PopularPostAwardService popularPostAwardService;
+    private AwardService awardService;
 
     private LocalDate setUpTime;
     private User user;
@@ -119,9 +119,9 @@ class PopularPostAwardServiceTest extends ServiceTest {
         // 글 작성일로부터 한달 뒤
         LocalDateTime dayOfNextMonth = LocalDateTime.now().plusMonths(1L);
 
-        popularPostAwardService.createPopularPostAwards(dayOfNextMonth);
+        awardService.createPopularPostAwards(dayOfNextMonth);
 
-        List<AwardResponse> awardsOfUserA = popularPostAwardService.findPopularPostAwards(user.getId());
+        List<AwardResponse> awardsOfUserA = awardService.findAwards(user.getId());
         assertThat(awardsOfUserA).hasSize(5);
 
         List<String> awardNames = awardsOfUserA.stream()

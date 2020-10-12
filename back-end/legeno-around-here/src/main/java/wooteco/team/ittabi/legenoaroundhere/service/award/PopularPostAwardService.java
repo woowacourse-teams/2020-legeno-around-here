@@ -16,27 +16,28 @@ import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.award.PopularPostAward;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.ranking.RankingCriteria;
+import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
+import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.util.AwardNameMaker;
 import wooteco.team.ittabi.legenoaroundhere.dto.AwardResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.PostSearchRequest;
 import wooteco.team.ittabi.legenoaroundhere.dto.RankingRequest;
-import wooteco.team.ittabi.legenoaroundhere.dto.SectorSimpleResponse;
 import wooteco.team.ittabi.legenoaroundhere.repository.PopularPostAwardRepository;
+import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
 import wooteco.team.ittabi.legenoaroundhere.service.AreaService;
 import wooteco.team.ittabi.legenoaroundhere.service.RankingService;
-import wooteco.team.ittabi.legenoaroundhere.service.SectorService;
 
 @Slf4j
 @Service
 @AllArgsConstructor
-public class PopularPostAwardService {
+class PopularPostAwardService {
 
     private static final int RANKING_LIMIT = 3;    // 3등까지 수상
     private static final RankingCriteria RANKING_CRITERIA_FOR_AWARD = LAST_MONTH;    // 월간 수상
 
     private final PopularPostAwardRepository popularPostAwardRepository;
+    private final SectorRepository sectorRepository;
     private final RankingService rankingService;
-    private final SectorService sectorService;
     private final AreaService areaService;
 
     List<AwardResponse> findPopularPostAwards(Long awardeeId) {
@@ -47,8 +48,9 @@ public class PopularPostAwardService {
     }
 
     @Transactional
-    public void createPopularPostAwards(LocalDateTime awardingTime) {
-        List<SectorSimpleResponse> allAvailableSectors = sectorService.findAllAvailableSectors();
+    void createPopularPostAwards(LocalDateTime awardingTime) {
+        List<Sector> allAvailableSectors = sectorRepository.findAllByStateIn(
+            SectorState.getAllAvailable());
         List<Area> allAreas = areaService.findAllAreas();
 
         allAvailableSectors.forEach(sector ->

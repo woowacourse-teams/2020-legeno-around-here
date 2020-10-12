@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
-import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,12 +9,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
-import wooteco.team.ittabi.legenoaroundhere.domain.award.SectorCreatorAward;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Name;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
-import wooteco.team.ittabi.legenoaroundhere.domain.util.AwardNameMaker;
 import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
@@ -26,8 +23,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.SectorUpdateStateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotUniqueException;
 import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
-import wooteco.team.ittabi.legenoaroundhere.service.award.SectorAwardService;
-import wooteco.team.ittabi.legenoaroundhere.service.award.SectorAwardService;
+import wooteco.team.ittabi.legenoaroundhere.service.award.AwardService;
 
 @Service
 @AllArgsConstructor
@@ -38,7 +34,7 @@ public class SectorService {
     private static final int DEFAULT_PAGING_NUMBER = 0;
 
     private final SectorRepository sectorRepository;
-    private final SectorAwardService sectorAwardService;
+    private final AwardService awardService;
     private final NotificationService notificationService;
 
     private final IAuthenticationFacade authenticationFacade;
@@ -151,7 +147,7 @@ public class SectorService {
             sectorUpdateStateRequest.getReason(), user);
 
         if (sectorState.equals(SectorState.APPROVED)) {
-            sectorAwardService.giveSectorCreatorAward(sector);
+            awardService.giveSectorCreatorAward(sector);
             notificationService.notifySectorApproved(sector);
         }
         if (sectorState.equals(SectorState.REJECTED)) {

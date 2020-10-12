@@ -9,8 +9,12 @@ import static wooteco.team.ittabi.legenoaroundhere.utils.constants.UserConstants
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
 import wooteco.team.ittabi.legenoaroundhere.domain.ranking.RankingCriteria;
@@ -75,5 +79,24 @@ class AwardNameMakerTest {
         assertThatThrownBy(() -> AwardNameMaker.makePopularPostAwardName(
             POST, 1, AREA, TEST_START_TIME, TEST_END_TIME, RankingCriteria.YESTERDAY)
         ).isInstanceOf(UnsupportedOperationException.class);
+    }
+
+    @DisplayName("인기 자랑글 상 이름 만들기 - 잘못된 시작&끝 시각 사용시 예외처리")
+    @ParameterizedTest
+    @MethodSource("testcaseForPostAwardNameIfTimeIsWrong")
+    void makePopularPostAwardName_IfStartAndEndTimeIsWrong_ThrowException(
+        LocalDate startDate, LocalDate endDate) {
+        assertThatThrownBy(() -> AwardNameMaker.makePopularPostAwardName(
+            POST, 1, AREA, startDate, endDate, RankingCriteria.LAST_MONTH)
+        ).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    private static Stream<Arguments> testcaseForPostAwardNameIfTimeIsWrong() {
+        return Stream.of(
+            Arguments.of(LocalDate.parse("2018-01-01"), LocalDate.parse("2019-01-01")),
+            Arguments.of(LocalDate.parse("2020-01-01"), LocalDate.parse("2019-12-01")),
+            Arguments.of(LocalDate.parse("2019-01-01"), LocalDate.parse("2019-01-01")),
+            Arguments.of(LocalDate.parse("2020-01-01"), LocalDate.parse("2020-01-03"))
+        );
     }
 }
