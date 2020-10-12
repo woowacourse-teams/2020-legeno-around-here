@@ -38,7 +38,7 @@ import wooteco.team.ittabi.legenoaroundhere.dto.SectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.repository.MailAuthRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.PostRepository;
 
-class RankingServiceTest extends ServiceTest {
+public class RankingServiceTest extends ServiceTest {
 
     private static final String TEST_PREFIX = "ranking_";
 

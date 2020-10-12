@@ -45,23 +45,16 @@ class RankingCriteriaTest {
     }
 
     private static Stream<Arguments> getStartDateTestcase() {
+        LocalDateTime now = LocalDateTime.of(2020, 3, 11, 14, 20, 0);
+
+        LocalDateTime lastMonthStart = LocalDateTime.of(2020, 2, 1, 0, 0, 0);
+
+        // 일요일 ~ 토요일을 한 주로 하여, 지난주 첫날(일요일)의 이 시각
+        LocalDateTime lastWeekStart = LocalDateTime.of(2020, 3, 1, 14, 20, 0);
+
         return Stream.of(
-            Arguments.of(RankingCriteria.LAST_MONTH,
-                LocalDateTime.of(2020, 3, 11, 14, 20, 0),    // now
-                LocalDateTime.of(2020, 2, 1, 0, 0, 0)
-            ),
-            Arguments.of(RankingCriteria.LAST_MONTH,
-                LocalDateTime.of(2020, 10, 12, 4, 0, 0),    // now
-                LocalDateTime.of(2020, 9, 1, 0, 0, 0)
-            ),
-            Arguments.of(RankingCriteria.LAST_WEEK,
-                LocalDateTime.of(2020, 3, 11, 14, 20, 0),   // now
-                LocalDateTime.of(2020, 3, 1, 14, 20, 0)    // 지난주 일요일 이시각
-            ),
-            Arguments.of(RankingCriteria.LAST_WEEK,
-                LocalDateTime.of(2020, 10, 12, 4, 0, 0),   // now
-                LocalDateTime.of(2020, 10, 4, 4, 0, 0)    // 지난주 일요일 이시각
-            )
+            Arguments.of(RankingCriteria.LAST_MONTH, now, lastMonthStart),
+            Arguments.of(RankingCriteria.LAST_WEEK, now, lastWeekStart)
         );
     }
 
