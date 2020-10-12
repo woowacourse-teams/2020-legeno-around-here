@@ -53,21 +53,47 @@ class RankingCriteriaTest {
         LocalDateTime lastWeekStart = LocalDateTime.of(2020, 3, 1, 14, 20, 0);
 
         return Stream.of(
-            Arguments.of(RankingCriteria.LAST_MONTH, now, lastMonthStart),
-            Arguments.of(RankingCriteria.LAST_WEEK, now, lastWeekStart)
+            Arguments.of(RankingCriteria.LAST_MONTH,
+                LocalDateTime.of(2020, 3, 11, 14, 20, 0),    // now
+                LocalDateTime.of(2020, 2, 1, 0, 0, 0)
+            ),
+            Arguments.of(RankingCriteria.LAST_MONTH,
+                LocalDateTime.of(2020, 10, 12, 4, 0, 0),    // now
+                LocalDateTime.of(2020, 9, 1, 0, 0, 0)
+            ),
+            Arguments.of(RankingCriteria.LAST_WEEK,
+                LocalDateTime.of(2020, 3, 11, 14, 20, 0),   // now
+                LocalDateTime.of(2020, 3, 1, 14, 20, 0)    // 지난주 일요일 이시각
+            ),
+            Arguments.of(RankingCriteria.LAST_WEEK,
+                LocalDateTime.of(2020, 10, 12, 4, 0, 0),   // now
+                LocalDateTime.of(2020, 10, 4, 4, 0, 0)    // 지난주 일요일 이시각
+            ),
+            Arguments.of(RankingCriteria.YESTERDAY,
+                LocalDateTime.of(2020, 3, 11, 14, 20, 0),   // now
+                LocalDateTime.of(2020, 3, 10, 0, 0, 0)    // 지난주 일요일 이시각
+            ),
+            Arguments.of(RankingCriteria.YESTERDAY,
+                LocalDateTime.of(2020, 10, 12, 4, 0, 0),   // now
+                LocalDateTime.of(2020, 10, 11, 0, 0, 0)
+            )
         );
     }
 
     private static Stream<Arguments> getEndDateTestcase() {
-        LocalDateTime now = LocalDateTime.of(2020, 3, 11, 14, 20, 0);
-        // 지난달의 마지막 = 이번달의 시작 (이번달 1일 0시 0분 0초)
-        LocalDateTime lastMonthEnd = LocalDateTime.of(2020, 3, 1, 0, 0, 0);
-        // 일요일 ~ 토요일을 한 주로 하여, 이번주 시작(일요일)의 이 시각
-        LocalDateTime lastWeekEnd = LocalDateTime.of(2020, 3, 8, 14, 20, 0);
-
         return Stream.of(
-            Arguments.of(RankingCriteria.LAST_MONTH, now, lastMonthEnd),
-            Arguments.of(RankingCriteria.LAST_WEEK, now, lastWeekEnd)
+            Arguments.of(RankingCriteria.LAST_MONTH,
+                LocalDateTime.of(2020, 3, 11, 14, 20, 0),    // now
+                LocalDateTime.of(2020, 3, 1, 0, 0, 0)
+            ),
+            Arguments.of(RankingCriteria.LAST_WEEK,
+                LocalDateTime.of(2020, 3, 11, 14, 20, 0),
+                LocalDateTime.of(2020, 3, 8, 14, 20, 0)
+            ),
+            Arguments.of(RankingCriteria.YESTERDAY,
+                LocalDateTime.of(2020, 3, 11, 14, 20, 0),
+                LocalDateTime.of(2020, 3, 11, 0, 0, 0)
+            )
         );
     }
 }

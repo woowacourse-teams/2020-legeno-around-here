@@ -7,6 +7,7 @@ import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 
 public enum RankingCriteria {
     YESTERDAY("yesterday",
+        // 어제 0시 0분 0초
         dateTime -> LocalDateTime.of(
             dateTime.minusDays(1).getYear(),
             dateTime.minusDays(1).getMonth(),
@@ -14,6 +15,7 @@ public enum RankingCriteria {
             0,
             0
         ),
+        // 오늘 0시 0분 0초
         dateTime -> LocalDateTime.of(
             dateTime.getYear(),
             dateTime.getMonth(),
@@ -23,10 +25,13 @@ public enum RankingCriteria {
         )
     ),
     LAST_WEEK("week",
+        // 일요일 ~ 토요일을 한 주로 하여, 지난주 첫날(일요일)의 이 시각
         dateTime -> dateTime.minusDays(7 + (dateTime.getDayOfWeek().getValue() % 7)),
+        // 일요일 ~ 토요일을 한 주로 하여, 이번주 첫날(일요일)의 이 시각
         dateTime -> dateTime.minusDays(dateTime.getDayOfWeek().getValue() % 7)
     ),
     LAST_MONTH("month",
+        // 지난달의 시작 (지난달 1일 0시 0분 0초)
         dateTime -> LocalDateTime.of(
             dateTime.minusMonths(1).getYear(),
             dateTime.minusMonths(1).getMonth(),
@@ -34,6 +39,7 @@ public enum RankingCriteria {
             0,
             0
         ),
+        // 지난달의 마지막 = 이번달의 시작 (이번달 1일 0시 0분 0초)
         dateTime -> LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(), 1, 0, 0)
     ),
     TOTAL("total",
