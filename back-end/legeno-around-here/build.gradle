@@ -27,6 +27,7 @@ dependencies {
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.security:spring-security-oauth2-client'
+    implementation 'com.github.maricn:logback-slack-appender:1.4.0'
 
     testImplementation 'io.rest-assured:rest-assured'
     testImplementation 'org.springframework.security:spring-security-test'

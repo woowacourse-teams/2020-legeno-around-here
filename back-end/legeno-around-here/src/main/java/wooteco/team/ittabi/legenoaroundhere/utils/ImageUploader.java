@@ -20,6 +20,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.post.image.PostImage;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.UserImage;
 import wooteco.team.ittabi.legenoaroundhere.domain.util.ImageExtension;
+import wooteco.team.ittabi.legenoaroundhere.exception.FileIOException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotFoundAlgorithmException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotImageMimeTypeException;
 import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
@@ -84,7 +85,6 @@ public class ImageUploader {
             return DatatypeConverter
                 .printHexBinary(digest).toUpperCase();
         } catch (NoSuchAlgorithmException e) {
-            log.error(ALGORITHM_NAME + "에 해당하는 알고리즘이 없음");
             throw new NotFoundAlgorithmException(ALGORITHM_NAME + "에 해당하는 알고리즘이 없습니다!");
         }
     }
@@ -100,13 +100,11 @@ public class ImageUploader {
     private void validateImageMimeType(MultipartFile multipartFile) {
         try {
             if (isNotImageMimeType(multipartFile)) {
-                log.debug("이미지 MIME 타입이 아님, originalFileName = {}",
-                    multipartFile.getOriginalFilename());
                 throw new NotImageMimeTypeException(
                     multipartFile.getName() + " 파일은 이미지 MIME 타입이 아닙니다!");
             }
         } catch (IOException e) {
-            log.error("의 바이트 파일을 가져오는데 실패했습니다!");
+            throw new FileIOException(multipartFile.getOriginalFilename() + "의 바이트 파일을 가져오는데 실패했습니다!");
         }
     }
 

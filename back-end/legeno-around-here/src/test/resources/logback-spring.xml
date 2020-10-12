@@ -7,7 +7,7 @@
       <pattern>${LOG_PATTERN}</pattern>
     </encoder>
   </appender>
-  <root level="info">
+  <root level="INFO">
     <appender-ref ref="CONSOLE"/>
   </root>
 </configuration>

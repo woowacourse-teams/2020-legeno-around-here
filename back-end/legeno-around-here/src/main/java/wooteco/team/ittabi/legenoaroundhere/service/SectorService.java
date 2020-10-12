@@ -160,7 +160,7 @@ public class SectorService {
 
     private void giveASectorCreatorAward(Sector sector) {
         if (sectorCreatorAwardRepository.findBySector(sector).isPresent()) {
-            log.info("기존에 수상 이력이 있는 부문입니다.");
+            log.info(sector.getName() + " : sector is already exist.");
             return;
         }
 

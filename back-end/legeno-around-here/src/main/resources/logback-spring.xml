@@ -1,51 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds">
+  <springProperty name="SLACK_WEB_HOOK_URI" source="logging.slack.web-hook-uri"/>
   <property name="ERR_LOG_FILE_NAME" value="err_log"/>
-  <property name="LOG_PATTERN"
-    value="%-5level %d{yy-MM-dd HH:mm:ss}[%thread] [%logger{0}:%line] - %msg%n"/>
-  <property name="LOG_PATH" value="logs"/>
+  <property name="LOG_PATTERN" value="%-5level %d{yy-MM-dd HH:mm:ss}[%thread] [%logger{0}:%line] - %msg%n"/>
   <property name="LOG_FILE_NAME" value="normal_log"/>
-  <appender class="ch.qos.logback.core.ConsoleAppender" name="CONSOLE">
-    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-      <pattern>${LOG_PATTERN}</pattern>
-    </encoder>
-  </appender>
-  <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="FILE">
-    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-      <pattern>${LOG_PATTERN}</pattern>
-    </encoder>
-    <file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}_%i.log</fileNamePattern>
-      <maxHistory>30</maxHistory>
-      <timeBasedFileNamingAndTriggeringPolicy
-        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-        <maxFileSize>10MB</maxFileSize>
-      </timeBasedFileNamingAndTriggeringPolicy>
-    </rollingPolicy>
-  </appender>
-  <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="Error">
-    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-      <pattern>${LOG_PATTERN}</pattern>
-    </encoder>
-    <file>${LOG_PATH}/${ERR_LOG_FILE_NAME}.log</file>
-    <filter class="ch.qos.logback.classic.filter.LevelFilter">
-      <level>error</level>
-      <onMatch>ACCEPT</onMatch>
-      <onMismatch>DENY</onMismatch>
-    </filter>
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>${LOG_PATH}/${ERR_LOG_FILE_NAME}.%d{yyyy-MM-dd}_%i.log</fileNamePattern>
-      <maxHistory>60</maxHistory>
-      <timeBasedFileNamingAndTriggeringPolicy
-        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-        <maxFileSize>10MB</maxFileSize>
-      </timeBasedFileNamingAndTriggeringPolicy>
-    </rollingPolicy>
-  </appender>
-  <root level="info">
-    <appender-ref ref="CONSOLE"/>
-    <appender-ref ref="FILE"/>
-    <appender-ref ref="Error"/>
+
+  <springProfile name="console-logging">
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+        <pattern>${LOG_PATTERN}</pattern>
+      </encoder>
+    </appender>
+  </springProfile>
+
+  <springProfile name="file-logging">
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+      <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+        <pattern>${LOG_PATTERN}</pattern>
+      </encoder>
+      <file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
+      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+        <maxHistory>30</maxHistory>
+        <timeBasedFileNamingAndTriggeringPolicy
+          class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+          <maxFileSize>10MB</maxFileSize>
+        </timeBasedFileNamingAndTriggeringPolicy>
+      </rollingPolicy>
+    </appender>
+  </springProfile>
+
+  <springProfile name="error-logging">
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+      <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+        <pattern>${LOG_PATTERN}</pattern>
+      </encoder>
+      <file>${LOG_PATH}/${ERR_LOG_FILE_NAME}.log</file>
+      <filter class="ch.qos.logback.classic.filter.LevelFilter">
+        <level>ERROR</level>
+        <onMatch>ACCEPT</onMatch>
+        <onMismatch>DENY</onMismatch>
+      </filter>
+      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <fileNamePattern>${LOG_PATH}/${ERR_LOG_FILE_NAME}.%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+        <maxHistory>60</maxHistory>
+        <timeBasedFileNamingAndTriggeringPolicy
+          class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+          <maxFileSize>10MB</maxFileSize>
+        </timeBasedFileNamingAndTriggeringPolicy>
+      </rollingPolicy>
+    </appender>
+  </springProfile>
+
+  <springProfile name="slack-logging">
+    <appender name="SLACK" class="com.github.maricn.logback.SlackAppender">
+      <layout class="ch.qos.logback.classic.PatternLayout">
+        <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{35} - %msg%n</pattern>
+      </layout>
+      <webhookUri>${SLACK_WEB_HOOK_URI}</webhookUri>
+      <username>Logging Legeno</username>
+      <colorCoding>true</colorCoding>
+    </appender>
+    <appender name="ASYNC_SLACK" class="ch.qos.logback.classic.AsyncAppender">
+      <appender-ref ref="SLACK"/>
+      <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <level>ERROR</level>
+      </filter>
+    </appender>
+  </springProfile>
+
+  <root level="INFO">
+    <springProfile name="console-logging">
+      <appender-ref ref="CONSOLE"/>
+    </springProfile>
+    <springProfile name="file-logging">
+      <appender-ref ref="FILE"/>
+    </springProfile>
+    <springProfile name="error-logging">
+      <appender-ref ref="ERROR"/>
+    </springProfile>
+    <springProfile name="slack-logging">
+      <appender-ref ref="ASYNC_SLACK"/>
+    </springProfile>
   </root>
+
 </configuration>
