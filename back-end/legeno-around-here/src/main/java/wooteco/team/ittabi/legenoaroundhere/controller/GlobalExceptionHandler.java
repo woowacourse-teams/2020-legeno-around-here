@@ -89,8 +89,7 @@ public class GlobalExceptionHandler {
             .body(new ErrorResponse("Login이 필요합니다."));
     }
 
-    @ExceptionHandler({Exception.class, NotFoundAlgorithmException.class,
-        UnsupportedOperationException.class})
+    @ExceptionHandler({Exception.class, NotFoundAlgorithmException.class})
     public ResponseEntity<ErrorResponse> handleInternalServerError(Exception e) {
         log.error("InternalServerError : ", e);
 

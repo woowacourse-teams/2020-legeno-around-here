@@ -19,7 +19,7 @@ public class PostAwardCreateScheduler {
         try {
             awardService.createPopularPostAwards(LocalDateTime.now());
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.info("Error : ", e);
         }
     }
 }
