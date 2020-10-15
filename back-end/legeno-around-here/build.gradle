@@ -3,6 +3,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'java'
     id 'jacoco'
+    id 'org.sonarqube' version '3.0'
 }
 
 group = 'wooteco.team.ittabi'
@@ -16,7 +17,7 @@ jacoco {
 jacocoTestReport {
     reports {
         html.enabled true
-        xml.enabled false
+        xml.enabled true
         csv.enabled false
     }
 
@@ -86,7 +87,6 @@ dependencies {
     implementation 'org.springframework.security:spring-security-oauth2-client'
     implementation 'com.github.maricn:logback-slack-appender:1.4.0'
 
-    testImplementation 'io.rest-assured:rest-assured'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'io.rest-assured:rest-assured'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
@@ -100,6 +100,17 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
+}
+
+sonarqube {
+    properties {
+        property "sonar.host.url", "http://sonarqube.capzzang.co.kr:8000"
+        property "sonar.sources", "src"
+        property "sonar.language", "java"
+        property "sonar.sourceEncoding", "UTF-8"
+        property "sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+        property "sonar.test.inclusions", "**/*Test.java"
+    }
 }
 
 test {
