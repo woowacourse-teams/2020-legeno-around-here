@@ -97,7 +97,7 @@ VALUES (1, now(), null, now(), null, '이것은 안읽은 글 짱 알림.', 1, f
        (10, now() - 9, null, now(), null, '유저씨님, 가입을 진심으로 축하드립니다.', null, false, 3, null,
         null);
 
-INSERT INTO popularity_post_creator_award(name, post_id, ranking, start_date, end_date, awardee_id)
+INSERT INTO popular_post_award(name, post_id, ranking, start_date, end_date, awardee_id)
 VALUES ('월간 서울특별시 비싼 음식 냠냠쓰 부문 1위', 1, 1, NOW() - 30, NOW(), 3),
        ('월간 서울특별시 비싼 음식 냠냠쓰 부문 2위', 2, 2, NOW() - 30, NOW(), 3),
        ('월간 서울특별시 비싼 음식 냠냠쓰 부문 3위', 3, 3, NOW() - 30, NOW(), 3),

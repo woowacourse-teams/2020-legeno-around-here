@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import wooteco.team.ittabi.legenoaroundhere.dto.AwardResponse;
-import wooteco.team.ittabi.legenoaroundhere.service.AwardService;
+import wooteco.team.ittabi.legenoaroundhere.service.award.AwardService;
 
 @RestController
 @AllArgsConstructor
-public class AwardController {
+public class AwardReadController {
 
     private final AwardService awardService;
 

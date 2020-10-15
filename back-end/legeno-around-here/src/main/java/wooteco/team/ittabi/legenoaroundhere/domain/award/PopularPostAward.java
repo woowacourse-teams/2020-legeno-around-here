@@ -19,9 +19,9 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString
-@SQLDelete(sql = "UPDATE popularity_post_creator_award SET deleted_at = NOW() WHERE id = ?")
+@SQLDelete(sql = "UPDATE popular_post_award SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class PopularityPostCreatorAward extends AwardEntity {
+public class PopularPostAward extends AwardEntity {
 
     @OneToOne
     @JoinColumn(name = "post_id", nullable = false)
@@ -37,7 +37,7 @@ public class PopularityPostCreatorAward extends AwardEntity {
     private LocalDate endDate;
 
     @Builder
-    private PopularityPostCreatorAward(String name, User awardee, Post post, Integer ranking,
+    private PopularPostAward(String name, User awardee, Post post, Integer ranking,
         LocalDate startDate, LocalDate endDate) {
         super(name, awardee);
         this.post = post;

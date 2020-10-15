@@ -239,7 +239,10 @@ class UserServiceTest extends ServiceTest {
 
         assertThat(updatedUserResponse.getEmail()).isEqualTo(TEST_UPDATE_EMAIL);
         assertThat(updatedUserResponse.getNickname()).isEqualTo("newname");
-        assertThat(updatedUserResponse.getImage()).isEqualTo(userImage);
+
+        assertThat(updatedUserResponse.getImage().getId()).isEqualTo(userImage.getId());
+        assertThat(updatedUserResponse.getImage().getName()).isEqualTo(userImage.getName());
+        assertThat(updatedUserResponse.getImage().getUrl()).isEqualTo(userImage.getUrl());
     }
 
     @DisplayName("내 비밀번호 수정 (로그인 후), 성공")

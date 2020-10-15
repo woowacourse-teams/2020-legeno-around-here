@@ -167,7 +167,7 @@ public class NotificationService {
     }
 
     @Transactional
-    void notifyGiveASectorCreatorAward(SectorCreatorAward sectorCreatorAward) {
+    public void notifyGiveASectorCreatorAward(SectorCreatorAward sectorCreatorAward) {
         Notification notification = Notification.builder()
             .content(makeGivenAwardNotificationContent(sectorCreatorAward))
             .receiver(sectorCreatorAward.getAwardee())

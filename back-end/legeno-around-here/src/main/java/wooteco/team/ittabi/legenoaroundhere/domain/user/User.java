@@ -31,7 +31,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import wooteco.team.ittabi.legenoaroundhere.domain.BaseEntity;
 import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
-import wooteco.team.ittabi.legenoaroundhere.domain.award.PopularityPostCreatorAward;
+import wooteco.team.ittabi.legenoaroundhere.domain.award.PopularPostAward;
 import wooteco.team.ittabi.legenoaroundhere.domain.award.SectorCreatorAward;
 import wooteco.team.ittabi.legenoaroundhere.domain.comment.Comment;
 import wooteco.team.ittabi.legenoaroundhere.domain.post.Post;
@@ -71,7 +71,7 @@ public class User extends BaseEntity implements UserDetails {
     private Area area = null;
 
     @OneToMany(mappedBy = "awardee")
-    private List<PopularityPostCreatorAward> popularityPostCreatorAwards = new ArrayList<>();
+    private List<PopularPostAward> popularPostAwards = new ArrayList<>();
 
     @OneToMany(mappedBy = "awardee")
     private List<SectorCreatorAward> sectorCreatorAwards = new ArrayList<>();
@@ -132,8 +132,8 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     public int countTopPopularityPostCreatorAwardsBy(int number) {
-        return (int) popularityPostCreatorAwards.stream()
-            .filter(popularityPostCreatorAward -> popularityPostCreatorAward.isTopBy(number))
+        return (int) popularPostAwards.stream()
+            .filter(popularPostAward -> popularPostAward.isTopBy(number))
             .count();
     }
 

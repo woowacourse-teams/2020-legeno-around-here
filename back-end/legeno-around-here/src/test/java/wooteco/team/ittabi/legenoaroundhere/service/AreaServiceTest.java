@@ -2,13 +2,16 @@ package wooteco.team.ittabi.legenoaroundhere.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import wooteco.team.ittabi.legenoaroundhere.domain.area.Area;
 import wooteco.team.ittabi.legenoaroundhere.dto.AreaResponse;
 
 
@@ -31,5 +34,13 @@ class AreaServiceTest extends ServiceTest {
     void searchAreas_NotExistsKeyword_SearchAnything(String keyword) {
         Page<AreaResponse> areas = areaService.searchAreas(Pageable.unpaged(), keyword);
         assertThat(areas.getContent()).hasSize(0);
+    }
+
+    @DisplayName("전체 조회")
+    @Test
+    void findAllAreas() {
+        List<Area> allAreas = areaService.findAllAreas();
+        assertThat(allAreas.size()).isGreaterThan(400);
+        allAreas.forEach(area -> System.out.println(area.getFullName()));
     }
 }
