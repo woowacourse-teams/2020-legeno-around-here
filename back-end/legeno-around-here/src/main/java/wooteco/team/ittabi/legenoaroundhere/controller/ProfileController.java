@@ -20,7 +20,7 @@ public class ProfileController {
 
     @GetMapping
     public String getProfile() {
-        return Arrays.stream(env.getActiveProfiles())
+        return Arrays.stream(env.getDefaultProfiles())
             .findFirst()
             .orElse(PROFILE_NONE);
     }
