@@ -845,7 +845,8 @@ export const deleteComment = (accessToken, commentId) => {
 
 // 로그인 페이지로 리다이렉트 될 경우 true 반환, 그렇지 않을 경우 false 반환
 const redirectLoginWhenUnauthorized = (error, history) => {
-  if (error.response && error.response.status === 403) {
+  if (error.response && (error.response.status === 403
+      || error.response.status === 401)) {
     history.push('/login');
     return true;
   } else if (error.response && error.response.status === 302) {

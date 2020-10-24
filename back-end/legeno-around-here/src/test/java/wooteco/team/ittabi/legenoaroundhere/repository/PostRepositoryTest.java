@@ -13,6 +13,9 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -223,5 +226,66 @@ public class PostRepositoryTest {
         assertThat(postsPage.getContent()).hasSize(0);
         assertThat(postsPage.getTotalPages()).isEqualTo(1);
         assertThat(postsPage.getTotalElements()).isEqualTo(1);
+    }
+
+    @DisplayName("랭킹 조회 (페이징 사용 X)")
+    @ParameterizedTest
+    @CsvSource({"0,0", "10,1"})
+    void findRankingWithoutPaging_Success(
+        int maximumDataSize, int expectedResultSize) {
+        RankingCriteria rankingCriteria = RankingCriteria.TOTAL;
+        LocalDateTime startDate = rankingCriteria.getStartDate();
+        LocalDateTime endDate = rankingCriteria.getEndDate();
+
+        List<Post> posts = postRepository.findRankingBy(startDate, endDate, maximumDataSize);
+
+        assertThat(posts).hasSize(expectedResultSize);
+    }
+
+    @DisplayName("랭킹 단일 지역 조회 (페이징 사용 X)")
+    @ParameterizedTest
+    @CsvSource({"0,0", "10,1"})
+    void findRankingByAreaIdWithoutPaging_Success(int maximumDataSize, int expectedResultSize) {
+        RankingCriteria rankingCriteria = RankingCriteria.TOTAL;
+        LocalDateTime startDate = rankingCriteria.getStartDate();
+        LocalDateTime endDate = rankingCriteria.getEndDate();
+
+        List<Post> posts = postRepository
+            .findRankingByAreaId(TEST_AREA_ID, startDate, endDate, maximumDataSize);
+
+        assertThat(posts).hasSize(expectedResultSize);
+    }
+
+    @DisplayName("랭킹 다중 부문 조회 (페이징 사용 X)")
+    @ParameterizedTest
+    @CsvSource({"0,0", "10,1"})
+    void findRankingBySectorIdsWithoutPaging_Success(int maximumDataSize, int expectedResultSize) {
+        RankingCriteria rankingCriteria = RankingCriteria.TOTAL;
+        LocalDateTime startDate = rankingCriteria.getStartDate();
+        LocalDateTime endDate = rankingCriteria.getEndDate();
+
+        List<Long> sectorIds = Collections.singletonList(sectorId);
+
+        List<Post> posts = postRepository
+            .findRankingBySectorIds(sectorIds, startDate, endDate, maximumDataSize);
+
+        assertThat(posts).hasSize(expectedResultSize);
+    }
+
+    @DisplayName("랭킹 단일 지역 다중 부문 조회 (페이징 사용 X)")
+    @ParameterizedTest
+    @CsvSource({"0,0", "10,1"})
+    void findRankingByAreaIdAndSectorIdsWithoutPaging_Success(
+        int maximumDataSize, int expectedResultSize) {
+        RankingCriteria rankingCriteria = RankingCriteria.TOTAL;
+        LocalDateTime startDate = rankingCriteria.getStartDate();
+        LocalDateTime endDate = rankingCriteria.getEndDate();
+
+        List<Long> sectorIds = Collections.singletonList(sectorId);
+
+        List<Post> posts = postRepository.findRankingByAreaIdAndSectorIds(
+            TEST_AREA_ID, sectorIds, startDate, endDate, maximumDataSize);
+
+        assertThat(posts).hasSize(expectedResultSize);
     }
 }

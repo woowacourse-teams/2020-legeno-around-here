@@ -34,19 +34,18 @@ class NicknameTest {
     }
 
     @ParameterizedTest
-    @DisplayName("생성자 테스트 - 닉네임에 공백이 포함되었을 때")
-    @ValueSource(strings = {" ", "a ", " a", "a a"})
+    @DisplayName("생성자 테스트 - 닉네임에 사용할 수 없는 특수문자가 포함되었을 때")
+    @ValueSource(strings = {"&히", "히=히", "히히_", "히히\'", "히-히", "히+히", ",", "<", ">", ".."})
     void constructor_IfExistSpace_ThrowException(String input) {
         assertThatThrownBy(() -> new Nickname(input))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("닉네임은 공백을 포함할 수 없습니다.");
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    @DisplayName("생성자 테스트 - 닉네임이 10글자를 초과했을 때")
+    @DisplayName("생성자 테스트 - 닉네임이 30글자를 초과했을 때")
     void constructor_IfLengthIsMoreThanMaximum_ThrowException() {
-        assertThatThrownBy(() -> new Nickname("이글자는열한글자입니다"))
+        assertThatThrownBy(() -> new Nickname("1234567890123456789012345678901"))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("닉네임은 10글자 이하여야 합니다.");
+            .hasMessage("닉네임은 30글자 이하여야 합니다.");
     }
 }

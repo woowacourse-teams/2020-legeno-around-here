@@ -51,7 +51,7 @@ public class SectorController {
 
     @GetMapping("/simple")
     public ResponseEntity<List<SectorSimpleResponse>> findSectorsForKeywordSearch() {
-        List<SectorSimpleResponse> sectors = sectorService.findSectorsForKeywordSearch();
+        List<SectorSimpleResponse> sectors = sectorService.findAllAvailableSectors();
 
         return ResponseEntity
             .ok(sectors);

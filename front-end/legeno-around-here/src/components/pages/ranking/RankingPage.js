@@ -84,10 +84,6 @@ const RankingPage = ({ history }) => {
     setMainCriteria(targetValue);
   };
 
-  /* 공동순위 처리를 위해서 필요한 변수들 */
-  let zzangCountOfBeforePost = -1;
-  let rankOfBeforePost = 0;
-
   return (
     <>
       <SearchTopBar setter={topBarSetters} getter={topBarGetters} history={history} selected={'ranking'} />
@@ -111,9 +107,7 @@ const RankingPage = ({ history }) => {
           endMessage={<EndMessage message={'모두 읽으셨습니다!'} />}
         >
           {posts.map((post, index) => {
-            const rank = post.zzang.count === zzangCountOfBeforePost ? rankOfBeforePost : index + 1;
-            zzangCountOfBeforePost = post.zzang.count;
-            rankOfBeforePost = rank;
+            const rank = index + 1;
             return <RankingItem key={post.id} post={post} rank={rank} history={history} />;
           })}
         </InfiniteScroll>

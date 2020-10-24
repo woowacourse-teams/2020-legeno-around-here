@@ -1,6 +1,5 @@
 package wooteco.team.ittabi.legenoaroundhere.service;
 
-import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,12 +9,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wooteco.team.ittabi.legenoaroundhere.config.IAuthenticationFacade;
-import wooteco.team.ittabi.legenoaroundhere.domain.award.SectorCreatorAward;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Name;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.Sector;
 import wooteco.team.ittabi.legenoaroundhere.domain.sector.SectorState;
 import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
-import wooteco.team.ittabi.legenoaroundhere.domain.util.AwardNameMaker;
 import wooteco.team.ittabi.legenoaroundhere.dto.AdminSectorResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorAssembler;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorDetailResponse;
@@ -25,8 +22,8 @@ import wooteco.team.ittabi.legenoaroundhere.dto.SectorSimpleResponse;
 import wooteco.team.ittabi.legenoaroundhere.dto.SectorUpdateStateRequest;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotExistsException;
 import wooteco.team.ittabi.legenoaroundhere.exception.NotUniqueException;
-import wooteco.team.ittabi.legenoaroundhere.repository.SectorCreatorAwardRepository;
 import wooteco.team.ittabi.legenoaroundhere.repository.SectorRepository;
+import wooteco.team.ittabi.legenoaroundhere.service.award.AwardService;
 
 @Service
 @AllArgsConstructor
@@ -36,9 +33,10 @@ public class SectorService {
     private static final String DB_LIKE_FORMAT = "%%%s%%";
     private static final int DEFAULT_PAGING_NUMBER = 0;
 
-    private final NotificationService notificationService;
     private final SectorRepository sectorRepository;
-    private final SectorCreatorAwardRepository sectorCreatorAwardRepository;
+    private final AwardService awardService;
+    private final NotificationService notificationService;
+
     private final IAuthenticationFacade authenticationFacade;
 
     @Transactional
@@ -149,29 +147,12 @@ public class SectorService {
             sectorUpdateStateRequest.getReason(), user);
 
         if (sectorState.equals(SectorState.APPROVED)) {
-            giveASectorCreatorAward(sector);
+            awardService.giveSectorCreatorAward(sector);
             notificationService.notifySectorApproved(sector);
         }
-
         if (sectorState.equals(SectorState.REJECTED)) {
             notificationService.notifySectorRejected(sector);
         }
-    }
-
-    private void giveASectorCreatorAward(Sector sector) {
-        if (sectorCreatorAwardRepository.findBySector(sector).isPresent()) {
-            log.info(sector.getName() + " : sector is already exist.");
-            return;
-        }
-
-        SectorCreatorAward sectorCreatorAward = SectorCreatorAward.builder()
-            .name(AwardNameMaker.makeSectorCreatorAwardName(sector))
-            .awardee(sector.getCreator())
-            .sector(sector)
-            .date(LocalDate.now())
-            .build();
-        sectorCreatorAwardRepository.save(sectorCreatorAward);
-        notificationService.notifyGiveASectorCreatorAward(sectorCreatorAward);
     }
 
     @Transactional(readOnly = true)
@@ -183,7 +164,7 @@ public class SectorService {
     }
 
     @Transactional(readOnly = true)
-    public List<SectorSimpleResponse> findSectorsForKeywordSearch() {
+    public List<SectorSimpleResponse> findAllAvailableSectors() {
         List<Sector> sectors = sectorRepository.findAllByStateIn(SectorState.getAllAvailable());
         return SectorSimpleResponse.listOf(sectors);
     }
