@@ -6,6 +6,7 @@ import LinkWithoutStyle from '../../../util/LinkWithoutStyle';
 import { MAIN_COLOR } from '../../../constants/Color';
 import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
 import {getAccessTokenFromCookie} from "../../../util/TokenUtils";
+import {pressCommentZzang} from "../../api/API";
 
 const useStyle = makeStyles({
   photoAndTextsLayout: {
@@ -58,7 +59,7 @@ const useStyle = makeStyles({
   },
 });
 
-const CommentItem = ({ comment, myId, onCommentDelete }) => {
+const CommentItem = ({ comment, myId, onCommentDelete, history }) => {
   const [accessToken] = useState(getAccessTokenFromCookie());
   const isMyComment = comment.creator.id === myId;
   const classes = useStyle({
@@ -76,6 +77,22 @@ const CommentItem = ({ comment, myId, onCommentDelete }) => {
       />
     );
   };
+
+  const makeZzangButtonUi = () => {
+    return <>
+      <div
+        className={classes.zzangButton}
+        onClick={() => pressCommentZzang(comment.id, accessToken, history)}
+      ></div>
+      <Typography
+        variant='subtitle2'
+        color='textSecondary'
+        onClick={() => onCommentDelete(accessToken, comment.id)}
+      >
+        {comment.zzang.count}
+      </Typography>
+    </>;
+  }
 
   return (
     <>
@@ -103,18 +120,17 @@ const CommentItem = ({ comment, myId, onCommentDelete }) => {
             >
               {convertDateFormat(comment.createdAt)}
             </Typography> {
-              isMyComment ? <Typography
-                variant='subtitle2'
-                color='textSecondary'
-                className={classes.deleteButton}
-                onClick={() => onCommentDelete(accessToken, comment.id)}
-              >
-                삭제
-              </Typography> : <div className={classes.zzangButton}></div>
+              isMyComment ?
+                <Typography
+                  variant='subtitle2'
+                  color='textSecondary'
+                  className={classes.deleteButton}
+                  onClick={() => onCommentDelete(accessToken, comment.id)}
+                >
+                  삭제
+                </Typography>
+              : makeZzangButtonUi()
             }
-          </div>
-          <div className={classes.secondaryInfoSection}>
-
           </div>
         </div>
       </ListItem>

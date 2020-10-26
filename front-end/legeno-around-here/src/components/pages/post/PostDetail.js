@@ -212,6 +212,7 @@ const PostDetail = ({ post, myInfo, history }) => {
         loading={loading}
         myId={myInfo.id}
         onCommentDelete={deleteCommentFunction}
+        history={history}
       />}
     </>
   );

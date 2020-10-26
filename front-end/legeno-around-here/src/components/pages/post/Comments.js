@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Comments = ({ comments, loading, myId, onCommentDelete }) => {
+const Comments = ({ comments, loading, myId, onCommentDelete, history }) => {
   const classes = useStyles();
 
   if (loading) return <Loading />;
@@ -23,6 +23,7 @@ const Comments = ({ comments, loading, myId, onCommentDelete }) => {
           comment={comment}
           myId={myId}
           onCommentDelete={onCommentDelete}
+          history={history}
         />
       ))}
     </List>
