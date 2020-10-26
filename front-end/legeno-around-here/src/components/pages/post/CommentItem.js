@@ -36,14 +36,25 @@ const useStyle = makeStyles({
     width: '90%',
     display: 'flex',
     flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'center',
   },
   createdTime: {
-    display: 'inline-block',
+    display: 'inline',
     margin: 'auto auto auto 0',
   },
   deleteButton: {
     display: 'inline-block',
     margin: 'auto 0 auto auto',
+  },
+  zzangButton: {
+    display: 'inline-block',
+    width: '20px',
+    height: '28px',
+    backgroundImage: 'url(/images/thumb_gray.png)',
+    backgroundPosition: 'center-top',
+    backgroundSize: 'contain',
+    backgroundRepeat: 'no-repeat',
   },
 });
 
@@ -92,15 +103,18 @@ const CommentItem = ({ comment, myId, onCommentDelete }) => {
             >
               {convertDateFormat(comment.createdAt)}
             </Typography> {
-              isMyComment && <Typography
+              isMyComment ? <Typography
                 variant='subtitle2'
                 color='textSecondary'
                 className={classes.deleteButton}
                 onClick={() => onCommentDelete(accessToken, comment.id)}
               >
                 삭제
-              </Typography>
+              </Typography> : <div className={classes.zzangButton}></div>
             }
+          </div>
+          <div className={classes.secondaryInfoSection}>
+
           </div>
         </div>
       </ListItem>
