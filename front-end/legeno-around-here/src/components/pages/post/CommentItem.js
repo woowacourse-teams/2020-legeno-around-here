@@ -5,8 +5,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import LinkWithoutStyle from '../../../util/LinkWithoutStyle';
 import { MAIN_COLOR } from '../../../constants/Color';
 import { DEFAULT_IMAGE_URL } from '../myProfileEdit/MyProfileEditPage';
-import {getAccessTokenFromCookie} from "../../../util/TokenUtils";
-import {pressCommentZzang} from "../../api/API";
+import { getAccessTokenFromCookie } from "../../../util/TokenUtils";
+import { pressCommentZzang } from "../../api/API";
+
+const THUMB_GRAY_IMAGE_URL = '/images/thumb_gray.png';
+const THUMB_BLUE_IMAGE_URL = '/images/thumb_blue.png';
 
 const useStyle = makeStyles({
   photoAndTextsLayout: {
@@ -40,6 +43,10 @@ const useStyle = makeStyles({
     alignContent: 'center',
     justifyContent: 'center',
   },
+  nickname: {
+    display: 'inline',
+    margin: 'auto auto auto 0',
+  },
   createdTime: {
     display: 'inline',
     margin: 'auto auto auto 0',
@@ -48,22 +55,25 @@ const useStyle = makeStyles({
     display: 'inline-block',
     margin: 'auto 0 auto auto',
   },
-  zzangButton: {
+  zzangButton: (props) => ({
     display: 'inline-block',
     width: '20px',
     height: '28px',
-    backgroundImage: 'url(/images/thumb_gray.png)',
+    backgroundImage: `url(${props.zzangButtonImageUrl})`,
     backgroundPosition: 'center-top',
     backgroundSize: 'contain',
     backgroundRepeat: 'no-repeat',
-  },
+  }),
 });
 
 const CommentItem = ({ comment, myId, onCommentDelete, history }) => {
   const [accessToken] = useState(getAccessTokenFromCookie());
+  const [isZzangActivated, setIsZzangActivated] = useState(comment.zzang.activated);
+  const [zzangCount, setZzangCount] = useState(comment.zzang.count);
   const isMyComment = comment.creator.id === myId;
   const classes = useStyle({
     creatorProfilePhotoUrl: comment.creator.image ? comment.creator.image.url : DEFAULT_IMAGE_URL,
+    zzangButtonImageUrl: isZzangActivated ? THUMB_BLUE_IMAGE_URL : THUMB_GRAY_IMAGE_URL
   });
 
   const makeCreatorPhotoUi = () => {
@@ -78,18 +88,30 @@ const CommentItem = ({ comment, myId, onCommentDelete, history }) => {
     );
   };
 
-  const makeZzangButtonUi = () => {
+  const pressZzang = async () => {
+    const isPressed = await pressCommentZzang(comment.id, accessToken, history);
+    if (isPressed) {
+      if (isZzangActivated) {
+        setZzangCount(zzangCount - 1);
+        setIsZzangActivated(!isZzangActivated);
+        return;
+      }
+      setZzangCount(zzangCount + 1);
+      setIsZzangActivated(!isZzangActivated);
+    }
+  };
+
+  const makeZzangButtonUi = (zzangCount) => {
     return <>
       <div
         className={classes.zzangButton}
-        onClick={() => pressCommentZzang(comment.id, accessToken, history)}
+        onClick={pressZzang}
       ></div>
       <Typography
         variant='subtitle2'
         color='textSecondary'
-        onClick={() => onCommentDelete(accessToken, comment.id)}
       >
-        {comment.zzang.count}
+        {zzangCount}
       </Typography>
     </>;
   }
@@ -99,9 +121,22 @@ const CommentItem = ({ comment, myId, onCommentDelete, history }) => {
       <ListItem alignItems='flex-start' className={classes.photoAndTextsLayout}>
         {makeCreatorPhotoUi()}
         <div className={classes.textsLayout}>
-          <Typography variant='subtitle2' color='textSecondary'>
-            {comment.creator.nickname}
-          </Typography>
+          <div className={classes.secondaryInfoSection}>
+            <Typography variant='subtitle2' color='textSecondary'className={classes.nickname}>
+              {comment.creator.nickname}
+            </Typography>
+            {
+              isMyComment &&
+              <Typography
+                variant='subtitle2'
+                color='textSecondary'
+                className={classes.deleteButton}
+                onClick={() => onCommentDelete(accessToken, comment.id)}
+              >
+                삭제
+              </Typography>
+            }
+          </div>
           <Typography variant='subtitle1'>
             {comment.writing.split('\n').map((line, index) => {
               return (
@@ -119,18 +154,8 @@ const CommentItem = ({ comment, myId, onCommentDelete, history }) => {
               className={classes.createdTime}
             >
               {convertDateFormat(comment.createdAt)}
-            </Typography> {
-              isMyComment ?
-                <Typography
-                  variant='subtitle2'
-                  color='textSecondary'
-                  className={classes.deleteButton}
-                  onClick={() => onCommentDelete(accessToken, comment.id)}
-                >
-                  삭제
-                </Typography>
-              : makeZzangButtonUi()
-            }
+            </Typography>
+            {makeZzangButtonUi(zzangCount)}
           </div>
         </div>
       </ListItem>
