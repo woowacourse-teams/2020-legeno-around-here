@@ -63,6 +63,7 @@ const useStyle = makeStyles({
     backgroundPosition: 'center-top',
     backgroundSize: 'contain',
     backgroundRepeat: 'no-repeat',
+    marginRight: '3px',
   }),
 });
 
