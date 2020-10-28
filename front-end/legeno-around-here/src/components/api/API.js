@@ -843,6 +843,28 @@ export const deleteComment = (accessToken, commentId) => {
     });
 };
 
+export const pressCommentZzang = async (commentId, accessToken, history) => {
+  const config = {
+    headers: {
+      'X-Auth-Token': accessToken,
+    },
+  };
+  try {
+    const response = await axios.post(DEFAULT_URL + `/comments/${commentId}/zzangs`, {}, config);
+
+    if (response.status === HTTP_STATUS_NO_CONTENT) {
+      return true;
+    }
+  } catch (error) {
+    if (await redirectLoginWhenUnauthorized(error, history)) {
+      return;
+    }
+    const errorResponse = error.response.data;
+    alert(errorResponse.errorMessage);
+  }
+  return false;
+};
+
 // 로그인 페이지로 리다이렉트 될 경우 true 반환, 그렇지 않을 경우 false 반환
 const redirectLoginWhenUnauthorized = (error, history) => {
   if (error.response && (error.response.status === 403
