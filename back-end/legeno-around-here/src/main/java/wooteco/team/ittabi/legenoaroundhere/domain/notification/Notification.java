@@ -2,8 +2,10 @@ package wooteco.team.ittabi.legenoaroundhere.domain.notification;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +28,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @ToString
 @SQLDelete(sql = "UPDATE notification SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
+@Table(indexes = @Index(columnList = "receiver_id", name="idx_notification_receiver"))
 public class Notification extends BaseEntity {
 
     @Column(nullable = false)

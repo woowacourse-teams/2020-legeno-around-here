@@ -10,10 +10,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,6 +41,11 @@ import wooteco.team.ittabi.legenoaroundhere.exception.WrongUserInputException;
 @ToString(exclude = {"comments", "postImages", "zzangs", "notifications"})
 @SQLDelete(sql = "UPDATE post SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
+@Table(indexes = {
+    @Index(name = "idx_post_creator", columnList = "creator_id"),
+    @Index(name = "idx_post_deleted_at_area", columnList = "deletedAt,area_id"),
+    @Index(name = "idx_post_deleted_at_sector", columnList = "deletedAt,sector_id")
+})
 public class Post extends BaseEntity {
 
     private static final int MAX_LENGTH = 2000;

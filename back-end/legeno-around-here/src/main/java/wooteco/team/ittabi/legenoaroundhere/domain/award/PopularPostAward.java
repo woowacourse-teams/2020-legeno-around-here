@@ -3,8 +3,10 @@ package wooteco.team.ittabi.legenoaroundhere.domain.award;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +23,7 @@ import wooteco.team.ittabi.legenoaroundhere.domain.user.User;
 @ToString
 @SQLDelete(sql = "UPDATE popular_post_award SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
+@Table(indexes = @Index(name="idx_popular_post_award_awardee", columnList = "awardee_id"))
 public class PopularPostAward extends AwardEntity {
 
     @OneToOne
